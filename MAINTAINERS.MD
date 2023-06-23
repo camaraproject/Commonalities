@@ -1,3 +1,4 @@
 | Org                    | Name                                                |
 | -----------------------| ----------------------------------------------------|
-| §company§ | $name§ |
+| Deutsche Telekom | Rafal Artych |
+| Deutsche Telekom | Shilpa Padgaonkar |
