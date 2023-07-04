@@ -1,6 +1,6 @@
 ---
 name: ❕ Documentation 📝
-about: Indicate an issue with Commpnalities documentation or supplementary documents
+about: Indicate an issue with Commonalities documentation or supplementary documents
 title: ''
 labels: 'documentation'
 assignees: ''
