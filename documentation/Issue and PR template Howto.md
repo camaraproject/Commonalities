@@ -28,7 +28,7 @@ blank_issues_enabled: true
 
 ```
   - name: Subproject discussions 
-    url: https://github.com/camaraproject/WorkingGroups/discussions
+    url: https://github.com/camaraproject/Commonalities/discussions
     about: Please ask and answer questions here.
  ```
 3. Modify Issue and PR templates in Markdown files included in the  `.github` folder if needed.
