@@ -3,7 +3,7 @@
 |----|--------------     |-----------|--------------------                         |
 |  1 |API Spec          | Y         | OAS3  (https://spec.openapis.org/oas/v3.0.3)|
 |  2 |API Implementation |   N        |                                             |
-| 3   |API Documentation  |   Y        |https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/API-DocumentationTemplate.md                                             |
+| 3   |API Documentation  |   Y        |https://github.com/camaraproject/Commonalities/blob/main/documentation/API-DocumentationTemplate.md                                             |
 |4   |User Stories  |   Y        |	https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/Userstory-template.md                                            |
 | 5   |API test cases and documentation  |   Y        |      TBD                                       |
 | 6   |Tested by atleast 2 operators  |   Y        |                                             |
