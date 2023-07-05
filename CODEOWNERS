@@ -6,6 +6,3 @@
 
 # These are the default owners for the whole content of this repository. The default owners are automatically added as reviewers when you open a pull request, unless different owners are specified in the file.
 * @shilpa-padgaonkar @rartych @patrice-conil
-
-# temporary for bootstrapping the repo and while @rartych is on vacation - delete afterwards
-* @shilpa-padgaonkar @hdamker
