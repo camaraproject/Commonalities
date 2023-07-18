@@ -765,7 +765,7 @@ With the aim of standardizing the request observability and traceability process
 
 One of the key points in the API definition process is to specify and validate the security needs that will be maintained to guarantee data integrity and access control. There are multiple ways to secure a RESTful API, e.g. basic authentication, OAuth, etc., but one thing is for sure: RESTful APIs should be stateless, so authentication/authorization requests should not rely on cookies or sessions. Instead, each API request must come with some form of authentication credentials that must be validated on the server for each request.
 
-Basic idea in terms of security is to understand that various types of data will require different levels of security, depending on the confidentiality of the data you are trying to obtain and the level of trust between Telefónica and the consumer.
+Basic idea in terms of security is to understand that various types of data will require different levels of security, depending on the confidentiality of the data you are trying to obtain and the level of trust between the Service Provider and the consumer.
 
 
 ### 10.1 API REST Security
