@@ -1,0 +1,268 @@
+openapi: 3.0.3
+info:
+  title: Event Notification using CloudEvents specifications
+  description: |
+    The event notification endpoint is used by the API server to notify the API consumer that an event occurred.  The notification is the message posted on listener side.
+
+    # Introduction
+
+    A lot of CAMARA APIs offer the capability to consumer to receive event.
+    Event data are defined in each API definition but in order to provide consistency across CAMARA APIs and to increase 
+    interoperability we will use [cloudevents](https://cloudevents.io/) specifications. In particular, CAMARA Event will 
+    be defined using [cloudevents-json-format](https://github.com/cloudevents/spec/blob/main/cloudevents/formats/json-format.md)
+   
+    # Relevant terms and definitions
+
+      * **Occurrence** : An "occurrence" is the capture of a statement of fact during the operation of a software system.
+  
+      * **Event**: An "event" is a data record expressing an occurrence and its context. Events are routed from an 
+    event producer (the source) to interested event consumers.
+    
+      * **Producer**: The "producer" is a specific instance, process or device that creates the data structure 
+    describing the CloudEvent.
+  
+      * **Source**:  The "source" is the context in which the occurrence happened. In a distributed system it might 
+    consist of multiple producers. If a source is not aware of CloudEvents, an external producer creates 
+    the CloudEvent on behalf of the source.
+  
+      * **Consumer**: A "consumer" receives the event and acts upon it. It uses the context and data to execute some 
+    logic, which might lead to the occurrence of new events.
+  
+      * **Data**:  Domain-specific information about the occurrence (i.e. the payload). This might 
+    include information about the occurrence, details about the data that was changed, or more.
+  
+    
+    # API Functionality   
+      
+    Only one endpoint/operation is provided: `POST /cloudevents`
+    
+    This endpoint describes the event notification received on subscription listener side when the event occurred. A detailed description of the event notification is provided in the CAMARA API design guideline document.
+  
+  
+
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: project-email@sample.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.5.0-wip
+externalDocs:
+  description: Product documentation at CAMARA
+  url: https://github.com/camaraproject/
+security:
+  - oAuth2ClientCredentials: []
+
+servers:
+  - url: '{apiRoot}/{basePath}'
+    variables:
+      apiRoot:
+        default: http://localhost:8080
+        description: API root
+      basePath:
+        default: /event-notification/v0
+        description: Base path for the event notification API
+tags:
+  - name: Cloud Event
+    description: |
+      Events received on subscription listener side.
+paths:
+  /notifications:
+    post:
+      tags:
+        - CAMARA Cloud Event Notification
+      summary: "Notification endpoint to notify consumer that statement of fact had occurred"
+      description: Notification endpoint to notify consumer that statement of fact occurred. This endpoint must be exposed on the consumer side.
+      operationId: notifyCloudEvent
+      requestBody:
+        required: true
+        content:
+          application/cloudevents+json:
+            schema:
+              $ref: "#/components/schemas/CloudEvent"
+            examples:
+              QOS_STATUS_CHANGED_EXAMPLE:
+                $ref: '#/components/examples/QOS_STATUS_CHANGED_EXAMPLE'
+
+      responses:
+        201:
+          description: Created
+        202:
+          description: Accepted
+        400:
+          $ref: "#/components/responses/Generic400"
+        401:
+          $ref: "#/components/responses/Generic401"
+        403:
+          $ref: "#/components/responses/Generic403"
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+        503:
+          $ref: "#/components/responses/Generic503"
+components:
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: '{tokenUrl}'
+          scopes: {}
+
+  schemas:
+    ErrorInfo:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          description: HTTP response status code
+        code:
+          type: string
+          description: Code given to this error
+        message:
+          type: string
+          description: Detailed error description
+
+    DateTime:
+      type: string
+      format: date-time
+      description: Timestamp of when the occurrence happened. Must adhere to RFC 3339.
+      example: '2018-04-05T17:31:00Z'
+
+    Source:
+      type: string
+      format: uri-reference
+      minLength: 1
+      description: "Identifies the context in which an event happened(example: 'com.orange.camara.qod')"
+      example:
+        - https://github.com/cloudevents
+        - mailto:cncf-wg-serverless@lists.cncf.io
+        - urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66
+        - cloudevents/spec/pull/123
+        - /sensors/tn-1234567/alerts
+        - 1-555-123-4567
+
+    CloudEvent:
+      description: The notification callback
+      required:
+        - id
+        - source
+        - specversion
+        - type
+      properties:
+        id:
+          type: string
+          description: identifier of this event, that must be unique in the source context.
+        source:
+          $ref: '#/components/schemas/Source'
+        type:
+          type: string
+          description: 'type of event as defined in each CAMARA API (examples: ROAMING_STATUS, QOS_STATUS_CHANGED, PAYMENT_COMPLETED, etc...)'
+          example: ROAMING_ON
+        specversion:
+          type: string
+          description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
+        datacontenttype:
+          type: string
+          description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
+        data:
+          type: object
+          description: Event details payload described in each CAMARA API and referenced by its type
+        subject:
+          description: Describes the subject of the event in the context of the event producer (identified by source).
+          type: string
+          example: ROAMING
+        time:
+          $ref: "#/components/schemas/DateTime"
+
+  responses:
+    Generic400:
+      description: Problem with the client request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 400
+            code: "INVALID_ARGUMENT"
+            message: "Client specified an invalid argument, request body or query param"
+    Generic401:
+      description: Authentication problem with the client request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 401
+            code: "UNAUTHENTICATED"
+            message: "Request not authenticated due to missing, invalid, or expired credentials"
+    Generic403:
+      description: Client does not have sufficient permission
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 403
+            code: "PERMISSION_DENIED"
+            message: "Client does not have sufficient permissions to perform this action"
+    Generic404:
+      description: Resource Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: NOT_FOUND
+            message: "The specified resource is not found"
+    Generic409:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: CONFLICT
+            message: "The specified resource is in a conflict"
+    Generic500:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 500
+            code: "INTERNAL"
+            message: "Server error"
+    Generic503:
+      description: Service unavailable. Typically the server is down.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 503
+            code: "UNAVAILABLE"
+            message: "Service unavailable"
+  examples:
+    QOS_STATUS_CHANGED_EXAMPLE:
+      value:
+        id: 123654
+        source: com.orange.camara.qod
+        type: QOS_STATUS_CHANGED
+        specversion: '1.0'
+        time: 2023-01-17T13:18:23.682Z
+        datacontenttype: application/json
+        subject: QOD
+        data:
+          sessionId: 6e8bc430-9c3a-11d9-9669-0800200c9a66
+          qosStatus: UNAVAILABLE
+          statusInfo: DURATION_EXPIRED
+
