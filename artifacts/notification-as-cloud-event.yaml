@@ -256,11 +256,11 @@ components:
       value:
         id: 123654
         source: com.orange.camara.qod
-        type: QOS_STATUS_CHANGED
+        type: org.camara.api.qod.QosStatusChangedEvent
         specversion: '1.0'
         time: 2023-01-17T13:18:23.682Z
+        subject: QOD/QOS_STATUS_CHANGED
         datacontenttype: application/json
-        subject: QOD
         data:
           sessionId: 6e8bc430-9c3a-11d9-9669-0800200c9a66
           qosStatus: UNAVAILABLE
