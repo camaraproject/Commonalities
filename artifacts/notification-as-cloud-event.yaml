@@ -67,12 +67,12 @@ tags:
     description: |
       Events received on subscription listener side.
 paths:
-  /notifications:
+  /cloudevents:
     post:
       tags:
-        - CAMARA Cloud Event Notification
-      summary: "Notification endpoint to notify consumer that statement of fact had occurred"
-      description: Notification endpoint to notify consumer that statement of fact occurred. This endpoint must be exposed on the consumer side.
+        - CAMARA Cloud Event notification endpoint
+      summary: "Cloud Event notification endpoint to notify consumer that statement of fact had occurred"
+      description: Cloud Event notification endpoint to notify consumer that statement of fact occurred. This endpoint must be exposed on the consumer side.
       operationId: notifyCloudEvent
       requestBody:
         required: true
@@ -89,12 +89,26 @@ paths:
           description: Created
         202:
           description: Accepted
+        204:
+          description: No Content
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
         400:
           $ref: "#/components/responses/Generic400"
         401:
           $ref: "#/components/responses/Generic401"
         403:
           $ref: "#/components/responses/Generic403"
+        410:
+          $ref: "#/components/responses/Generic410"
+        415:
+          $ref: "#/components/responses/Generic415"
+        429:
+          $ref: "#/components/responses/Generic429"
         500:
           description: Server error
           content:
@@ -164,8 +178,8 @@ components:
           $ref: '#/components/schemas/Source'
         type:
           type: string
-          description: 'type of event as defined in each CAMARA API (examples: ROAMING_STATUS, QOS_STATUS_CHANGED, PAYMENT_COMPLETED, etc...)'
-          example: ROAMING_ON
+          description: 'type of event as defined in each CAMARA API (e.g. org.camara.api.qod.QosStatusChangedEvent)'
+          example: org.camara.api.qod.QosStatusChangedEvent
         specversion:
           type: string
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
@@ -231,6 +245,33 @@ components:
           example:
             code: CONFLICT
             message: "The specified resource is in a conflict"
+    Generic410:
+      description: Gone
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: GONE
+            message: "Access to the target resource is no longer available."
+    Generic415:
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: UNSUPPORTED_MEDIA_TYPE
+            message: "The specified media type is not supported"
+    Generic429:
+      description: Too Many Requests
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: TOO_MANY_REQUESTS
+            message: "Endpoint does not support as many requests per time slot"
     Generic500:
       description: Server error
       content:
