@@ -67,13 +67,17 @@ tags:
     description: |
       Events received on subscription listener side.
 paths:
-  /cloudevents:
+  /your_webhook_notificationUrl:
     post:
       tags:
         - CAMARA Cloud Event notification endpoint
       summary: "Cloud Event notification endpoint to notify consumer that statement of fact had occurred"
-      description: Cloud Event notification endpoint to notify consumer that statement of fact occurred. This endpoint must be exposed on the consumer side.
-      operationId: notifyCloudEvent
+      description: |
+        INFORMATIVE ENDPOINT: The value of this endpoint is freely declared by each client app by means of resource-based
+        subscription or instance-based subscription. /your_webhook_notificationUrl is 
+        just a convention naming referring to an absolute URL, indeed the one indicated by API client
+        in the triggering of the procedure (resource-based or instance-based).
+      operationId: sendEvent
       requestBody:
         required: true
         content:
