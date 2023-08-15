@@ -1073,7 +1073,7 @@ The following sample illustrates this usage.
           type: string
         address:
           type: string
-          format: ipv6
+          format: ipv4
         ...
 
     Ipv6Addr: <-- object involved in oneOf MUST include the objectype property
@@ -1086,7 +1086,7 @@ The following sample illustrates this usage.
           type: string
         address:
           type: string
-          format: ipv4
+          format: ipv6
         ...
 
 ```
