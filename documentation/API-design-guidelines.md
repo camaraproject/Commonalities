@@ -953,6 +953,16 @@ Below considerations should be checked when an API is documented:
    -  Response Structure ([Section 11.4](#114-response-structure))
    -  Data Definitions ([Section 11.5](#115-data-definitions))
    -  OAuth Definition ([Section 11.6](#116-oauth-definition))
+- To avoid issues with implementation using Open API generators:
+  - Reserved words must not be used in the following parts of an API specification:
+    - Path and operation names
+    - Path or query parameter names
+    - Request and response body property names
+    - Security schemes
+    - Component names
+    - OperationIds
+  - A reserved word is one whose usage is reserved by any of the following Open API generators:
+    - [Python Flask](https://openapi-generator.tech/docs/generators/python-flask/#reserved-words)
 
 ### 11.1 General Information
 
