@@ -6,7 +6,7 @@
 <a href="https://github.com/camaraproject/Commonalities/blob/main/LICENSE" title="License"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg?style=plastic"></a>
 
 # Commonalities
-Repository to describe, develop, document and test the Commonalities
+Repository to describe and document common guidelines and assets for CAMARA APIs
 
 ## Scope
 * Guidelines and assets for “Commonalities” (see APIBacklog.md)  
