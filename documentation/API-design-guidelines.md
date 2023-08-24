@@ -966,7 +966,7 @@ Below considerations should be checked when an API is documented:
     - [OpenAPI Generator (Java)](https://openapi-generator.tech/docs/generators/java/#reserved-words)
     - [OpenAPI Generator (Go)](https://openapi-generator.tech/docs/generators/go/#reserved-words)
     - [OpenAPI Generator (Kotlin)](https://openapi-generator.tech/docs/generators/kotlin/#reserved-words)
-    - [OpenAPI Generator (Swift)](https://openapi-generator.tech/docs/generators/swift5#reserved-words)
+    - [OpenAPI Generator (Swift5)](https://openapi-generator.tech/docs/generators/swift5#reserved-words)
 
 ### 11.1 General Information
 
