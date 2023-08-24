@@ -963,6 +963,10 @@ Below considerations should be checked when an API is documented:
     - OperationIds
   - A reserved word is one whose usage is reserved by any of the following Open API generators:
     - [Python Flask](https://openapi-generator.tech/docs/generators/python-flask/#reserved-words)
+    - [OpenAPI Generator (Java)](https://openapi-generator.tech/docs/generators/java/#reserved-words)
+    - [OpenAPI Generator (Go)](https://openapi-generator.tech/docs/generators/go/#reserved-words)
+    - [OpenAPI Generator (Kotlin)](https://openapi-generator.tech/docs/generators/kotlin/#reserved-words)
+    - [OpenAPI Generator (Swift)](https://openapi-generator.tech/docs/generators/swift5#reserved-words)
 
 ### 11.1 General Information
 
