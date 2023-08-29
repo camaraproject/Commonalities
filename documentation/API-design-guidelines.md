@@ -1058,54 +1058,11 @@ In this part, the error response structure must also be defined, which must be a
 </p>
 
 #### 11.5.1 Usage of discriminator
+
 As mentioned in Openapi doc [here](https://spec.openapis.org/oas/v3.0.3#discriminator-object) usage of discriminator may
 simplify serialization/deserialization process and so reduce resource consumption.
 
-##### Inheritance
-The mappings section is not mandatory in discriminator, by default ClassName are used as values to populate the property. You can use mappings to restrict usage to subset of subclasses.
-
-
-``` yaml 
-    IpAddr:
-      type: object
-      properties:
-        addressType:
-            type: string
-      required:
-         - addressType
-      discriminator:
-        propertyName: addressType 
-        mappings:                   
-            - IPV4ADDR: Ipv4Addr
-            - IPV6ADDR: Ipv6Addr   
-
-    Ipv4Addr: 
-      allOf:            <-- extends IpAddr (no need to define addressType because it's inherited
-        - $ref: IpAddr
-        - type: object
-          required:
-            - address
-          properties:
-            address:
-                type: string
-                format: ipv4
-        ...
-
-    Ipv6Addr:
-      allOf:            <-- extends IpAddr
-        - $ref: IpAddr
-        - type: object
-          required:
-            - address
-          properties:
-            address:
-              type: string
-              format: ipv6
-        ...
-```
-
-##### Polymorphism
-To help usage of Camara object from strongly typed languages prefer to use inheritance than polymorphism ... Despite this, if you have to use it apply following rules:
+To achieve this in the Camara context, we decided that :
 
     - objects containing oneOf or anyOf section MUST include a discriminator defined by a propertyName
     - objects involved in oneOf / anyOf section MUST include the property designed by propetyName
@@ -1130,7 +1087,7 @@ The following sample illustrates this usage.
           type: string
         address:
           type: string
-          format: ipv4
+          format: ipv6
         ...
 
     Ipv6Addr: <-- object involved in oneOf MUST include the objectype property
@@ -1143,7 +1100,7 @@ The following sample illustrates this usage.
           type: string
         address:
           type: string
-          format: ipv6
+          format: ipv4
         ...
 
 ```
