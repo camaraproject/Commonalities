@@ -258,7 +258,6 @@ PUT |  Update | Replaces a specific resource. Returns the resource URL when the 
 DELETE | Delete | Delete a specific resource.  |
 PATCH |  Update | Updates a specific resource, applying all changes at the same time. If resource does not exist, it will be created. Returns the resource URL when the update ends. If any error occurs during the update, all of them will be cancelled.   |
 OPTIONS | Read | Returns a 200 OK with an allowed methods list in the specific resource destined to the header allowed joined to an HTML document about the resource + an API Doc link.  |
-HEAD | Read | Returns the resource actual status without message body. |
 
 In this document will be defined the principal verbs to use in the API definition.
 
@@ -765,7 +764,7 @@ With the aim of standardizing the request observability and traceability process
 
 One of the key points in the API definition process is to specify and validate the security needs that will be maintained to guarantee data integrity and access control. There are multiple ways to secure a RESTful API, e.g. basic authentication, OAuth, etc., but one thing is for sure: RESTful APIs should be stateless, so authentication/authorization requests should not rely on cookies or sessions. Instead, each API request must come with some form of authentication credentials that must be validated on the server for each request.
 
-Basic idea in terms of security is to understand that various types of data will require different levels of security, depending on the confidentiality of the data you are trying to obtain and the level of trust between Telefónica and the consumer.
+Basic idea in terms of security is to understand that various types of data will require different levels of security, depending on the confidentiality of the data you are trying to obtain and the level of trust between the API Provider and the consumer.
 
 
 ### 10.1 API REST Security
@@ -953,6 +952,20 @@ Below considerations should be checked when an API is documented:
    -  Response Structure ([Section 11.4](#114-response-structure))
    -  Data Definitions ([Section 11.5](#115-data-definitions))
    -  OAuth Definition ([Section 11.6](#116-oauth-definition))
+- To avoid issues with implementation using Open API generators:
+  - Reserved words must not be used in the following parts of an API specification:
+    - Path and operation names
+    - Path or query parameter names
+    - Request and response body property names
+    - Security schemes
+    - Component names
+    - OperationIds
+  - A reserved word is one whose usage is reserved by any of the following Open API generators:
+    - [Python Flask](https://openapi-generator.tech/docs/generators/python-flask/#reserved-words)
+    - [OpenAPI Generator (Java)](https://openapi-generator.tech/docs/generators/java/#reserved-words)
+    - [OpenAPI Generator (Go)](https://openapi-generator.tech/docs/generators/go/#reserved-words)
+    - [OpenAPI Generator (Kotlin)](https://openapi-generator.tech/docs/generators/kotlin/#reserved-words)
+    - [OpenAPI Generator (Swift5)](https://openapi-generator.tech/docs/generators/swift5#reserved-words)
 
 ### 11.1 General Information
 
