@@ -258,7 +258,6 @@ PUT |  Update | Replaces a specific resource. Returns the resource URL when the 
 DELETE | Delete | Delete a specific resource.  |
 PATCH |  Update | Updates a specific resource, applying all changes at the same time. If resource does not exist, it will be created. Returns the resource URL when the update ends. If any error occurs during the update, all of them will be cancelled.   |
 OPTIONS | Read | Returns a 200 OK with an allowed methods list in the specific resource destined to the header allowed joined to an HTML document about the resource + an API Doc link.  |
-HEAD | Read | Returns the resource actual status without message body. |
 
 In this document will be defined the principal verbs to use in the API definition.
 
