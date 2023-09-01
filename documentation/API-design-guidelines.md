@@ -16,6 +16,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
   - [2.5 Reduce telco-specific terminology in API definitions](#25-reduce-telco-specific-terminology-in-api-definitions)
   - [3. API Definition](#3-api-definition)
     - [3.1 API REST](#31-api-rest)
+      - [**POST or GET for transferring sensitive or complex data**](#post-or-get-for-transferring-sensitive-or-complex-data)
     - [3.2 HTTP Response Codes](#32-http-response-codes)
     - [3.3 Query Parameters Use](#33-query-parameters-use)
     - [3.4 Path Parameters Use](#34-path-parameters-use)
@@ -43,6 +44,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [11.3 Request Parameters](#113-request-parameters)
     - [11.4 Response Structure](#114-response-structure)
     - [11.5 Data Definitions](#115-data-definitions)
+      - [11.5.1 Usage of discriminator](#1151-usage-of-discriminator)
     - [11.6 OAuth Definition](#116-oauth-definition)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
@@ -1147,7 +1149,7 @@ An instance-based subscription is a subscription indirectly created, additionall
 
 Providing this capability is optional for any CAMARA API depending on UC requirements.
 
-If this capability is present in CAMARA API, following attributes **must** be used in the POST request, within a `webhook` object, for the managed entity:
+If this capability is present in CAMARA API, `webhook` object attribute **must** be used in the POST request. The `webhook` object contains following attributes :
 
 | attribute name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  | -----  | 
@@ -1170,6 +1172,7 @@ Recommended format conventions regarding ```notificationAuthToken``` attribute, 
 - It SHOULD BE an opaque attribute, meaning that should not be based in security info shared between API Consumer and API Provider 
 - It has to be restricted in length, a string between [20-256] characters.
 - It is HIGHLY recommended to have random-based pattern (e.g. UUIDv4 or another one. Anycase it is an implementation topic not design one) 
+
 
 **Resource-based subscription**
 
@@ -1215,7 +1218,7 @@ The `subscriptionDetail` must have at least an eventType attribute:
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
-| eventType | string | Type of event subscribed. This attribute must be present in the `POST` request. It is open to API working group to allow providing a list of event type based on specific UC. `eventType` must follow UPPER_SNAKE_CASE format. | mandatory  |
+| subject | string | Type of event subscribed. This attribute must be present in the `POST` request. It is open to API working group to allow providing a list of event subject based on specific UC. `subject` must follow CamelCase format. | mandatory  |
 
 
 _Error definition for subscription_
@@ -1266,7 +1269,7 @@ curl -X 'POST' \
       "ipv4Addr": "192.168.0.1"
     },
     "uePort": 5060,
-    "eventType": "ROAMING_STATUS"
+    "subject": "EventRoamingStatus"
   }
 }
 ```
@@ -1287,7 +1290,7 @@ response:
       "ipv4Addr": "192.168.0.1"
     },
     "uePort": 5060,
-    "eventType": "ROAMING_STATUS"
+    "subject": "EventRoamingStatus"
   },
   "eventSubscriptionId": "456g899g",
   "startsAt": "2023-03-17T16:02:41.314Z",
@@ -1295,36 +1298,43 @@ response:
 }
 ```
 
-Note: If the API provides both patterns (indirect and resource-based), and the API customer requests both (instance based + subscription), the 2 requests should be handled independently & autonomously. Depending on server implementation, it is acceptable, when the event occurrs, that one or two notifications are sent to listener.
+Note: If the API provides both patterns (indirect and resource-based), and the API customer requests both (instance based + subscription), the 2 requests should be handled independently & autonomously. Depending on server implementation, it is acceptable, when the event occurs, that one or two notifications are sent to listener.
 
 
 ### 12.2 Event notification
 
 The event notification endpoint is used by the API server to notify the API consumer that an event occured.
 
-Note: The notification is the message posted on listener side. We describe the notification message in the CAMARA OAS but it could confusing because this endpoint should be implemented on the business API consumer side. This notice should be explicited mentioned in all CAMARA API documentation featuring notifications.
+CAMARA event notification leverages **CloudEvents** as it is a vendor-neutral specification for defining the format of event data. A generic neutral CloudEvent notification swagger is available in commonalities/artifact directory (notification-as-cloud-event.yaml).
 
-Only Operation POST is provided for `eventNotifications` and the expected response code is `204`.
+Note: The notification is the message posted on listener side. We describe the notification(s) in the CAMARA API using the `callbacks`. From API consumer it could confusing because this endpoint must be implemented on the business API consumer side. This notice should be explicited mentioned in all CAMARA API documentation featuring notifications.
 
-For consistence among CAMARA APIs the uniform `eventNotifications` model must be used:
+Only Operation POST is provided for `eventNotifications` and the expected response code is `204`. 
+The url for this `POST` operation must be specified in the swagger as `{$request.body#/webhook/notificationUrl}`. 
 
-| name | type | attribute description | cardinality |
-| ----- |	-----  |	 -----  |  -----  | 
-| eventSubscriptionId | string | subscription identifier - could be valued for Resource-based subscription | optional |
-| event | object | event structure - see next table | mandatory |
-
-Following table defines event attribute object structure: 
+For consistence among CAMARA APIs the uniform CloudEvents model must be used with following rules:
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
-| eventId | string - uuid | Identifier of the event from the server where the event was reported | optional |
-| eventType | string | Type of event as defined in each CAMARA API. The event type are written in UPPER_SNAKE_CASE| mandatory |
-| eventTime | string - datetime | Date time when the event occurred | mandatory |
-| eventDetail | object | Event details structure depending on the eventType | mandatory |
+| id | string | identifier of this event, that must be unique in the source context. | mandatory |
+| source | string - URI | identifies the context in which an event happened in the specific Provider Implementation. Often this will include information such as the type of the event source, the organization publishing the event or the process that produced the event. The exact syntax and semantics behind the data encoded in the URI is defined by the event producer. | mandatory |
+| type | string | a value describing the type of event related to the originating occurrence. For consistency accross API we mandate following pattern: org.camara.api._name of the API_._event name_ (for exemple org.camara.api.device-status.RoamingStatusEvent ) | mandatory |
+| specversion | string | version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version) | mandatory |
+| datacontenttype | string | media-type that describes the event payload encoding, must be `application/json for CAMARA APIs` | optional |
+| subject | string | describes the subject of the event. In CAMARA we enforce to use subject as defined in each API. This attribute is tagged as optional in CloudEvents specification but from CAMARA perspective we **strongly** recommend to value this attribute. | optional |
+| time | string  datetime| timestamp of when the occurrence happened (must adhere on CAMARA datetime recommendation based on RFC 3339) | optional |
+| data | object| event notification details payload described in each CAMARA API and referenced by its `subject` | optional |
+
+`data` structure is dependant to each API but we mandate presence of this following attribute for all event notification
+
+| name | type | attribute description | cardinality |
+| ----- |	-----  |	 -----  |  -----  | 
+| eventSubscriptionId | string | The event subscription identifier - must be valued for Resource-based subscription | optional |
+
 
 Note: For operational and troubleshooting purposes it is relevant to accommodate use of `X-Correlator` header attribute. API listener implementations have to be ready to support and receive this data.
 
-Specific eventType "SUBSCRIPTION_ENDS" is defined to inform listener about subscrition termination. It is used when the subscription expire time (required by the requester) has been reached or if the API server has to stop sending notification prematurely. For this specific event, the `eventDetail` must feature `terminationReason` attribute.
+Specific event notification subject "EventSubscriptionEnds" is defined to inform listener about subscrition termination. It is used when the subscription expire time (required by the requester) has been reached or if the API server has to stop sending notification prematurely. For this specific event, the `data` must feature `terminationReason` attribute.
 
 _Error definition for event notification_
 
@@ -1335,13 +1345,13 @@ Following Error code must be present:
 
 _Managing correlation between resource-based event souscription and event notification_
 To manage correlation between the subscription management and the event notification (as these are 2 distinct operations):
-- use `eventSubscriptionId` attribute (in body) - this identifier is provided in event subscription and could be valued in each event notification. 
+- use `eventSubscriptionId` attribute (in `data` structure in the body) - this identifier is provided in event subscription and could be valued in each event notification. 
 
-note: There is no normative enforcement to use any of these patterns and they could be used on agreement between API consumer & provider.
+Note: There is no normative enforcement to use any of these patterns and they could be used on agreement between API consumer & provider.
 
 _Examples_
 
-Example for Roaming status - Request:
+Example for Roaming status event notification - Request:
 
 ```
 curl -X 'POST' \
@@ -1353,20 +1363,22 @@ curl -X 'POST' \
  ```
  ```json 
 {
-  "eventSubscriptionId": "456g899g",
-  "event": {
-    "eventType": "ROAMING_STATUS",
-    "eventTime": "2023-01-19T13:18:23.682Z",
-    "eventDetail": {
-      "ueId": {
-        "ipv4Addr": "192.168.0.1"
-      },
-      "uePort": 5060,
-      "roaming": true,
-      "countryCode": 208,
-      "countryName": "FR"
-    }
-  }
+  "id": 123654,
+  "source": "supertelco.notificationSendServer12",
+  "type": "org.camara.api.device-status.RoamingStatusEvent",
+  "specversion": 1,
+  "datacontenttype": "application/json",
+  "data": {
+    "eventSubscriptionId": "456g899g",
+    "device": {
+      "phoneNumber": 123456789
+    },
+    "roaming": true,
+    "countryCode": 208,
+    "countryName": "FR"
+  },
+  "subject": "EventRoamingStatus",
+  "time": "2023-01-17T13:18:23.682Z"
 }
 ```
 
@@ -1389,18 +1401,20 @@ curl -X 'POST' \
  ```
  ```json 
 {
-  "eventSubscriptionId": "456g899g",
-  "event": {
-    "eventType": "SUBSCRIPTION_ENDS",
-    "eventTime": "2023-01-24T13:18:23.682Z",
-    "eventDetail": {
-      "ueId": {
-        "ipv4Addr": "192.168.0.1"
-      },
-      "uePort": 5060,
-      "terminationReason": "Service terminates for lack of consent"
-    }
-  }
+  "id": 123658,
+  "source": "supertelco.notificationSendServer12",
+  "type": "org.camara.api.device-status.RoamingSubscriptionEndsEvent",
+  "specversion": 1,
+  "datacontenttype": "application/json",
+  "data": {
+    "eventSubscriptionId": "456g899g",
+    "device": {
+      "phoneNumber": 123456789
+    },
+    "terminationReason": "SUBSCRIPTION_EXPIRED"
+  },
+  "subject": "EventSubscriptionEnds",
+  "time": "2023-01-19T13:18:23.682Z"
 }
 ```
 
