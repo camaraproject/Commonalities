@@ -1402,7 +1402,7 @@ curl -X 'POST' \
   "id": 123658,
   "source": "supertelco.notificationSendServer12",
   "type": "org.camara.api.device-status.RoamingSubscriptionEndsEvent",
-  "specversion": 1,
+  "specversion": "1.0",
   "datacontenttype": "application/json",
   "data": {
     "eventSubscriptionId": "456g899g",
