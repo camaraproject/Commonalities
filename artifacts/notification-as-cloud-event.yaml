@@ -8,7 +8,7 @@ info:
 
     A lot of CAMARA APIs offer the capability to API consumer to receive events.
     Event data are defined in each API definition but in order to provide consistency across CAMARA APIs and to increase 
-    interoperability we will use [cloudevents](https://cloudevents.io/) specifications. In particular, CAMARA Event will 
+    interoperability we will use [cloudevents](https://cloudevents.io/) specifications. In particular, every CAMARA Event will 
     be defined using [cloudevents-json-format](https://github.com/cloudevents/spec/blob/main/cloudevents/formats/json-format.md)
    
     # Relevant terms and definitions
