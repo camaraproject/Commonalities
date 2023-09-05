@@ -34,7 +34,7 @@ info:
     
     # API Functionality   
       
-    Only one endpoint/operation is provided: `POST /cloudevents`
+    Only one endpoint/operation is provided: `POST /your_webhook_notificationUrl`
     
     This endpoint describes the event notification received on subscription listener side when the event occurred. A detailed description of the event notification is provided in the CAMARA API design guideline document.
   
@@ -46,7 +46,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.5.0-wip
+  version: 0.1.0-wip
 externalDocs:
   description: Product documentation at CAMARA
   url: https://github.com/camaraproject/
@@ -76,7 +76,8 @@ paths:
         INFORMATIVE ENDPOINT: The value of this endpoint is freely declared by each client app by means of resource-based
         subscription or instance-based subscription. /your_webhook_notificationUrl is 
         just a convention naming referring to an absolute URL, indeed the one indicated by API client
-        in the triggering of the procedure (resource-based or instance-based).
+        in the triggering of the procedure (resource-based or instance-based).  In this way, it represents an absolute
+        URL, i.e.: notifications won't be sent to /event-notification/vX/your_webhook_notificationUrl.
       operationId: sendEvent
       requestBody:
         required: true
