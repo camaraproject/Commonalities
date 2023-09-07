@@ -1319,9 +1319,11 @@ For consistence among CAMARA APIs the uniform CloudEvents model must be used wit
 | type | string | a value describing the type of event related to the originating occurrence. For consistency accross API we mandate following pattern: org.camara.api._name of the API_._event name_ (for exemple org.camara.api.device-status.RoamingStatusEvent ) | mandatory |
 | specversion | string | version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version) | mandatory |
 | datacontenttype | string | media-type that describes the event payload encoding, must be `application/json for CAMARA APIs` | optional |
-| subject | string | describes the subject of the event. In CAMARA we enforce to use subject as defined in each API. This attribute is tagged as optional in CloudEvents specification but from CAMARA perspective we **strongly** recommend to value this attribute. | optional |
-| time | string  datetime| timestamp of when the occurrence happened (must adhere on CAMARA datetime recommendation based on RFC 3339) | optional |
+| subject | string | describes the subject of the event | mandatory |
+| time | string  datetime| timestamp of when the occurrence happened (must adhere on CAMARA datetime recommendation based on RFC 3339) | mandatory |
 | data | object| event notification details payload described in each CAMARA API and referenced by its `subject` | optional |
+
+Note: Both attributes `subject` and `time` are tagged as optional in CloudEvents specification but from CAMARA perspective we mandate to value these attributes.
 
 `data` structure is dependant to each API:
 
