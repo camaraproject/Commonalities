@@ -1323,11 +1323,12 @@ For consistence among CAMARA APIs the uniform CloudEvents model must be used wit
 | time | string  datetime| timestamp of when the occurrence happened (must adhere on CAMARA datetime recommendation based on RFC 3339) | optional |
 | data | object| event notification details payload described in each CAMARA API and referenced by its `subject` | optional |
 
-`data` structure is dependant to each API but we mandate presence of this following attribute for all event notification
+`data` structure is dependant to each API:
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
 | eventSubscriptionId | string | The event subscription identifier - must be valued for Resource-based subscription | optional |
+| ... | ... | Specific attribute(s) related to the notification event | ... |
 
 
 Note: For operational and troubleshooting purposes it is relevant to accommodate use of `X-Correlator` header attribute. API listener implementations have to be ready to support and receive this data.
