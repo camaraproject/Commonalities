@@ -1318,7 +1318,7 @@ For consistence among CAMARA APIs the uniform CloudEvents model must be used wit
 | source | string - URI | identifies the context in which an event happened in the specific Provider Implementation. Often this will include information such as the type of the event source, the organization publishing the event or the process that produced the event. The exact syntax and semantics behind the data encoded in the URI is defined by the event producer. | mandatory |
 | type | string | a value describing the type of event related to the originating occurrence. For consistency accross API we mandate following pattern: org.camara.api._name of the API_._event name_ (for exemple org.camara.api.device-status.RoamingStatusEvent ) | mandatory |
 | specversion | string | version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version) | mandatory |
-| datacontenttype | string | media-type that describes the event payload encoding, must be `application/json for CAMARA APIs` | optional |
+| datacontenttype | string | media-type that describes the event payload encoding, must be `application/json` for CAMARA APIs| optional |
 | subject | string | describes the subject of the event | mandatory |
 | time | string  datetime| timestamp of when the occurrence happened (must adhere on CAMARA datetime recommendation based on RFC 3339) | mandatory |
 | data | object| event notification details payload described in each CAMARA API and referenced by its `subject` | optional |
