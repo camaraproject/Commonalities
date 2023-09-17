@@ -57,7 +57,8 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [12.2 Event notification](#122-event-notification)
       - [Event notification definition](#event-notification-definition)
       - [Error definition for event notification](#error-definition-for-event-notification)
-      - [Managing correlation between resource-based event souscription and event notification\_](#managing-correlation-between-resource-based-event-souscription-and-event-notification_)
+      - [Correlation Management](#correlation-management)
+      - [Security Considerations](#security-considerations)
       - [Abuse Protection](#abuse-protection)
       - [Notification examples](#notification-examples)
 
@@ -1359,13 +1360,13 @@ Error definition are described in this guideline applies for event notification.
 Following Error code must be present:
 * for `POST`: 400, 401, 403, 500, 503
 
-#### Managing correlation between resource-based event souscription and event notification_
+#### Correlation Management
 To manage correlation between the subscription management and the event notification (as these are 2 distinct operations):
 - use `eventSubscriptionId` attribute (in `data` structure in the body) - this identifier is provided in event subscription and could be valued in each event notification. 
 
 Note: There is no normative enforcement to use any of these patterns and they could be used on agreement between API consumer & provider.
 
-####Security Considerations
+#### Security Considerations
 
 As notification may carry sensitive information, privacy and security constraints has to be considered. CloudEvents specification provides some guidance there: https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md#privacy-and-security
 
