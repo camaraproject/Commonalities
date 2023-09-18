@@ -34,7 +34,7 @@ info:
     
     # API Functionality   
       
-    Only one endpoint/operation is provided: `POST /your_webhook_notificationUrl`
+    Only one endpoint/operation is provided: `POST /your_webhook_notification_url`
     
     This endpoint describes the event notification received on subscription listener side when the event occurred. A detailed description of the event notification is provided in the CAMARA API design guideline document.
   
@@ -67,17 +67,17 @@ tags:
     description: |
       Events received on subscription listener side.
 paths:
-  /your_webhook_notificationUrl:
+  /your_webhook_notification_url:
     post:
       tags:
         - CAMARA Cloud Event notification endpoint
       summary: "Cloud Event notification endpoint to notify consumer that statement of fact had occurred"
       description: |
         INFORMATIVE ENDPOINT: The value of this endpoint is freely declared by each client app by means of resource-based
-        subscription or instance-based subscription. /your_webhook_notificationUrl is 
+        subscription or instance-based subscription. /your_webhook_notification_url is 
         just a convention naming referring to an absolute URL, indeed the one indicated by API client
         in the triggering of the procedure (resource-based or instance-based).  In this way, it represents an absolute
-        URL, i.e.: notifications won't be sent to /event-notification/vX/your_webhook_notificationUrl.
+        URL, i.e.: notifications won't be sent to /event-notification/vX/your_webhook_notification_url.
       operationId: sendEvent
       requestBody:
         required: true
@@ -115,11 +115,7 @@ paths:
         429:
           $ref: "#/components/responses/Generic429"
         500:
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
+          $ref: "#/components/responses/Generic500"
         503:
           $ref: "#/components/responses/Generic503"
 components:
@@ -179,15 +175,18 @@ components:
         id:
           type: string
           description: identifier of this event, that must be unique in the source context.
+          minLength: 1
         source:
           $ref: '#/components/schemas/Source'
         type:
           type: string
           description: 'type of event as defined in each CAMARA API (e.g. org.camara.api.qod.QosStatusChangedEvent)'
           example: org.camara.api.qod.QosStatusChangedEvent
+          minLength: 15
         specversion:
           type: string
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
+          minLength: 3
         datacontenttype:
           type: string
           description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
@@ -232,24 +231,6 @@ components:
             status: 403
             code: "PERMISSION_DENIED"
             message: "Client does not have sufficient permissions to perform this action"
-    Generic404:
-      description: Resource Not Found
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          example:
-            code: NOT_FOUND
-            message: "The specified resource is not found"
-    Generic409:
-      description: Conflict
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          example:
-            code: CONFLICT
-            message: "The specified resource is in a conflict"
     Generic410:
       description: Gone
       content:
@@ -300,7 +281,7 @@ components:
   examples:
     QOS_STATUS_CHANGED_EXAMPLE:
       value:
-        id: 123654
+        id: 123e4567-e89b-12d3-a456-426655440000
         source: com.orange.camara.qod
         type: org.camara.api.qod.QosStatusChangedEvent
         specversion: '1.0'
