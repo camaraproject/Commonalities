@@ -1230,7 +1230,7 @@ The `subscriptionDetail` must have at least a type attribute:
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
-| type | string | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required to provide a enum for these attribute. `type` must follow following format: `org.camaraproject.<api-name>.<EVENT_NAME` like `org.camaraproject.device-status.ROAMING_OFF`| mandatory  |
+| type | string | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required to provide a enum for these attribute. `type` must follow following format: `org.camaraproject.<api-name>.<event-name>` like `org.camaraproject.device-status.roaming-off`| mandatory  |
 
 
 ##### Error definition for subscription
@@ -1281,7 +1281,7 @@ curl -X 'POST' \
       "ipv4Addr": "192.168.0.1"
     },
     "uePort": 5060,
-    "type": "org.camaraproject.device-status.ROAMING_STATUS"
+    "type": "org.camaraproject.device-status.roaming-status"
   }
 }
 ```
@@ -1302,7 +1302,7 @@ response:
       "ipv4Addr": "192.168.0.1"
     },
     "uePort": 5060,
-    "type": "org.camaraproject.device-status.ROAMING_STATUS"
+    "type": "org.camaraproject.device-status.roaming-status"
   },
   "eventSubscriptionId": "456g899g",
   "startsAt": "2023-03-17T16:02:41.314Z",
@@ -1332,7 +1332,7 @@ For consistency across CAMARA APIs the uniform CloudEvents model must be used wi
 | ----- |	-----  |	 -----  |  -----  | 
 | id | string | identifier of this event, that must be unique in the source context. | mandatory |
 | source | string - URI | identifies the context in which an event happened in the specific Provider Implementation. Often this will include information such as the type of the event source, the organization publishing the event or the process that produced the event. The exact syntax and semantics behind the data encoded in the URI is defined by the event producer. | mandatory |
-| type | string | a value describing the type of event related to the originating occurrence. For consistency accross API we mandate following pattern: `org.camaraproject.<api-name>.<EVENT_NAME` (for exemple org.camaraproject.device-status.ROAMING_CHANGE_COUNTRY ) | mandatory |
+| type | string | a value describing the type of event related to the originating occurrence. For consistency accross API we mandate following pattern: `org.camaraproject.<api-name>.<event-name>` (for exemple org.camaraproject.device-status.roaming-status ) | mandatory |
 | specversion | string | version of the specification to which this event conforms - must be "1.0" | mandatory |
 | datacontenttype | string | media-type that describes the event payload encoding, must be `application/json` for CAMARA APIs| optional |
 | subject | string | describes the subject of the event - Not used in CAMARA notification. | optional |
@@ -1351,7 +1351,7 @@ Note: Attribute  `time` is tagged as optional in CloudEvents specification but f
 
 Note: For operational and troubleshooting purposes it is relevant to accommodate use of `X-Correlator` header attribute. API listener implementations have to be ready to support and receive this data.
 
-Specific event notification type "SUBSCRIPTION_ENDS" is defined to inform listener about subscrition termination. It is used when the subscription expire time (required by the requester) has been reached or if the API server has to stop sending notification prematurely. For this specific event, the `data` must feature `terminationReason` attribute.
+Specific event notification type "subscription-ends" is defined to inform listener about subscrition termination. It is used when the subscription expire time (required by the requester) has been reached or if the API server has to stop sending notification prematurely. For this specific event, the `data` must feature `terminationReason` attribute.
 
 #### Error definition for event notification
 
@@ -1393,7 +1393,7 @@ curl -X 'POST' \
 {
   "id": 123654,
 "source": "https://notificationSendServer12.supertelco.com",
-  "type": "org.camaraproject.device-status.ROAMING_STATUS",
+  "type": "org.camaraproject.device-status.roaming-status",
   "specversion": "1.0",
   "datacontenttype": "application/json",
   "data": {
@@ -1430,7 +1430,7 @@ curl -X 'POST' \
 {
   "id": 123658,
   "source": "https://notificationSendServer12.supertelco.com",
-  "type": "org.camara.api.device-status.SUBSCRIPTION_ENDS",
+  "type": "org.camara.api.device-status.subcription-ends",
   "specversion": "1.0",
   "datacontenttype": "application/json",
   "data": {
