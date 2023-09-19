@@ -190,10 +190,6 @@ components:
         data:
           type: object
           description: Event details payload described in each CAMARA API and referenced by its type
-        subject:
-          description: Describes the subject of the event in the context of the event producer (identified by source).
-          type: string
-          example: ROAMING
         time:
           $ref: "#/components/schemas/DateTime"
 
