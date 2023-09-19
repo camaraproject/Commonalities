@@ -54,14 +54,11 @@ security:
   - oAuth2ClientCredentials: []
 
 servers:
-  - url: '{apiRoot}/{basePath}'
+  - url: '{apiRoot}'
     variables:
       apiRoot:
         default: http://localhost:8080
-        description: API root
-      basePath:
-        default: /event-notification/v0
-        description: Base path for the event notification API
+        description: Can be any notification server address sent by the client application
 tags:
   - name: Cloud Event
     description: |
@@ -180,8 +177,8 @@ components:
           $ref: '#/components/schemas/Source'
         type:
           type: string
-          description: 'type of event as defined in each CAMARA API (e.g. org.camara.api.qod.QosStatusChangedEvent)'
-          example: org.camara.api.qod.QosStatusChangedEvent
+          description: 'type of event as defined in each CAMARA API (e.g.: org.camara.qod.qos-status-changed-event)'
+          example: org.camara.qod.qos-status-changed-event
           minLength: 15
         specversion:
           type: string
@@ -283,10 +280,9 @@ components:
       value:
         id: 123e4567-e89b-12d3-a456-426655440000
         source: com.orange.camara.qod
-        type: org.camara.api.qod.QosStatusChangedEvent
+        type: org.camara.qod.qos-status-changed-event
         specversion: '1.0'
         time: 2023-01-17T13:18:23.682Z
-        subject: QOD/QOS_STATUS_CHANGED
         datacontenttype: application/json
         data:
           sessionId: 6e8bc430-9c3a-11d9-9669-0800200c9a66
