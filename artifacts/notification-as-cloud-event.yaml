@@ -177,8 +177,8 @@ components:
           $ref: '#/components/schemas/Source'
         type:
           type: string
-          description: 'type of event as defined in each CAMARA API (e.g.: org.camara.qod.qos-status-changed-event)'
-          example: org.camara.qod.qos-status-changed-event
+          description: 'type of event as defined in each CAMARA API (e.g.: org.camaraproject.qod.qos-status-changed-event)'
+          example: org.camaraproject.qod.qos-status-changed-event
           minLength: 15
         specversion:
           type: string
@@ -280,7 +280,7 @@ components:
       value:
         id: 123e4567-e89b-12d3-a456-426655440000
         source: com.orange.camara.qod
-        type: org.camara.qod.qos-status-changed-event
+        type: org.camaraproject.qod.qos-status-changed-event
         specversion: '1.0'
         time: 2023-01-17T13:18:23.682Z
         datacontenttype: application/json
