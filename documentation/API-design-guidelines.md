@@ -1336,7 +1336,7 @@ For consistency across CAMARA APIs the uniform CloudEvents model must be used wi
 | specversion | string | version of the specification to which this event conforms - must be "1.0" | mandatory |
 | datacontenttype | string | media-type that describes the event payload encoding, must be `application/json` for CAMARA APIs| optional |
 | subject | string | describes the subject of the event - Not used in CAMARA notification. | optional |
-| time | string  datetime| Timestamp of when the occurrence happened. If the time of the occurrence cannot be determined then this attribute MAY be set to some other time (such as the current time) by the CloudEvents producer, however all producers for the same `source` MUST be consistent in this respect. In other words, either they all use the actual time of the occurrence or they all use the same algorithm to determine the value used. (must adhere on CAMARA datetime recommendation based on RFC 3339) | mandatory |
+| time | string  datetime| Timestamp of when the occurrence happened. If the time of the occurrence cannot be determined then this attribute MAY be set to some other time (such as the current time) by the CloudEvents producer, however all producers for the same `source` MUST be consistent in this respect. In other words, either they all use the actual time of the occurrence or they all use the same algorithm to determine the value used. (must adhere on CAMARA datetime recommendation based on RFC 3339) | mandatory (*) |
 | data | object| event notification details payload described in each CAMARA API and referenced by its `type` | optional |
 
 Note: Attribute  `time` is tagged as optional in CloudEvents specification but from CAMARA perspective we mandate to value this attributes.
