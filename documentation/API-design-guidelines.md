@@ -48,12 +48,12 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [11.6 OAuth Definition](#116-oauth-definition)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
-      - [Instance-based subscription](#instance-based-subscription)
-        - [Instance-based example](#instance-based-example)
-      - [Resource-based subscription](#resource-based-subscription)
-        - [Error definition for subscription](#error-definition-for-subscription)
-        - [Termination for resource-based subscription](#termination-for-resource-based-subscription)
-        - [Subscription example](#subscription-example)
+      - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
+        - [Instance-based (implicit) subscription example](#instance-based-implicit-subscription-example)
+      - [Resource-based (explicit) subscription](#resource-based-explicit-subscription)
+        - [Error definition for resource-based (explicit) subscription](#error-definition-for-resource-based-explicit-subscription)
+        - [Termination for resource-based (explicit) subscription](#termination-for-resource-based-explicit-subscription)
+        - [Resource-based (explicit) example](#resource-based-explicit-example)
     - [12.2 Event notification](#122-event-notification)
       - [Event notification definition](#event-notification-definition)
       - [Error definition for event notification](#error-definition-for-event-notification)
@@ -1152,10 +1152,10 @@ Managed event types are explicitly defined in CAMARA API OAS.
 ### 12.1 Subscription
 
 We distinguish 2 types of subscriptions:
-- Instance-based subscription (indirect creation)
-- Resource-based subscription (direct creation)
+- Instance-based subscription (implicit creation)
+- Resource-based subscription (explicit creation)
 
-#### Instance-based subscription
+#### Instance-based (implicit) subscription
 
 An instance-based subscription is a subscription indirectly created, additionally to another resource creation. For example for a Payment request (in Carrier Billing API), in the `POST/payments`, the API consumer could request to get event notification about **this** Payment request processing update. The subscription is not an autonomous entity and its lifecycle is linked to the managed entity (the Payment resource in this case). The subscription terminates with the managed entity.
 
@@ -1168,7 +1168,7 @@ If this capability is present in CAMARA API, `webhook` object attribute **must**
 | notificationUrl | string | https callback address where the notification must be POST-ed | mandatory |
 | notificationAuthToken | string | OAuth2 token to be used by the callback API endpoint. It MUST be indicated within HTTP Authorization header e.g. Authorization: Bearer $notificationAuthToken | optional |
 
-##### Instance-based example
+##### Instance-based (implicit) subscription example
 
 ```json
 {
@@ -1186,9 +1186,9 @@ Recommended format conventions regarding ```notificationAuthToken``` attribute, 
 - It is HIGHLY recommended to have random-based pattern (e.g. UUIDv4 or another one. Anycase it is an implementation topic not design one) 
 
 
-#### Resource-based subscription
+#### Resource-based (explicit) subscription
 
-A resource-based subscription is a event subscription managed as a resource. An API endpoint is provided to request subscription creation.  As this event subscription is managed as an API resource, it is identified and operations to search, retrieve and delete it must be provided.
+A resource-based subscription is a event subscription managed as a resource. This subscription is explicit. An API endpoint is provided to request subscription creation.  As this event subscription is managed as an API resource, it is identified and operations to search, retrieve and delete it must be provided.
 
 Note: It is perfectly valid for a CAMARA API to have several event types managed. The subscription endpoint will be unique but 'eventType' attribute is used to distinguish distinct events subscribed.
 
@@ -1233,7 +1233,7 @@ The `subscriptionDetail` must have at least a type attribute:
 | type | string | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required to provide a enum for these attribute. `type` must follow following format: `org.camaraproject.<api-name>.<event-name>` like `org.camaraproject.device-status.roaming-off`| mandatory  |
 
 
-##### Error definition for subscription
+##### Error definition for resource-based (explicit) subscription
 
 Error definition described in this guideline applies for subscriptions.
 
@@ -1243,7 +1243,7 @@ Following Error code must be present:
 * for `GET/{subscriptionId}`: 400, 401, 403, 404, 500, 503
 * for `DELETE`: 400, 401, 403, 404, 500, 503
 
-##### Termination for resource-based subscription
+##### Termination for resource-based (explicit) subscription
 
 3 scenarios subscription termination are possible (business conditions may apply):
 
@@ -1258,7 +1258,7 @@ _Termination rules regarding subscriptionExpireTime usage_
 * When the `subscriptionExpireTime` is not provided, client side has to trigger a `DELETE` operation to terminate it.
 
 
-##### Subscription example
+##### Resource-based (explicit) example
 In this example, we illustrate a request for a device roaming status event subscription. Requester did not provide anticipated expiration time for the subscription. In the response, server accepts this request and sets an event subscription end one year later. This is an illustration and each implementation is free to provide - or not - a subscription planned expiration date.
 
 Request:
@@ -1375,6 +1375,8 @@ As notification may carry sensitive information, privacy and security constraint
 Any system that allows registration of and delivery of notifications to arbitrary HTTP endpoints can potentially be abused such that someone maliciously or inadvertently registers the address of a system that does not expect such requests and for which the registering party is not authorized to perform such a registration.
 
 In order to protect the sender, CloudEvents specification provides some guidance there: https://github.com/cloudevents/spec/blob/main/cloudevents/http-webhook.md#4-abuse-protection
+
+Event Producers shall choose based on their internal security guidelines to implement measures based on the above guidance to ensure abuse protection. For e.g. An event producer might ask the subscriber to pre-register the notification URL at the time of app onboarding. If this registered notification URL doesn't match later with the notification URL in the request, the event producer can choose to reject the request with the relevant error code.
 
 
 #### Notification examples
