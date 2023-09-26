@@ -1199,7 +1199,7 @@ In order to ease developer adoption, the pattern for Resource-based event subscr
 | operation | path | description |
 | ----- |	-----  |	 -----  | 
 | POST | `/subscriptions` |  Operation to request a event subscription.     |
-| GET | `/subscriptions` |  Operation to retrieve a list of event subscriptions - could be an empty list.  eg. `GET /subscriptions?type=ROAMING_STATUS&ExpireTime.lt=2023-03-17` |
+| GET | `/subscriptions` |  Operation to retrieve a list of event subscriptions - could be an empty list.  eg. `GET /subscriptions?type=org.camaraproject.device-status.v1.roaming-status&expiresAt.lt=2023-03-17` |
 | GET | `/subscriptions/{subscriptionsId}` | Operation to retrieve a event subscription |
 | DELETE | `/subscriptions/{subscriptionsId}` | Operation to delete a event subscription |
 
