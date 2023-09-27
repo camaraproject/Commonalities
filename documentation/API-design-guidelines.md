@@ -1212,7 +1212,7 @@ Following table provides `/subscriptions` attributes
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
 | webhook | object | detail for event channel - in current version only webhook description are provided but other event channel descriptor could be added in future | mandatory |
-| eventSubscriptionId | string | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server | mandatory in server response |
+| subscriptionId | string | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server | mandatory in server response |
 | subscriptionExpireTime | string - datetime| Date when the event subscription should end. Provided by API requester. Server may reject the suscription if the period requested do not comply with Telco Operator policies (i.e. to avoid unlimited time subscriptions). In this case server returns exception 403 "SUBSCRIPTION_PERIOD_NOT_ALLOWED" | optional |
 | startsAt | string - datetime| Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints | optional |
 | expiresAt | string - datetime| Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided by API server.  | optional |
@@ -1304,7 +1304,7 @@ response:
     "uePort": 5060,
     "type": "org.camaraproject.device-status.v1.roaming-status"
   },
-  "eventSubscriptionId": "456g899g",
+  "subscriptionId": "456g899g",
   "startsAt": "2023-03-17T16:02:41.314Z",
   "expiresAt" : "2024-03-17T00:00:00.000Z"
 }
@@ -1345,7 +1345,7 @@ For consistency across CAMARA APIs the uniform CloudEvents model must be used wi
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
-| eventSubscriptionId | string | The event subscription identifier - must be valued for Resource-based subscription | optional |
+| subscriptionId | string | The event subscription identifier - must be valued for Resource-based subscription | optional |
 | ... | ... | Specific attribute(s) related to the notification event | ... |
 
 
@@ -1362,7 +1362,7 @@ Following Error code must be present:
 
 #### Correlation Management
 To manage correlation between the subscription management and the event notification (as these are 2 distinct operations):
-- use `eventSubscriptionId` attribute (in `data` structure in the body) - this identifier is provided in event subscription and could be valued in each event notification. 
+- use `subscriptionId` attribute (in `data` structure in the body) - this identifier is provided in event subscription and could be valued in each event notification. 
 
 Note: There is no normative enforcement to use any of these patterns and they could be used on agreement between API consumer & provider.
 
@@ -1399,7 +1399,7 @@ curl -X 'POST' \
   "specversion": "1.0",
   "datacontenttype": "application/json",
   "data": {
-    "eventSubscriptionId": "456g899g",
+    "subscriptionId": "456g899g",
     "device": {
       "phoneNumber": 123456789
     },
@@ -1436,7 +1436,7 @@ curl -X 'POST' \
   "specversion": "1.0",
   "datacontenttype": "application/json",
   "data": {
-    "eventSubscriptionId": "456g899g",
+    "subscriptionId": "456g899g",
     "device": {
       "phoneNumber": 123456789
     },
