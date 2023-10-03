@@ -1103,7 +1103,7 @@ When IpAddr is used in a payload the property objectType MUST be present to indi
 
 ### 11.6 Security definition
 
-Finally, this part describes the security is applied to the API. 
+This section describes and aligns the security specific definitions within the API specification, such as scopes and the security schemes.
 
 #### 11.6.1 Scope naming
 
