@@ -14,11 +14,16 @@ The full list of the rules in this ruleset are described in [OpenAPI Rules](http
 
 `extends: [[spectral:oas, off]]`  - this avoids running any rules from the extended ruleset as they are disabled. Each rule can [enabled individually](https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all#enabling-rules).
 
+### Rule severity
+
+The `severity` keyword is optional in rule definition and can be `error`, `warn`, `info`, `hint`, or `off`.
+The default value is `warn`.
+
 ### OpenAPI v2 & v3
 Rules applying to both OpenAPI v2.0, v3.0, and most likely v3.1.
 
 
-|Name| Desc| Recom mended|CAMARA use|Spectral  level | CAMARA Level 
+|Name| Desc| Recom mended|CAMARA use|Spectral severity | CAMARA severity
 |---|---|---|--|---|--|
 |contact-properties| contact object is full of the most useful properties: `name`, `url`, `and email`|No|No |  |  |
 |duplicated-entry-in-enum| Each value of an `enum` must be different from one another |Yes  | Yes |  |  |
@@ -33,7 +38,7 @@ Rules applying to both OpenAPI v2.0, v3.0, and most likely v3.1.
 | openapi-tags-alphabetical | OpenAPI object should have alphabetical `tags` | No |No |  |  |
 | openapi-tags-uniqueness | OpenAPI object must not have duplicated tag names | No | No |  |  |
 |operation-description | ???| Yes| ???|  |  |
-|operation-operationId | a reference for the operation = the value `lower-hyphen-case` |Yes| Yes|  |  |
+|operation-operationId | a reference for the operation - the value `lower-hyphen-case` **CAMARA: OperationIds are defined in `lowerCamelCase` For example: `helloWorld`** |Yes| Yes|  |  |
 | operation-operationId-unique | Every operation must have a unique operationId | Yes| Yes|  |  |
 | operation-operationId-valid-in-url | avoid non-URL-safe characters| Yes| Yes|  |  |
 |operation-parameters | Operation parameters are unique and non-repeating | Yes| Yes|  |  |
@@ -71,6 +76,7 @@ The description attributes should be checked for typos.
 
 _Spectral rule_: [camara-language-spelling]()
 
+*Severity*: `warn`
 
 ### Reduce telco-specific terminology in API definitions
 
@@ -91,6 +97,7 @@ See also [CAMARA Glossary](https://github.com/camaraproject/Commonalities/blob/m
 
 _Spectral rule_: [camara-language-avoid-telco]()
 
+*Severity*: `hint`
 
 ## 3. API Definition
 ### Path parameters
@@ -109,6 +116,8 @@ Point 2 The attribute must be identifying itself, it is not enough with "{id}"
 
 _Spectral rule_: [camara-path-param-id]()
 
+*Severity*: `warn`
+
 Point 3 The identifier should have a similar morphology on all endpoints. For example, “*xxxxId*”, where *xxx* is the name of the entity it reference
 
 | 👍  &nbsp; Recommended |
@@ -119,3 +128,7 @@ Point 3 The identifier should have a similar morphology on all endpoints. For ex
 |`/users/{userId}/vehicles/{vehicleId}` |
 
 _Spectral rule_: [camara-path-param-id-morphology]()
+
+*Severity*: `warn`
+
+
