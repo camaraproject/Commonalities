@@ -21,15 +21,17 @@ The documents that are relevant for CAMARA API Subprojects / CAMARA API Working 
 
 The `artifacts` directory contains templates for creating Github issues and Common data and error formats for CAMARA APIs.
 
-A list of some of the most frequently accessed documents in the documentation directory is provided below. Note that the links point to the `main` branch of this repository. Refer to the section below for released versions. 
+### Frequently-accessed output documents
+
+A list of some of the frequently accessed documents that are an output of the work done in the Commonalities Working Group is provided below. Note that the links are relative to the branch selected. Refer to the section below for released versions. 
 
 | Document name                                                                                                                             | Purpose                                                                                                                                                            |
 |-------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
  | [API-design-guidelines.md](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md)               | This document captures guidelines for the API design in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative. |
-| [API-DocumentationTemplate.md](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-DocumentationTemplate.md)       | Template for documenting the APIs                                                                                                                                  |
-| [API-Readiness-Checklist.md](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-Readiness-Checklist.md)           | A checklist that describes the minimum criteria for considering an API Ready                                                                                       |
-| [Camara_Versioning_Guidelines.md](https://github.com/camaraproject/Commonalities/blob/main/documentation/Camara_Versioning_Guidelines.md) | Guidelines for API Subprojects on making releases                                                                                                                  |
-| [Glossary.md](https://github.com/camaraproject/Commonalities/blob/main/documentation/Glossary.md)                                         | A glossary of the common terms and their API parameter/field names for use in the APIs                                                                             |
+| [API-DocumentationTemplate.md](documentation/API-DocumentationTemplate.md)       | Template for documenting the APIs                                                                                                                                  |
+| [API-Readiness-Checklist.md](documentation/API-Readiness-Checklist.md)           | A checklist that describes the minimum criteria for considering an API Ready                                                                                       |
+| [Camara_Versioning_Guidelines.md](documentation/Camara_Versioning_Guidelines.md) | Guidelines for API Subprojects on making releases                                                                                                                  |
+| [Glossary.md](documentation/Glossary.md)                                         | A glossary of the common terms and their API parameter/field names for use in the APIs                                                                             |
 
 
 
