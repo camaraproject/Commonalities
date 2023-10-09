@@ -12,7 +12,7 @@ With `extends: "spectral:oas"` ("oas" being shorthand for OpenAPI Specification)
 The full list of the rules in this ruleset are described in [OpenAPI Rules](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules).
 
 
-`extends: [[spectral:oas, off]]`  - this avoids running any rules from the extended ruleset as they are disabled. Each rule can [enabled individually](https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all#enabling-rules).
+`extends: [[spectral:oas, off]]`  - this avoids running any rules from the extended ruleset as they are disabled. Each rule can be[enabled individually](https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all#enabling-rules).
 
 ### Rule severity
 
@@ -35,29 +35,29 @@ Rules applying to both OpenAPI v2.0, v3.0, and most likely v3.1.
 |no-eval-in-markdown | injecting `eval()` JavaScript statements could lead to an XSS attack |Yes |Yes |  |  |
 |no-script-tags-in-markdown |  injecting `<script>` tags could lead to execution of an arbitrary | Yes |Yes |  |  |
 |openapi-tags | OpenAPI object should have non-empty `tags` array |??? | ??? (No) |   |  |
-| openapi-tags-alphabetical | OpenAPI object should have alphabetical `tags` | No |No |  |  |
-| openapi-tags-uniqueness | OpenAPI object must not have duplicated tag names | No | No |  |  |
+|openapi-tags-alphabetical | OpenAPI object should have alphabetical `tags` | No |No |  |  |
+|openapi-tags-uniqueness | OpenAPI object must not have duplicated tag names | No | No |  |  |
 |operation-description | ???| Yes| ???|  |  |
 |operation-operationId | a reference for the operation - the value `lower-hyphen-case` **CAMARA: OperationIds are defined in `lowerCamelCase` For example: `helloWorld`** |Yes| Yes|  |  |
 | operation-operationId-unique | Every operation must have a unique operationId | Yes| Yes|  |  |
-| operation-operationId-valid-in-url | avoid non-URL-safe characters| Yes| Yes|  |  |
+|operation-operationId-valid-in-url | avoid non-URL-safe characters| Yes| Yes|  |  |
 |operation-parameters | Operation parameters are unique and non-repeating | Yes| Yes|  |  |
-| operation-singular-tag | Use just one tag for an operation | No| ???|  |  |
+|operation-singular-tag | Use just one tag for an operation | No| ???|  |  |
 |operation-success-response | Operation must have at least one `2xx` or `3xx` response | Yes| Yes|  |  |
 |operation-tags | Operation should have non-empty `tags` array| Yes| Yes|  |  |
-| operation-tag-defined | Operation tags should be defined in global tags| Yes| Yes|  |  |
-| path-declarations-must-exist | Path parameter declarations cannot be empty, ex.`/given/{}` is invalid.  | Yes| Yes|  |  |
-| path-keys-no-trailing-slash | Keep trailing slashes off of paths,  | Yes| Yes|  |  |
-| path-not-include-query | Don't put query string items in the path, they belong in parameters with `in: query`| Yes| Yes|  |  |
+|operation-tag-defined | Operation tags should be defined in global tags| Yes| Yes|  |  |
+|path-declarations-must-exist | Path parameter declarations cannot be empty, ex.`/given/{}` is invalid.  | Yes| Yes|  |  |
+|path-keys-no-trailing-slash | Keep trailing slashes off of paths,  | Yes| Yes|  |  |
+|path-not-include-query | Don't put query string items in the path, they belong in parameters with `in: query`| Yes| Yes|  |  |
 |path-params | Path parameters are correct and valid | Yes| Yes|  |  |
 |tag-description | global tags have description | No | ???|  |  |
-| typed-enum | Enum values should respect the type specifier. | Yes| Yes|  |  |
+|typed-enum | Enum values should respect the type specifier. | Yes| Yes|  |  |
 ||||| |
 |oas3-api-servers | OpenAPI servers must be present and non-empty array | Yes| Yes|  |  |
 |oas3-examples-value-or-externalValue | Examples for requestBody or response examples can have an `externalValue` or a `value`, but they cannot have both| Yes| Yes|  |  |
 |**oas3-operation-security-defined** | Operation `security` values must match a scheme defined in the `components.securitySchemes` object. | Yes| Yes|  |  |
 |oas3-parameter-description | Parameter objects should have a description| No| Yes?|  |  |
-| oas3-schema | Validate structure of OpenAPI v3 specification | Yes| Yes|  |  |
+|oas3-schema | Validate structure of OpenAPI v3 specification | Yes| Yes|  |  |
 |oas3-server-not-example.com | Server URL should not point to *example.com*| No| Yes?|  |  |
 |oas3-server-trailing-slash | Server URL should not have a trailing slash | Yes| Yes|  |  |
 |oas3-unused-component | Potential unused reusable components entry has been detected  | Yes| Yes|  |  |
@@ -131,4 +131,117 @@ _Spectral rule_: [camara-path-param-id-morphology]()
 
 *Severity*: `warn`
 
+### Reserved words
 
+API Design Guidelines: 
+[11. Definition in OpenAPI](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#11-definition-in-openapi)
+
+To avoid issues with implementation using Open API generators:
+
+    Reserved words must not be used in the following parts of an API specification:
+      - Path and operation names
+      - Path or query parameter names
+      - Request and response body property names
+      - Security schemes
+      - Component names
+      - OperationIds
+
+
+A reserved word is one whose usage is reserved by any of the following Open API generators:
+- [Python Flask](https://openapi-generator.tech/docs/generators/python-flask/#reserved-words)
+- [OpenAPI Generator (Java)](https://openapi-generator.tech/docs/generators/java/#reserved-words)
+- [OpenAPI Generator (Go)](https://openapi-generator.tech/docs/generators/go/#reserved-words)
+- [OpenAPI Generator (Kotlin)](https://openapi-generator.tech/docs/generators/kotlin/#reserved-words)
+- [OpenAPI Generator (Swift5)](https://openapi-generator.tech/docs/generators/swift5#reserved-words)
+
+_Spectral rule_: [camara-reserved-words]()
+
+*Severity*: `warn`
+
+### Usage of discriminator
+
+API Design Guidelines: 
+[11.5.1 Usage of discriminator](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#1151-usage-of-discriminator)
+
+When request bodies or response payloads may be one of a number of different schemas (containing `oneOf` or `anyOf` section), a `discriminator` object can be used to aid in serialization, deserialization, and validation. 
+
+_Spectral rule_: [camara-discriminator-use]()
+
+*Severity*: `warn`
+
+### Casing convention
+
+Spectral core functions: [casing](https://docs.stoplight.io/docs/spectral/cb95cf0d26b83-core-functions#casing) can be used to verify text match a certain case. Available types are:
+|name	|sample|
+|---|----|
+|flat|	verylongname|
+|camel|	veryLongName|
+|pascal|	VeryLongName|
+|kebab|	very-long-name|
+|cobol|	VERY-LONG-NAME|
+|snake|	very_long_name|
+|macro|	VERY_LONG_NAME|
+
+
+#### Enum
+
+API Design Guidelines: **No clear requirement**
+
+❓ This rule verifies that `enum` fields contain values that follow a specific case convention: `macro`.
+
+_Spectral rule_: [camara-enum-casing-convention]()
+
+*Severity*: `info`
+
+
+
+#### Operation Id
+
+API Design Guidelines: 
+[4.1 URL Definition](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#41-url-definition)
+>   OperationIds are defined in lowerCamelCase: For example: `helloWorld`
+
+Operation ids should follow a specific case convention: `camel` case.
+
+_Spectral rule_: [camara-operationid-casing-convention]()
+
+**Contradiction with Spectral rule `operation-operationId `** 
+>  a reference for the operation - the value `lower-hyphen-case`
+
+*Severity*: `error`
+
+#### Path parameters / Query parameters
+
+API Design Guidelines: [4.1 URL Definition](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#41-url-definition)
+> URI with lowercase and hyphens. URIs must be "human readable" to facilitate identification of the offered resources. Lowercase words and hyphenation (kebab-case) help achieve this best practice. For example: `/customer-segments`
+
+Path parameter should follow a specific case convention, with the default being `kebab` case.
+
+_Spectral rule_: [camara-parameter-casing-convention]()
+
+*Severity*: `error`
+
+#### Property names
+
+API Design Guidelines: [4.1 URL Definition](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#41-url-definition)
+
+> Objects are defined in CamelCase inside properties field. For example: Greetings, ExampleObject.
+
+❓ **Should it be lowerCamelCase in DG?**
+
+Property names should follow a specific case convention, with the default being `camel` case.
+
+_Spectral rule_: [camara-property-casing-convention]()
+
+*Severity*: `error`
+
+#### Schema names
+
+API Design Guidelines: **No clear requirement**
+
+Schema names (the keys in `components -> schemas`) should follow the "upper camel case" convention - `pascal`
+
+
+_Spectral rule_: [camara-schema-casing-convention]()
+
+*Severity*: `warn`
