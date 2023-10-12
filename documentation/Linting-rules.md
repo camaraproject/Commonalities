@@ -12,7 +12,7 @@ With `extends: "spectral:oas"` ("oas" being shorthand for OpenAPI Specification)
 The full list of the rules in this ruleset are described in [OpenAPI Rules](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules).
 
 
-`extends: [[spectral:oas, off]]`  - this avoids running any rules from the extended ruleset as they are disabled. Each rule can be[enabled individually](https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all#enabling-rules).
+`extends: [[spectral:oas, off]]`  - this avoids running any rules from the extended ruleset as they are disabled. Each rule then can be [enabled individually](https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all#enabling-rules).
 
 ### Rule severity
 
@@ -25,45 +25,45 @@ Rules applying to both OpenAPI v2.0, v3.0, and most likely v3.1.
 
 |Name| Desc| Recom mended|CAMARA use|Spectral severity | CAMARA severity
 |---|---|---|--|---|--|
-|contact-properties| contact object is full of the most useful properties: `name`, `url`, `and email`|No|No |  |  |
-|duplicated-entry-in-enum| Each value of an `enum` must be different from one another |Yes  | Yes |  |  |
-|info-contact |Info object should contain `contact` object |Yes  | Yes|   |  |
-|info-description |Info object should contain `description` object |Yes  | Yes|  |  | 
-|info-license |Info object should contain `license` object |Yes  | Yes|   |  |
-|license-url | link to the full text of licence | Yes | Yes|  |  |
-|no-$ref-siblings| Before OpenAPI v3.1, keywords next to $ref were ignored | Yes | Yes|   |  |
-|no-eval-in-markdown | injecting `eval()` JavaScript statements could lead to an XSS attack |Yes |Yes |  |  |
-|no-script-tags-in-markdown |  injecting `<script>` tags could lead to execution of an arbitrary | Yes |Yes |  |  |
-|openapi-tags | OpenAPI object should have non-empty `tags` array |??? | ??? (No) |   |  |
-|openapi-tags-alphabetical | OpenAPI object should have alphabetical `tags` | No |No |  |  |
-|openapi-tags-uniqueness | OpenAPI object must not have duplicated tag names | No | No |  |  |
-|operation-description | ???| Yes| ???|  |  |
-|operation-operationId | a reference for the operation - the value `lower-hyphen-case` **CAMARA: OperationIds are defined in `lowerCamelCase` For example: `helloWorld`** |Yes| Yes|  |  |
-| operation-operationId-unique | Every operation must have a unique operationId | Yes| Yes|  |  |
-|operation-operationId-valid-in-url | avoid non-URL-safe characters| Yes| Yes|  |  |
-|operation-parameters | Operation parameters are unique and non-repeating | Yes| Yes|  |  |
-|operation-singular-tag | Use just one tag for an operation | No| ???|  |  |
-|operation-success-response | Operation must have at least one `2xx` or `3xx` response | Yes| Yes|  |  |
-|operation-tags | Operation should have non-empty `tags` array| Yes| Yes|  |  |
-|operation-tag-defined | Operation tags should be defined in global tags| Yes| Yes|  |  |
-|path-declarations-must-exist | Path parameter declarations cannot be empty, ex.`/given/{}` is invalid.  | Yes| Yes|  |  |
-|path-keys-no-trailing-slash | Keep trailing slashes off of paths,  | Yes| Yes|  |  |
-|path-not-include-query | Don't put query string items in the path, they belong in parameters with `in: query`| Yes| Yes|  |  |
-|path-params | Path parameters are correct and valid | Yes| Yes|  |  |
-|tag-description | global tags have description | No | ???|  |  |
-|typed-enum | Enum values should respect the type specifier. | Yes| Yes|  |  |
+|contact-properties| contact object is full of the most useful properties: `name`, `url`, `and email`|No|No | Warning |  |
+|duplicated-entry-in-enum| Each value of an `enum` must be different from one another |Yes  | Yes | Warning |  |
+|info-contact |Info object should contain `contact` object |Yes  | Yes| Warning  |  |
+|info-description |Info object should contain `description` object |Yes  | Yes| Warning |  | 
+|info-license |Info object should contain `license` object |Yes  | Yes|  Warning |  |
+|license-url | link to the full text of licence | Yes | Yes| Warning  |  |
+|no-$ref-siblings| Before OpenAPI v3.1, keywords next to $ref were ignored | Yes | Yes| Error |  |
+|no-eval-in-markdown | injecting `eval()` JavaScript statements could lead to an XSS attack |Yes |Yes |Warning  |  |
+|no-script-tags-in-markdown |  injecting `<script>` tags could lead to execution of an arbitrary | Yes |Yes | Warning |  |
+|openapi-tags | OpenAPI object should have non-empty `tags` array |No | Yes | Warning |  |
+|openapi-tags-alphabetical | OpenAPI object should have alphabetical `tags` | No |No | Warning |  |
+|openapi-tags-uniqueness | OpenAPI object must not have duplicated tag names | No | No | Error |  |
+|operation-description | Operation `description` must be present and non-empty string | Yes| Yes| Warning  |  |
+|operation-operationId | Operation must have `operationId` |Yes| Yes| Warning |  |
+|operation-operationId-unique | Every operation must have a unique operationId | Yes| Yes| Error |  |
+|operation-operationId-valid-in-url | avoid non-URL-safe characters| Yes| Yes| Warning |  |
+|operation-parameters | Operation parameters are unique and non-repeating | Yes| Yes| Warning  |  |
+|operation-singular-tag | Use just one tag for an operation | No| Yes| Warning |  |
+|operation-success-response | Operation must have at least one `2xx` or `3xx` response | Yes| Yes| Warning |  |
+|operation-tags | Operation should have non-empty `tags` array| Yes| Yes| Warning |  |
+|operation-tag-defined | Operation tags should be defined in global tags| Yes| Yes| Warning |  |
+|path-declarations-must-exist | Path parameter declarations cannot be empty, ex.`/given/{}` is invalid.  | Yes| Yes| Warning |  |
+|path-keys-no-trailing-slash | Keep trailing slashes off of paths,  | Yes| Yes| Warning |  |
+|path-not-include-query | Don't put query string items in the path, they belong in parameters with `in: query`| Yes| Yes| Warning |  |
+|path-params | Path parameters are correct and valid | Yes| Yes| Error |  |
+|tag-description | global tags have description | No | ???| Warning |  |
+|typed-enum | Enum values should respect the type specifier. | Yes| Yes| Warning |  |
 ||||| |
-|oas3-api-servers | OpenAPI servers must be present and non-empty array | Yes| Yes|  |  |
-|oas3-examples-value-or-externalValue | Examples for requestBody or response examples can have an `externalValue` or a `value`, but they cannot have both| Yes| Yes|  |  |
-|**oas3-operation-security-defined** | Operation `security` values must match a scheme defined in the `components.securitySchemes` object. | Yes| Yes|  |  |
-|oas3-parameter-description | Parameter objects should have a description| No| Yes?|  |  |
-|oas3-schema | Validate structure of OpenAPI v3 specification | Yes| Yes|  |  |
-|oas3-server-not-example.com | Server URL should not point to *example.com*| No| Yes?|  |  |
-|oas3-server-trailing-slash | Server URL should not have a trailing slash | Yes| Yes|  |  |
-|oas3-unused-component | Potential unused reusable components entry has been detected  | Yes| Yes|  |  |
-|oas3-valid-media-example | Examples must be valid against their defined schema. This rule is applied to *Media Type objects*  | Yes| Yes|  |  |
-|oas3-valid-schema-example | Examples must be valid against their defined schema. This rule is applied to *Schema objects* | Yes| Yes|  |  |
-|oas3-server-variables | This rule ensures that server variables defined in OpenAPI Specification 3 (OAS3) and 3.1 are valid, not unused | Yes| Yes|  |  |
+|oas3-api-servers | OpenAPI servers must be present and non-empty array | Yes| Yes| Warning |  |
+|oas3-examples-value-or-externalValue | Examples for requestBody or response examples can have an `externalValue` or a `value`, but they cannot have both| Yes| Yes| Warning |  |
+|**oas3-operation-security-defined** | Operation `security` values must match a scheme defined in the `components.securitySchemes` object. | Yes| Yes| Warning |  |
+|oas3-parameter-description | Parameter objects should have a description| No| Yes?| Warning |  |
+|oas3-schema | Validate structure of OpenAPI v3 specification | Yes| Yes| Warning |  |
+|oas3-server-not-example.com | Server URL should not point to *example.com*| No| Yes?| Warning |  |
+|oas3-server-trailing-slash | Server URL should not have a trailing slash | Yes| Yes| Warning |  |
+|oas3-unused-component | Potential unused reusable components entry has been detected  | Yes| Yes| Warning |  |
+|oas3-valid-media-example | Examples must be valid against their defined schema. This rule is applied to *Media Type objects*  | Yes| Yes| Warning  |  |
+|oas3-valid-schema-example | Examples must be valid against their defined schema. This rule is applied to *Schema objects* | Yes| Yes| Warning   |  |
+|oas3-server-variables | This rule ensures that server variables defined in OpenAPI Specification 3 (OAS3) and 3.1 are valid, not unused | Yes| Yes| Warning  |  |
 
 
 
