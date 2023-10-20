@@ -31,14 +31,14 @@ info:
       * **Data**:  Domain-specific information about the occurrence (i.e. the payload). This might 
     include information about the occurrence, details about the data that was changed, or more.
   
+    # API Functionality
     
-    # API Functionality   
-      
     Only one endpoint/operation is provided: `POST /your_webhook_notification_url`
-    
     This endpoint describes the event notification received on subscription listener side when the event occurred. A detailed description of the event notification is provided in the CAMARA API design guideline document.
   
-  
+    # Security
+    
+    Security is the responsibility of the API provider. The API provider must include its requirements in the security section of this specification or remove this section if it does not support any authentication scheme.
 
   termsOfService: http://swagger.io/terms/
   contact:
@@ -46,7 +46,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.1.0-wip
+  version: 0.1.0
 externalDocs:
   description: Product documentation at CAMARA
   url: https://github.com/camaraproject/
@@ -57,7 +57,7 @@ servers:
   - url: '{apiRoot}'
     variables:
       apiRoot:
-        default: http://localhost:8080
+        default: https://localhost:8080
         description: Can be any notification server address sent by the client application
 tags:
   - name: Cloud Event
@@ -145,7 +145,9 @@ components:
     DateTime:
       type: string
       format: date-time
-      description: Timestamp of when the occurrence happened. Must adhere to RFC 3339.
+      description: |
+        Timestamp of when the occurrence happened. Must adhere to RFC 3339. 
+        WARN: This optional field in CloudEvents specification is required in CAMARA APIs implementation.
       example: '2018-04-05T17:31:00Z'
 
     Source:
@@ -179,7 +181,7 @@ components:
           type: string
           description: 'type of event as defined in each CAMARA API (e.g.: org.camaraproject.qod.qos-status-changed-event)'
           example: org.camaraproject.qod.qos-status-changed-event
-          minLength: 15
+          minLength: 25
         specversion:
           type: string
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
