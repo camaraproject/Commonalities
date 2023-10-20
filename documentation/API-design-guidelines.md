@@ -1077,7 +1077,7 @@ simplify serialization/deserialization process and so reduce resource consumptio
 
 ##### Inheritance
 The mappings section is not mandatory in discriminator, by default ClassName are used as values to populate the property. You can use mappings to restrict usage to subset of subclasses.
-
+When it's possible, use Object Name as key in mapping section. This will simplify the work of providers and consumers who use openapi generators.
 
 ``` yaml 
     IpAddr:
@@ -1090,12 +1090,12 @@ The mappings section is not mandatory in discriminator, by default ClassName are
       discriminator:
         propertyName: addressType 
         mappings:                   
-            - IPV4ADDR: Ipv4Addr
-            - IPV6ADDR: Ipv6Addr   
+            - Ipv4Addr: '#/components/schemas/Ipv4Addr'   <-- use Object Name as mapping key to simplify usage
+            - Ipv6Addr: '#/components/schemas/Ipv6Addr'   
 
-    Ipv4Addr: 
+    Ipv4Addr:           <-- Object Name also known as Class Name, used as JsonName by openapi generator
       allOf:            <-- extends IpAddr (no need to define addressType because it's inherited
-        - $ref: IpAddr
+        - $ref: '#/components/schemas/IpAddr'
         - type: object
           required:
             - address
@@ -1107,7 +1107,7 @@ The mappings section is not mandatory in discriminator, by default ClassName are
 
     Ipv6Addr:
       allOf:            <-- extends IpAddr
-        - $ref: IpAddr
+        - $ref: '#/components/schemas/IpAddr'
         - type: object
           required:
             - address
