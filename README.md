@@ -17,7 +17,7 @@ Repository to describe and document common guidelines and assets for CAMARA APIs
 
 ## Documents for CAMARA Sub Projects
 
-The documents that are relevant for CAMARA API Subprojects / CAMARA API Working Groups are found in the `documentation` directory (at the top-level). The rest of the sub-directories are primarily for internal working of the Commonalities Working Group.
+The documents that are relevant for CAMARA API Sub Projects are found in the `documentation` directory (at the top-level). The rest of the sub-directories are primarily for internal working of the Commonalities Working Group.
 
 The `artifacts` directory contains templates for creating Github issues and Common data and error formats for CAMARA APIs.
 
