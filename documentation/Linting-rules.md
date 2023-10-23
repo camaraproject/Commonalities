@@ -52,7 +52,12 @@ Rules applying to both OpenAPI v2.0, v3.0, and most likely v3.1.
 |path-params | Path parameters are correct and valid | Yes| Yes| Error |  |
 |tag-description | global tags have description | No | ???| Warning |  |
 |typed-enum | Enum values should respect the type specifier. | Yes| Yes| Warning |  |
-||||| |
+
+### OpenAPI v3-only
+Rules applicable only to OpenAPI v3.0 documents.
+
+|Name| Desc| Recom mended|CAMARA use|Spectral severity | CAMARA severity
+|---|---|---|--|---|--|
 |oas3-api-servers | OpenAPI servers must be present and non-empty array | Yes| Yes| Warning |  |
 |oas3-examples-value-or-externalValue | Examples for requestBody or response examples can have an `externalValue` or a `value`, but they cannot have both| Yes| Yes| Warning |  |
 |**oas3-operation-security-defined** | Operation `security` values must match a scheme defined in the `components.securitySchemes` object. | Yes| Yes| Warning |  |
@@ -99,12 +104,61 @@ _Spectral rule_: [camara-language-avoid-telco]()
 
 *Severity*: `hint`
 
+
+
+
 ## 3. API Definition
+
+
+### Openapi property
+
+API Design Guidelines: 
+[11. Definition in OpenAPI](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#11-definition-in-openapi)
+
+The API functionalities must be implemented following the specifications of the **Open API version 3.0.3** 
+
+`/users/{id}`
+
+| ❌ &nbsp; Not recommended | 👍  &nbsp; Recommended |
+|----------------------------|-------------------------|
+| `openapi: 3.0.1`                 | `openapi: 3.0.3`           |
+
+_Spectral rule_: [camara-oas-version]()
+
+*Severity*: `error`
+
+### Info object
+
+API Design Guidelines: 
+[11.1 General Information](hhttps://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#111-general-information)
+
+
+Info object must include the following information: API title with public name.
+
+
+_Spectral rule_: [camara-info−title]()
+
+*Severity*: `warn`
+
+
+API Design Guidelines: 
+[11.1 General Information](hhttps://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#111-general-information)
+
+
+Info object must include the following information: API Version in the format: X.Y.Z.
+
+
+_Spectral rule_: [camara-info−version-format]()
+
+*Severity*: `warn` <br>
+❕ Note: Currently the format like  `version: 0.10.0-wip` is used in the API development branch
+
+
+
 ### Path parameters
 
 API Design Guidelines: 
 [3.4 Path Parameters Use](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#34-path-parameters-use)
-
 
 Point 2 The attribute must be identifying itself, it is not enough with "{id}"
 
@@ -131,6 +185,37 @@ _Spectral rule_: [camara-path-param-id-morphology]()
 
 *Severity*: `warn`
 
+
+### Sensitive data 
+Sensitive data (msisdn/imsi) cannot be a path or query parameter.
+<br>❕ Note: Needs to list down if we have other sensitive parameters other than MSISDN/IMSI - cf.  *monite-security-no-secrets-in-path-or-query-parameters*
+
+
+_Spectral rule_: [camara-security-no-secrets-in-path-or-query-parameters]()
+
+*Severity*: `warn`
+
+### HTTP verbs
+
+API Design Guidelines: 
+[3.1 API REST](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#31-api-rest)
+
+Valid methods are: GET, PUT, POST, DELETE, PATCH, OPTIONS
+
+_Spectral rule_: [camara-http-methods]()
+
+*Severity*: `error`
+
+
+
+'GET' and 'DELETE' http methods MUST NOT accept a 'requestBody' attribute 
+<br>❕ Note: https://github.com/team-monite/api-style-guide/blob/main/spectral/monite.section8-requests.yaml
+
+_Spectral rule_: [camara-get-no-request-body]()
+
+*Severity*: `error`
+
+
 ### Reserved words
 
 API Design Guidelines: 
@@ -155,6 +240,30 @@ A reserved word is one whose usage is reserved by any of the following Open API 
 - [OpenAPI Generator (Swift5)](https://openapi-generator.tech/docs/generators/swift5#reserved-words)
 
 _Spectral rule_: [camara-reserved-words]()
+
+*Severity*: `warn`
+
+
+Resources must not contain the method name get, put, post, delete, patch.
+
+_Spectral rule_: [camara-resource-reserved-words]()
+
+*Severity*: `warn`
+
+ 
+### Descriptions
+
+API Design Guidelines: [11.3 Request Parameters](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#113-request-parameters)
+
+All parameters must have a description. 
+
+_Spectral rule_: [camara-parameters-descriptions]()
+
+*Severity*: `warn`
+
+API Design Guidelines: [11.2 Published Routes](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#112-published-routes)
+Summary must be defined on each operation, describing with a short summary what the operation does.  
+_Spectral rule_: [camara-operation-summary]()
 
 *Severity*: `warn`
 
