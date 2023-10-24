@@ -1257,7 +1257,7 @@ The Following table provides `/subscriptions` attributes
 | ----- |	-----  |	 -----  |  -----  | 
 | webhook | object | detail for event channel - in current version only webhook description are provided, but other event channel descriptor could be added in future | mandatory |
 | subscriptionId | string | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server | mandatory in server response |
-| subscriptionExpireTime | string - datetime| Date when the event subscription should end. Provided by API requester. The Server may reject the subscription if the period requested do not comply with Telco Operator policies (i.e. to avoid unlimited time subscriptions). In this case server returns exception 403 "SUBSCRIPTION_PERIOD_NOT_ALLOWED" | optional |
+| subscriptionExpireTime | string - date-time| Date when the event subscription should end. Provided by API requester. The Server may reject the subscription if the period requested do not comply with Telco Operator policies (i.e. to avoid unlimited time subscriptions). In this case server returns exception 403 "SUBSCRIPTION_PERIOD_NOT_ALLOWED" | optional |
 | startsAt | string - datetime| Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints | optional |
 | expiresAt | string - datetime| Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided by API server.  | optional |
 | subscriptionDetail | object | Object defined for each event subscription depending on the event - it could be for example the ueID targeted by the subscription | optional |
