@@ -1072,12 +1072,12 @@ In this part, the error response structure must also be defined, which must be a
 </p>
 
 #### 11.5.1 Usage of discriminator
-As mentioned in Openapi doc [here](https://spec.openapis.org/oas/v3.0.3#discriminator-object) usage of discriminator may
+As mentioned in OpenAPI doc [here](https://spec.openapis.org/oas/v3.0.3#discriminator-object) usage of discriminator may
 simplify serialization/deserialization process and so reduce resource consumption.
 
 ##### Inheritance
 The mappings section is not mandatory in discriminator, by default ClassName are used as values to populate the property. You can use mappings to restrict usage to subset of subclasses.
-When it's possible, use Object Name as key in mapping section. This will simplify the work of providers and consumers who use openapi generators.
+When it's possible, use Object Name as key in mapping section. This will simplify the work of providers and consumers who use OpenAPI code generators.
 
 ``` yaml 
     IpAddr:
@@ -1093,7 +1093,7 @@ When it's possible, use Object Name as key in mapping section. This will simplif
             - Ipv4Addr: '#/components/schemas/Ipv4Addr'   <-- use Object Name as mapping key to simplify usage
             - Ipv6Addr: '#/components/schemas/Ipv6Addr'   
 
-    Ipv4Addr:           <-- Object Name also known as Class Name, used as JsonName by openapi generator
+    Ipv4Addr:           <-- Object Name also known as Class Name, used as JsonName by OpenAPI generator
       allOf:            <-- extends IpAddr (no need to define addressType because it's inherited
         - $ref: '#/components/schemas/IpAddr'
         - type: object
