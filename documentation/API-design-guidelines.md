@@ -67,15 +67,15 @@ This document captures guidelines for the API design in CAMARA project. These gu
 
 | **Term** | Description |
 | --- | --- | 
-|**API** | Application Programming Interface. It is a rule & specification group (code) that applications follow to comunicate between them, used as interface among programs developed with different technologies.|
+|**API** | Application Programming Interface. It is a rule & specification group (code) that applications follow to communicate between them, used as interface among programs developed with different technologies.|
 |**Body**| HTTP Message body (If exists) is used to carry the entity data associated with the request or response.|
-|**Camel Case**| It is a kind of define the fields’ compound name or phrases without whitespaces among words. It uses a capital letter at the beginning of each word. There are two different uses:<li>Upper Camel Case: When the first letter of each word is capital.</li><li>Lower Camel Case: Same that Upper one, but with the first word in lowercase.</li>|
-|**Header**| HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.|
-|**HTTP**| Hypertext Transfer Protocol (HTTP) is communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.|
+|**Camel Case**| It is a kind of define the fields’ compound name or phrases without whitespaces among words. It uses a capital letter at the beginning of each word. There are two different uses:<li>Upper Camel Case: When the first letter of each word is capital.</li><li>Lower Camel Case: Same to that Upper one, but with the first word in lowercase.</li>|
+|**Header**| HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by a colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.|
+|**HTTP**| Hypertext Transfer Protocol (HTTP) is a communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.|
 |**JSON**| JavaScript Object Notation|
 |**JWT**| JSON Web Token (JWT) is an open standard based on JSON proposed by IETF (RFC 7519) for access token creations allowing the identity and purposes spread. |
 |**Kebab-case**| Practice in the words denomination where the hyphen is used to separate words. |
-|**OAuth**| Open Authorization is an open standard that allows simple Authorization flows to be used in web sites or applications.|
+|**OAuth**| Open Authorization is an open standard that allows simple Authorization flows to be used in websites or applications.|
 |**REST**| Representational State Transfer.|
 |**TLS**| Transport Layer Security or TLS is a cryptographic protocol that provides secured network communications. |
 |**URI**| Uniform Resource Identifier. |
@@ -128,7 +128,7 @@ This design strategy considers the API as the main interface of the application 
 
 In this way, the technological infrastructure depends directly on the design of the services instead of being a response to their implementation.
 
-Among the main benefits of an "API First" development strategy we can highlight:
+Among the main benefits of an "API First" development strategy, we can highlight:
 
 - Development teams can work in parallel. 
 - Reduces the cost of application development.
@@ -201,21 +201,21 @@ A **number** is similar to a C or Java number, except that octal and hexadecimal
 <img src="./images/guidelines-fig-8.png" alt="drawing" width="300"/>
 </p>
 
-Except for minor enconding details, the above-mentioned structures provide a full description of JSON language. 
+Except for minor encoding details, the above-mentioned structures provide a full description of JSON language. 
 
 ## 2.5 Reduce telco-specific terminology in API definitions
 CAMARA aims to produce 'intent-based' APIs, which have two key benefits:
 - for the developer: it does not assume familiarity with the network that will fulfil the API.
 - for the operator: it avoids tight-coupling, meaning the API can be fulfilled by various networks (mobile, fixed, satellite etc.)  and network versions (4/5/6G etc.)
 
-To realise these benefits it is important to reduce the use of telco-specific terminolgy/acronyms in developer-facing APIs. 
+To realise these benefits it is important to reduce the use of telco-specific terminology/acronyms in developer-facing APIs. 
 
 CAMARA API designers should:
 - Consider and account for how the API can be fulfilled on a range of network types
 - Avoid terms/types specific to a given telco domain. For example the acronym 'UE': in 3GPP terminology this refers to 'User Equipment', but 'UE' means 'User Experience' for most Web developers: 'Terminal' would be a more appropriate, and unambiguous, term. If use of a telco-specific term is unavoidable, either:
-- - allow a choice, so the developer can utilise other types. E.g. `MSISDN` should not be the _only_ way to identify an end user.
-- - use abstractions, which can evolve: e.g. an `endUserIdentifier` enumeration can support mulitple identifiers.
-- - explain the telco-specific term in the documentation, and any constraints it brings.
+ - allow a choice, so the developer can utilise other types. E.g. `MSISDN` should not be the _only_ way to identify an end user.
+ - use abstractions, which can evolve: e.g. an `endUserIdentifier` enumeration can support multiple identifiers.
+ - explain the telco-specific term in the documentation, and any constraints it brings.
 
 
 ## 3. API Definition
@@ -239,12 +239,12 @@ API definition must consider the next assertions:
 - API must be versioned, and version must figure in all operations URL. It allows a better last develops management and surveillance, it avoids out of date URLs request and it makes available coexistence of more than one version productive in the same environment.
 - Expose the required fields by the API consumers only. Sometimes, all the response body is not necessary for consumers. Allows more security, less the network traffic and agile the API usability.
 - One of the API Quality requirements will be the evolution and management scalability, lined with versioning and backward compatibility considerations detailed in this document.
-- At API definition time is necessary include audit parameters to allow make surveillance and next maintenances.
+- At API definition time is necessary to include audit parameters to allow make surveillance and next maintenances.
 - English use must be applied in the OpenAPI definition.
 
 ### 3.1 API REST
 
-Representational state transfer (REST) is a software architectural style that was created to guide the design and development of the architecture for the World Wide Web. REST defines a set of constraints for how the architecture of an Internet-scale distributed hypermedia system, such as the Web, should behave. 
+Representational state transfer (REST) is a software architectural style that was created to guide the design and development of the architecture for the World Wide Web. REST defines a set of constraints on how the architecture of an Internet-scale distributed hypermedia system, such as the Web, should behave. 
 
 The formal REST constraints are as follows:
 
@@ -270,7 +270,7 @@ GET | Read | Retrieve the actual resource status |
 POST | Create | Creates a new resource in the collection. Returns the resource URL when the creation ends.|
 PUT |  Update | Replaces a specific resource. Returns the resource URL when the replace ends. |
 DELETE | Delete | Delete a specific resource.  |
-PATCH |  Update | Updates a specific resource, applying all changes at the same time. If resource does not exist, it will be created. Returns the resource URL when the update ends. If any error occurs during the update, all of them will be cancelled.   |
+PATCH |  Update | Updates a specific resource, applying all changes at the same time. If a resource does not exist, it will be created. Returns the resource URL when the update ends. If any error occurs during the update, all of them will be cancelled.   |
 OPTIONS | Read | Returns a 200 OK with an allowed methods list in the specific resource destined to the header allowed joined to an HTML document about the resource + an API Doc link.  |
 
 In this document will be defined the principal verbs to use in the API definition.
@@ -285,7 +285,7 @@ In this document will be defined the principal verbs to use in the API definitio
 
 #### **POST or GET for transferring sensitive or complex data**
 
-Using the GET operation to pass senstive data potentially embeds this information in the URL if contained in query or path parameters. For example, this information can remain in browser history, could be visible to anyone who can read the URL, or could be logged by elements along the route such as gateways and load balancers. This increases the risk that the sensitive data may be acquired by unauthorised 3rd parties. Using HTTPS does not solve this vulnerability, as the TLS termination points are not necessarily the same as the API endpoints themselves.
+Using the GET operation to pass sensitive data potentially embeds this information in the URL if contained in query or path parameters. For example, this information can remain in browser history, could be visible to anyone who can read the URL, or could be logged by elements along the route such as gateways and load balancers. This increases the risk that the sensitive data may be acquired by unauthorised 3rd parties. Using HTTPS does not solve this vulnerability, as the TLS termination points are not necessarily the same as the API endpoints themselves.
 
 The classification of data tagged as sensitive should be assessed for each API project, but might include the following examples:
 -  phone number (MSISDN) must be cautiously handled as it is not solely about the number itself, but also knowing something about what transactions are being processed for that customer
@@ -320,9 +320,9 @@ Common errors are captured in the table below.
 | ---| ---| 
 | 200 | 200 (OK) status code indicates that the request result successfully<br>`GET`-> 200 HTTP Code by default.<br>`POST`/`PUT`/`PATCH` -> Resource update actions, data is returned in a body from server side.<br>`DELETE` -> Resource delete action, data is returned in a body from server side.</br>|
 | 201 | 201 (Created) HTTP code indicates that the request has created one or more resource successfully.<br>`POST`/`PUT` -> When a resource is created successfully.|
-| 202 | 202 (Accepted) code indicated that the request has been accepted to be processed, but it has not ended.<br>Usually, when a `DELETE` is requested but the server cannot make the action immediately. It should applies to async processes. |
-| 203 |  203 (Unathourized information) code indicated that the request has been successfully, but the attached payload was modified from the 200 (OK) response from the origin server using a transformation proxy.<br>It is used when data sent in the request could be modified as a third data subset.|
-| 204 | 204 (No Content) indicated that the server has ended successfully the request and there are nothing to return in the body response.<br>`POST` -> When used to modify a resource and output is not returned.<br>`PUT`/`PATCH` -> When used to modify a resource and output is not returned.<br>`DELETE` -> Resource delete action and output is not returned.<br> _NOTE: This list of levels MAY be extended with new values. The OpenID Provider (Auth Server) and the APIs used by the Relying Parties (client Applications) MUST be ready to support new values in the future._|
+| 202 | 202 (Accepted) code indicated that the request has been accepted to be processed, but it has not ended.<br>Usually, when a `DELETE` is requested but the server cannot make the action immediately. It should apply to async processes. |
+| 203 |  203 (Unauthorized information) code indicated that the request has been successfully, but the attached payload was modified from the 200 (OK) response from the origin server using a transformation proxy.<br>It is used when data sent in the request could be modified as a third data subset.|
+| 204 | 204 (No Content) indicated that the server has ended successfully the request and there is nothing to return in the body response.<br>`POST` -> When used to modify a resource and output is not returned.<br>`PUT`/`PATCH` -> When used to modify a resource and output is not returned.<br>`DELETE` -> Resource delete action and output is not returned.<br> _NOTE: This list of levels MAY be extended with new values. The OpenID Provider (Auth Server) and the APIs used by the Relying Parties (client Applications) MUST be ready to support new values in the future._|
 | 206 | 206 (Partial Content) The server has fulfilled the partial GET request for the resource.
 | 400 | 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something perceived as a client error (for example, malformed request syntax, invalid request message structure, or incorrect routing). <br>This code must be documented in all the operations in which it is necessary to receive data in the request.|
 | 401 | 401 (Unauthorized) status code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource.<br>This code has to be documented in all API operations that require subscription by a client.|
@@ -348,7 +348,7 @@ API query parameters can be defined as key-value pairs that appear after the que
 <img src="./images/guidelines-fig-9.png" alt="drawing" width="350"/>
 </p>
 
-If you want to add multiple query parameters, an "`&`" is placed between them to form a query string. You can present lot of objects types with different lengths, such as arrays, strings, and numbers.
+If you want to add multiple query parameters, an "`&`" is placed between them to form a query string. You can present a lot of objects types with different lengths, such as arrays, strings, and numbers.
 
 ### 3.4 Path Parameters Use
 
@@ -402,19 +402,19 @@ The main HTTP headers are described below:
 - `Content-Encoding`: it is used as a message type modifier. The type of encoding used in the response is indicated.
 - `Host`:  specifies the host and port number of the server to which the request is being sent.
 
-<font size="3"><span style="color: blue"> Optional recommendended security headers by OWASP </span></font>
+<font size="3"><span style="color: blue"> Optional recommended security headers by OWASP </span></font>
 
-- `HTTP Strict Transport Security`: a web security policy mechanism which helps to protect websites against protocol downgrade attacks and cookie hijacking. t allows web servers to declare that web browsers (or other complying user agents) should only interact with it using secure HTTPS connections, and never via the insecure HTTP protocol.
+- `HTTP Strict Transport Security`: a web security policy mechanism which helps to protect websites against protocol downgrade attacks and cookie hijacking. It allows web servers to declare that web browsers (or other complying user agents) should only interact with it using secure HTTPS connections, and never via the insecure HTTP protocol.
 - `X-Frame-Options`: a response header (also named XFO) which improves the protection of web applications against clickjacking. It instructs the browser whether the content can be displayed within frames.
 - `X-Content-Type-Options`: setting this header will prevent the browser from interpreting files as a different MIME type to what is specified in the Content-Type HTTP header (e.g. treating text/plain as text/css).
 - `Content-Security-Policy`: it requires careful tuning and precise definition of the policy. If enabled, CSP has significant impact on the way browsers render pages (e.g., inline JavaScript is disabled by default and must be explicitly allowed in the policy). CSP prevents a wide range of attacks, including cross-site scripting and other cross-site injections.
 - `X-Permitted-Cross-Domain-Policies`: a cross-domain policy file is an XML document that grants a web client, such as Adobe Flash Player or Adobe Acrobat (though not necessarily limited to these), permission to handle data across domains. When clients request content hosted on a particular source domain and that content makes requests directed towards a domain other than its own, the remote domain needs to host a cross-domain policy file that grants access to the source domain, allowing the client to continue the transaction.
-- `Referrer-Policy`: it governs which referrer information (sent in the Referer header) should be included with requests made.
+- `Referrer-Policy`: it governs which referrer information (sent in the Referrer header) should be included with requests made.
 - `Clear-Site-Data`: it clears browsing data (e.g., cookies, storage, cache) associated with the requesting website. It allows web developers to have more control over the data stored locally by a browser for their origins.
-- `Cross-Origin-Embedder-Policy`: it prevents a document from loading any cross-origin resources that don’t explicitly grant the document permission
-- `Cross-Origin-Opener-Policy`: this response header (also referred to as COOP) allows you to ensure a top-level document does not share a browsing context group with cross-origin documents. COOP will process-isolate your document and potential attackers can’t access to your global object if they were opening it in a popup, preventing a set of cross-origin attacks dubbed XS-Leaks
-- `Cross-Origin-Resource-Policy`: this response header (also referred to as CORP) allows to define a policy that lets web sites and applications opt in to protection against certain requests from other origins (such as those issued with elements like "`<script>`" and "`<img>`"), to mitigate speculative side-channel attacks, like Spectre, as well as Cross-Site Script Inclusion (XSSI) attacks
-- `Cache-Control`: it holds directives (instructions) for caching in both requests and responses. If a given directive is in a request, it does not mean this directive is in the response
+- `Cross-Origin-Embedder-Policy`: it prevents a document from loading any cross-origin resources that don’t explicitly grant the document permission.
+- `Cross-Origin-Opener-Policy`: this response header (also referred to as COOP) allows you to ensure a top-level document does not share a browsing context group with cross-origin documents. COOP will process-isolate your document and potential attackers can’t access to your global object if they were opening it in a popup, preventing a set of cross-origin attacks dubbed XS-Leaks.
+- `Cross-Origin-Resource-Policy`: this response header (also referred to as CORP) allows to define a policy that lets web sites and applications opt in to protection against certain requests from other origins (such as those issued with elements like "`<script>`" and "`<img>`"), to mitigate speculative side-channel attacks, like Spectre, as well as Cross-Site Script Inclusion (XSSI) attacks.
+- `Cache-Control`: it holds directives (instructions) for caching in both requests and responses. If a given directive is in a request, it does not mean this directive is in the response.
 
 To avoid cluttering the CAMARA OAS (Swagger) definition files, the above headers must not be included explicitly in the API definition files even when supported, as it can be assumed that developers will already be familiar with their use.
 
@@ -458,7 +458,7 @@ As seen, the full URL consist of:
 4.	**Version**: MAJOR version. Part of semantic versioning.
 5.	**Resource**: specific resource that we are accessing. It can be made up of several levels.
 6.	**Path param**: part of the resource identifier that precedes it. Indicates that it is the user unequivocally identified by "1244".
-7.	**Query Param**: rsource filter parameters. They are preceded by "?" and as many as defined with "&" can be concatenated.
+7.	**Query Param**: resource filter parameters. They are preceded by "?" and as many as defined with "&" can be concatenated.
 
 <font size="3"><span style="color: blue"> Good practices </span></font>
 
@@ -483,7 +483,7 @@ URIs should be designed according to the following considerations:
 <font size="3"><span style="color: blue"> Hierachy </span></font>
 
 Hierarchy could be introduced with the concepts of entity and sub-entity:
-- **Entity**: it is understood as a enough relevant business object to be identified as a product. A single entity is defined by an API.
+- **Entity**: it is understood as an enough relevant business object to be identified as a product. A single entity is defined by an API.
 - **Sub-entity**: it is understood as a business object that by itself has no business relevance. It is an object that is hierarchically related to an entity.
 
 To make the hierarchy, the following aspects must be applied:
@@ -568,14 +568,14 @@ Bearing in mind that APIs are continually evolving and certain operations will n
 
 <font size="3"><span style="color: blue"> Types of modification </span></font>
 
-Not all API changes have an impact on API consumers. These changes are often referred to as backward compatible changes. If API undergoes changes of this type, it should not be necessary to release a new version, it will suffice to replace the current one. What would be very convenient is to notify our consumers with the new changes so that they take them into account.
+Not all API changes have an impact on API consumers. These changes are often referred to as backward compatible changes. If the API undergoes changes of this type, it should not be necessary to release a new version, it will suffice to replace the current one. What would be very convenient is to notify our consumers with the new changes so that they take them into account.
 
 This is a list of changes to an API that **DO NOT** affect consumers:
 
 - Add new operations to the service. Translated to REST, it would be to add new actions on a resource (`PUT`, `POST`, ...).
 - Add optional input parameters to requests on existing resources. For example, adding a new filter parameter in a GET on a collection of resources.
 - Modify input parameters from required to optional. For example: when creating a resource, a property of said resource that was previously mandatory becomes optional.
-- Add new properties in the representation of a resource returned by the server. For example, adding a new age field to an Person resource which originally was made up of nationality and name. 
+- Add new properties in the representation of a resource returned by the server. For example, adding a new age field to a Person resource, which originally was made up of nationality and name. 
 
 This other list shows changes that **DO** affect consumers:
 - Delete operations or actions on a resource. For example:  POST requests on a resource are no longer accepted.
@@ -589,8 +589,8 @@ This other list shows changes that **DO** affect consumers:
 Tho ensure this compatibility, the following must be followed.
 
 **As API producer**:
-- New fields should always be aAdded as optional.
-- Postel's Law: “<em>Be conservative in what you do, be liberal in what you accept from others</em>”. When you have input fields that need to be removed, mark them as unused so they can be ignored. 
+- New fields should always be added as optional.
+- Postel's Law: “<em>Be conservative in what you do, be liberal in what you accept from others</em>”. When you have input fields that need to be removed, mark them as unused, so they can be ignored. 
 - Do not change the field’s semantics.
 - Do not change the field’s order.
 - Do not change the validation rules of the request fields to more restrictive ones.
@@ -608,7 +608,7 @@ Tho ensure this compatibility, the following must be followed.
 In order to guarantee interoperability, one of the most important points is to carry out error management aimed at strictly complying with the error codes defined in the HTTP protocol.
 
 An error representation must not be different from the representation of any resource. A main error message is defined, with JSON structure with the following fields:
-- A field "`status`", which can be identified in the response as a standard code from list of Hypertext Transfer Protocol (HTTP) response status codes.
+- A field "`status`", which can be identified in the response as a standard code from a list of Hypertext Transfer Protocol (HTTP) response status codes.
 - A unique error "`code`", which can be identified and traced for more details. It must be human readable; therefore, it must not be a numeric code. In turn, to achieve a better location of the error, you can reference the value or field that is causing it, and include it in the message. 
 - A detailed description of "`message`"
   
@@ -622,7 +622,7 @@ A JSON error structure is proposed below:
 }
 ```
 
-In error handling different cases must be considered, even at the functional level that it is possible to modify the error message returned to the API consumer. For this error handling there are two possible alternatives listed below:
+In error handling different cases must be considered, even at the functional level that it is possible to modify the error message returned to the API consumer. For this error handling, there are two possible alternatives listed below:
 - Error handling done with custom policies in the API admin tool.
 - Error management performed in a service queried by API.
   
@@ -631,7 +631,7 @@ The essential requirements to consider would be:
 - Customization of the generated error based on the error content returned by the final core service should be contemplated.
 - Latency should be minimized in its management.
 
-In the following, we ellaborate on the exisiing client errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature: i) syntax exceptions, ii) service exceptions, and iii) server errores. 
+In the following, we elaborate on the existing client errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature: i) syntax exceptions, ii) service exceptions, and iii) server errors. 
 
 <font size="3"><span style="color: blue"> Syntax Exceptions </span></font>
 
@@ -706,8 +706,8 @@ The HTTP codes that the server will use as a response are:
 - `400`: request outside the range of the resource list
  
 Petitions examples:
-- `page=0 perPage=20`, which returnss the first 20 resources
-- `page=10 perPage=20`, which returns 20 resources from the 10th page (in terms of absolute index, 10 pages and 20 elements per page, means it will start on the 200 position as 10*20=200)
+- `page=0 perPage=20`, which returns the first 20 resources
+- `page=10 perPage=20`, which returns 20 resources from the 10th page (in terms of absolute index, 10 pages and 20 elements per page, means it will start on the 200 position as 10x20=200)
 
 
 
@@ -717,7 +717,7 @@ Sorting the result of a query on a resources collection requires two main parame
 - `orderBy`: it contains the names of the attributes on which the sort is performed, with comma separated if there is more than one criteria.
 - `order`: by default, sorting is done in descending order. 
 
-If you may want to specify which sort criteria you need to use "ascp" or "desc" as query value.
+If you may want to specify which sort criteria, you need to use "asc" or "desc" as query value.
 
 For example: The list of orders is retrieved, sorted by rating, reviews and name with descending criteria.
 ```http
@@ -835,7 +835,7 @@ The API must ensure that the channel where the consumer and the API will exchang
 <u>a) TLS and mutual authentication</u><br>
 As for today, it is commonly agreed that all communications over the Internet must be done via secure HTTP (HTTPS) using Transport Layer Security (TLS) to generate a secure and recorded communication channel. In some cases, the TLS channel must be more strictly added a mutual authentication process to identify both actors.
 
-Protect communications with TLS is mandatory for all APIs. Any API that accepts requests without TLS will not be published to the API Manager. The TLS version to use for APIs is TLS 1.2 (for compatibility) and TLS 1.3 (for security and because it is the latest version available). The API Manager should not accept requests made with some of the older versions of TLS. 
+Protect communications with TLS is mandatory for all APIs. Any API that accepts requests without TLS will not be published to the API Manager. The TLS version to use for APIs is TLS 1.2 (for compatibility) and TLS 1.3 (for security and because it is the latest version available). The API Manager should not accept requests made with some older versions of TLS. 
 
 In case the request does not use the proper TLS, the API should send an HTTP 403 (Forbidden) code with the corresponding response body.
 
@@ -884,7 +884,7 @@ To correctly define the scopes, when creating them, the following recommendation
 - **Use the kebab-case nomenclature** to define API names, resources, and scope permissions.
 - **Recommended Format**: `<API_name>-<Resource>-<Permission>`
 
-Next, we illustrate an example on how to define series of scopes for a OpenAPI file.
+Next, we illustrate an example on how to define a series of scopes for a OpenAPI file.
 
 The first step is to create the security definitions according to the nomenclature that we have defined.
 <p align="center">
@@ -943,7 +943,7 @@ The API must validate the signature of the JWT in the payload following next req
 - The API must validate that the certificate used by the consumer is accepted by one of the allowed CAs (see Certificate Chain Validation section for a list of accepted CAs).
 - Validate that the payload has not been modified during its transmission. Below options should be checked:
   - Encryption/decryption of the JWT signature using the appropriate consumer public key. The JWT is encoded in Base64.
-  - Making sure that that the decrypted and decrypted signature has the following String value ("`JWT_Header.JWT_Payload`")
+  - Making sure that the decrypted and decrypted signature has the following String value ("`JWT_Header.JWT_Payload`")
   - Making sure that the JWT payload has the same structure and values as the decrypted part of "`JWT_Signature`".
 
 
@@ -989,7 +989,7 @@ This part must include the following information:
 - A brief description of the main functions of the API.
 - API Terms of Service.
 - Contact information, with name, email and website of the API Holder.
-- License information (name, website…)
+- Licence information (name, website…)
 - Schemes supported (HTTP, HTTPS…)
 - Allowed response formats (“application/json”, “text/xml”…)
 - Response format (“application/jwt”…)
@@ -1006,8 +1006,8 @@ This part must contain the list of published functions, with the following descr
    - Functionality summary.
    - Functionality method description.
    - Tag list to classify methods.
-   - Request param list, making reference to "Request params " part.
-   - Supported responses list, describing success and erros cases.
+   - Request param list, making reference to "Request params" part.
+   - Supported responses list, describing success and errors cases.
 
 <p align="center">
 <img src="./images/guidelines-fig-15.png" width="400"/>
@@ -1044,11 +1044,11 @@ This part describes the list of possible messages returned by the API. It also i
 This part captures a detailed description of all the data structures used in the API specification. For each of these data, the specification must contain:
 - Name of the data object, used to reference it in other sections.
 - Data type (String, Integer, Object…).
-- If the format of a string is datetime following sentence must be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)`
+- If the format of a string is date-time following sentence must be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)`
 - If the data type is an object, list of required properties.
 - List of properties within the object data, including:
    - Property name
-   - Property desctiption
+   - Property description
    - Property type (String, Integer, Object …)
    - Other properties by type:
       - String ones: min and max longitude
@@ -1076,7 +1076,7 @@ As mentioned in Openapi doc [here](https://spec.openapis.org/oas/v3.0.3#discrimi
 simplify serialization/deserialization process and so reduce resource consumption.
 
 ##### Inheritance
-The mappings section is not mandatory in discriminator, by default ClassName are used as values to populate the property. You can use mappings to restrict usage to subset of subclasses.
+The mappings section is not mandatory in discriminator, by default ClassName are used as values to populate the property. You can use mappings to restrict usage to a subset of subclasses.
 
 
 ``` yaml 
@@ -1162,7 +1162,7 @@ The following sample illustrates this usage.
 
 ```
 
-When IpAddr is used in a payload the property objectType MUST be present to indicate which schema to use
+When IpAddr is used in a payload, the property objectType MUST be present to indicate which schema to use
 
 ``` json
 { 
@@ -1181,14 +1181,14 @@ there should be as similar as possible to the OAuth flows in your production env
 following aspects:
 
 - Security Type: oauth2, oauth…
-- Security Flow (Depends of security type): implicit, password…
+- Security Flow (Depends on security type): implicit, password…
 - Security Flow description applied (String)
 - Endpoint token URL
 - URL to endpoint authorization ( If flow is based on "`authorizationCode`").	
 
 ## 12. Subscription, Notification & Event
 
-In order to provide event-based interaction, CAMARA API could provided capabilities for subscription & notification management.
+In order to provide event-based interaction, CAMARA API could provide capabilities for subscription & notification management.
 A subscription allows an API consumer to request event notification reception at a given URL (callback address) for a specific context.
 A notification is the publication at the listener address about an occurred event.
 Managed event types are explicitly defined in CAMARA API OAS.
@@ -1232,9 +1232,9 @@ Recommended format conventions regarding ```notificationAuthToken``` attribute, 
 
 #### Resource-based (explicit) subscription
 
-A resource-based subscription is a event subscription managed as a resource. This subscription is explicit. An API endpoint is provided to request subscription creation.  As this event subscription is managed as an API resource, it is identified and operations to search, retrieve and delete it must be provided.
+A resource-based subscription is an event subscription managed as a resource. This subscription is explicit. An API endpoint is provided to request subscription creation.  As this event subscription is managed as an API resource, it is identified and operations to search, retrieve and delete it must be provided.
 
-Note: It is perfectly valid for a CAMARA API to have several event types managed. The subscription endpoint will be unique but 'eventType' attribute is used to distinguish distinct events subscribed.
+Note: It is perfectly valid for a CAMARA API to have several event types managed. The subscription endpoint will be unique, but 'eventType' attribute is used to distinguish distinct events subscribed.
 
 In order to ease developer adoption, the pattern for Resource-based event subscription should be consistent for all API providing this feature.
 
@@ -1242,24 +1242,24 @@ In order to ease developer adoption, the pattern for Resource-based event subscr
 
 | operation | path | description |
 | ----- |	-----  |	 -----  | 
-| POST | `/subscriptions` |  Operation to request a event subscription.     |
-| GET | `/subscriptions` |  Operation to retrieve a list of event subscriptions - could be an empty list.  eg. `GET /subscriptions?type=org.camaraproject.device-status.v1.roaming-status&expiresAt.lt=2023-03-17` |
-| GET | `/subscriptions/{subscriptionsId}` | Operation to retrieve a event subscription |
-| DELETE | `/subscriptions/{subscriptionsId}` | Operation to delete a event subscription |
+| POST | `/subscriptions` |  Operation to request an event subscription.     |
+| GET | `/subscriptions` |  Operation to retrieve a list of event subscriptions - could be an empty list.  e.g. `GET /subscriptions?type=org.camaraproject.device-status.v1.roaming-status&expiresAt.lt=2023-03-17` |
+| GET | `/subscriptions/{subscriptionsId}` | Operation to retrieve an event subscription |
+| DELETE | `/subscriptions/{subscriptionsId}` | Operation to delete an event subscription |
 
 
 Note on the operation path:
 The recommended pattern is to use `/subscriptions` path for the subscription operation. But API design team, for specific case, has the option to append `/subscriptions` path with a prefix (e.g. `/roaming/subscriptions` and `/connectivity/subscriptions`). The rationale for using this alternate pattern should be explicitly provided (e.g. the notification source for each of the supported events may be completely different, in which case separating the implementations is beneficial). 
 
-Following table provides `/subscriptions` attributes
+The Following table provides `/subscriptions` attributes
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
-| webhook | object | detail for event channel - in current version only webhook description are provided but other event channel descriptor could be added in future | mandatory |
+| webhook | object | detail for event channel - in current version only webhook description are provided, but other event channel descriptor could be added in future | mandatory |
 | subscriptionId | string | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server | mandatory in server response |
-| subscriptionExpireTime | string - datetime| Date when the event subscription should end. Provided by API requester. Server may reject the suscription if the period requested do not comply with Telco Operator policies (i.e. to avoid unlimited time subscriptions). In this case server returns exception 403 "SUBSCRIPTION_PERIOD_NOT_ALLOWED" | optional |
-| startsAt | string - datetime| Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints | optional |
-| expiresAt | string - datetime| Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided by API server.  | optional |
+| subscriptionExpireTime | string - date-time| Date when the event subscription should end. Provided by API requester. The Server may reject the subscription if the period requested do not comply with Telco Operator policies (i.e. to avoid unlimited time subscriptions). In this case server returns exception 403 "SUBSCRIPTION_PERIOD_NOT_ALLOWED" | optional |
+| startsAt | string - date-time| Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints | optional |
+| expiresAt | string - date-time| Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided by API server.  | optional |
 | subscriptionDetail | object | Object defined for each event subscription depending on the event - it could be for example the ueID targeted by the subscription | optional |
 
 
@@ -1274,7 +1274,7 @@ The `subscriptionDetail` must have at least a type attribute:
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
-| type | string | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required to provide a enum for these attribute. `type` must follow following format: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter `v` and the major version like  ``org.camaraproject.device-status.v1.roaming-status``| mandatory  |
+| type | string | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required to provide an enum for this attribute. `type` must follow the format: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter `v` and the major version like  ``org.camaraproject.device-status.v1.roaming-status``| mandatory  |
 
 
 ##### Error definition for resource-based (explicit) subscription
@@ -1289,13 +1289,13 @@ Following Error code must be present:
 
 ##### Termination for resource-based (explicit) subscription
 
-3 scenarios subscription termination are possible (business conditions may apply):
+3 scenarios of subscription termination are possible (business conditions may apply):
 
 * case1: subscriptionExpireTime has been provided in the request and reached. The operator in this case has to terminate the subscription.
 * case2: subscriber requests the `DELETE` operation for the subscription (if the subscription did not have a subscriptionExpireTime or before subscriptionExpireTime expires). 
 * case3: subscription ends on operator request. 
 
-It could be useful to provide a mechanism to inform subscriber for case3 (and probably case1). In this case a specific event type could be used.
+It could be useful to provide a mechanism to inform subscriber for case3 (and probably case1). In this case, a specific event type could be used.
 
 _Termination rules regarding subscriptionExpireTime usage_
 * When client side providing a `subscriptionExpireTime`, service side has to terminate the subscription without expecting a `DELETE` operation.
@@ -1303,7 +1303,7 @@ _Termination rules regarding subscriptionExpireTime usage_
 
 
 ##### Resource-based (explicit) example
-In this example, we illustrate a request for a device roaming status event subscription. Requester did not provide anticipated expiration time for the subscription. In the response, server accepts this request and sets an event subscription end one year later. This is an illustration and each implementation is free to provide - or not - a subscription planned expiration date.
+In this example, we illustrate a request for a device roaming status event subscription. Requester did not provide an anticipated expiration time for the subscription. In the response, server accepts this request and sets an event subscription end one year later. This is an illustration and each implementation is free to provide - or not - a subscription planned expiration date.
 
 Request:
 
@@ -1361,16 +1361,16 @@ Note: If the API provides both patterns (indirect and resource-based), and the A
 
 #### Event notification definition
 
-The event notification endpoint is used by the API server to notify the API consumer that an event occured.
+The event notification endpoint is used by the API server to notify the API consumer that an event occurred.
 
 CAMARA event notification leverages **[CloudEvents](https://cloudevents.io/)** as it is a vendor-neutral specification for defining the format of event data. A generic neutral CloudEvent notification swagger is available in commonalities/artifact directory (notification-as-cloud-event.yaml).
 
-Note: The notification is the message posted on listener side. We describe the notification(s) in the CAMARA API using the `callbacks`. From API consumer it could confusing because this endpoint must be implemented on the business API consumer side. This notice should be explicitly mentioned in all CAMARA API documentation featuring notifications.
+Note: The notification is the message posted on listener side. We describe the notification(s) in the CAMARA API using the `callbacks`. From API consumer it could be confusing because this endpoint must be implemented on the business API consumer side. This notice should be explicitly mentioned in all CAMARA API documentation featuring notifications.
 
 Only Operation POST is provided for event notification and the expected response code is `204`. 
-The url for this `POST` operation must be specified in the swagger as `{$request.body#/webhook/notificationUrl}`. 
+The URL for this `POST` operation must be specified in the swagger as `{$request.body#/webhook/notificationUrl}`. 
 
-For consistency across CAMARA APIs the uniform CloudEvents model must be used with following rules:
+For consistency across CAMARA APIs, the uniform CloudEvents model must be used with following rules:
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
@@ -1380,12 +1380,12 @@ For consistency across CAMARA APIs the uniform CloudEvents model must be used wi
 | specversion | string | version of the specification to which this event conforms - must be "1.0" | mandatory |
 | datacontenttype | string | media-type that describes the event payload encoding, must be `application/json` for CAMARA APIs| optional |
 | subject | string | describes the subject of the event - Not used in CAMARA notification. | optional |
-| time | string  datetime| Timestamp of when the occurrence happened. If the time of the occurrence cannot be determined then this attribute MAY be set to some other time (such as the current time) by the CloudEvents producer, however all producers for the same `source` MUST be consistent in this respect. In other words, either they all use the actual time of the occurrence or they all use the same algorithm to determine the value used. (must adhere on CAMARA datetime recommendation based on RFC 3339) | mandatory (*) |
+| time | string  date-time| Timestamp of when the occurrence happened. If the time of the occurrence cannot be determined then this attribute MAY be set to some other time (such as the current time) by the CloudEvents producer, however all producers for the same `source` MUST be consistent in this respect. In other words, either they all use the actual time of the occurrence or they all use the same algorithm to determine the value used. (must adhere to CAMARA date-time recommendation based on RFC 3339) | mandatory (*) |
 | data | object| event notification details payload described in each CAMARA API and referenced by its `type` | optional |
 
-(*) Note: Attribute  `time` is tagged as optional in CloudEvents specification but from CAMARA perspective we mandate to value this attributes.
+(*) Note: Attribute  `time` is tagged as optional in CloudEvents specification, but from CAMARA perspective we mandate to value this attributes.
 
-`data` structure is dependant to each API:
+`data` structure is dependant on each API:
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 

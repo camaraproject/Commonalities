@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Github enables using templates in order to customize and standardize the information contributors 
+GitHub enables using templates in order to customize and standardize the information contributors 
 include when they open issues and pull requests in the repository.
 The proposed set of templates is adjusted to be applicable mainly to CAMARA API specification subprojects.
 
@@ -32,8 +32,8 @@ blank_issues_enabled: true
     about: Please ask and answer questions here.
  ```
 3. Modify Issue and PR templates in Markdown files included in the  `.github` folder if needed.
-* Issue templates include headers, where the name and descripttion of issue category, the suggested title of the issue, 
-the labels and assigness for the issue can be configured, e.g. 
+* Issue templates include headers, where the name and description of issue category, the suggested title of the issue, 
+the labels and assignees for the issue can be configured, e.g. 
 
 ```
 ---
