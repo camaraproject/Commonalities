@@ -744,7 +744,7 @@ Next, it is specified how it should be used according to the filtering based on 
 **Additional rules**:
 - The operator "`&`" is evaluated as an AND between different attributes.
 - A Query Param (attribute) can contain 1 or n values separated by "`,`".
-- For operations on numeric, date or enumerated fields, the use of the suffixes `.(gte|gt|lte|lt)$` will be allowed, which will act as comparators for “greater - equal to, greater than, smaller - equal to, smaller than”.
+- For operations on numeric, date or enumerated fields, the parameters with the suffixes `.(gte|gt|lte|lt)$` need to be defined, which should be used as comparators for “greater - equal to, greater than, smaller - equal to, smaller than” respectively. Only the parameters needed for given field should be defined e.g. with `.gte` and `.lte` suffixes only.
 
 **Examples**:
 - <u>Equals</u>: to search users with first name "david" and last name "munoz":
@@ -756,13 +756,56 @@ Next, it is specified how it should be used according to the filtering based on 
     - Search for the exact name "dav"
   - `GET /users?name=~dav`
     - Look for names that include "dav"
-- <u>Greater than / less than</u>: new attribute will be created and it will be preceded with the suffixes .(gte|gt|lte|lt)$.
+- <u>Greater than / less than</u>: new attributes need to be created with the suffixes `.(gte|gt|lte|lt)$` and included in `get` operation :
+```yaml
+paths:
+  /users:
+    get:  
+      parameters:
+        - $ref: "#/components/parameters/StartCreationDate"
+        - $ref: "#/components/parameters/AfterCreationDate"
+        - $ref: "#/components/parameters/EndCreationDate"
+        - $ref: "#/components/parameters/BeforeCreationDate"
+    ...
+components:
+  parameters: 
+    StartCreationDate:   <-- component name
+      in: query
+      name: creationDate.gte    <-- query attribute for "greater - equal to" comparison 
+      required: false
+      schema:
+        format: date-time
+        type: string
+    AfterCreationDate:
+      in: query
+      name: creationDate.gt
+      required: false
+      schema:
+        format: date-time
+        type: string
+    EndCreationDate:
+      in: query
+      name: creationDate.lte
+      required: false
+      schema:
+        format: date-time
+        type: string
+    BeforeCreationDate:
+      in: query
+      name: creationDate.lt
+      required: false
+      schema:
+        format: date-time
+        type: string
+```
+Then the parameters can be included in the query:
   - `GET /users?creationDate.gte=2021-01-01T00:00:00`
-    - Find users with creation Date greater than 2021
-  - `GET /users?creationDate.gt=2021-11-31T23:59:59`
-    - Find users with creationDate less than 2022
-  - `GET /users?creationDate.gte=2020-01-01T00:00:00&creationDate.lte=2021-11-31T23:59:59`
+    - Find users with creationDate starting from 2021
+  - `GET /users?creationDate.lt=2022-01-01T00:00:00`
+    - Find users with creationDate before 2022
+  - `GET /users?creationDate.gte=2020-01-01T00:00:00&creationDate.lte=2021-12-31T23:59:59`
     - Search for users created between 2020 and 2021
+
 
 
 ## 9. Architecture Headers
