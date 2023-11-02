@@ -314,9 +314,6 @@ Operation ids should follow a specific case convention: `camel` case.
 
 _Spectral rule_: [camara-operationid-casing-convention]()
 
-**Contradiction with Spectral rule `operation-operationId `** 
->  a reference for the operation - the value `lower-hyphen-case`
-
 *Severity*: `error`
 
 #### Path parameters / Query parameters
