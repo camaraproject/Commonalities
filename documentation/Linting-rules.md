@@ -25,7 +25,8 @@ Rules applying to both OpenAPI v2.0, v3.0, and most likely v3.1.
 
 |Name| Desc| Recom mended|CAMARA use|Spectral severity | CAMARA severity
 |---|---|---|--|---|--|
-|contact-properties| contact object is full of the most useful properties: `name`, `url`, `and email`|No|No | Warning |  |
+|contact-properties| contact object is full of the most useful properties: `name`, `url`, and `email`|No|No | Warning |  |
+
 |duplicated-entry-in-enum| Each value of an `enum` must be different from one another |Yes  | Yes | Warning |  |
 |info-contact |Info object should contain `contact` object |Yes  | Yes| Warning  |  |
 |info-description |Info object should contain `description` object |Yes  | Yes| Warning |  | 
