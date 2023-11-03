@@ -9,10 +9,14 @@ Spectral has a built-in OpenAPI Specification ruleset that can be used to valida
 
 With `extends: "spectral:oas"` ("oas" being shorthand for OpenAPI Specification) in the ruleset file to rules for OpenAPI v2 and v3.x, depending on the appropriate OpenAPI version being used (this is automatically detected through formats) are added to the final ruleset.
 
-The full list of the rules in this ruleset are described in [OpenAPI Rules](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules).
+All of the rules in this ruleset are described in [OpenAPI Rules](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules).
 
 
 `extends: [[spectral:oas, off]]`  - this avoids running any rules from the extended ruleset as they are disabled. Each rule then can be [enabled individually](https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all#enabling-rules).
+
+### Recommended rules
+Spectral's built-in OpenAPI ruleset is a two-tier system: with subset of rules marked as [recommended](https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all#recommended-or-all) to be used by default, and addtional rules marked with `recommended: false`.
+Recommended rules cover more basic requirements.
 
 ### Rule severity
 
@@ -20,13 +24,12 @@ The `severity` keyword is optional in rule definition and can be `error`, `warn`
 The default value is `warn`.
 
 ### OpenAPI v2 & v3
-Rules applying to both OpenAPI v2.0, v3.0, and most likely v3.1.
 
+Rules applying to both OpenAPI v2.0, v3.0, and most likely v3.1 - details are described in [Spectral Documentation](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules#openapi-v2--v3).
 
 |Name| Desc| Recom mended|CAMARA use|Spectral severity | CAMARA severity
 |---|---|---|--|---|--|
 |contact-properties| contact object is full of the most useful properties: `name`, `url`, and `email`|No|No | Warning |  |
-
 |duplicated-entry-in-enum| Each value of an `enum` must be different from one another |Yes  | Yes | Warning |  |
 |info-contact |Info object should contain `contact` object |Yes  | Yes| Warning  |  |
 |info-description |Info object should contain `description` object |Yes  | Yes| Warning |  | 
@@ -55,7 +58,7 @@ Rules applying to both OpenAPI v2.0, v3.0, and most likely v3.1.
 |typed-enum | Enum values should respect the type specifier. | Yes| Yes| Warning |  |
 
 ### OpenAPI v3-only
-Rules applicable only to OpenAPI v3.0 documents.
+Rules applicable only to OpenAPI v3.0 documents - details are described in [Spectral Documentation](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules#openapi-v3-only).
 
 |Name| Desc| Recom mended|CAMARA use|Spectral severity | CAMARA severity
 |---|---|---|--|---|--|
