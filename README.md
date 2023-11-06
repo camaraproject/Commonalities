@@ -15,6 +15,27 @@ Repository to describe and document common guidelines and assets for CAMARA APIs
 * Started: June 2023
 * Location: virtually
 
+## Documents for CAMARA Sub Projects
+
+The documents that are relevant for CAMARA API Sub Projects are found in the `documentation` directory (at the top-level). The rest of the sub-directories are primarily for internal working of the Commonalities Working Group.
+
+The `artifacts` directory contains templates for creating Github issues and Common data and error formats for CAMARA APIs.
+
+### Frequently-accessed output documents
+
+A list of some of the frequently accessed documents that are an output of the work done in the Commonalities Working Group is provided below. Note that the links are relative to the branch selected. Refer to the section below for released versions. 
+
+| Document name                                                                                                                             | Purpose                                                                                                                                                            |
+|-------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+ | [API-design-guidelines.md](documentation/API-design-guidelines.md)               | This document captures guidelines for the API design in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative. |
+| [API-DocumentationTemplate.md](documentation/API-DocumentationTemplate.md)       | Template for documenting the APIs                                                                                                                                  |
+| [API-Readiness-Checklist.md](documentation/API-Readiness-Checklist.md)           | A checklist that describes the minimum criteria for considering an API Ready                                                                                       |
+| [Camara_Versioning_Guidelines.md](documentation/Camara_Versioning_Guidelines.md) | Guidelines for API Subprojects on making releases                                                                                                                  |
+| [Glossary.md](documentation/Glossary.md)                                         | A glossary of the common terms and their API parameter/field names for use in the APIs                                                                             |
+
+
+
+
 ## Status and released versions
 * Release 0.1.0 of guidelines and assets for CAMARA APIs is available within the [release-0.1.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.1.0)):
   * For changes see [CHANGELOG.md](https://github.com/camaraproject/Commonalities/blob/main/CHANGELOG.md)
