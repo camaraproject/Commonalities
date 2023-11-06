@@ -1072,12 +1072,13 @@ In this part, the error response structure must also be defined, which must be a
 </p>
 
 #### 11.5.1 Usage of discriminator
-As mentioned in Openapi doc [here](https://spec.openapis.org/oas/v3.0.3#discriminator-object) usage of discriminator may
+As mentioned in OpenAPI doc [here](https://spec.openapis.org/oas/v3.0.3#discriminator-object) usage of discriminator may
 simplify serialization/deserialization process and so reduce resource consumption.
 
 ##### Inheritance
-The mappings section is not mandatory in discriminator, by default ClassName are used as values to populate the property. You can use mappings to restrict usage to a subset of subclasses.
 
+The mappings section is not mandatory in discriminator, by default ClassName are used as values to populate the property. You can use mappings to restrict usage to subset of subclasses.
+When it's possible, use Object Name as key in mapping section. This will simplify the work of providers and consumers who use OpenAPI code generators.
 
 ``` yaml 
     IpAddr:
@@ -1090,12 +1091,12 @@ The mappings section is not mandatory in discriminator, by default ClassName are
       discriminator:
         propertyName: addressType 
         mappings:                   
-            - IPV4ADDR: Ipv4Addr
-            - IPV6ADDR: Ipv6Addr   
+            - Ipv4Addr: '#/components/schemas/Ipv4Addr'   <-- use Object Name as mapping key to simplify usage
+            - Ipv6Addr: '#/components/schemas/Ipv6Addr'   
 
-    Ipv4Addr: 
+    Ipv4Addr:           <-- Object Name also known as Class Name, used as JsonName by OpenAPI generator
       allOf:            <-- extends IpAddr (no need to define addressType because it's inherited
-        - $ref: IpAddr
+        - $ref: '#/components/schemas/IpAddr'
         - type: object
           required:
             - address
@@ -1107,7 +1108,7 @@ The mappings section is not mandatory in discriminator, by default ClassName are
 
     Ipv6Addr:
       allOf:            <-- extends IpAddr
-        - $ref: IpAddr
+        - $ref: '#/components/schemas/IpAddr'
         - type: object
           required:
             - address
