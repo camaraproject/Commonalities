@@ -769,10 +769,12 @@ Next, it is specified how it should be used according to the filtering based on 
 
 With the aim of standardizing the request observability and traceability process, common headers that provide a follow-up of the E2E processes should be included. The table below captures these headers.
 
-| Name | Description |  Type | Pattern	| Longitude | Location | Required by API Caller | Required in OAS Definition |	Example | 
+| Name | Description |  Type | Pattern	| Longitude | Location | Required by API Consumer | Required in OAS Definition |	Example | 
 |---|---|---|---|---|---|---|---|---|
 | `X-Version` |	Service version description to help observability process |	String| N/A	| | Request | No | No | |	
 | `X-Correlator`|	Service correlator to make E2E observability |		String |	UUID (8-4-4-4-12)	| Max 36	| Request/Response | No | No |	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
+
+When the API Consumer includes the "X-Correlator" header in the request, the API provider must include it in the response. Otherwise, it is optional to include the "X-Correlator" header in the response.
 
 ## 10. Security
 
