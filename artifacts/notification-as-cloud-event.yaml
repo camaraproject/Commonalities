@@ -150,7 +150,7 @@ components:
       type: string
       format: uri-reference
       minLength: 1
-      description: "Identifies the context in which an event happened(example: 'com.orange.camara.qod')"
+      description: "Identifies the context in which an event happened - be a non-empty `URI-reference`.
       example:
         - https://github.com/cloudevents
         - mailto:cncf-wg-serverless@lists.cncf.io
