@@ -176,7 +176,7 @@ components:
         type:
           type: string
           description: 'type of event as defined in each CAMARA API (e.g.: org.camaraproject.qod.qos-status-changed-event)'
-          example: org.camaraproject.qod.qos-status-changed-event
+          example: 'org.camaraproject.qod.qos-status-changed-event'
           minLength: 25
         specversion:
           type: string
