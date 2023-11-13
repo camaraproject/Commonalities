@@ -151,13 +151,17 @@ components:
       format: uri-reference
       minLength: 1
       description: "Identifies the context in which an event happened - be a non-empty `URI-reference."
-      example:
-        - https://github.com/cloudevents
-        - mailto:cncf-wg-serverless@lists.cncf.io
-        - urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66
-        - cloudevents/spec/pull/123
-        - /sensors/tn-1234567/alerts
-        - 1-555-123-4567
+     examples:
+        absolute_uri_https:
+          value: https://github.com/cloudevents
+        absolute_uri_mailto:
+          value: mailto:cncf-wg-serverless@lists.cncf.io
+        URN_with_UUID:
+          value: urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66
+        application_specific_relative_reference:
+          value: /cloudevents/spec/pull/123
+        application_specific:
+          value: 1-555-123-4567
 
     CloudEvent:
       description: The notification callback
