@@ -276,14 +276,14 @@ components:
   examples:
     QOS_STATUS_CHANGED_EXAMPLE:
       value:
-        id: 123e4567-e89b-12d3-a456-426655440000
-        source: com.orange.camara.qod
-        type: org.camaraproject.qod.qos-status-changed-event
-        specversion: '1.0'
-        time: 2023-01-17T13:18:23.682Z
-        datacontenttype: application/json
+        id: "123e4567-e89b-12d3-a456-426655440000"
+        source: "com.orange.camara.qod"
+        type: "org.camaraproject.qod.qos-status-changed-event"
+        specversion: "1.0"
+        time: "2023-01-17T13:18:23.682Z"
+        datacontenttype: "application/cloudevents+json"
         data:
-          sessionId: 6e8bc430-9c3a-11d9-9669-0800200c9a66
+          sessionId: "6e8bc430-9c3a-11d9-9669-0800200c9a66"
           qosStatus: UNAVAILABLE
           statusInfo: DURATION_EXPIRED
 
