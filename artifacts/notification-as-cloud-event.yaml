@@ -281,7 +281,7 @@ components:
         type: "org.camaraproject.qod.qos-status-changed-event"
         specversion: "1.0"
         time: "2023-01-17T13:18:23.682Z"
-        datacontenttype: "application/cloudevents+json"
+        datacontenttype: "application/json"
         data:
           sessionId: "6e8bc430-9c3a-11d9-9669-0800200c9a66"
           qosStatus: UNAVAILABLE
