@@ -151,7 +151,7 @@ components:
       format: uri-reference
       minLength: 1
       description: "Identifies the context in which an event happened - be a non-empty `URI-reference."
-     examples:
+      example:
         absolute_uri_https:
           value: https://github.com/cloudevents
         absolute_uri_mailto:
