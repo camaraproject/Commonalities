@@ -1242,11 +1242,18 @@ In order to ease developer adoption, the pattern for Resource-based event subscr
 
 | operation | path | description |
 | ----- |	-----  |	 -----  | 
-| POST | `/subscriptions` |  Operation to request an event subscription.     |
+| POST | `/subscriptions` |  Operation to request an event subscription. (*)     |
 | GET | `/subscriptions` |  Operation to retrieve a list of event subscriptions - could be an empty list.  e.g. `GET /subscriptions?type=org.camaraproject.device-status.v1.roaming-status&expiresAt.lt=2023-03-17` |
-| GET | `/subscriptions/{subscriptionId}` | Operation to retrieve an event subscription |
-| DELETE | `/subscriptions/{subscriptionId}` | Operation to delete an event subscription |
+| GET | `/subscriptions/{subscriptionId}` | Operation to retrieve an event subscription (**) |
+| DELETE | `/subscriptions/{subscriptionId}` | Operation to delete an event subscription (***) |
 
+Notes:
+
+(*) As the subscription could be created synchronously or asynchronously both status codes 201 and 202 must be described in the OpenAPI specification.
+ 
+(**) If the `GET /subscriptions/{subscriptionId}` is not able to retrieve a recently created subscription in asynchronous mode, a 404 code is sent back.
+  
+(***) As the subscription deletion could be handled synchronously or asynchronously both status codes 202 and 204 must be described in the OpenAPI specification.
 
 Note on the operation path:
 The recommended pattern is to use `/subscriptions` path for the subscription operation. But API design team, for specific case, has the option to append `/subscriptions` path with a prefix (e.g. `/roaming/subscriptions` and `/connectivity/subscriptions`). The rationale for using this alternate pattern should be explicitly provided (e.g. the notification source for each of the supported events may be completely different, in which case separating the implementations is beneficial). 
