@@ -277,7 +277,7 @@ components:
     QOS_STATUS_CHANGED_EXAMPLE:
       value:
         id: "123e4567-e89b-12d3-a456-426655440000"
-        source: "com.orange.camara.qod"
+        source: "https://notificationSendServer12.supertelco.com"
         type: "org.camaraproject.qod.qos-status-changed-event"
         specversion: "1.0"
         time: "2023-01-17T13:18:23.682Z"
