@@ -148,18 +148,17 @@ components:
       type: string
       format: uri-reference
       minLength: 1
-      description: "Identifies the context in which an event happened - be a non-empty `URI-reference`."
-      example:
-        absolute_uri_https:
-          value: https://github.com/cloudevents
-        absolute_uri_mailto:
-          value: mailto:cncf-wg-serverless@lists.cncf.io
-        URN_with_UUID:
-          value: urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66
-        application_specific_relative_reference:
-          value: /cloudevents/spec/pull/123
-        application_specific:
-          value: 1-555-123-4567
+      description: |
+        Identifies the context in which an event happened - be a non-empty `URI-reference` like:
+        - URI with a DNS authority:
+          * https://github.com/cloudevents
+          * mailto:cncf-wg-serverless@lists.cncf.io
+        - Universally-unique URN with a UUID:
+          * urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66
+        - Application-specific identifier:
+          * /cloudevents/spec/pull/123
+          * 1-555-123-4567
+      example: "https://notificationSendServer12.supertelco.com"
 
     CloudEvent:
       description: The notification callback
