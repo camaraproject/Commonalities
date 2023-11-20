@@ -167,6 +167,7 @@ components:
         - source
         - specversion
         - type
+        - time
       properties:
         id:
           type: string
