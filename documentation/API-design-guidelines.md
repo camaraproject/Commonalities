@@ -1370,7 +1370,7 @@ Note: If the API provides both patterns (indirect and resource-based), and the A
 
 The event notification endpoint is used by the API server to notify the API consumer that an event occurred.
 
-CAMARA event notification leverages **[CloudEvents](https://cloudevents.io/)** as it is a vendor-neutral specification for defining the format of event data. A generic neutral CloudEvent notification OpenAPI specification is available in Commonalities/artifact directory (notification-as-cloud-event.yaml).
+CAMARA event notification leverages **[CloudEvents](https://cloudevents.io/)**  and is based on release [1.0.2](https://github.com/cloudevents/spec/releases/tag/v1.0.2) as it is a vendor-neutral specification for defining the format of event data. A generic neutral CloudEvent notification OpenAPI specification is available in Commonalities/artifact directory (notification-as-cloud-event.yaml).
 
 Note: The notification is the message posted on listener side. We describe the notification(s) in the CAMARA API using the `callbacks`. From API consumer it could be confusing because this endpoint must be implemented on the business API consumer side. This notice should be explicitly mentioned in all CAMARA API documentation featuring notifications.
 
