@@ -16,7 +16,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
   - [2.5 Reduce telco-specific terminology in API definitions](#25-reduce-telco-specific-terminology-in-api-definitions)
   - [3. API Definition](#3-api-definition)
     - [3.1 API REST](#31-api-rest)
-      - [**POST or GET for transferring sensitive or complex data**](#post-or-get-for-transferring-sensitive-or-complex-data)
+      - [POST or GET for transferring sensitive or complex data](#post-or-get-for-transferring-sensitive-or-complex-data)
     - [3.2 HTTP Response Codes](#32-http-response-codes)
     - [3.3 Query Parameters Use](#33-query-parameters-use)
     - [3.4 Path Parameters Use](#34-path-parameters-use)
@@ -283,7 +283,7 @@ In this document will be defined the principal verbs to use in the API definitio
 
 <br>
 
-#### **POST or GET for transferring sensitive or complex data**
+#### POST or GET for transferring sensitive or complex data
 
 Using the GET operation to pass sensitive data potentially embeds this information in the URL if contained in query or path parameters. For example, this information can remain in browser history, could be visible to anyone who can read the URL, or could be logged by elements along the route such as gateways and load balancers. This increases the risk that the sensitive data may be acquired by unauthorised 3rd parties. Using HTTPS does not solve this vulnerability, as the TLS termination points are not necessarily the same as the API endpoints themselves.
 
