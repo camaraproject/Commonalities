@@ -118,13 +118,13 @@ And secondary (optionally) with:
 ## References
 
 [1]:https://www.3gpp.org/DynaReport/23501.htm
-[2]:https://www.3gpp.org/DynaReport/2300.htm
+[2]:https://www.3gpp.org/DynaReport/23003.htm
 [3]:https://www.rfc-editor.org/rfc/rfc4282
 [4]:https://www.3gpp.org/DynaReport/23682.htm
 [5]:https://www.3gpp.org/DynaReport/23502.htm
 
 * [1]: 3GPP [TS 23.501](https://www.3gpp.org/DynaReport/23501.htm"): "System Architecture for the 5G System; Stage 2".
-* [2]: 3GPP [TS 23.003](https://www.3gpp.org/DynaReport/2300.htm): "Numbering, addressing and identification".
+* [2]: 3GPP [TS 23.003](https://www.3gpp.org/DynaReport/23003.htm): "Numbering, addressing and identification".
 * [3]: IETF [RFC 4282](https://www.rfc-editor.org/rfc/rfc4282): "The Network Access Identifier".
 * [4]: 3GPP [TS 23.682](https://www.3gpp.org/DynaReport/23682): "Architecture enhancements to facilitate communications with packet data networks and applications".
 * [5]: 3GPP [TS 23.502](https://www.3gpp.org/DynaReport/23502.htm): "Procedures for the 5G System (5GS)".
