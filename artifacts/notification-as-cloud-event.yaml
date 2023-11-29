@@ -161,8 +161,7 @@ components:
       example: "https://notificationSendServer12.supertelco.com"
 
     CloudEvent:
-      description: |
-        The notification callback that can be extended by adding data field in child classes
+      description: The notification callback
       required:
         - id
         - source
@@ -188,6 +187,9 @@ components:
         datacontenttype:
           type: string
           description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
+        data:
+          type: object
+          description: Event details payload described in each CAMARA API and referenced by its type
         time:
           $ref: "#/components/schemas/DateTime"
 
