@@ -16,7 +16,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
   - [2.5 Reduce telco-specific terminology in API definitions](#25-reduce-telco-specific-terminology-in-api-definitions)
   - [3. API Definition](#3-api-definition)
     - [3.1 API REST](#31-api-rest)
-      - [**POST or GET for transferring sensitive or complex data**](#post-or-get-for-transferring-sensitive-or-complex-data)
+      - [POST or GET for transferring sensitive or complex data](#post-or-get-for-transferring-sensitive-or-complex-data)
     - [3.2 HTTP Response Codes](#32-http-response-codes)
     - [3.3 Query Parameters Use](#33-query-parameters-use)
     - [3.4 Path Parameters Use](#34-path-parameters-use)
@@ -283,7 +283,7 @@ In this document will be defined the principal verbs to use in the API definitio
 
 <br>
 
-#### **POST or GET for transferring sensitive or complex data**
+#### POST or GET for transferring sensitive or complex data
 
 Using the GET operation to pass sensitive data potentially embeds this information in the URL if contained in query or path parameters. For example, this information can remain in browser history, could be visible to anyone who can read the URL, or could be logged by elements along the route such as gateways and load balancers. This increases the risk that the sensitive data may be acquired by unauthorised 3rd parties. Using HTTPS does not solve this vulnerability, as the TLS termination points are not necessarily the same as the API endpoints themselves.
 
@@ -1217,9 +1217,9 @@ If this capability is present in CAMARA API, `webhook` object attribute **must**
 
 ##### Instance-based (implicit) subscription example
 
-```json
+```javascript
 {
-<Resource instance representation>
+ /* Resource instance representation */
 "webhook": {
    "notificationUrl": "https://callback..."
    "notificationAuthToken" : "sdfr5sff...lmp"
@@ -1245,11 +1245,18 @@ In order to ease developer adoption, the pattern for Resource-based event subscr
 
 | operation | path | description |
 | ----- |	-----  |	 -----  | 
-| POST | `/subscriptions` |  Operation to request an event subscription.     |
+| POST | `/subscriptions` |  Operation to request an event subscription. (*)     |
 | GET | `/subscriptions` |  Operation to retrieve a list of event subscriptions - could be an empty list.  e.g. `GET /subscriptions?type=org.camaraproject.device-status.v1.roaming-status&expiresAt.lt=2023-03-17` |
-| GET | `/subscriptions/{subscriptionsId}` | Operation to retrieve an event subscription |
-| DELETE | `/subscriptions/{subscriptionsId}` | Operation to delete an event subscription |
+| GET | `/subscriptions/{subscriptionId}` | Operation to retrieve an event subscription (**) |
+| DELETE | `/subscriptions/{subscriptionId}` | Operation to delete an event subscription (***) |
 
+Notes:
+
+(*) As the subscription could be created synchronously or asynchronously both status codes 201 and 202 must be described in the OpenAPI specification.
+ 
+(**) If the `GET /subscriptions/{subscriptionId}` is not able to retrieve a recently created subscription in asynchronous mode, a 404 code is sent back.
+  
+(***) As the subscription deletion could be handled synchronously or asynchronously both status codes 202 and 204 must be described in the OpenAPI specification.
 
 Note on the operation path:
 The recommended pattern is to use `/subscriptions` path for the subscription operation. But API design team, for specific case, has the option to append `/subscriptions` path with a prefix (e.g. `/roaming/subscriptions` and `/connectivity/subscriptions`). The rationale for using this alternate pattern should be explicitly provided (e.g. the notification source for each of the supported events may be completely different, in which case separating the implementations is beneficial). 
@@ -1287,7 +1294,7 @@ Error definition described in this guideline applies for subscriptions.
 Following Error code must be present:
 * for `POST`: 400, 401, 403, 409, 500, 503
 * for `GET`: 400, 401, 403, 500, 503
-* for `GET/{subscriptionId}`: 400, 401, 403, 404, 500, 503
+* for `GET .../{subscriptionId}`: 400, 401, 403, 404, 500, 503
 * for `DELETE`: 400, 401, 403, 404, 500, 503
 
 ##### Termination for resource-based (explicit) subscription
@@ -1310,7 +1317,7 @@ In this example, we illustrate a request for a device roaming status event subsc
 
 Request:
 
-```
+```bash
 curl -X 'POST' \
   'http://localhost:9091//device-status/v0/subscriptions' \
   -H 'accept: application/json' \
@@ -1335,7 +1342,7 @@ curl -X 'POST' \
 
 response:
 
-```
+```http
 201 Created
 ```
 ```json 
@@ -1366,12 +1373,13 @@ Note: If the API provides both patterns (indirect and resource-based), and the A
 
 The event notification endpoint is used by the API server to notify the API consumer that an event occurred.
 
-CAMARA event notification leverages **[CloudEvents](https://cloudevents.io/)** as it is a vendor-neutral specification for defining the format of event data. A generic neutral CloudEvent notification swagger is available in commonalities/artifact directory (notification-as-cloud-event.yaml).
+CAMARA event notification leverages **[CloudEvents](https://cloudevents.io/)**  and is based on release [1.0.2](https://github.com/cloudevents/spec/releases/tag/v1.0.2) as it is a vendor-neutral specification for defining the format of event data. A generic neutral CloudEvent notification OpenAPI specification is available in Commonalities/artifact directory (notification-as-cloud-event.yaml).
 
 Note: The notification is the message posted on listener side. We describe the notification(s) in the CAMARA API using the `callbacks`. From API consumer it could be confusing because this endpoint must be implemented on the business API consumer side. This notice should be explicitly mentioned in all CAMARA API documentation featuring notifications.
 
 Only Operation POST is provided for event notification and the expected response code is `204`. 
 The URL for this `POST` operation must be specified in the swagger as `{$request.body#/webhook/notificationUrl}`. 
+The event notification is represented in the JavaScript Object Notation (JSON) Data Interchange Format ([RFC8259](https://datatracker.ietf.org/doc/html/rfc8259)). Such [CloudEvents representation](https://github.com/cloudevents/spec/blob/main/cloudevents/formats/json-format.md) must use the media type `application/cloudevents+json`.
 
 For consistency across CAMARA APIs, the uniform CloudEvents model must be used with following rules:
 
@@ -1384,11 +1392,11 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 | datacontenttype | string | media-type that describes the event payload encoding, must be `application/json` for CAMARA APIs| optional |
 | subject | string | describes the subject of the event - Not used in CAMARA notification. | optional |
 | time | string  date-time| Timestamp of when the occurrence happened. If the time of the occurrence cannot be determined then this attribute MAY be set to some other time (such as the current time) by the CloudEvents producer, however all producers for the same `source` MUST be consistent in this respect. In other words, either they all use the actual time of the occurrence or they all use the same algorithm to determine the value used. (must adhere to CAMARA date-time recommendation based on RFC 3339) | mandatory (*) |
-| data | object| event notification details payload described in each CAMARA API and referenced by its `type` | optional |
+| data | object| event notification details payload described in each CAMARA API and referenced by its `type` | optional (**) |
 
 (*) Note: Attribute  `time` is tagged as optional in CloudEvents specification, but from CAMARA perspective we mandate to value this attributes.
 
-`data` structure is dependant on each API:
+(**) Event data (domain-specific information about the occurrence) are encapsulated within `data` object, its occurence can be set to mandatory by given CAMARA API and its structure is dependant on each API:
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
@@ -1430,12 +1438,12 @@ Event Producers shall choose based on their internal security guidelines to impl
 
 Example for Roaming status event notification - Request:
 
-```
+```bash
 curl -X 'POST' \
   'https://application-server.com/v0/notifications' \
-  -H 'accept: application/json' \
+  -H 'Accept: application/json' \
   -H 'Authorization: Bearer c8974e592c2fa383d4a3960714' \
-  -H 'Content-Type: application/json' \
+  -H 'Content-Type: application/cloudevents+json' \
   -d
  ```
  ```json 
@@ -1460,19 +1468,19 @@ curl -X 'POST' \
 
 response:
 
-```
+```http
 204 No Content
 ```
 
 
 Example for subscription termination - Request:
 
-```
+```bash
 curl -X 'POST' \
   'https://application-server.com/v0/notifications' \
-  -H 'accept: application/json' \
+  -H 'Accept: application/json' \
   -H 'Authorization: Bearer c8974e592c2fa383d4a3960714' \
-  -H 'Content-Type: application/json' \
+  -H 'Content-Type: application/cloudevents+json' \
   -d
  ```
  ```json 
@@ -1495,6 +1503,6 @@ curl -X 'POST' \
 
 response:
 
-```
+```http
 204 No Content
 ```
