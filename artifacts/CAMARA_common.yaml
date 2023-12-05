@@ -288,13 +288,17 @@ components:
       application/json:
         schema:
           "$ref": "#/components/schemas/ErrorInfo"
-        example:
-        - status: 404
-          code: OUT_OF_RANGE
-          message: Out Of Range
-        - status: 404
-          code: NOT_FOUND
-          message: Not found
+        examples:
+          OutOfRange:
+            value:
+              status: 404
+              code: OUT_OF_RANGE
+              message: Out Of Range
+          NotFound:
+            value:
+              status: 404
+              code: NOT_FOUND
+              message: Not found
   MethodNotAllowed:
     description: Method not allowed
     content:
