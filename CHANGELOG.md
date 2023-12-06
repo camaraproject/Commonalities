@@ -7,7 +7,7 @@
 
 # v0.2.0
 
-**This version introduces CloudEvents format to CAMARA Events and other changes to documents and artifacts approved since v0.1.0**
+**This version introduces CloudEvents format to CAMARA Events and other changes to documents and artifacts approved since v0.1.0.**
 
 ## Please note:
 The content of the release includes:
