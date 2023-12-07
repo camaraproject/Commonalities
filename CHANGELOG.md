@@ -2,7 +2,44 @@
 
 ## Table of Contents
 
+- [v0.2.0](#v020)
 - [v0.1.0 - Initial version](#v010---initial-version)
+
+# v0.2.0
+
+**This version introduces CloudEvents format to CAMARA Events and other changes to documents and artifacts approved since v0.1.0.**
+
+## Please note:
+The content of the release includes:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/release-0.2.0/documentation)** folder
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/release-0.2.0/artifacts)** folder
+  - **New:** OAS definition of CAMARA Event using CloudEvents: **[notification-as-cloud-event.yaml](https://github.com/camaraproject/Commonalities/blob/release-0.2.0/artifacts/notification-as-cloud-event.yaml)**
+
+
+### Added
+* Added reserved word restrictions to API Design Guidelines by @eric-murray in https://github.com/camaraproject/Commonalities/pull/49
+* Explicitly indicated use of RFC3339 for DateTime attributes by @patrice-conil in https://github.com/camaraproject/Commonalities/pull/55
+* Usage of discriminator: Encourage inheritance rather than polymorphism by @patrice-conil in https://github.com/camaraproject/Commonalities/pull/22
+* Use ObjectName as discriminator's mapping key by @patrice-conil in https://github.com/camaraproject/Commonalities/pull/78
+* OAS definition of CAMARA Event using Cloudevents in artifacts: [notification-as-cloud-event.yaml](https://github.com/camaraproject/Commonalities/blob/release-0.2.0/artifacts/notification-as-cloud-event.yaml) by @patrice-conil in https://github.com/camaraproject/Commonalities/pull/43
+    
+### Changed
+* Updated API Design Guidelines with use of callbacks & cloudEvents by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/56
+* Updated Architecture headers in API Design Guidelines by @eric-murray in https://github.com/camaraproject/Commonalities/pull/88
+
+### Fixed
+* Fixed code typos in API Design Guidelines section 11.5.1 code sample by @Kevsy in https://github.com/camaraproject/Commonalities/pull/48
+* Correction of format and typos by @dfischer-tech in https://github.com/camaraproject/Commonalities/pull/79
+* Improved discovery of Commonalities output documents by API Subprojects by @rkandoi in https://github.com/camaraproject/Commonalities/pull/73
+* Updated references in UE-Identification.md by @gmuratk in https://github.com/camaraproject/Commonalities/pull/95
+* Minor changes needed in API Design Guidelines for CloudEvents by @rartych in https://github.com/camaraproject/Commonalities/pull/86
+* Filtering GET results - updated section 8.3 in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/82
+
+### Removed
+* Removed option to use HTTP HEAD from API-design-guidelines.md by @eric-murray in https://github.com/camaraproject/Commonalities/pull/50
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/v0.1.0...v.0.2.0
+
 
 # v0.1.0 - Initial version
 
