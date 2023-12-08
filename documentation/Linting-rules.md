@@ -27,52 +27,52 @@ The default value is `warn`.
 
 Rules applying to both OpenAPI v2.0, v3.0, and most likely v3.1 - details are described in [Spectral Documentation](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules#openapi-v2--v3).
 
-|Name| Desc| Recom mended|CAMARA use|Spectral severity | CAMARA severity
+|Name| Desc| Recom mended|CAMARA use|Spectral severity | CAMARA severity |
 |---|---|---|--|---|--|
-|contact-properties| contact object is full of the most useful properties: `name`, `url`, and `email`|No|No | Warning |  |
-|duplicated-entry-in-enum| Each value of an `enum` must be different from one another |Yes  | Yes | Warning |  |
-|info-contact |Info object should contain `contact` object |Yes  | Yes| Warning  |  |
-|info-description |Info object should contain `description` object |Yes  | Yes| Warning |  | 
-|info-license |Info object should contain `license` object |Yes  | Yes|  Warning |  |
-|license-url | link to the full text of licence | Yes | Yes| Warning  |  |
-|no-$ref-siblings| Before OpenAPI v3.1, keywords next to $ref were ignored | Yes | Yes| Error |  |
-|no-eval-in-markdown | injecting `eval()` JavaScript statements could lead to an XSS attack |Yes |Yes |Warning  |  |
-|no-script-tags-in-markdown |  injecting `<script>` tags could lead to execution of an arbitrary | Yes |Yes | Warning |  |
-|openapi-tags | OpenAPI object should have non-empty `tags` array |No | Yes | Warning |  |
-|openapi-tags-alphabetical | OpenAPI object should have alphabetical `tags` | No |No | Warning |  |
-|openapi-tags-uniqueness | OpenAPI object must not have duplicated tag names | No | No | Error |  |
-|operation-description | Operation `description` must be present and non-empty string | Yes| Yes| Warning  |  |
-|operation-operationId | Operation must have `operationId` |Yes| Yes| Warning |  |
-|operation-operationId-unique | Every operation must have a unique operationId | Yes| Yes| Error |  |
-|operation-operationId-valid-in-url | avoid non-URL-safe characters| Yes| Yes| Warning |  |
-|operation-parameters | Operation parameters are unique and non-repeating | Yes| Yes| Warning  |  |
-|operation-singular-tag | Use just one tag for an operation | No| Yes| Warning |  |
-|operation-success-response | Operation must have at least one `2xx` or `3xx` response | Yes| Yes| Warning |  |
-|operation-tags | Operation should have non-empty `tags` array| Yes| Yes| Warning |  |
-|operation-tag-defined | Operation tags should be defined in global tags| Yes| Yes| Warning |  |
-|path-declarations-must-exist | Path parameter declarations cannot be empty, ex.`/given/{}` is invalid.  | Yes| Yes| Warning |  |
-|path-keys-no-trailing-slash | Keep trailing slashes off of paths,  | Yes| Yes| Warning |  |
-|path-not-include-query | Don't put query string items in the path, they belong in parameters with `in: query`| Yes| Yes| Warning |  |
-|path-params | Path parameters are correct and valid | Yes| Yes| Error |  |
-|tag-description | global tags have description | No | ???| Warning |  |
-|typed-enum | Enum values should respect the type specifier. | Yes| Yes| Warning |  |
+|contact-properties| contact object is full of the most useful properties: `name`, `url`, and `email`| No | No | Warning | Warning |
+|duplicated-entry-in-enum| Each value of an `enum` must be different from one another | Yes | Yes | Warning | Warning |
+|info-contact |Info object should contain `contact` object |Yes | Yes | Warning | Warning |
+|info-description |Info object should contain `description` object | Yes | Yes| Warning | Warning | 
+|info-license |Info object should contain `license` object |Yes | Yes |  Warning | Warning |
+|license-url | link to the full text of licence | Yes | Yes| Warning | Warning |
+|no-$ref-siblings| Before OpenAPI v3.1, keywords next to $ref were ignored | Yes | Yes| Error | Error  |
+|no-eval-in-markdown | injecting `eval()` JavaScript statements could lead to an XSS attack | Yes | Yes | Warning | Warning |
+|no-script-tags-in-markdown |  injecting `<script>` tags could lead to execution of an arbitrary | Yes |Yes | Warning | Warning |
+|openapi-tags | OpenAPI object should have non-empty `tags` array |No | No | Warning | Warning |
+|openapi-tags-alphabetical | OpenAPI object should have alphabetical `tags` | No |No | Warning | Warning |
+|openapi-tags-uniqueness | OpenAPI object must not have duplicated tag names | No | No | Error | Error |
+|operation-description | Operation `description` must be present and non-empty string | Yes| Yes| Warning | Warning |
+|operation-operationId | Operation must have `operationId` | Yes | Yes | Warning | Warning |
+|operation-operationId-unique | Every operation must have a unique operationId | Yes| Yes| Error | Error |
+|operation-operationId-valid-in-url | avoid non-URL-safe characters| Yes| Yes| Warning | Warning |
+|operation-parameters | Operation parameters are unique and non-repeating | Yes| Yes| Warning | Warning |
+|operation-singular-tag | Use just one tag for an operation | No| Yes| Warning | Warning |
+|operation-success-response | Operation must have at least one `2xx` or `3xx` response | Yes| Yes| Warning | Warning |
+|operation-tags | Operation should have non-empty `tags` array| Yes| Yes| Warning | Warning |
+|operation-tag-defined | Operation tags should be defined in global tags| Yes| Yes| Warning | Warning |
+|path-declarations-must-exist | Path parameter declarations cannot be empty, ex.`/given/{}` is invalid | Yes | Yes | Warning | Warning |
+|path-keys-no-trailing-slash | Keep trailing slashes off of paths | Yes | Yes | Warning | Warning |
+|path-not-include-query | Don't put query string items in the path, they belong in parameters with `in: query`| Yes| Yes| Warning | Warning |
+|path-params | Path parameters are correct and valid | Yes | Yes | Error | Error |
+|tag-description | global tags have description | No | No | Warning | Warning |
+|typed-enum | Enum values should respect the type specifier. | Yes| Yes| Warning | Warning |
 
 ### OpenAPI v3-only
 Rules applicable only to OpenAPI v3.0 documents - details are described in [Spectral Documentation](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules#openapi-v3-only).
 
-|Name| Desc| Recom mended|CAMARA use|Spectral severity | CAMARA severity
+|Name| Desc| Recom mended|CAMARA use|Spectral severity | CAMARA severity |
 |---|---|---|--|---|--|
-|oas3-api-servers | OpenAPI servers must be present and non-empty array | Yes| Yes| Warning |  |
-|oas3-examples-value-or-externalValue | Examples for requestBody or response examples can have an `externalValue` or a `value`, but they cannot have both| Yes| Yes| Warning |  |
-|**oas3-operation-security-defined** | Operation `security` values must match a scheme defined in the `components.securitySchemes` object. | Yes| Yes| Warning |  |
-|oas3-parameter-description | Parameter objects should have a description| No| Yes?| Warning |  |
-|oas3-schema | Validate structure of OpenAPI v3 specification | Yes| Yes| Warning |  |
-|oas3-server-not-example.com | Server URL should not point to *example.com*| No| Yes?| Warning |  |
-|oas3-server-trailing-slash | Server URL should not have a trailing slash | Yes| Yes| Warning |  |
-|oas3-unused-component | Potential unused reusable components entry has been detected  | Yes| Yes| Warning |  |
-|oas3-valid-media-example | Examples must be valid against their defined schema. This rule is applied to *Media Type objects*  | Yes| Yes| Warning  |  |
-|oas3-valid-schema-example | Examples must be valid against their defined schema. This rule is applied to *Schema objects* | Yes| Yes| Warning   |  |
-|oas3-server-variables | This rule ensures that server variables defined in OpenAPI Specification 3 (OAS3) and 3.1 are valid, not unused | Yes| Yes| Warning  |  |
+|oas3-api-servers | OpenAPI servers must be present and non-empty array | Yes | Yes | Warning | Warning |
+|oas3-examples-value-or-externalValue | Examples for requestBody or response examples can have an `externalValue` or a `value`, but they cannot have both| Yes| Yes| Warning | Warning |
+|oas3-operation-security-defined | Operation `security` values must match a scheme defined in the `components.securitySchemes` object. | Yes| Yes| Warning | Warning |
+|oas3-parameter-description | Parameter objects should have a description| No | No | Warning | Warning |
+|oas3-schema | Validate structure of OpenAPI v3 specification | Yes| Yes | Warning | Warning |
+|oas3-server-not-example.com | Server URL should not point to *example.com*| No| No| Warning | Warning |
+|oas3-server-trailing-slash | Server URL should not have a trailing slash | Yes| Yes| Warning | Warning |
+|oas3-unused-component | Potential unused reusable components entry has been detected  | Yes| Yes| Warning | Warning |
+|oas3-valid-media-example | Examples must be valid against their defined schema. This rule is applied to *Media Type objects*  | Yes| Yes| Warning  | Warning |
+|oas3-valid-schema-example | Examples must be valid against their defined schema. This rule is applied to *Schema objects* | Yes | Yes | Warning | Warning |
+|oas3-server-variables | This rule ensures that server variables defined in OpenAPI Specification 3 (OAS3) and 3.1 are valid, not unused | Yes| Yes| Warning | Warning |
 
 
 
@@ -248,7 +248,7 @@ _Spectral rule_: [camara-reserved-words]()
 *Severity*: `warn`
 
 
-Resources must not contain the method name get, put, post, delete, patch.
+Resource names must not contain the method name: get, put, post, delete, patch.
 
 _Spectral rule_: [camara-resource-reserved-words]()
 
@@ -355,3 +355,28 @@ Schema names (the keys in `components -> schemas`) should follow the "upper came
 _Spectral rule_: [camara-schema-casing-convention]()
 
 *Severity*: `warn`
+
+## 4. Summary of proposed CAMARA rules
+
+|Name| Desc| Recom mended|CAMARA use|  CAMARA severity |
+|---|---|---|---|--|
+|camara-language-spelling | Check spellin in description fields | No | No | Warning |
+|camara-language-avoid-telco | Avoid terms/types specific to the telco domain | Yes | Yes | Hint |
+|camara-oas-version | Open API version 3.0.3 | Yes | Yes | Warning |
+|camara-info−title | API title with public name | tbd | tbd | Warning |
+|camara-info−version-format | API Version in the format: X.Y.Z. | tbd | tbd | Warning |
+|camara-path-param-id | Use 'resource_id' instead of just 'id' for your path parameters | Yes | Yes | Warning |
+|camara-security-no-secrets-in-path-or-query-parameters| Sensitive data (msisdn/imsi) cannot be a path or query parameter | Yes | Yes | Warning |
+|camara-http-methods | Valid methods are: GET, PUT, POST, DELETE, PATCH, OPTIONS | Yes | Yes | Error |
+|camara-get-no-request-body | 'GET' and 'DELETE' http methods MUST NOT accept a 'requestBody' attribute | Yes | Yes | Error |
+|camara-reserved-words | Reserved words must not be used | Yes | Yes | Warning |
+|camara-resource-reserved-words| Resources must not contain the method name | Yes | Yes | Warning |
+|camara-parameters-descriptions | All parameters must have a description | Yes | Yes | Warning |
+|camara-operation-summary | Summary must be defined on each operation | Yes | Yes | Warning |
+|camara-discriminator-use | discriminator object can be used to aid in serialization, deserialization, and validation | Yes | Yes | Warning |
+|camara-operationid-casing-convention | Operation ids should follow a specific case convention: camel case | Yes | Yes | Hint |
+|camara-schema-casing-convention | Schema should follow a specific case convention pascal case (upper camel case) | Yes | Yes | Warning |
+|camara-parameter-casing-convention | Path parameter should follow a specific case convention, with the default being kebab-case | Yes | Yes | Error |
+|camara-schema-casing-convention | Schema should follow a specific case convention pascal case (upper camel case) | Yes | Yes | Warning |
+|camara-enum-casing-convention | enum fields contain values that follow a specific case convention: macro (CAPITAL_LETTERS) | tbd | tbd | Info |
+|camara-property-casing-convention | Property names should follow a specific case convention, with the default being camel case | tbd | tbd | Error |
