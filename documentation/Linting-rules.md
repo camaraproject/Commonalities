@@ -362,7 +362,7 @@ _Spectral rule_: [camara-schema-casing-convention]()
 |---|---|---|---|--|
 |camara-language-spelling | Check spellin in description fields | No | No | Warning |
 |camara-language-avoid-telco | Avoid terms/types specific to the telco domain | Yes | Yes | Hint |
-|camara-oas-version | Open API version 3.0.3 | Yes | Yes | Warning |
+|camara-oas-version | Open API version 3.0.3 | Yes | Yes | Error |
 |camara-info−title | API title with public name | tbd | tbd | Warning |
 |camara-info−version-format | API Version in the format: X.Y.Z. | tbd | tbd | Warning |
 |camara-path-param-id | Use 'resource_id' instead of just 'id' for your path parameters | Yes | Yes | Warning |
