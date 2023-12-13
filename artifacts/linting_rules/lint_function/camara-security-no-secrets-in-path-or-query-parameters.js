@@ -1,4 +1,4 @@
-const sensetiveData = ['MSISDN','IMSI'];
+const sensitiveData = ['MSISDN','IMSI','phoneNumber'];
 
 export default async function (input) {
 
