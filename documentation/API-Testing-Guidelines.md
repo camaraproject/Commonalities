@@ -1,13 +1,13 @@
 # API Testing Guidelines
 
 ## Table of Contents
-1. [Introduction](#Introduction)
+1. [Introduction](#introduction)
 2. [Test Cases contributions for APIs](#contribution)
 3. [Location of feature file](#location)
 4. [Best practises and recommendations](#recommendations)
-7. [References](#References)
+7. [References](#references)
 
-## Introduction <a name="Introduction"></a>
+## Introduction <a name="introduction"></a>
 This document captures guidelines for the API testing in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative.
 
 ## Test Cases contribution for APIs <a name="contribution"></a>
@@ -33,7 +33,7 @@ Subproject_Repository/code/Test_definitions/file-name.feature
 * Recommendation is to have API literal request value (with example) but in case of exceptions, it is fine to use ready payload as well.
 
 
-## References <a name="References"></a>
+## References <a name="references"></a>
 
 * [One feature file per API](https://www.testquality.com/blog/tpost/v79acjttj1-cucumber-and-gherkin-language-best-pract)
 * [Scenario Identifer](https://support.smartbear.com/cucumberstudio/docs/tests/best-practices.html#scenario-content-set-up-writing-standards)
