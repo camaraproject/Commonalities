@@ -677,7 +677,7 @@ The aim of this clause is to detail standard data types that will be used over t
 
 It should be noted that this point is open to continuous evolution over time through the addition of possible new data structures. To allow for a proper management of this ever-evolving list, an external repository has been defined to that end. This repository is referenced below. 
 
-[Link to Common Data Types documentation repository](../artifacts/CAMARA_common.json)
+[Link to Common Data Types documentation repository](../artifacts/CAMARA_common.yaml)
 
 
 ## 8. Pagination, Sorting and Filtering
