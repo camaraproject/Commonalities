@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This guide provides instructions on implement linting rules for the CAMARA API using two methods: <b>Spectral Linting</b> and <b>Megalinter with Spectral Linting.</B>
+This guide provides instructions to implement linting rules for the CAMARA APIs using two methods: <b>Spectral Linting</b> and <b>Megalinter with Spectral Linting.</B>
 
-CAMARA suggests the second method, incorporating Megalinter with Spectral.
+CAMARA recommends the second method, incorporating Megalinter with Spectral.
 
 ## Megalinter with Spectral Linting
 
@@ -22,7 +22,7 @@ Megalinter is an open-source tool for CI/CD workflows that analyzes the consiste
 
    which include the configuration of megalinter and spectral for GitHub actions.
 
-2. Add<b> .spectral.yml</b> (Rules) File -> root location of repository
+2. Add<b> .spectral.yml</b> (rules) file to -> root location of repository
 
 3. Create lint-function folder
 
