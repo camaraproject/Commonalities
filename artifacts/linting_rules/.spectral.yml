@@ -191,22 +191,22 @@ rules:
 
   camara-schema-casing-convention:
     description: This rule checks schema should follow a specific case convention pascal case.
-    message: "{{property}} should be pascal (uppper camel case)"
+    message: "{{property}} should be pascal case (UppperCamelCase)"
     severity: warn
     given: $.components.schemas[*]~
     then:
-      function: pattern
+      function: casing
       functionOptions:
-        match: "^([A-Z][a-z0-9]*([A-Z][a-z0-9]*)*)$"
+        type: pascal
     recommended: true  # Set to true/false to enable/disable this rule
 
   camara-parameter-casing-convention:
-    description: Paths should be kebab-case.
+    description: This rule checks Paths should follow a specific case convention kebab-case.
     severity: error
-    message: "{{property}} is not kebab-case: {{error}}"
+    message: "{{property}} should be kebab-case: {{error}}"
     given: $.paths[*]~
     then:
-      function: pattern
+      function: casing
       functionOptions:
-        match: "^\/([a-z0-9]+(-[a-z0-9]+)*)?(\/[a-z0-9]+(-[a-z0-9]+)*|\/{.+})*$"  # doesn't allow /asasd{asdas}sadas pattern or not closed braces
+        type: kebab
     recommended: true  # Set to true/false to enable/disable this rule
