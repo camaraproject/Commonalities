@@ -16,7 +16,8 @@ Based on the decision taken in the commonalities working group and as documented
 ## Location of feature file <a name="location"></a>
 The feature file will reside under 
 ```
-Subproject_Repository/code/Test_definitions/file-name.feature
+Subproject_Repository/code/Test_definitions/file_name.feature
+for e.g. https://github.com/camaraproject/QualityOnDemand/blob/main/code/Test_definitions/QoD_API_Test.feature
 ```
 
 ## Best practices and recommendations <a name="recommendations"></a>
