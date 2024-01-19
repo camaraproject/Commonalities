@@ -11,7 +11,7 @@
 This document captures guidelines for the API testing in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative.
 
 ## Test Cases contribution for APIs <a name="contribution"></a>
-Based on the decision taken in the commonalities working group and as documented in [API-Readiness-Checklist](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-Readiness-Checklist.md), a Gherkin feature file will be added to the main subproject repo and this will fullfil the minimum criteria of readiness w.r.t API test cases and documentation. If subprojects also intend to add test implementations, an aligned single implementation that is agreed amongst all provider implementers could be added to the main subproject repo. If no alignment is possible, each provider implementer will add the test implementation to their own repos.
+Based on the decision taken in the Commonalities working group and as documented in [API-Readiness-Checklist](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-Readiness-Checklist.md), at least one Gherkin feature file will be added to the main subproject repo and this will fulfill the minimum criteria of readiness with respect to API test cases and documentation. If subprojects also intend to add test implementations, an aligned single implementation that is agreed among all provider implementors could be added to the main subproject repo. If no alignment is possible, each provider implementer will add the test implementation to their own repos.
 
 ## Location of feature file <a name="location"></a>
 The feature file will reside under 
