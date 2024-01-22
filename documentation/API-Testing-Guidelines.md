@@ -22,7 +22,10 @@ for e.g. https://github.com/camaraproject/QualityOnDemand/blob/main/code/Test_de
 
 ## Best practices and recommendations <a name="recommendations"></a>
 
-* One feature file per API is advisable so that all scenarios can be covered corresponding to the API & the corresponding resource.
+* Granularity of the feature file must be decided at the project level but it is recommended to:
+    -	group in one file all scenarios for one given API capability (that can cover several endpoints).
+    -	provide several files when one CAMARA API (yaml) covers several independent functions that can be provided independently
+
 * Third Person pronoun usage in feature file is advisable as using the third person, conveys information in a more official manner.
 * It is recommended to only have one When/Then in a feature file as per cucumber official documentation's recommendations. However, in case of  complex scenarios, several when/then can be allowed.
 * The recommended format for scenario identifier is shown below
@@ -36,6 +39,6 @@ for e.g. https://github.com/camaraproject/QualityOnDemand/blob/main/code/Test_de
 
 ## References <a name="references"></a>
 
-* [One feature file per API](https://www.testquality.com/blog/tpost/v79acjttj1-cucumber-and-gherkin-language-best-pract)
+* [Feature files]( https://copyprogramming.com/howto/multiple-feature-inside-single-feature-file#multiple-feature-inside-single-feature-file)
 * [Scenario Identifier](https://support.smartbear.com/cucumberstudio/docs/tests/best-practices.html#scenario-content-set-up-writing-standards)
 * [One when/then](https://cucumber.io/docs/gherkin/reference/)
