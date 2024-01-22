@@ -683,6 +683,7 @@ It should be noted that this point is open to continuous evolution over time thr
 ## 8. Pagination, Sorting and Filtering
 
 Exposing a resources collection through a single URI can cause applications to fetch large amounts of data when only a subset of the information is required. For example, suppose a client application needs to find all orders with a cost greater than a specific value. You could retrieve all orders from the /orders URI and then filter these orders on the client side. Clearly, this process is highly inefficient. It wastes network bandwidth and processing power on the server hosting the web API.
+To alleviate the above-mentioned issues and concerns, Pagination, Sorting and Filtering may optionally be supported by the API provider.  Following subsections apply when such functionality is supported.
 
 ### 8.1 Pagination
 Services can answer with a resource or article collections. Sometimes these collections may be a partial set due to performance or security reasons. Elements must be identified and arranged consistently on all pages. Paging can be enabled by default on the server side to mitigate denial of service or similar.
@@ -714,6 +715,7 @@ Petitions examples:
 ### 8.2 Sorting
 
 Sorting the result of a query on a resources collection requires two main parameters:
+Note: Services must accept and use these parameters when sorting is supported.  If a parameter is not supported, service should return an error message.
 - `orderBy`: it contains the names of the attributes on which the sort is performed, with comma separated if there is more than one criteria.
 - `order`: by default, sorting is done in descending order. 
 
@@ -727,9 +729,10 @@ https://api.mycompany.com/v1/orders?orderBy=rating,reviews,name&order=desc
 ### 8.3 Filtering
 
 
-Filtering consists of restricting the number of resources queried by specifying some attributes and their expected values. It is possible to filter a collection on multiple attributes at the same time and allow multiple values for a filtered attribute.
+Filtering consists of restricting the number of resources queried by specifying some attributes and their expected values. When filtering is supported, it is possible to filter a collection on multiple attributes at the same time and allow multiple values for a filtered attribute.
 
 Next, it is specified how it should be used according to the filtering based on the type of data being searched for: a text, a number or a date and the type of operation.
+Note: Services may not support all attributes for filtering.  In case a query includes an attribute for which filtering is not supported, it may be ignored by the service.
  
 | **Operation** |	Text |	Numbers | 	Dates |
 | ----- |	-----  |	 -----  |  -----  |
