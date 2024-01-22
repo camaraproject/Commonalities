@@ -23,7 +23,7 @@ for e.g. https://github.com/camaraproject/QualityOnDemand/blob/main/code/Test_de
 ## Best practices and recommendations <a name="recommendations"></a>
 
 * Granularity of the feature file must be decided at the project level but it is recommended to:
-    -	group in one file all scenarios for one given API capability (that can cover several endpoints).
+    -	group in one file all scenarios testing one closely related API capability (that can cover one or several endpoints).
     -	provide several files when one CAMARA API (yaml) covers several independent functions that can be provided independently
 
 * Third Person pronoun usage in feature file is advisable as using the third person, conveys information in a more official manner.
