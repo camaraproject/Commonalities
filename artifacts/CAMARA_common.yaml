@@ -242,9 +242,9 @@ components:
      schema:
       $ref: "#/components/schemas/ErrorInfo"
      example:
-      status: 504
+      status: 503
       code: UNAVAILABLE
-      message: Request timeout exceeded
+      message: Service Unavailable
   Timeout:
    description: Timeout
    content:
@@ -252,7 +252,7 @@ components:
      schema:
       $ref: "#/components/schemas/ErrorInfo"
      example:
-      status: 503
+      status: 504
       code: TIMEOUT
       message: Request timeout exceeded
   NotImplemented:
