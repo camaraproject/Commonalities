@@ -244,7 +244,7 @@ components:
      example:
       status: 503
       code: UNAVAILABLE
-      message: Service Unavailable
+      message: Service unavailable
   Timeout:
    description: Timeout
    content:
