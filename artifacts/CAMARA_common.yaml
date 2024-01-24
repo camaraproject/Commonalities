@@ -12,29 +12,29 @@ paths: {}
 components:
  parameters:
   IPv4-Address:
-    in: header
-    name: IPv4-Address
-    required: false
-    schema:
-      $ref: "#/components/schemas/DeviceIpv4Address"
+   in: header
+   name: IPv4-Address
+   required: false
+   schema:
+    $ref: "#/components/schemas/DeviceIpv4Address"
   IPv6-Address:
-    in: header
-    name: IPv6-Address
-    required: false
-    schema:
-      $ref: "#/components/schemas/DeviceIpv6Address"
+   in: header
+   name: IPv6-Address
+   required: false
+   schema:
+    $ref: "#/components/schemas/DeviceIpv6Address"
   Phone-Number:
-    in: header
-    name: Phone-Number
-    required: false
-    schema:
-      $ref: "#/components/schemas/PhoneNumber"     
+   in: header
+   name: Phone-Number
+   required: false
+   schema:
+    $ref: "#/components/schemas/PhoneNumber"
   Network-Access-Identifier:
-    in: header
-    name: Network-Access-Identifier
-    required: false
-    schema:
-      $ref: "#/components/schemas/NetworkAccessIdentifier"
+   in: header
+   name: Network-Access-Identifier
+   required: false
+   schema:
+    $ref: "#/components/schemas/NetworkAccessIdentifier"
  schemas:
   TimePeriod:
    properties:
