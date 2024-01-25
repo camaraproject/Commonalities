@@ -21,7 +21,7 @@ This document provides an overview and discusses the methods that a 5G Core netw
 
 A number of CAMARA APIs require the API invoker to identify the UE. The API invoker may have different UE identifiers, for example, a GPSI, in any of its various formats or perhaps the IP or MAC address of the UE. While the GPSI and the MAC address of the UE are permanent identifiers, the UE IP address is temporarily allocated to the UE, might be NATted, and may change during the lifetime of the session towards the application server. 
 
-Identifying a UE is not the same as identifying the PDU session that might be related to an API invocation. For example, a UE might have established several PDU sessions, each one on a different connectivity service (e.g., differnet S-NSSAI or DNN). As a result, the UE might be provisioned with different IP addresses for each PDU session. In cases where the UE is assumed to have established a single PDU session, or where it is possible to correlate the the API invoker to a connectivity service, the combination of it and the UE identification might be sufficient to identify one out of multiple PDU sessions as well.
+Identifying a UE is not the same as identifying the PDU session that might be related to an API invocation. For example, a UE might have established several PDU sessions, each one on a different connectivity service (e.g., differnet S-NSSAI or DNN). As a result, the UE might be provisioned with different IP addresses for each PDU session. In cases where the UE is assumed to have established a single PDU session, or where it is possible to correlate the API invoker to a connectivity service, the combination of it and the UE identification might be sufficient to identify one out of multiple PDU sessions as well.
 
 This document analizes the identifiers at the disposal of the API invoker for identifying a UE and proposes that CAMARA APIs, where possible, enable the UE identification accordingly.
 
@@ -118,13 +118,13 @@ And secondary (optionally) with:
 ## References
 
 [1]:https://www.3gpp.org/DynaReport/23501.htm
-[2]:https://www.3gpp.org/DynaReport/2300.htm
+[2]:https://www.3gpp.org/DynaReport/23003.htm
 [3]:https://www.rfc-editor.org/rfc/rfc4282
 [4]:https://www.3gpp.org/DynaReport/23682.htm
 [5]:https://www.3gpp.org/DynaReport/23502.htm
 
 * [1]: 3GPP [TS 23.501](https://www.3gpp.org/DynaReport/23501.htm"): "System Architecture for the 5G System; Stage 2".
-* [2]: 3GPP [TS 23.003](https://www.3gpp.org/DynaReport/2300.htm): "Numbering, addressing and identification".
+* [2]: 3GPP [TS 23.003](https://www.3gpp.org/DynaReport/23003.htm): "Numbering, addressing and identification".
 * [3]: IETF [RFC 4282](https://www.rfc-editor.org/rfc/rfc4282): "The Network Access Identifier".
 * [4]: 3GPP [TS 23.682](https://www.3gpp.org/DynaReport/23682): "Architecture enhancements to facilitate communications with packet data networks and applications".
 * [5]: 3GPP [TS 23.502](https://www.3gpp.org/DynaReport/23502.htm): "Procedures for the 5G System (5GS)".
