@@ -64,7 +64,7 @@ Rules applicable only to OpenAPI v3.0 documents - details are described in [Spec
 |---|---|---|--|---|--|
 |oas3-api-servers | OpenAPI servers must be present and non-empty array | Yes | Yes | Warning | Warning |
 |oas3-examples-value-or-externalValue | Examples for requestBody or response examples can have an `externalValue` or a `value`, but they cannot have both| Yes| Yes| Warning | Warning |
-|oas3-operation-security-defined | Operation `security` values must match a scheme defined in the `components.securitySchemes` object. | Yes| Yes| Warning | Warning |
+|oas3-operation-security-defined | Operation `security` values must match a scheme defined in the `components.securitySchemes` object. | Yes| No| Warning | Warning |
 |oas3-parameter-description | Parameter objects should have a description| No | No | Warning | Warning |
 |oas3-schema | Validate structure of OpenAPI v3 specification | Yes| Yes | Warning | Warning |
 |oas3-server-not-example.com | Server URL should not point to *example.com*| No| No| Warning | Warning |
@@ -74,7 +74,7 @@ Rules applicable only to OpenAPI v3.0 documents - details are described in [Spec
 |oas3-valid-schema-example | Examples must be valid against their defined schema. This rule is applied to *Schema objects* | Yes | Yes | Warning | Warning |
 |oas3-server-variables | This rule ensures that server variables defined in OpenAPI Specification 3 (OAS3) and 3.1 are valid, not unused | Yes| Yes| Warning | Warning |
 
-
+Note: oas3-operation-security-defined rule is not fully compatible with OpenIdConnect.
 
 ## 2. Language
 ### Spell checking
@@ -257,11 +257,35 @@ _Spectral rule_: [camara-resource-reserved-words]()
  
 ### Descriptions
 
+API Design Guidelines: [11.2 Published routes](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#112-published-routes)
+
+Functionality methods must have a description.
+
+_Spectral rule_: [camara-routes-descriptions]()
+
+*Severity*: `warn`
+
 API Design Guidelines: [11.3 Request Parameters](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#113-request-parameters)
 
 All parameters must have a description. 
 
 _Spectral rule_: [camara-parameters-descriptions]()
+
+*Severity*: `warn`
+
+API Design Guidelines: [11.4 Response Structure](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#114-response-structure)
+
+All response objects must have a description. 
+
+_Spectral rule_: [camara-response-descriptions]()
+
+*Severity*: `warn`
+
+API Design Guidelines: [11.5 Data Definitions](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#115-data-definitions)
+
+All properties within the object must have a description. 
+
+_Spectral rule_: [camara-properties-descriptions]()
 
 *Severity*: `warn`
 
@@ -370,8 +394,11 @@ _Spectral rule_: [camara-schema-casing-convention]()
 |camara-http-methods | Valid methods are: GET, PUT, POST, DELETE, PATCH, OPTIONS | Yes | Yes | Error |
 |camara-get-no-request-body | 'GET' and 'DELETE' http methods MUST NOT accept a 'requestBody' attribute | Yes | Yes | Error |
 |camara-reserved-words | Reserved words must not be used | Yes | Yes | Warning |
-|camara-resource-reserved-words| Resources must not contain the method name | Yes | Yes | Warning |
+|camara-resource-reserved-words | Resources must not contain the method name | Yes | Yes | Warning |
+|camara-routes-description | Functionality methods must have a description. | Yes | Yes | Warning |
 |camara-parameters-descriptions | All parameters must have a description | Yes | Yes | Warning |
+|camara-response-descriptions| All response objects must have a description | Yes | Yes | Warning |
+|camara-properties-descriptions | All properties within the object must have a description | Yes | Yes | Warning |
 |camara-operation-summary | Summary must be defined on each operation | Yes | Yes | Warning |
 |camara-discriminator-use | discriminator object can be used to aid in serialization, deserialization, and validation | Yes | Yes | Warning |
 |camara-operationid-casing-convention | Operation ids should follow a specific case convention: camel case | Yes | Yes | Hint |
