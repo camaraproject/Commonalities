@@ -304,7 +304,7 @@ When request bodies or response payloads may be one of a number of different sch
 
 _Spectral rule_: [camara-discriminator-use]()
 
-*Severity*: `warn`
+*Severity*: `hint`
 
 ### Casing convention
 
