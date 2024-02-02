@@ -1,3 +1,6 @@
+// CAMARA Project - support function for Spectral linter
+// 31.01.2024 - initial version
+
 const sensitiveData = ['MSISDN','IMSI','phoneNumber'];
 
 export default async function (input) {

@@ -1,3 +1,6 @@
+// CAMARA Project - support function for Spectral linter
+// 31.01.2024 - initial version
+
 const replacements = [
   { original: 'UE', recommended: 'device' },
   { original: 'MSISDN', recommended: 'phone number' },
