@@ -138,8 +138,8 @@ rules:
     then:
       function: camara-reserved-words
     recommended: true  # Set to true/false to enable/disable this rule
-    
-   camara-routes-description:
+
+  camara-routes-description:
     message: "Functionality method description Warning: Each method should have description."
     severity: warn
     description: |
