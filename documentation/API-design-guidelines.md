@@ -929,7 +929,7 @@ To correctly define the scopes, when creating them, the following recommendation
 - **Appropriate granularity**. Scopes should be granular enough to match the types of resources and permissions you want to grant.
 - **Use a common nomenclature for all resources**.  Scopes must be descriptive names and that there is no conflict between the different resources.
 - **Use the kebab-case nomenclature** to define API names, resources, and scope permissions.
-- **Recommended Format**: `<API_name>-<Resource>-<Permission>`
+- **Recommended Format**: `<api-name>-<resource>-<permission>`
 
 Next, we illustrate an example on how to define a series of scopes for a OpenAPI file.
 
