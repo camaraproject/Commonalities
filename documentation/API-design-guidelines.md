@@ -734,10 +734,10 @@ Next, it is specified how it should be used according to the filtering based on 
 | **Operation** |	Numbers | 	Dates  |
 | ----- |	-----  |	 -----  |
 | Equal | `GET .../?amount=807.24`	| `GET .../?executionDate=2024-02-05T09:38:24Z` |
-| Greater or equal	| `GET .../?amount.gte=807.24` | `GET.../?executionDate.gte=2018-30-05` |
-| Strictly greater | `GET .../?amount.gt=807.24` | `GET.../?executionDate.gt=2018-30-05`  |
-| smaller or equal	| `GET .../?amount.lte=807.24` | `GET.../?executionDate.lte=2018-30-05` |
-| Strictly smaller | `GET .../?amount.lt=807.24` | `GET.../?executionDate.lt=2018-30-05` |
+| Greater or equal	| `GET .../?amount.gte=807.24` | `GET.../?executionDate.gte=2018-05-30` |
+| Strictly greater | `GET .../?amount.gt=807.24` | `GET.../?executionDate.gt=2018-05-30`  |
+| smaller or equal	| `GET .../?amount.lte=807.24` | `GET.../?executionDate.lte=2018-05-30` |
+| Strictly smaller | `GET .../?amount.lt=807.24` | `GET.../?executionDate.lt=2018-05-30` |
 
 
 And according to the filtering based on string and enums data being searched for: 
