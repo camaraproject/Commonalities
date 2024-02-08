@@ -45,7 +45,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [11.4 Response Structure](#114-response-structure)
     - [11.5 Data Definitions](#115-data-definitions)
       - [11.5.1 Usage of discriminator](#1151-usage-of-discriminator)
-    - [11.6 OAuth Definition](#116-oauth-definition)
+    - [11.6 Security Definition](#116-security-definition)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
@@ -923,28 +923,14 @@ The scopes allow defining the permission scopes that a system or a user has on a
 Scopes should be represented as:
 - API Name: address-management, numbering-information...
 - Protected Resource: orders, billings…
-- Grant-level: read, write…
+- Grant-level, action on resource: read, write…
   
 To correctly define the scopes, when creating them, the following recommendations should be taken:
 - **Appropriate granularity**. Scopes should be granular enough to match the types of resources and permissions you want to grant.
 - **Use a common nomenclature for all resources**.  Scopes must be descriptive names and that there is no conflict between the different resources.
 - **Use the kebab-case nomenclature** to define API names, resources, and scope permissions.
-- **Recommended Format**: `<API_name>-<Resource>-<Permission>`
 
-Next, we illustrate an example on how to define a series of scopes for a OpenAPI file.
-
-The first step is to create the security definitions according to the nomenclature that we have defined.
-<p align="center">
-<img src="./images/guidelines-fig-11.png" width="400"/>
-</p>
-
-Then, each operation is assigned the necessary scope:
-<p align="center">
-<img src="./images/guidelines-fig-12.png" width="400"/>
-</p>
-<p align="center">
-<img src="./images/guidelines-fig-13.png" width="400"/>
-</p>
+See section [11.6 Security Definition](#116-security-definition) for detailed guidelines on how to define scopes and other security-related properties in a OpenAPI file.
 
 
 <font size="3"><span style="color: blue"> Data security </span></font>
@@ -992,7 +978,6 @@ The API must validate the signature of the JWT in the payload following next req
   - Encryption/decryption of the JWT signature using the appropriate consumer public key. The JWT is encoded in Base64.
   - Making sure that the decrypted and decrypted signature has the following String value ("`JWT_Header.JWT_Payload`")
   - Making sure that the JWT payload has the same structure and values as the decrypted part of "`JWT_Signature`".
-
 
 
 ## 11. Definition in OpenAPI
@@ -1222,17 +1207,48 @@ When IpAddr is used in a payload, the property objectType MUST be present to ind
 }
 ```
 
-### 11.6 OAuth Definition
+### 11.6 Security definition
 
-Finally, this part describes the OAuth security applied to the API. This spec is for client testing purposes only, but
-there should be as similar as possible to the OAuth flows in your production environment. This definition has the
-following aspects:
+The [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#camara-api-specification---authorization-and-authentication-common-guidelines) are discussed and maintained by the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement). In particular, the following aspects are detailed:
 
-- Security Type: oauth2, oauth…
-- Security Flow (Depends on security type): implicit, password…
-- Security Flow description applied (String)
-- Endpoint token URL
-- URL to endpoint authorization ( If flow is based on "`authorizationCode`").	
+- Use of openIdConnect as protocol in `securitySchemes`.
+- How to fill the `security` property per operation.
+- How to fill the "Authorization and authentication" section in `info.description`.
+
+#### 11.6.1 Scope naming
+
+Regarding scope naming, the guidelines are:
+
+* Define a scope per API operation with the structure:
+
+`api-name:[resource:]action`
+
+where
+
+* `api-name` is the API name specified as the base path, prior to the API version, in the `servers[*].url` property. For example, from `/location-verification/v0`, it would be `location-verification`.
+
+* `resource` is optional. For APIs with several `paths`, it may include the resource in the path. For example, from `/qod/v0/sessions/{sessionId}`, it would be `sessions`.
+
+* `action`: There are two cases:
+  - For POST operations with a verb, it will be the verb. For example, from `POST /location-verification/v0/verify`, it would be `verify`.
+    - For endpoints designed as POST but with underlying logic retrieving information, a CRUD action `read` may be added, but if it is a path with single operation and it is not expected to have more operations on it, the CRUD action is not necessary.
+  - For CRUD operations on a resource in paths, it will be one of:
+    - `create`: For operations creating the resource, typically `POST`.
+    - `read`: For operations accessing to details of the resource, typically `GET`.
+    - `update`: For operations modifying the resource, typically `PUT` or `PATCH`.
+    - `delete`: For operations removing the resource, typically `DELETE`.
+    - `write` : For operations creating or modifying the resource, when differentiation between `create` and `update` is not needed.
+
+* Eventually we may need to add an additional level to the scope, such as `api-name:[resource:]action[:detail]`, to deal with cases when only a set of parameters/information has to be allowed to be returned. Guidelines should be enhanced when those cases happen.
+
+##### Examples
+
+| API | path | method | scope |
+| --- | --- | --- | --- |
+| location-verification | /verify | POST | `location-verification:verify` |
+| qod | /sessions | POST | `qod:sessions:create`, or<br>`qod:sessions:write` |
+| qod | /qos-profiles | GET | `qod:qos-profiles:read` |
+
 
 ## 12. Subscription, Notification & Event
 
