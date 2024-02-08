@@ -65,6 +65,7 @@ jobs:
           YAML_YAMLLINT_CONFIG_FILE: ".yamllint.yaml"
           OPENAPI_SPECTRAL_CONFIG_FILE: ".spectral.yml"
           YAML_YAMLLINT_FILTER_REGEX_INCLUDE: "(code/)"
+          OPENAPI_SPECTRAL_FILTER_REGEX_INCLUDE: "(code/)"
 
           # Upload MegaLinter artifacts
       - name: Archive production artifacts
