@@ -2,8 +2,42 @@
 
 ## Table of Contents
 
+- [v0.3.0](#v030)
 - [v0.2.0](#v020)
 - [v0.1.0 - Initial version](#v010---initial-version)
+
+# v0.3.0
+
+**This version introduces API Testing Guidelines and initial linting ruleset  and other changes to documents and artifacts approved since v0.2.0.**
+
+## Please note:
+The content of the release includes:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/release-0.2.0/documentation)** folder
+  - **New:**
+    - [API Testing Guidelines](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-Testing-Guidelines.md)
+    - [API Linting rules]()
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/release-0.2.0/artifacts)** folder
+  - **New:**
+    -  [CAMARA_common.yaml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/CAMARA_common.yaml)
+    -  [Linting rules implementation files](https://github.com/camaraproject/Commonalities/tree/API-linting-Implementation-Guideline/artifacts/linting_rules)
+
+### Added
+* API-Testing-Guidelines.md created by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/117
+
+* 
+### Changed
+* CAMARA_common.json renamed to CAMARA_common.yaml and updated by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/107
+* Set X-Correlator as Required in OAS Definition, X-Version removed by @jlurien in https://github.com/camaraproject/Commonalities/pull/115
+* 
+### Fixed
+* Update CAMARA_common.yaml by @RubenBG7 in https://github.com/camaraproject/Commonalities/pull/124
+* Update API-design-guidelines  Issues 97&98 by @rartych in https://github.com/camaraproject/Commonalities/pull/123
+
+### Removed
+* API-exposure-reference-solution.docx removed from documentation/SupportingDocuments by @jordonezlucena in https://github.com/camaraproject/Commonalities/pull/104
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/v0.2.0...v0.3.0
+
 
 # v0.2.0
 
