@@ -41,7 +41,7 @@ A list of some of the frequently accessed documents that are an output of the wo
 
 
 ## Status and released versions
-* Release 0.3.0 of guidelines and assets for CAMARA APIs is available within the [release-0.2.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.3.0):
+* Release 0.3.0 of guidelines and assets for CAMARA APIs is available within the [release-0.3.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.3.0):
 * Release 0.2.0 of guidelines and assets for CAMARA APIs is available within the [release-0.2.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.2.0):
 * Release 0.1.0 of guidelines and assets for CAMARA APIs is available within the [release-0.1.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.1.0):
 
