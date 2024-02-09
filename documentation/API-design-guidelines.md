@@ -731,17 +731,26 @@ https://api.mycompany.com/v1/orders?orderBy=rating,reviews,name&order=desc
 
 Filtering consists of restricting the number of resources queried by specifying some attributes and their expected values. When filtering is supported, it is possible to filter a collection on multiple attributes at the same time and allow multiple values for a filtered attribute.
 
-Next, it is specified how it should be used according to the filtering based on the type of data being searched for: a text, a number or a date and the type of operation.
+Next, it is specified how it should be used according to the filtering based on the type of data being searched for: a number or a date and the type of operation.
+
 Note: Services may not support all attributes for filtering.  In case a query includes an attribute for which filtering is not supported, it may be ignored by the service.
  
-| **Operation** |	Text |	Numbers | 	Dates |
-| ----- |	-----  |	 -----  |  -----  |
-| Equal | `GET .../?name=Juan` | `GET .../?amount=807.24`	| `GET .../?executionDate=2018-30-05` | 
-| Greater or equal	| N/A | `GET .../?amount.gte=807.24` | `GET.../?executionDate.gte=2018-30-05` |
-| Strictly greater | N/A | `GET .../?amount.gt=807.24` | `GET.../?executionDate.gt=2018-30-05` | 
-| smaller or equal	| N/A | `GET .../?amount.lte=807.24` | `GET.../?executionDate.lte=2018-30-05` |
-| Strictly smaller | N/A | `GET .../?amount.lt=807.24` | `GET.../?executionDate.lt=2018-30-05` | 
-|Contains | `GET .../?name=~Juan` |N/A | N/A | 
+| **Operation** |	Numbers | 	Dates  |
+| ----- |	-----  |	 -----  |
+| Equal | `GET .../?amount=807.24`	| `GET .../?executionDate=2024-02-05T09:38:24Z` |
+| Greater or equal	| `GET .../?amount.gte=807.24` | `GET.../?executionDate.gte=2018-05-30` |
+| Strictly greater | `GET .../?amount.gt=807.24` | `GET.../?executionDate.gt=2018-05-30`  |
+| smaller or equal	| `GET .../?amount.lte=807.24` | `GET.../?executionDate.lte=2018-05-30` |
+| Strictly smaller | `GET .../?amount.lt=807.24` | `GET.../?executionDate.lt=2018-05-30` |
+
+
+And according to the filtering based on string and enums data being searched for: 
+
+| **Operation** |	**Strings/enums** |
+| ----- | ----- |
+| equal | `GET .../?name=Juan` |
+| non equal | `GET .../?name!=Jonh` |
+| Contains | `GET .../?name=~Rafa` |
 
 
 **Additional rules**:
