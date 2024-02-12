@@ -15,27 +15,27 @@ The content of the release includes:
 * Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/release-0.3.0/documentation)** folder
   - **New:**
     - [API Testing Guidelines](https://github.com/camaraproject/Commonalities/blob/release-0.3.0/documentation/API-Testing-Guidelines.md)
-    - [API Linting rules](https://github.com/camaraproject/Commonalities/blob/release-0.3.0/documentation/Linting-rules.md)
+    - [API Linting Rules](https://github.com/camaraproject/Commonalities/blob/release-0.3.0/documentation/Linting-rules.md)
     - [OpenAPI Linting Rules Implementaion Guideline](https://github.com/camaraproject/Commonalities/blob/release-0.3.0/documentation/API-linting-Implementation-Guideline.md)
 * Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/release-0.3.0/artifacts)** folder
   - **New:**
     -  [CAMARA_common.yaml](https://github.com/camaraproject/Commonalities/blob/release-0.3.0/artifacts/CAMARA_common.yaml)
-    -  [Linting rules implementation files](https://github.com/camaraproject/Commonalities/tree/release-0.3.0/API-linting-Implementation-Guideline/artifacts/linting_rules)
+    -  [Linting rules implementation files](https://github.com/camaraproject/Commonalities/tree/release-0.3.0/artifacts/linting_rules)
 
 ### Added
-* API-Testing-Guidelines.md created by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/117
-* API-design-guidelines.md updated with scopes naming by @jlurien in https://github.com/camaraproject/Commonalities/pull/57
-* Initial CAMARA OAS linting ruleset by @rartych in https://github.com/camaraproject/Commonalities/pull/74
+* API Testing Guidelines created by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/117
+* API Design Guidelines updated with scopes naming guidelines by @jlurien in https://github.com/camaraproject/Commonalities/pull/57
+* API Linting Rules - initial linting ruleset description by @rartych in https://github.com/camaraproject/Commonalities/pull/74
 * API linting implementation and guidelines by @ravindrapalaskar17 in https://github.com/camaraproject/Commonalities/pull/110
   
 ### Changed
 * CAMARA_common.json renamed to CAMARA_common.yaml and updated by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/107
-* Set X-Correlator as Required in OAS Definition, X-Version removed by @jlurien in https://github.com/camaraproject/Commonalities/pull/115
-* Changed filtering criteria in API-design-guidelines.md by @RubenBG7 in https://github.com/camaraproject/Commonalities/pull/132
+* X-Correlator header as required in OAS definition, X-Version removed from API Design Guidelines by @jlurien in https://github.com/camaraproject/Commonalities/pull/115
+* Filtering criteria in API Design Guidelines changed by @RubenBG7 in https://github.com/camaraproject/Commonalities/pull/132
 
 ### Fixed
 * CAMARA_common.yaml - error response codes updated by @RubenBG7 in https://github.com/camaraproject/Commonalities/pull/124
-* API-design-guidelines updated on response filtering by @rartych in https://github.com/camaraproject/Commonalities/pull/123
+* API Design Guidelines updated on response filtering by @rartych in https://github.com/camaraproject/Commonalities/pull/123
 
 ### Removed
 * API-exposure-reference-solution.docx removed from documentation/SupportingDocuments by @jordonezlucena in https://github.com/camaraproject/Commonalities/pull/104
