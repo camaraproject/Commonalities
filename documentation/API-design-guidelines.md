@@ -1352,7 +1352,7 @@ Following Error code must be present:
 * case3: subscriber requests the `DELETE` operation for the subscription (if the subscription did not have a subscriptionExpireTime or before subscriptionExpireTime expires). 
 * case4: subscription ends on operator request. 
 
-It could be useful to provide a mechanism to inform subscriber for all case. In this case, a specific event type could be used.
+It could be useful to provide a mechanism to inform subscriber for all cases. In this case, a specific event type could be used.
 
 _Termination rules regarding subscriptionExpireTime & subscriptionMaxEvents usage_
 * When client side providing a `subscriptionExpireTime` and/or `subscriptionMaxEvents` service side has to terminate the subscription without expecting a `DELETE` operation.
