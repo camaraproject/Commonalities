@@ -29,7 +29,13 @@ The content of the release includes:
 * API linting implementation and guidelines by @ravindrapalaskar17 in https://github.com/camaraproject/Commonalities/pull/110
   
 ### Changed
-* CAMARA_common.json renamed to CAMARA_common.yaml and updated by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/107
+* CAMARA_common.yaml includes the following changes:
+
+- CAMARA_common.json was changed to CAMARA_common.yaml to be consistent with all Camara API specs.
+- Includes guidance for info object
+- Adds the aligned device schema 
+updated by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/107
+
 * X-Correlator header as required in OAS definition, X-Version removed from API Design Guidelines by @jlurien in https://github.com/camaraproject/Commonalities/pull/115
 * Filtering criteria in API Design Guidelines changed by @RubenBG7 in https://github.com/camaraproject/Commonalities/pull/132
 
