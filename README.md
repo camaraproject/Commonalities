@@ -19,7 +19,10 @@ Repository to describe and document common guidelines and assets for CAMARA APIs
 
 The documents that are relevant for CAMARA API Sub Projects are found in the `documentation` directory (at the top-level). The rest of the sub-directories are primarily for internal working of the Commonalities Working Group.
 
-The `artifacts` directory contains templates for creating Github issues and Common data and error formats for CAMARA APIs.
+The `artifacts` directory contains:
+* templates for creating Github issues
+* common data and error formats for CAMARA APIs in [CAMARA_common.yaml](artifacts/CAMARA_common.yaml)
+* OAS definition of CAMARA Event using CloudEvents: [notification-as-cloud-event.yaml](artifacts/notification-as-cloud-event.yaml)
 
 ### Frequently-accessed output documents
 
@@ -32,11 +35,13 @@ A list of some of the frequently accessed documents that are an output of the wo
 | [API-Readiness-Checklist.md](documentation/API-Readiness-Checklist.md)           | A checklist that describes the minimum criteria for considering an API Ready                                                                                       |
 | [Camara_Versioning_Guidelines.md](documentation/Camara_Versioning_Guidelines.md) | Guidelines for API Subprojects on making releases                                                                                                                  |
 | [Glossary.md](documentation/Glossary.md)                                         | A glossary of the common terms and their API parameter/field names for use in the APIs                                                                             |
-
+| [API-Testing-Guidelines.md](documentation/API-Testing-Guidelines.md)             | Guidelines for the API testing in CAMARA project
+                                                                                                   |
 
 
 
 ## Status and released versions
+* Release 0.3.0 of guidelines and assets for CAMARA APIs is available within the [release-0.3.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.3.0):
 * Release 0.2.0 of guidelines and assets for CAMARA APIs is available within the [release-0.2.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.2.0):
 * Release 0.1.0 of guidelines and assets for CAMARA APIs is available within the [release-0.1.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.1.0):
 
