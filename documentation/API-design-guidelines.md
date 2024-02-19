@@ -22,6 +22,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [3.4 Path Parameters Use](#34-path-parameters-use)
     - [3.5 HTTP Headers Definition](#35-http-headers-definition)
     - [3.6 MIME Types](#36-mime-types)
+      - [3.6.1 Content-Type character set](#361-content-type-character-set)
   - [4. API Resource Definition](#4-api-resource-definition)
     - [4.1 URL Definition](#41-url-definition)
     - [4.2 Input/Output Resource Definition](#42-inputoutput-resource-definition)
@@ -440,6 +441,23 @@ The standard headers that allow managing the data format are:
 As a MIME Types example we can identify:
 - `application/xml`
 - `application/json`
+
+#### 3.6.1 Content-Type character set
+
+The character set supported must only be UTF-8. The [JSON Data Interchange Format (RFC 8259)](https://datatracker.ietf.org/doc/html/rfc8259#section-8.1) states the following
+
+```
+JSON text exchanged between systems that are not part of a closed
+ecosystem MUST be encoded using UTF-8 [RFC3629].
+
+Previous specifications of JSON have not required the use of UTF-8
+when transmitting JSON text.  However, the vast majority of JSON-
+based software implementations have chosen to use the UTF-8 encoding,
+to the extent that it is the only encoding that achieves
+interoperability.
+```
+
+Implementers may include the UTF-8 character set in the Content-Type header value, for example: "application/json; charset=utf-8". However, the preferred format is to specify only the MIME type, such as "application/json". Regardless, the interpretation of the MIME type as UTF-8 is mandatory, even when only "application/json" is provided.
 
 
 ## 4. API Resource Definition
