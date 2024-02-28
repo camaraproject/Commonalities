@@ -35,8 +35,7 @@ A list of some of the frequently accessed documents that are an output of the wo
 | [API-Readiness-Checklist.md](documentation/API-Readiness-Checklist.md)           | A checklist that describes the minimum criteria for considering an API Ready                                                                                       |
 | [Camara_Versioning_Guidelines.md](documentation/Camara_Versioning_Guidelines.md) | Guidelines for API Subprojects on making releases                                                                                                                  |
 | [Glossary.md](documentation/Glossary.md)                                         | A glossary of the common terms and their API parameter/field names for use in the APIs                                                                             |
-| [API-Testing-Guidelines.md](documentation/API-Testing-Guidelines.md)             | Guidelines for the API testing in CAMARA project
-                                                                                                   |
+| [API-Testing-Guidelines.md](documentation/API-Testing-Guidelines.md)             | Guidelines for the API testing in CAMARA project                                                                                                   |
 
 
 
@@ -48,9 +47,9 @@ A list of some of the frequently accessed documents that are an output of the wo
 For changes see [CHANGELOG.md](https://github.com/camaraproject/Commonalities/blob/main/CHANGELOG.md)
 
 ## Meetings
-* Meetings are held virtually
-* Schedule: bi-weekly, Monday, 4 PM CET/CEST (3 PM BST, 15:00 UTC)
-* Meeting link: [MS Teams](https://teams.microsoft.com/l/meetup-join/19%3ameeting_M2E3ZmUxYWUtMDZkNi00YmM1LThiYWMtZjQzNWI0NWQxOGY0%40thread.v2/0?context=%7b%22Tid%22%3a%22bde4dffc-4b60-4cf6-8b04-a5eeb25f5c4f%22%2c%22Oid%22%3a%22a5cb7460-f2b0-42ec-b511-c642f83aa9a3%22%7d)
+* Meetings are held virtually on the LF Platform: [Meeting Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/91016460698?password=d031b0e3-8d49-49ae-958f-af3213b1e547)
+* Schedule: bi-weekly, Monday, 4 PM CET/CEST (3 PM BST, 15:00 UTC). The date of the next meeting can be found in the previous [meeting minutes](https://wiki.camaraproject.org/display/CAM/2024+Commonalities+WG+Minutes).
+
 
 ## Contributorship and mailing list
 * To subscribe / unsubscribe to the mailing list of this Sub Project and thus be / resign as Contributor please visit <https://lists.camaraproject.org/g/sp-com>.
