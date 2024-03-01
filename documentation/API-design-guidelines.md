@@ -1526,7 +1526,7 @@ curl -X 'POST' \
   "data": {
     "subscriptionId": "456g899g",
     "device": {
-      "phoneNumber": 123456789
+      "phoneNumber": "+123456789"
     },
     "roaming": true,
     "countryCode": 208,
@@ -1563,7 +1563,7 @@ curl -X 'POST' \
   "data": {
     "subscriptionId": "456g899g",
     "device": {
-      "phoneNumber": 123456789
+      "phoneNumber": "+123456789"
     },
     "terminationReason": "SUBSCRIPTION_EXPIRED"
   },
