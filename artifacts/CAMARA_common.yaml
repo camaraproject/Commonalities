@@ -63,7 +63,7 @@ components:
   PhoneNumber:
    description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
    type: string
-   pattern: '^\+[0-9]{5,15}$'
+   pattern: '^\+[1-9]\d{1,14}$'
    example: "+123456789"
 
   NetworkAccessIdentifier:
