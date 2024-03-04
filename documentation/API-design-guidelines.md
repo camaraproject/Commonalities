@@ -45,7 +45,9 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [11.4 Response Structure](#114-response-structure)
     - [11.5 Data Definitions](#115-data-definitions)
       - [11.5.1 Usage of discriminator](#1151-usage-of-discriminator)
-    - [11.6 Security Definition](#116-security-definition)
+        - [Inheritance](#inheritance)
+        - [Polymorphism](#polymorphism)
+    - [11.6 OAuth Definition](#116-oauth-definition)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
@@ -1340,6 +1342,7 @@ The Following table provides `/subscriptions` attributes
 | subscriptionExpireTime | string - date-time| Date when the event subscription should end. Provided by API requester. The Server may reject the subscription if the period requested do not comply with Telco Operator policies (i.e. to avoid unlimited time subscriptions). In this case server returns exception 403 "SUBSCRIPTION_PERIOD_NOT_ALLOWED" | optional |
 | startsAt | string - date-time| Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints | optional |
 | expiresAt | string - date-time| Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided by API server.  | optional |
+| subscriptionMaxEvents | integer | Identifies the maximum number of event reports to be generated (>=1) - Once this number is reached, the subscription ends | optional |
 | subscriptionDetail | object | Object defined for each event subscription depending on the event - it could be for example the ueID targeted by the subscription | optional |
 
 
@@ -1369,17 +1372,20 @@ Following Error code must be present:
 
 ##### Termination for resource-based (explicit) subscription
 
-3 scenarios of subscription termination are possible (business conditions may apply):
+4 scenarios of subscription termination are possible (business conditions may apply):
 
 * case1: subscriptionExpireTime has been provided in the request and reached. The operator in this case has to terminate the subscription.
-* case2: subscriber requests the `DELETE` operation for the subscription (if the subscription did not have a subscriptionExpireTime or before subscriptionExpireTime expires). 
-* case3: subscription ends on operator request. 
+* case2: subscriptionMaxEvents has been provided in the request and reached. The operator in this case has to terminate the subscription.
+* case3: subscriber requests the `DELETE` operation for the subscription (if the subscription did not have a subscriptionExpireTime or before subscriptionExpireTime expires). 
+* case4: subscription ends on operator request. 
 
-It could be useful to provide a mechanism to inform subscriber for case3 (and probably case1). In this case, a specific event type could be used.
+It could be useful to provide a mechanism to inform subscriber for all cases. In this case, a specific event type could be used.
 
-_Termination rules regarding subscriptionExpireTime usage_
-* When client side providing a `subscriptionExpireTime`, service side has to terminate the subscription without expecting a `DELETE` operation.
-* When the `subscriptionExpireTime` is not provided, client side has to trigger a `DELETE` operation to terminate it.
+_Termination rules regarding subscriptionExpireTime & subscriptionMaxEvents usage_
+* When client side providing a `subscriptionExpireTime` and/or `subscriptionMaxEvents` service side has to terminate the subscription without expecting a `DELETE` operation.
+* If both `subscriptionExpireTime` and `subscriptionMaxEvents` are provided, the subscription will end when the first one is reached.
+* When none `subscriptionExpireTime` and `subscriptionMaxEvents` are not provided, client side has to trigger a `DELETE` operation to terminate it.
+* It is perfectly valid for client side to trigger a DELETE operation before `subscriptionExpireTime` and/or `subscriptionMaxEvents` reached. 
 
 
 ##### Resource-based (explicit) example
@@ -1476,7 +1482,8 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 
 Note: For operational and troubleshooting purposes it is relevant to accommodate use of `X-Correlator` header attribute. API listener implementations have to be ready to support and receive this data.
 
-Specific event notification type "subscription-ends" is defined to inform listener about subscription termination. It is used when the subscription expire time (required by the requester) has been reached or if the API server has to stop sending notification prematurely. For this specific event, the `data` must feature `terminationReason` attribute.
+Specific event notification type "subscription-ends" is defined to inform listener about subscription termination. It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notification prematurely. For this specific event, the `data` must feature `terminationReason` attribute.
+Note: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example if a client request a `subscriptionMaxEvents` to 2, later, received 2 notification, then a third notification will be send for "subscription-ends")
 
 #### Error definition for event notification
 
