@@ -108,7 +108,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: "^(get|put|post|delete|patch|options)$"
+        match: "^(get|put|post|delete|patch|options|parameters)$"
     recommended: true  # Set to true/false to enable/disable this rule
 
   camara-get-no-request-body:
