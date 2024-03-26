@@ -1,6 +1,9 @@
 # CAMARA Project - linting ruleset - documentation avaialable here:
 # https://github.com/camaraproject/Commonalities/blob/main/documentation/Linting-rules.md
-# 19.03.2024 - camara-http-method rule corrected
+# Changelog:
+# - 31.01.2024: Initial version
+# - 19.03.2024: Corrected camara-http-methods rule
+
 
 extends: "spectral:oas"
 functions:
