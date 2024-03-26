@@ -1054,7 +1054,8 @@ This part must include the following information:
 - Schemes supported (HTTP, HTTPS…)
 - Allowed response formats (“application/json”, “text/xml”…)
 - Response format (“application/jwt”…)
-
+- Global `tags` object if tags are used for API operations
+  
 <p align="center">
 <img src="./images/guidelines-fig-14.png" width="400"/>
 </p>
@@ -1066,7 +1067,7 @@ This part must contain the list of published functions, with the following descr
 - HTTP Methods. For each one, the following shall be included:
    - Functionality summary.
    - Functionality method description.
-   - Tag list to classify methods.
+   - Optionally `tags` object for each API operation - Title Case is the recommended style for tag names.
    - Request param list, making reference to "Request params" part.
    - Supported responses list, describing success and errors cases.
 
