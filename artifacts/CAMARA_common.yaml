@@ -265,6 +265,16 @@ components:
       status: 501
       code: NOT_IMPLEMENTED
       message: This functionality is not implemented yet
+  NotSupported:
+   description: Not Supported
+   content:
+    application/json:
+     schema:
+      $ref: "#/components/schemas/ErrorInfo"
+     example:
+      status: 501
+      code: NOT_SUPPORTED
+      message: Service not supported for this phone number
   AuthenticationRequired:
    description: Authentication Required
    content:
