@@ -74,7 +74,7 @@ paths:
         URL, i.e.: notifications won't be sent to /event-notification/vX/your_webhook_notification_url.
       operationId: sendEvent
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: "#/components/parameters/X-Correlator"
       requestBody:
         required: true
         content:
@@ -89,23 +89,23 @@ paths:
         201:
           description: Created
           headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
+            X-Correlator:
+              $ref: "#/components/headers/X-Correlator"
         202:
           description: Accepted
           headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
+            X-Correlator:
+              $ref: "#/components/headers/X-Correlator"
         204:
           description: No Content
           headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
+            X-Correlator:
+              $ref: "#/components/headers/X-Correlator"
         200:
           description: Ok
           headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
+            X-Correlator:
+              $ref: "#/components/headers/X-Correlator"
           content:
             application/json:
               schema:
@@ -207,13 +207,13 @@ components:
         time:
           $ref: "#/components/schemas/DateTime"
   headers:
-    x-correlator:
+    X-Correlator:
       description: Correlation id for the different services
       schema:
         type: string
   parameters:
-    x-correlator:
-      name: x-correlator
+    X-Correlator:
+      name: X-Correlator
       in: header
       description: Correlation id for the different services
       schema:
@@ -223,8 +223,8 @@ components:
     Generic400:
       description: Problem with the client request
       headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -236,8 +236,8 @@ components:
     Generic401:
       description: Authentication problem with the client request
       headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -249,8 +249,8 @@ components:
     Generic403:
       description: Client does not have sufficient permission
       headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -262,8 +262,8 @@ components:
     Generic410:
       description: Gone
       headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -274,8 +274,8 @@ components:
     Generic415:
       description: Unsupported Media Type
       headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -286,8 +286,8 @@ components:
     Generic429:
       description: Too Many Requests
       headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -298,8 +298,8 @@ components:
     Generic500:
       description: Server error
       headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -311,8 +311,8 @@ components:
     Generic503:
       description: Service unavailable. Typically the server is down.
       headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
