@@ -152,7 +152,7 @@ components:
      schema:
       $ref: "#/components/schemas/ErrorInfo"
      example:
-      status: 404
+      status: 400
       code: OUT_OF_RANGE
       message: Client specified an invalid range
   Unauthenticated:
