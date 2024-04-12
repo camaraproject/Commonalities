@@ -949,10 +949,22 @@ The following controls will be performed on the access token:
 
 The scopes allow defining the permission scopes that a system or a user has on a resource, ensuring that they can only access the parts they need and not have access to more. These restrictions are done by limiting the permissions that are granted to OAuth tokens.
 
-Scopes should be represented as:
+Scopes should be represented as below for all Camara APIs except the APIs that offer explicit event subscriptions:
 - API Name: address-management, numbering-information...
 - Protected Resource: orders, billings…
 - Grant-level, action on resource: read, write…
+
+The APIs that offer a way to subscribe to events (explicit subscriptions) must have a way to reflect which event types are being subscribed to, when a subscription create request is made. This will impact how consent management is done for these APIs. 
+
+Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete:
+ 
+- API Name: device-roaming-subscriptions
+- Grant-level, action on resource: read, delete
+  
+Scopes should be represented as below for APIs that offer explicit event subscriptions with action create:
+
+- Event-type: org.camaraproject.device-roaming-subscriptions.v0.roaming-on (As API name is already a part of the event type field, we do not prepend it again within the scope)
+- Grant-level, action on resource: create
   
 To correctly define the scopes, when creating them, the following recommendations should be taken:
 - **Appropriate granularity**. Scopes should be granular enough to match the types of resources and permissions you want to grant.
@@ -1331,6 +1343,8 @@ A resource-based subscription is an event subscription managed as a resource. Th
 Note: It is perfectly valid for a CAMARA API to have several event types managed. The subscription endpoint will be unique, but 'eventType' attribute is used to distinguish distinct events subscribed.
 
 In order to ease developer adoption, the pattern for Resource-based event subscription should be consistent for all API providing this feature.
+
+To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. The name of this API must be appended with the keyword "subscriptions". For e.g. device-roaming-subscriptions.yaml
 
 4 operations must be defined:
 
