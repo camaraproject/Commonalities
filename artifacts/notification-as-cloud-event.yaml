@@ -183,7 +183,8 @@ components:
         specversion:
           type: string
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
-          minLength: 3
+          enum:
+            - "1.0"
         datacontenttype:
           type: string
           description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
