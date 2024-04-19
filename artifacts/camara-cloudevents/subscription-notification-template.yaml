@@ -45,11 +45,11 @@ paths:
         required: true
       callbacks:
         notifications:
-          "{$request.body#/webhook/notificationUrl}":
+          "{$request.body#/sink}":
             post:
               tags:
-                - Session notifications callback
-              summary: "Session notifications callback"
+                - notifications callback
+              summary: "notifications callback"
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
                 The xxx server will call this endpoint whenever a xxx event occurs.
@@ -187,7 +187,7 @@ paths:
         - xxx notification subscription
       summary: 'Delete a xxx event subscription'
       operationId: deleteSubscription
-      description: delete a  given event subscription.
+      description: delete a given event subscription.
       security:
         - openId:
           - xxx:subscriptions:delete
