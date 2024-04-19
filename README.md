@@ -4,6 +4,7 @@
 <a href="https://github.com/camaraproject/Commonalities/graphs/contributors" title="Contributors"><img src="https://img.shields.io/github/contributors/camaraproject/Commonalities?style=plastic"></a>
 <a href="https://github.com/camaraproject/Commonalities" title="Repo Size"><img src="https://img.shields.io/github/repo-size/camaraproject/Commonalities?style=plastic"></a>
 <a href="https://github.com/camaraproject/Commonalities/blob/main/LICENSE" title="License"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg?style=plastic"></a>
+<img src="https://img.shields.io/badge/Working%20Group-red">
 
 # Commonalities
 Repository to describe and document common guidelines and assets for CAMARA APIs
