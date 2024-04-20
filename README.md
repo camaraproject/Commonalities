@@ -53,5 +53,5 @@ For changes see [CHANGELOG.md](https://github.com/camaraproject/Commonalities/bl
 
 
 ## Contributorship and mailing list
-* To subscribe / unsubscribe to the mailing list of this Sub Project and thus be / resign as Contributor please visit <https://lists.camaraproject.org/g/sp-com>.
-* A message to all Contributors of this Sub Project can be sent using <sp-com@lists.camaraproject.org>.
+* To subscribe / unsubscribe to the mailing list of this Sub Project and thus be / resign as Contributor please visit <https://lists.camaraproject.org/g/wg-commonalities>.
+* A message to all Contributors of this Sub Project can be sent using <wg-commonalities@lists.camaraproject.org>.
