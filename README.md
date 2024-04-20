@@ -13,7 +13,7 @@ Repository to describe and document common guidelines and assets for CAMARA APIs
 * Guidelines and assets for “Commonalities” (see APIBacklog.md)  
 * All deliverables are mandatory for all CAMARA Sub Projects 
 * Describe, develop, document and test the deliverables
-* Started: June 2023
+* Started: October 2021
 * Location: virtually
 
 ## Documents for CAMARA Sub Projects
