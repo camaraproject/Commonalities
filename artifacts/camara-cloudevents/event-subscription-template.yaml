@@ -15,28 +15,28 @@ externalDocs:
   description: Product documentation at CAMARA
   url: hhttps://github.com/camaraproject/
 servers:
-  - url: '{apiRoot}/xxx-notification-subscriptions/v0'
+  - url: '{apiRoot}/event-type-notification-subscriptions/v0'
     variables:
       apiRoot:
         default: http://localhost:9091
         description: API root
 tags:
-  - name: xxx notification subscription
-    description: Operation to manage event subscription on xxx event 
+  - name: event-type notification subscription
+    description: Operation to manage event subscription on event-type event 
 
 paths:
   /subscriptions:
     post:
       tags:
-        - xxx notification subscription
-      summary: 'Create a xxx event subscription'
-      description: Create a xxx event subscription
-      operationId: createXxxSubscription
+        - event-type notification subscription
+      summary: 'Create a event-type event subscription'
+      description: Create a event-type event subscription
+      operationId: createEvent-TypeSubscription
       parameters:
         - $ref: '#/components/parameters/x-correlator'
       security:
         - openId:
-          - xxx:subscriptions:create
+          - event-type:subscriptions:create
       requestBody:
         content:
           application/json:
@@ -52,7 +52,7 @@ paths:
               summary: "notifications callback"
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
-                The xxx server will call this endpoint whenever a xxx event occurs.
+                The event-type server will call this endpoint whenever a event-type event occurs.
               operationId: postNotification
               parameters:
                 - $ref: '#/components/parameters/x-correlator'
@@ -81,7 +81,6 @@ paths:
                   $ref: "#/components/responses/Generic503"
               security:
                 - { }
-                - notificationsBearerAuth: [ ]
 
       responses:
         "201":
@@ -116,15 +115,15 @@ paths:
           $ref: '#/components/responses/Generic503'
     get:
       tags:
-        - xxx notification subscription
-      summary: 'Retrieve a list of xxx event subscription'
-      description: Retrieve a list of xxx event subscription(s)
+        - event-type notification subscription
+      summary: 'Retrieve a list of event-type event subscription'
+      description: Retrieve a list of event-type event subscription(s)
       operationId: retrieveSubscriptionList
       parameters:
         - $ref: '#/components/parameters/x-correlator'
       security:
         - openId:
-          - xxx:subscriptions:read
+          - event-type:subscriptions:read
       responses:
         "200":
           description: List of event subscription details
@@ -150,13 +149,13 @@ paths:
   /subscriptions/{subscriptionId}:
     get:
       tags:
-        - xxx notification subscription
-      summary: 'Retrieve a xxx event subscription'
+        - event-type notification subscription
+      summary: 'Retrieve a event-type event subscription'
       description: retrieve event subscription information for a given subscription.
       operationId: retrieveSubscription
       security:
         - openId:
-          - xxx:subscriptions:read
+          - event-type:subscriptions:read
       parameters:
         - $ref: "#/components/parameters/SubscriptionId"
         - $ref: '#/components/parameters/x-correlator'
@@ -184,13 +183,13 @@ paths:
           $ref: "#/components/responses/Generic503"
     delete:
       tags:
-        - xxx notification subscription
-      summary: 'Delete a xxx event subscription'
+        - event-type notification subscription
+      summary: 'Delete a event-type event subscription'
       operationId: deleteSubscription
       description: delete a given event subscription.
       security:
         - openId:
-          - xxx:subscriptions:delete
+          - event-type:subscriptions:delete
       parameters:
         - $ref: "#/components/parameters/SubscriptionId"
         - $ref: '#/components/parameters/x-correlator'
@@ -264,7 +263,7 @@ components:
           description: Detailed error description
         
     SubscriptionRequest:
-      description: The request for creating a xxx event subscription
+      description: The request for creating a event-type event subscription
       type: object
       required:
         - sink
@@ -399,18 +398,18 @@ components:
       required:
         - type
 
-    XxxNotificationEventType:
+    Event-typeNotification:
       type: string
       description: |
-        xxx - Event triggered when a xxx event occured
+        event-type - Event triggered when a event-type event occured
 
         subscription-ends: Event triggered when the subscription ends
       enum:
-        - org.camaraproject.xxx.v0.xxx
-        - org.camaraproject.xxx.v0.subscription-ends
+        - org.camaraproject.api-name.v0.event-type
+        - org.camaraproject.api-name.v0.subscription-ends
 
     Subscription:
-      description: Represents a xxx subscription.
+      description: Represents a event-type subscription.
       required:
         - startsAt
         - subscriptionId
@@ -430,7 +429,7 @@ components:
             - id
 
     SubscriptionAsync:
-      description: Response for a xxx subscription request managed asynchronously (Creation or Deletion)
+      description: Response for a event-type subscription request managed asynchronously (Creation or Deletion)
       type: object
       properties:
           id:
@@ -456,11 +455,10 @@ components:
         source:
           $ref: '#/components/schemas/Source'
         type:
-          $ref: '#/components/schemas/XxxNotificationEventType'
+          $ref: '#/components/schemas/Event-typeNotification'
         specversion:
           type: string
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
-          example: "1.0"
           enum: 
             - "1.0"
         datacontenttype:
@@ -475,8 +473,8 @@ components:
       discriminator:
         propertyName: 'type'
         mapping:
-            org.camaraproject.xxx.v0.xxx: '#/components/schemas/EventXxx'
-            org.camaraproject.xxx.v0.subscription-ends: '#/components/schemas/EventSubscriptionEnds'
+            org.camaraproject.api-name.v0.event-type: '#/components/schemas/Event-typeEvent'
+            org.camaraproject.api-name.v0.subscription-ends: '#/components/schemas/EventSubscriptionEnds'
 
     Source:
       type: string
@@ -497,8 +495,8 @@ components:
       description: Timestamp of when the occurrence happened. Must adhere to RFC 3339.
       example: '2018-04-05T17:31:00Z'
 
-    EventXxx:
-      description:  event structure for xxx event
+    Event-typeEven:
+      description:  event structure for event-type event
       allOf:
         - $ref: '#/components/schemas/CloudEvent'
         - type: object
@@ -756,5 +754,3 @@ components:
                 status: 400
                 code: INVALID_ARGUMENT
                 message: "Expected property is missing: subscriptionId"
-
-
