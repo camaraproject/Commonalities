@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Notification Subscription Template
   description: |
-    This file is a template for CAMARA explicit subscription template and for Notification model. Additional information are provided in API Design guidelines document.
+    This file is a template for CAMARA API explicit subscription endpoint and for Notification model. Additional information are provided in API Design Guidelines document.
 
   termsOfService: http://swagger.io/terms/
   contact:
