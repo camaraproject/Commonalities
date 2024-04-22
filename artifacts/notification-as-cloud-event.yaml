@@ -57,14 +57,14 @@ servers:
         default: https://localhost:8080
         description: Can be any notification server address sent by the client application
 tags:
-  - name: Cloud Event
+  - name: CAMARA Cloud Event
     description: |
       Events received on subscription listener side.
 paths:
   /your_webhook_notification_url:
     post:
       tags:
-        - CAMARA Cloud Event notification endpoint
+        - CAMARA Cloud Event
       summary: "Cloud Event notification endpoint to notify consumer that statement of fact had occurred"
       description: |
         INFORMATIVE ENDPOINT: The value of this endpoint is freely declared by each client app by means of resource-based
@@ -73,6 +73,8 @@ paths:
         in the triggering of the procedure (resource-based or instance-based).  In this way, it represents an absolute
         URL, i.e.: notifications won't be sent to /event-notification/vX/your_webhook_notification_url.
       operationId: sendEvent
+      parameters:
+        - $ref: "#/components/parameters/X-Correlator"
       requestBody:
         required: true
         content:
@@ -86,12 +88,24 @@ paths:
       responses:
         201:
           description: Created
+          headers:
+            X-Correlator:
+              $ref: "#/components/headers/X-Correlator"
         202:
           description: Accepted
+          headers:
+            X-Correlator:
+              $ref: "#/components/headers/X-Correlator"
         204:
           description: No Content
+          headers:
+            X-Correlator:
+              $ref: "#/components/headers/X-Correlator"
         200:
           description: Ok
+          headers:
+            X-Correlator:
+              $ref: "#/components/headers/X-Correlator"
           content:
             application/json:
               schema:
@@ -192,10 +206,25 @@ components:
           description: Event details payload described in each CAMARA API and referenced by its type
         time:
           $ref: "#/components/schemas/DateTime"
+  headers:
+    X-Correlator:
+      description: Correlation id for the different services
+      schema:
+        type: string
+  parameters:
+    X-Correlator:
+      name: X-Correlator
+      in: header
+      description: Correlation id for the different services
+      schema:
+        type: string
 
   responses:
     Generic400:
       description: Problem with the client request
+      headers:
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -206,6 +235,9 @@ components:
             message: "Client specified an invalid argument, request body or query param"
     Generic401:
       description: Authentication problem with the client request
+      headers:
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -216,6 +248,9 @@ components:
             message: "Request not authenticated due to missing, invalid, or expired credentials"
     Generic403:
       description: Client does not have sufficient permission
+      headers:
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -226,6 +261,9 @@ components:
             message: "Client does not have sufficient permissions to perform this action"
     Generic410:
       description: Gone
+      headers:
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -235,6 +273,9 @@ components:
             message: "Access to the target resource is no longer available."
     Generic415:
       description: Unsupported Media Type
+      headers:
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -244,6 +285,9 @@ components:
             message: "The specified media type is not supported"
     Generic429:
       description: Too Many Requests
+      headers:
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -253,6 +297,9 @@ components:
             message: "Endpoint does not support as many requests per time slot"
     Generic500:
       description: Server error
+      headers:
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
@@ -263,6 +310,9 @@ components:
             message: "Server error"
     Generic503:
       description: Service unavailable. Typically the server is down.
+      headers:
+        X-Correlator:
+          $ref: "#/components/headers/X-Correlator"
       content:
         application/json:
           schema:
