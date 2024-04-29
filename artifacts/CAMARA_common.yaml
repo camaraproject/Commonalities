@@ -123,10 +123,10 @@ components:
       $ref: "#/components/schemas/ErrorInfo"
      example:
       status: 400
-      code: INVALID_INPUT
-      message: Schema validation failed at  ...
+      code: INVALID_ARGUMENT
+      message: Client specified an invalid argument, request body or query param
   Conflict:
-   description: conflict
+   description: Conflict
    content:
     application/json:
      schema:
@@ -134,7 +134,7 @@ components:
      example:
       status: 409
       code: CONFLICT
-      message: Schema validation failed at  ...
+      message:  Request could not be processed due to a conflict
   FailedPrecondition:
    description: Failed precondition
    content:
@@ -142,9 +142,9 @@ components:
      schema:
       $ref: "#/components/schemas/ErrorInfo"
      example:
-      status: 400
+      status: 412
       code: FAILED_PRECONDITION
-      message: Schema validation failed at  ...
+      message: Request cannot be executed in the current system state.
   OutOfRange:
    description: Out of Range
    content:
@@ -154,7 +154,7 @@ components:
      example:
       status: 400
       code: OUT_OF_RANGE
-      message: Schema validation failed at  ...
+      message: Client specified an invalid range
   Unauthenticated:
    description: Not Authenticated
    content:
@@ -194,7 +194,7 @@ components:
      example:
       status: 409
       code: ABORTED
-      message: Concurrency conflict.
+      message: Request aborted.
   AlreadyExists:
    description: Already Exists
    content:
@@ -206,7 +206,7 @@ components:
       code: ALREADY_EXISTS
       message: The resource that a client tried to create already exists.
   TooManyRequests:
-   description: Already Exists
+   description: Too Many Requests
    content:
     application/json:
      schema:
