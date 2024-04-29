@@ -36,7 +36,6 @@ paths:
         - $ref: '#/components/parameters/x-correlator'
       security:
         - openId:
-          - api-name:subscriptions:create
           - api-name:event-type:grant-level
       requestBody:
         content:
