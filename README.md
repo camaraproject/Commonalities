@@ -4,6 +4,7 @@
 <a href="https://github.com/camaraproject/Commonalities/graphs/contributors" title="Contributors"><img src="https://img.shields.io/github/contributors/camaraproject/Commonalities?style=plastic"></a>
 <a href="https://github.com/camaraproject/Commonalities" title="Repo Size"><img src="https://img.shields.io/github/repo-size/camaraproject/Commonalities?style=plastic"></a>
 <a href="https://github.com/camaraproject/Commonalities/blob/main/LICENSE" title="License"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg?style=plastic"></a>
+<img src="https://img.shields.io/badge/Working%20Group-red">
 
 # Commonalities
 Repository to describe and document common guidelines and assets for CAMARA APIs
@@ -12,7 +13,7 @@ Repository to describe and document common guidelines and assets for CAMARA APIs
 * Guidelines and assets for “Commonalities” (see APIBacklog.md)  
 * All deliverables are mandatory for all CAMARA Sub Projects 
 * Describe, develop, document and test the deliverables
-* Started: June 2023
+* Started: October 2021
 * Location: virtually
 
 ## Documents for CAMARA Sub Projects
@@ -52,5 +53,5 @@ For changes see [CHANGELOG.md](https://github.com/camaraproject/Commonalities/bl
 
 
 ## Contributorship and mailing list
-* To subscribe / unsubscribe to the mailing list of this Sub Project and thus be / resign as Contributor please visit <https://lists.camaraproject.org/g/sp-com>.
-* A message to all Contributors of this Sub Project can be sent using <sp-com@lists.camaraproject.org>.
+* To subscribe / unsubscribe to the mailing list of this Sub Project and thus be / resign as Contributor please visit <https://lists.camaraproject.org/g/wg-commonalities>.
+* A message to all Contributors of this Sub Project can be sent using <wg-commonalities@lists.camaraproject.org>.
