@@ -963,6 +963,7 @@ Scopes should be represented as below for APIs that offer explicit event subscri
 - API Name: device-roaming-subscriptions
 - Protected Resource: subscriptions (If the API name offering explicit subscriptions does not include the word subscriptions, then the protected resource "subscriptions" should be added when defining the scope.)
 - Grant-level, action on resource: read, delete
+This type of formulation is not needed for the create action.
 
 For e.g. device-roaming-subscriptions:read 
   
