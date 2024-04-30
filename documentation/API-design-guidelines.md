@@ -966,7 +966,7 @@ Scopes should be represented as below for APIs that offer explicit event subscri
 
 For e.g. device-roaming-subscriptions:read 
   
-Scopes should be represented as below for APIs that offer explicit event subscriptions with action create:
+The format to define scopes for explicit subscriptions with action create, includes the event type in its formulation to ensure that consent is managed at the level of subscribed event types. Scopes should be represented as below for APIs that offer explicit event subscriptions with action create:
 
 - API Name: device-roaming-subscriptions
 - Protected Resource: subscriptions (If the API name offering explicit subscriptions does not include the word subscriptions, then the protected resource "subscriptions" should be added when defining the scope.)
