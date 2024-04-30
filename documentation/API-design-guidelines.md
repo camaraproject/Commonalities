@@ -950,8 +950,8 @@ The following controls will be performed on the access token:
 The scopes allow defining the permission scopes that a system or a user has on a resource, ensuring that they can only access the parts they need and not have access to more. These restrictions are done by limiting the permissions that are granted to OAuth tokens.
 
 Scopes should be represented as below for all Camara APIs except the APIs that offer explicit event subscriptions:
-- API Name: address-management, numbering-information...
-- Protected Resource: orders, billings…
+- API Name: qod, address-management, numbering-information...
+- Protected Resource: sessions, orders, billings…
 - Grant-level, action on resource: read, write…
 
 For e.g. qod:sessions:read
@@ -961,6 +961,7 @@ The APIs that offer explicit event subscriptions must have a way to reflect whic
 Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete:
  
 - API Name: device-roaming-subscriptions
+- Protected Resource: subscriptions (If the API name offering explicit subscriptions does not include the word subscriptions, then the protected resource "subscriptions" should be added when defining the scope.)
 - Grant-level, action on resource: read, delete
 
 For e.g. device-roaming-subscriptions:read 
@@ -968,6 +969,7 @@ For e.g. device-roaming-subscriptions:read
 Scopes should be represented as below for APIs that offer explicit event subscriptions with action create:
 
 - API Name: device-roaming-subscriptions
+- Protected Resource: subscriptions (If the API name offering explicit subscriptions does not include the word subscriptions, then the protected resource "subscriptions" should be added when defining the scope.)
 - Event-type: org.camaraproject.device-roaming-subscriptions.v0.roaming-on 
 - Grant-level, action on resource: create
 
