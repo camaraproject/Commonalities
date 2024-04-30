@@ -954,17 +954,24 @@ Scopes should be represented as below for all Camara APIs except the APIs that o
 - Protected Resource: orders, billings…
 - Grant-level, action on resource: read, write…
 
-The APIs that offer a way to subscribe to events (explicit subscriptions) must have a way to reflect which event types are being subscribed to, when a subscription create request is made. This will impact how consent management is done for these APIs. 
+For e.g. qod-sessions-read
+
+The APIs that offer explicit event subscriptions must have a way to reflect which event types are being subscribed to, when a subscription create request is made. This will impact how consent management is handled for these APIs. 
 
 Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete:
  
 - API Name: device-roaming-subscriptions
 - Grant-level, action on resource: read, delete
+
+For e.g. device-roaming-subscriptions-read
   
 Scopes should be represented as below for APIs that offer explicit event subscriptions with action create:
 
+- API Name: device-roaming-subscriptions
 - Event-type: org.camaraproject.device-roaming-subscriptions.v0.roaming-on (As API name is already a part of the event type field, we do not prepend it again within the scope)
 - Grant-level, action on resource: create
+
+For e.g. device-roaming-subscriptions-org.camaraproject.device-roaming-subscriptions.v0.roaming-on-create
   
 To correctly define the scopes, when creating them, the following recommendations should be taken:
 - **Appropriate granularity**. Scopes should be granular enough to match the types of resources and permissions you want to grant.
