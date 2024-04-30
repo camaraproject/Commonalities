@@ -979,7 +979,7 @@ To correctly define the scopes, when creating them, the following recommendation
 - **Appropriate granularity**. Scopes should be granular enough to match the types of resources and permissions you want to grant.
 - **Use a common nomenclature for all resources**.  Scopes must be descriptive names and that there is no conflict between the different resources.
 - **Use the kebab-case nomenclature** to define API names, resources, and scope permissions.
-- **Use** ":" as the separator between API name, protected resources, event-types and grant-levels.
+- **Using ":" a separator** between API name, protected resources, event-types and grant-levels for consistency.
 
 See section [11.6 Security Definition](#116-security-definition) for detailed guidelines on how to define scopes and other security-related properties in a OpenAPI file.
 
