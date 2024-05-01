@@ -295,7 +295,7 @@ components:
     Protocol:
       type: string
       enum: ["HTTP", "MQTT3", "MQTT5", "AMQP", "NATS", "KAFKA"]
-      description: Identifier of a delivery protocol. Only HTTP is used for now
+      description: Identifier of a delivery protocol. Only HTTP is allowed for now
       example: "HTTP"
 
     Config:
