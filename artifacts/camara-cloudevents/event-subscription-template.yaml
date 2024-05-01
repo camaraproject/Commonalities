@@ -4,6 +4,8 @@ info:
   description: |
     This file is a template for CAMARA API explicit subscription endpoint and for Notification model. Additional information are provided in API Design Guidelines document.
 
+    Note on ``security`` - ``openId`` scope: The value in this yaml `api-name:event-type:grant-level` must be replaced accordingly to the format defined in the guideline document.
+
   termsOfService: http://swagger.io/terms/
   contact:
     email: project-email@sample.com
@@ -15,23 +17,26 @@ externalDocs:
   description: Product documentation at CAMARA
   url: hhttps://github.com/camaraproject/
 servers:
-  - url: '{apiRoot}/event-type-notification-subscriptions/v0'
+  - url: '{apiRoot}/{apiName}/v0'
     variables:
       apiRoot:
         default: http://localhost:9091
         description: API root
+      api-name:
+        default: camaraAPI
+        description: apiName will be replaced in WG by its value and not modelled as a variable
 tags:
-  - name: event-type notification subscription
+  - name: apiName subscription
     description: Operations to manage event subscriptions on event-type event 
 
 paths:
   /subscriptions:
     post:
       tags:
-        - event-type notification subscription
-      summary: 'Create a event-type event subscription'
-      description: Create a event-type event subscription
-      operationId: createEvent-TypeSubscription
+        - apiName subscription
+      summary: 'Create a apiName event subscription'
+      description: Create a apiName event subscription
+      operationId: createApiNameSubscription
       parameters:
         - $ref: '#/components/parameters/x-correlator'
       security:
@@ -52,7 +57,7 @@ paths:
               summary: "notifications callback"
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
-                The event-type server will call this endpoint whenever a event-type event occurs.
+                The apiName server will call this endpoint whenever a apiName event occurs.
               operationId: postNotification
               parameters:
                 - $ref: '#/components/parameters/x-correlator'
@@ -70,7 +75,7 @@ paths:
                     x-correlator:
                       $ref: '#/components/headers/x-correlator'
                 "400":
-                  $ref: "#/components/responses/Generic400"
+                  $ref: "#/components/responses/CreateSubscriptionBadRequest400"
                 "401":
                   $ref: "#/components/responses/Generic401"
                 "403":
@@ -115,9 +120,9 @@ paths:
           $ref: '#/components/responses/Generic503'
     get:
       tags:
-        - event-type notification subscription
-      summary: 'Retrieve a list of event-type event subscription'
-      description: Retrieve a list of event-type event subscription(s)
+        - apiName subscription
+      summary: 'Retrieve a list of apiName event subscription'
+      description: Retrieve a list of apiName event subscription(s)
       operationId: retrieveSubscriptionList
       parameters:
         - $ref: '#/components/parameters/x-correlator'
@@ -149,9 +154,9 @@ paths:
   /subscriptions/{subscriptionId}:
     get:
       tags:
-        - event-type notification subscription
-      summary: 'Retrieve a event-type event subscription'
-      description: retrieve event subscription information for a given subscription.
+        - apiName subscription
+      summary: 'Retrieve a apiName event subscription'
+      description: retrieve apiName subscription information for a given subscription.
       operationId: retrieveSubscription
       security:
         - openId:
@@ -183,10 +188,10 @@ paths:
           $ref: "#/components/responses/Generic503"
     delete:
       tags:
-        - event-type notification subscription
-      summary: 'Delete a event-type event subscription'
+        - apiName subscription
+      summary: 'Delete a apiName event subscription'
       operationId: deleteSubscription
-      description: delete a given event subscription.
+      description: delete a given apiName subscription.
       security:
         - openId:
           - event-type:subscriptions:delete
@@ -195,7 +200,7 @@ paths:
         - $ref: '#/components/parameters/x-correlator'
       responses:
         "204":
-          description: event subscription deleted
+          description: apiName subscription deleted
           headers:
             x-correlator:
               $ref: '#/components/headers/x-correlator'
@@ -269,6 +274,7 @@ components:
         - sink
         - protocol
         - config
+        - types
       properties:
         protocol:
           $ref: "#/components/schemas/Protocol"
@@ -280,13 +286,13 @@ components:
         sinkCredential:
           $ref: '#/components/schemas/SinkCredential'
         types:
-          description: Camara Event types eligible to be delivered by this subscription - Use of array MUST be decided at API project level.
+          description: |
+            Camara Event types eligible to be delivered by this subscription.
+            Note : for the Commonalities meta-release v0.4 we enforce to have only event type per subscription then for following meta-release use of array MUST be decided
+             at API project level.
           type: array
           items:
             type: string
-        filters:
-          type: object
-          description: Placeholder to add filters management for future UC. **It MUST not be used as long as UC requires it and their behaviour is discussed and agreed in advance**
         config:
           $ref: '#/components/schemas/Config'
       discriminator:
@@ -641,6 +647,26 @@ components:
       required:
         - subject
   responses:
+    CreateSubscriptionBadRequest400:
+      description: Problem with the client request
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            InvalidArgument:
+              value:
+                status: 400
+                code: "INVALID_ARGUMENT"
+                message: "Client specified an invalid argument, request body or query param"
+            InvalidProtocol:
+              value:
+                status: 400
+                code: "INVALID_PROTOCOL"
+                message: "Only HTTP is supported"
     Generic400:
       description: Problem with the client request
       headers:
