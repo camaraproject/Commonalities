@@ -286,7 +286,7 @@ components:
             type: string
         filters:
           type: object
-          description: Placeholder to add filters management for futur UC. **Not to be used as of now.**
+          description: Placeholder to add filters management for future UC. **It MUST not be used as long as UC requires it and their behaviour is discussed and agreed in advance**
         config:
           $ref: '#/components/schemas/Config'
       discriminator:
