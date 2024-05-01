@@ -22,7 +22,7 @@ servers:
         description: API root
 tags:
   - name: event-type notification subscription
-    description: Operation to manage event subscription on event-type event 
+    description: Operations to manage event subscriptions on event-type event 
 
 paths:
   /subscriptions:
