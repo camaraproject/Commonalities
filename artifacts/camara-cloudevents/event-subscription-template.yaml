@@ -140,6 +140,7 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
                 items:
                   $ref: '#/components/schemas/Subscription'
         "400":
