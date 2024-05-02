@@ -437,7 +437,7 @@ components:
           properties:
             id:
               type: string
-              description: The unique identifier of the subscription in the scope of the subscription manager.
+              description: The unique identifier of the subscription in the scope of the subscription manager. NOTE: When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#122-event-notification).
               example: 1119920371
             status:
               type: string
