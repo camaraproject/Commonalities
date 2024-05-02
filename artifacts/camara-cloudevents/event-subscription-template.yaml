@@ -372,7 +372,8 @@ components:
       description: An access token credential.
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
-        - properties:
+        - type: object
+          properties:
             accessToken:
               description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
               type: string
