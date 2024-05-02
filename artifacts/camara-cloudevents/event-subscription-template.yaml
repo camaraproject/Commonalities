@@ -333,7 +333,7 @@ components:
         initialEvent:
           type: boolean
           description: |
-            Set to `true` by APi consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.
+            Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.
             Example: Consumer request Roaming event. If consumer sets initialEvent to true and device is in roaming situation, an event is triggered 
             Up to API project decision to keep it.
 
