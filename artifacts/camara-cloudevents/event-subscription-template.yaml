@@ -383,7 +383,7 @@ components:
             accessTokenType:
               description: OPTIONAL. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
               type: string
-              default: bearer
+              default: Bearer
           required:
             - accessToken
             - accessTokenExpiresUtc
