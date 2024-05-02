@@ -129,7 +129,7 @@ paths:
         - $ref: '#/components/parameters/x-correlator'
       security:
         - openId:
-          - event-type:subscriptions:read
+          - api-name:read
       responses:
         "200":
           description: List of event subscription details
