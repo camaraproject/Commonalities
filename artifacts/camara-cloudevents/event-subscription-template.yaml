@@ -455,7 +455,7 @@ components:
 
     SubscriptionId:
       type: string
-      description: The event subscription identifier.
+      description: The unique identifier of the subscription in the scope of the subscription manager.
       example: qs15-h556-rt89-1298
 
     CloudEvent:
