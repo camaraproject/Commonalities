@@ -482,7 +482,6 @@ components:
         datacontenttype:
           type: string
           description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
-          example: application/json
         data:
           type: object
           description: Event details payload described in each CAMARA API and referenced by its type
