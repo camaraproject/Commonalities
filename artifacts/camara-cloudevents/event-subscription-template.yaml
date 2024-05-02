@@ -58,6 +58,7 @@ paths:
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
                 The apiName server will call this endpoint whenever a apiName event occurs.
+                `operationId` value will have to be replaced accordingly with WG API specific semantic
               operationId: postNotification
               parameters:
                 - $ref: '#/components/parameters/x-correlator'
