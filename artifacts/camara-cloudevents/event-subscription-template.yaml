@@ -377,7 +377,7 @@ components:
               format: date-time
               description: RECOMMENDED. An absolute UTC instant at which the token shall be considered expired.
             accessTokenType:
-              description: OPTIONAL. )Type of the access token (See https://tools.ietf.org/html/rfc6749#section-7.1).
+              description: OPTIONAL. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
               type: string
               default: bearer
           required:
