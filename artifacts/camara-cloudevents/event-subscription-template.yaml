@@ -342,7 +342,10 @@ components:
       properties:
          credentialType:
             type: string
-            enum: ["PLAIN", "ACCESSTOKEN", "REFRESHTOKEN"]
+            enum: 
+              - PLAIN
+              - ACCESSTOKEN
+              - REFRESHTOKEN
             description: "The type of the credential."
       discriminator:
         propertyName: credentialType
