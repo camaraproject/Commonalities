@@ -162,7 +162,7 @@ paths:
       operationId: retrieveApiNameSubscription
       security:
         - openId:
-          - event-type:subscriptions:read
+          - api-name:read
       parameters:
         - $ref: "#/components/parameters/SubscriptionId"
         - $ref: '#/components/parameters/x-correlator'
