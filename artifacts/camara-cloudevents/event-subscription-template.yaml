@@ -22,7 +22,7 @@ servers:
       apiRoot:
         default: http://localhost:9091
         description: API root
-      api-name:
+      apiName:
         default: camaraAPI
         description: apiName will be replaced in WG by its value and not modelled as a variable
 tags:
