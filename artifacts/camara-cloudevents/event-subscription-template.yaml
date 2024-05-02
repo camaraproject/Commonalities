@@ -356,7 +356,11 @@ components:
       description: A plain credential as a combination of an identifier and a secret.
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
-        - properties:
+        - type: object
+          required:
+            - identifier
+            - secret
+          properties:
             identifier:
               description: The identifier might be an account or username.
               type: string
