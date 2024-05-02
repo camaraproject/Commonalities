@@ -961,7 +961,6 @@ The APIs that offer explicit event subscriptions must have a way to reflect whic
 Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete:
  
 - API Name: device-roaming-subscriptions
-- Protected Resource: subscriptions (If the API name offering explicit subscriptions does not include the word subscriptions, then the protected resource "subscriptions" should be added when defining the scope.)
 - Grant-level, action on resource: read, delete
 This type of formulation is not needed for the create action.
 
@@ -970,7 +969,6 @@ For e.g. device-roaming-subscriptions:read
 The format to define scopes for explicit subscriptions with action create, includes the event type in its formulation to ensure that consent is managed at the level of subscribed event types. Scopes should be represented as below for APIs that offer explicit event subscriptions with action create:
 
 - API Name: device-roaming-subscriptions
-- Protected Resource: subscriptions (If the API name offering explicit subscriptions does not include the word subscriptions, then the protected resource "subscriptions" should be added when defining the scope.)
 - Event-type: org.camaraproject.device-roaming-subscriptions.v0.roaming-on 
 - Grant-level, action on resource: create
 
@@ -1355,7 +1353,7 @@ Note: It is perfectly valid for a CAMARA API to have several event types managed
 
 In order to ease developer adoption, the pattern for Resource-based event subscription should be consistent for all API providing this feature.
 
-To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is recommended when possible to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
+To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s.  It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
 4 operations must be defined:
 
