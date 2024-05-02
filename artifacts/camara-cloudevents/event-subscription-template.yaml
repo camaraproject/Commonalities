@@ -196,7 +196,7 @@ paths:
       description: delete a given apiName subscription.
       security:
         - openId:
-          - event-type:subscriptions:delete
+          - api-name:delete
       parameters:
         - $ref: "#/components/parameters/SubscriptionId"
         - $ref: '#/components/parameters/x-correlator'
