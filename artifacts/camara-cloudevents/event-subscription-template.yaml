@@ -159,7 +159,7 @@ paths:
         - apiName subscription
       summary: 'Retrieve a apiName event subscription'
       description: retrieve apiName subscription information for a given subscription.
-      operationId: retrieveSubscription
+      operationId: retrieveApiNameSubscription
       security:
         - openId:
           - event-type:subscriptions:read
