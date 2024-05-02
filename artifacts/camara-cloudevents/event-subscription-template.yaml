@@ -124,7 +124,7 @@ paths:
         - apiName subscription
       summary: 'Retrieve a list of apiName event subscription'
       description: Retrieve a list of apiName event subscription(s)
-      operationId: retrieveSubscriptionList
+      operationId: retrieveApiNameSubscriptionList
       parameters:
         - $ref: '#/components/parameters/x-correlator'
       security:
