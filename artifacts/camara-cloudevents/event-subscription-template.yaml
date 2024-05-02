@@ -567,6 +567,10 @@ components:
         properties:
             headers:
                 type: object
+                description: |-
+                  A set of key/value pairs that is copied into the HTTP request as custom headers.
+                  
+                  NOTE: Use/Applicability of this concept has not been discussed in Commonalities under the scope of Meta Release v0.4. When required by an API project as an option to meet a UC/Requirement, please generate an issue for Commonalities discussion about it. 
                 additionalProperties:
                     type: string
             method:
