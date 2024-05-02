@@ -76,7 +76,7 @@ paths:
                     x-correlator:
                       $ref: '#/components/headers/x-correlator'
                 "400":
-                  $ref: "#/components/responses/CreateSubscriptionBadRequest400"
+                  $ref: "#/components/responses/Generic400"
                 "401":
                   $ref: "#/components/responses/Generic401"
                 "403":
