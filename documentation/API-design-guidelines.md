@@ -1353,7 +1353,7 @@ Note: It is perfectly valid for a CAMARA API to have several event types managed
 
 In order to ease developer adoption, the pattern for Resource-based event subscription should be consistent for all API providing this feature.
 
-To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s.  It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
+To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
 4 operations must be defined:
 
