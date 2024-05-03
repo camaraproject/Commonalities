@@ -112,9 +112,13 @@ paths:
         "401":
           $ref: '#/components/responses/Generic401'
         "403":
-          $ref: '#/components/responses/Generic403'
+          $ref: '#/components/responses/CreateSubscription403'
         "409":
           $ref: '#/components/responses/Generic409'
+        "415":
+          $ref: "#/components/responses/Generic415"
+        "429":
+          $ref: "#/components/responses/Generic429"
         "500":
           $ref: '#/components/responses/Generic500'
         "503":
@@ -384,10 +388,12 @@ components:
             accessTokenType:
               description: OPTIONAL. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
               type: string
-              default: Bearer
+              enum: 
+                - Bearer
           required:
             - accessToken
             - accessTokenExpiresUtc
+            - accessTokenType
     RefreshTokenCredential:
       type: object
       description: An access token credential with a refresh token.
@@ -437,14 +443,34 @@ components:
           properties:
             id:
               type: string
-              description: The unique identifier of the subscription in the scope of the subscription manager. NOTE: When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#122-event-notification).
+              description: The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#122-event-notification).
               example: 1119920371
+            startsAt:
+              type: string
+              format: date-time
+              description: Date when the event subscription will begin/began
+            expiresAt:
+              type: string
+              format: date-time
+              description: Date when the event subscription will expire. Only provided when `subscriptionExpireTime` is indicated by API client or Telco Operator has specific policy about that.
             status:
               type: string
-              description: current status of the subscription - Management of subscriptionstate engine is not mandatory for now.
-              enum: ["REQUESTED", "ACTIVE", "EXPIRED", "DEACTIVATED"]
+              description: |-
+                  Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
+                    - `ACTIVATION_REQUESTED`: Subscription creation (POST) is triggered but subscription creation process is not finished yet.
+                    - `ACTIVE`: Subscription creation process is completed. Subscription is fully operative.
+                    - `DEACTIVE`: Subscription is temporarily inactive, but its workflow logic is not deleted.
+                    - `EXPIRED`: Subscription is ended (no longer active). This status applies when subscription is ended due to `SUBSCRIPTION_EXPIRED` event.
+                    - `DELETED`: Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its metainformation is kept).
+              enum:
+                - ACTIVATION_REQUESTED
+                - ACTIVE
+                - EXPIRED
+                - DEACTIVATE
+                - DELETED
           required:
             - id
+            - startsAt
 
     SubscriptionAsync:
       description: Response for a event-type subscription request managed asynchronously (Creation or Deletion)
@@ -574,6 +600,9 @@ components:
                     type: string
             method:
                 type: string
+                description: The HTTP method to use for sending the message.
+                enum:
+                  - POST
 
     MQTTSubscriptionRequest:
       allOf:
@@ -682,6 +711,11 @@ components:
                 status: 400
                 code: "INVALID_PROTOCOL"
                 message: "Only HTTP is supported"
+            InvalidToken:
+              value:
+                status: 400
+                code: "INVALID_TOKEN"
+                message: "Only bearer token is supported"
     Generic400:
       description: Problem with the client request
       headers:
@@ -708,6 +742,27 @@ components:
             status: 401
             code: "UNAUTHENTICATED"
             message: "Request not authenticated due to missing, invalid, or expired credentials"
+
+    CreateSubscription403:
+      description: Client does not have sufficient permission
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            PermissionDenied:
+              value:
+                status: 403
+                code: "PERMISSION_DENIED"
+                message: "Client does not have sufficient permissions to perform this action"
+            TokenMismatch:
+              value:
+                status: 403
+                code: "SUSBCRIPTION_MISMATCH"
+                message: "Client mistmatches between tokens used"
     Generic403:
       description: Client does not have sufficient permission
       headers:
@@ -747,6 +802,30 @@ components:
             status: 409
             code: CONFLICT
             message: "The specified resource is in a conflict"
+    Generic415:
+      description: Unsupported Media Type
+      headers:
+        X-Correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: UNSUPPORTED_MEDIA_TYPE
+            message: "The specified media type is not supported"
+    Generic429:
+      description: Too Many Requests
+      headers:
+        X-Correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: TOO_MANY_REQUESTS
+            message: "Endpoint does not support as many requests per time slot"
     Generic500:
       description: Server error
       headers:
