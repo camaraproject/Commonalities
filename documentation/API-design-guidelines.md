@@ -48,7 +48,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
       - [11.5.1 Usage of discriminator](#1151-usage-of-discriminator)
         - [Inheritance](#inheritance)
         - [Polymorphism](#polymorphism)
-    - [11.6 Security Definition](116-security-definition)
+    - [11.6 Security Definition](#116-security-definition)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
