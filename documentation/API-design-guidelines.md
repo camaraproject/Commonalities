@@ -48,11 +48,13 @@ This document captures guidelines for the API design in CAMARA project. These gu
       - [11.5.1 Usage of discriminator](#1151-usage-of-discriminator)
         - [Inheritance](#inheritance)
         - [Polymorphism](#polymorphism)
-    - [11.6 OAuth Definition](#116-oauth-definition)
+    - [11.6 Security definition](#116-security-definition)
+      - [11.6.1 Scope naming](#1161-scope-naming)
+        - [Examples](#examples)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
-        - [Instance-based (implicit) subscription example](#instance-based-implicit-subscription-example)
+        - [Instance-based (implicit) subscription examples](#instance-based-implicit-subscription-examples)
       - [Resource-based (explicit) subscription](#resource-based-explicit-subscription)
         - [Error definition for resource-based (explicit) subscription](#error-definition-for-resource-based-explicit-subscription)
         - [Termination for resource-based (explicit) subscription](#termination-for-resource-based-explicit-subscription)
@@ -1326,25 +1328,52 @@ If this capability is present in CAMARA API, `webhook` object attribute **must**
 
 | attribute name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  | -----  | 
-| notificationUrl | string | https callback address where the notification must be POST-ed | mandatory |
-| notificationAuthToken | string | OAuth2 token to be used by the callback API endpoint. It MUST be indicated within HTTP Authorization header e.g. Authorization: Bearer $notificationAuthToken | optional |
+| sink | string | https callback address where the notification must be POST-ed | mandatory |
+| sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic | optional |
 
-##### Instance-based (implicit) subscription example
+Several types of `sinkCredential` could be available in future but for now only access token credential are managed.
 
-```javascript
+``sinkCredential`` attributes table (must be access token for now):
+
+| attribute name | type | attribute description | cardinality |
+| ----- |	-----  |	 -----  | -----  | 
+| credentialtype | string | Type of the credential - MUST be set to `ACCESSTOKEN` for now | mandatory |
+| accessToken | string | Access Token granting access to the POST operation to create notification | mandatory |
+| accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory |
+| accessTokenType | string | Type of access token - MUST be set to `Bearer` for now | mandatory |
+
+
+##### Instance-based (implicit) subscription examples
+
+If credentials are not required:
+
+```json
 {
  /* Resource instance representation */
 "webhook": {
-   "notificationUrl": "https://callback..."
-   "notificationAuthToken" : "sdfr5sff...lmp"
+   "sink": "https://callback..."
    }
 }
 ```
 
-Recommended format conventions regarding ```notificationAuthToken``` attribute, in order to provide Uniqueness, Randomness and Simplicity for its management are the following:
-- It SHOULD BE an opaque attribute, meaning that should not be based in security info shared between API Consumer and API Provider 
-- It has to be restricted in length, a string between [20-256] characters.
-- It is HIGHLY recommended to have random-based pattern (e.g. UUIDv4 or another one. Any case it is an implementation topic not design one) 
+If credentials are required:
+
+```json
+{
+ /* Resource instance representation */
+"webhook": {
+   "sink": "https://callback...",
+   "sinkCredential": {
+      "credentialType": "ACCESSTOKEN",
+      "accessToken" : "eyJ2ZXIiOiIxLjAiLCJ0eXAiOiJKV1QiL..",
+      "accessTokenExpireUtc" : "2024-12-06T14:37:56.147Z",
+      "accessTokenType" : "Bearer"
+    }
+   }
+}
+```
+
+
 
 
 #### Resource-based (explicit) subscription
@@ -1355,6 +1384,8 @@ Note: It is perfectly valid for a CAMARA API to have several event types managed
 
 In order to ease developer adoption, the pattern for Resource-based event subscription should be consistent for all API providing this feature.
 
+CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)**  and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in Commonalities/artifact directory (event-subscription-template.yaml).
+
 To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
 4 operations must be defined:
@@ -1362,7 +1393,7 @@ To ensure consistency across Camara subprojects, it is necessary that explicit s
 | operation | path | description |
 | ----- |	-----  |	 -----  | 
 | POST | `/subscriptions` |  Operation to request an event subscription. (*)     |
-| GET | `/subscriptions` |  Operation to retrieve a list of event subscriptions - could be an empty list.  e.g. `GET /subscriptions?type=org.camaraproject.device-status.v1.roaming-status&expiresAt.lt=2023-03-17` |
+| GET | `/subscriptions` |  Operation to retrieve a list of event subscriptions - could be an empty list.  e.g. `GET /subscriptions?type=org.camaraproject.device-roaming-subscriptions.v1.roaming-status&expiresAt.lt=2023-03-17` |
 | GET | `/subscriptions/{subscriptionId}` | Operation to retrieve an event subscription (**) |
 | DELETE | `/subscriptions/{subscriptionId}` | Operation to delete an event subscription (***) |
 
@@ -1381,27 +1412,50 @@ The Following table provides `/subscriptions` attributes
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
-| webhook | object | detail for event channel - in current version only webhook description are provided, but other event channel descriptor could be added in future | mandatory |
-| subscriptionId | string | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server | mandatory in server response |
-| subscriptionExpireTime | string - date-time| Date when the event subscription should end. Provided by API requester. The Server may reject the subscription if the period requested do not comply with Telco Operator policies (i.e. to avoid unlimited time subscriptions). In this case server returns exception 403 "SUBSCRIPTION_PERIOD_NOT_ALLOWED" | optional |
+| protocol | string | Identifier of a delivery protocol. **Only** `HTPP` **is allowed for now**.| Mandatory |
+| sink | string | https callback address where the notification must be POST-ed | mandatory |
+| sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. | optional |
+| types | string | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required by API project to provide an enum for this attribute. `type` must follow the format: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter `v` and the major version like  ``org.camaraproject.device-roaming-subscriptions.v1.roaming-status`` - Note: An array of types could be passed **but as of now only one value MUST passed**. Use of multiple value will be open later at API level.| mandatory  |
+| config | object | Implementation-specific configuration parameters needed by the subscription manager for acquiring events. In CAMARA we have predefined attributes like ``subscriptionExpireTime``, ``subscriptionMaxEvents`` or ``initialEvent``. see detail below.| mandatory |
+| id | string | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server | mandatory in server response |
 | startsAt | string - date-time| Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints | optional |
-| expiresAt | string - date-time| Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided by API server.  | optional |
-| subscriptionMaxEvents | integer | Identifies the maximum number of event reports to be generated (>=1) - Once this number is reached, the subscription ends | optional |
-| subscriptionDetail | object | Object defined for each event subscription depending on the event - it could be for example the ueID targeted by the subscription | optional |
+| expiresAt | string - date-time| Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided (optionally) by API server.  | optional |
+| status | string | Current status of the subscription - Management of Subscription state engine is not mandatory for now. Note: not all statuses may be considered to be implemented. See below status table. | optional |
 
 
-The `webhook` object definition: 
 
-| name | type | attribute description | cardinality |
-| ----- |	-----  |	 -----  |  -----  | 
-| notificationUrl | string | https callback address where the event notification must be POST-ed | mandatory |
-| notificationAuthToken | string | OAuth2 token to be used by the callback API endpoint. It MUST be indicated within HTTP Authorization header e.g. Authorization: Bearer $notificationAuthToken  | optional |
+``sinkCredential`` attributes table (must be only access token for now):
 
-The `subscriptionDetail` must have at least a type attribute:
+| attribute name | type | attribute description | cardinality |
+| ----- |	-----  |	 -----  | -----  | 
+| credentialtype | string | Type of the credential - MUST be set to `ACCESSTOKEN` for now | mandatory |
+| accessToken | string | Access Token granting access to the POST operation to create notification | mandatory |
+| accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory |
+| accessTokenType | string | Type of access token - MUST be set to `Bearer` for now | mandatory |
 
-| name | type | attribute description | cardinality |
-| ----- |	-----  |	 -----  |  -----  | 
-| type | string | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required to provide an enum for this attribute. `type` must follow the format: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter `v` and the major version like  ``org.camaraproject.device-status.v1.roaming-status``| mandatory  |
+
+`config` attributes table:
+
+
+| attribute name | type | attribute description | cardinality |
+| ----- |	-----  |	 -----  | -----  | 
+| subscriptionMaxEvents | integer | Identifies the maximum number of event reports to be generated (>=1) - Once this number is reached, the subscription ends. Up to API project decision to keep it. | optional |
+| subscriptionDetail | object | Object defined for each event subscription depending on the event. This is in this object that for example the device identifier will be provided (see example below).  | mandatory |
+| subscriptionExpireTime | string (date-time) | The subscription expiration time (in date-time format) requested by the API consumer. Up to API project decision to keep it. | optional |
+| initialEvent | boolean | Set to true by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request. Example: Consumer request Roaming event. If consumer sets initialEvent to true and device is in roaming situation, an event is triggered. Up to API project decision to keep it. | optional |
+
+
+Subscription status value table:
+
+Managing subscription is a draft feature and it is not mandatory for now. An API project could decide to use/not use it. A list of status is provided for global consistency.
+
+| status | definition |
+| ------ | -----------|
+| ACTIVATION_REQUESTED | Subscription creation (POST) is triggered but subscription creation process is not finished yet. |
+| ACTIVE | Subscription creation process is completed. Subscription is fully operative. |
+| DEACTIVE | Subscription is temporarily inactive, but its workflow logic is not deleted. DEACTIVE could be use when an user initially provided consent for the event monitor and then later denied this consent. For now we did not provide capability to reactive subscription. |
+| EXPIRED | Subscription is ended (no longer active). This status applies when subscription is ended due to max event reached or expire time reached. |
+| DELETED | Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its metainformation is kept). |
 
 
 ##### Error definition for resource-based (explicit) subscription
@@ -1409,10 +1463,13 @@ The `subscriptionDetail` must have at least a type attribute:
 Error definition described in this guideline applies for subscriptions.
 
 Following Error code must be present:
-* for `POST`: 400, 401, 403, 409, 500, 503
+* for `POST`: 400, 401, 403, 409, 415, 429, 500, 503
 * for `GET`: 400, 401, 403, 500, 503
 * for `GET .../{subscriptionId}`: 400, 401, 403, 404, 500, 503
 * for `DELETE`: 400, 401, 403, 404, 500, 503
+
+Please see in Commonalities/artifact directory ``event-subscription-template.yaml`` for more information and error examples. 
+
 
 ##### Termination for resource-based (explicit) subscription
 
@@ -1433,29 +1490,32 @@ _Termination rules regarding subscriptionExpireTime & subscriptionMaxEvents usag
 
 
 ##### Resource-based (explicit) example
-In this example, we illustrate a request for a device roaming status event subscription. Requester did not provide an anticipated expiration time for the subscription. In the response, server accepts this request and sets an event subscription end one year later. This is an illustration and each implementation is free to provide - or not - a subscription planned expiration date.
+In this example, we illustrate a request for a device roaming status event subscription. Requester did not provide an anticipated expiration time for the subscription but requested to get an event if the device is in roaming situation at subscription time and set the max limit to event to 10. In the response, server accepts this request and sets an event subscription end one year later. This is an illustration and each implementation is free to provide - or not - a subscription planned expiration date.
 
 Request:
 
 ```bash
 curl -X 'POST' \
-  'http://localhost:9091//device-status/v0/subscriptions' \
+  'http://localhost:9091/device-roaming-subscriptions/v1/subscriptions' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d
  ```
  ```json 
 {
-  "webhook": {
-    "notificationUrl": "https://application-server.com",
-    "notificationAuthToken": "c8974e592c2fa383d4a3960714"
-    }
-  "subscriptionDetail": {
-    "ueId": {,
-      "ipv4Addr": "192.168.0.1"
+  "protocol" : "HTTP",
+  "sink": "https://application-server.com",
+  "types" : [
+      "org.camaraproject.device-roaming-subscriptions.v1.roaming-status"
+  ],
+  "config": {
+    "subscriptionDetail": {
+      "device": {
+        "phoneNumber": "12345678"
+      }
     },
-    "uePort": 5060,
-    "type": "org.camaraproject.device-status.v1.roaming-status"
+    "initialEvent" : true,
+    "subscriptionMaxEvents" : 10
   }
 }
 ```
@@ -1467,20 +1527,24 @@ response:
 ```
 ```json 
 {
-  "webhook": {
-    "notificationUrl": "https://application-server.com",
-    "notificationAuthToken": "c8974e592c2fa383d4a3960714"
-    }
-  "subscriptionDetail": {
-    "ueId": {
-      "ipv4Addr": "192.168.0.1"
+  "protocol" : "HTTP",
+  "sink": "https://application-server.com",
+  "types" : [
+      "org.camaraproject.device-roaming-subscriptions.v1.roaming-status"
+  ],
+  "config": {
+    "subscriptionDetail": {
+      "device": {
+        "phoneNumber": "12345678"
+      }
     },
-    "uePort": 5060,
-    "type": "org.camaraproject.device-status.v1.roaming-status"
+    "initialEvent" : true,
+    "subscriptionMaxEvents" : 10
   },
-  "subscriptionId": "456g899g",
+  "id": "456g899g",
   "startsAt": "2023-03-17T16:02:41.314Z",
-  "expiresAt" : "2024-03-17T00:00:00.000Z"
+  "expiresAt" : "2024-03-17T00:00:00.000Z",
+  "status" : "ACTIVE"
 }
 ```
 
@@ -1507,7 +1571,7 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 | ----- |	-----  |	 -----  |  -----  | 
 | id | string | identifier of this event, that must be unique in the source context. | mandatory |
 | source | string - URI | identifies the context in which an event happened in the specific Provider Implementation. Often this will include information such as the type of the event source, the organization publishing the event or the process that produced the event. The exact syntax and semantics behind the data encoded in the URI is defined by the event producer. | mandatory |
-| type | string | a value describing the type of event related to the originating occurrence. For consistency across API we mandate following pattern: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter 'v' and the major version like example org.camaraproject.device-status.v1.roaming-status | mandatory |
+| type | string | a value describing the type of event related to the originating occurrence. For consistency across API we mandate following pattern: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter 'v' and the major version like example org.camaraproject.device-roaming-subscriptions.v1.roaming-status | mandatory |
 | specversion | string | version of the specification to which this event conforms - must be "1.0". As design guideline, this field will be modeled as an enum. | mandatory |
 | datacontenttype | string | media-type that describes the event payload encoding, must be `application/json` for CAMARA APIs| optional |
 | subject | string | describes the subject of the event - Not used in CAMARA notification. | optional |
@@ -1571,7 +1635,7 @@ curl -X 'POST' \
 {
   "id": 123654,
 "source": "https://notificationSendServer12.supertelco.com",
-  "type": "org.camaraproject.device-status.v1.roaming-status",
+  "type": "org.camaraproject.device-roaming-subscriptions.v1.roaming-status",
   "specversion": "1.0",
   "datacontenttype": "application/json",
   "data": {
@@ -1608,7 +1672,7 @@ curl -X 'POST' \
 {
   "id": 123658,
   "source": "https://notificationSendServer12.supertelco.com",
-  "type": "org.camaraproject.api.device-status.v1.subcription-ends",
+  "type": "org.camaraproject.api.device-roaming-subscriptions.v1.subcription-ends",
   "specversion": "1.0",
   "datacontenttype": "application/json",
   "data": {
