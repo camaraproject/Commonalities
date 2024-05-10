@@ -491,7 +491,7 @@ components:
         - source
         - specversion
         - type
-        - data
+        - time
       properties:
         id:
           type: string
