@@ -296,7 +296,7 @@ components:
         types:
           description: |
             Camara Event types eligible to be delivered by this subscription.
-            Note : for the Commonalities meta-release v0.4 we enforce to have only event type per subscription then for following meta-release use of array MUST be decided
+            Note: for the Commonalities meta-release v0.4 we enforce to have only event type per subscription then for following meta-release use of array MUST be decided
              at API project level.
           type: array
           items:
