@@ -17,7 +17,7 @@ externalDocs:
   description: Product documentation at CAMARA
   url: https://github.com/camaraproject/
 servers:
-  - url: '{apiRoot}/{apiName}/v0'
+  - url: "{apiRoot}/{apiName}/v0"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -27,26 +27,26 @@ servers:
         description: apiName will be replaced in WG by its value and not modelled as a variable
 tags:
   - name: apiName subscription
-    description: Operations to manage event subscriptions on event-type event 
+    description: Operations to manage event subscriptions on event-type event
 
 paths:
   /subscriptions:
     post:
       tags:
         - apiName subscription
-      summary: 'Create a apiName event subscription'
+      summary: "Create a apiName event subscription"
       description: Create a apiName event subscription
       operationId: createApiNameSubscription
       parameters:
-        - $ref: '#/components/parameters/x-correlator'
+        - $ref: "#/components/parameters/x-correlator"
       security:
         - openId:
-          - api-name:event-type:grant-level
+            - api-name:event-type:grant-level
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SubscriptionRequest'
+              $ref: "#/components/schemas/SubscriptionRequest"
         required: true
       callbacks:
         notifications:
@@ -61,20 +61,20 @@ paths:
                 `operationId` value will have to be replaced accordingly with WG API specific semantic
               operationId: postNotification
               parameters:
-                - $ref: '#/components/parameters/x-correlator'
+                - $ref: "#/components/parameters/x-correlator"
               requestBody:
                 required: true
                 content:
                   application/json:
                     schema:
                       $ref: "#/components/schemas/CloudEvent"
- 
+
               responses:
                 "204":
                   description: Successful notification
                   headers:
                     x-correlator:
-                      $ref: '#/components/headers/x-correlator'
+                      $ref: "#/components/headers/x-correlator"
                 "400":
                   $ref: "#/components/responses/Generic400"
                 "401":
@@ -86,60 +86,60 @@ paths:
                 "503":
                   $ref: "#/components/responses/Generic503"
               security:
-                - { }
+                - {}
 
       responses:
         "201":
           description: Created
           headers:
             x-correlator:
-              $ref: '#/components/headers/x-correlator'
+              $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Subscription'
+                $ref: "#/components/schemas/Subscription"
         "202":
           description: Request accepted to be processed. It applies for async creation process.
           headers:
             x-correlator:
-              $ref: '#/components/headers/x-correlator'
+              $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SubscriptionAsync'
+                $ref: "#/components/schemas/SubscriptionAsync"
         "400":
-          $ref: '#/components/responses/CreateSubscriptionBadRequest400'
+          $ref: "#/components/responses/CreateSubscriptionBadRequest400"
         "401":
-          $ref: '#/components/responses/Generic401'
+          $ref: "#/components/responses/Generic401"
         "403":
-          $ref: '#/components/responses/CreateSubscription403'
+          $ref: "#/components/responses/CreateSubscription403"
         "409":
-          $ref: '#/components/responses/Generic409'
+          $ref: "#/components/responses/Generic409"
         "415":
           $ref: "#/components/responses/Generic415"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
-          $ref: '#/components/responses/Generic500'
+          $ref: "#/components/responses/Generic500"
         "503":
-          $ref: '#/components/responses/Generic503'
+          $ref: "#/components/responses/Generic503"
     get:
       tags:
         - apiName subscription
-      summary: 'Retrieve a list of apiName event subscription'
+      summary: "Retrieve a list of apiName event subscription"
       description: Retrieve a list of apiName event subscription(s)
       operationId: retrieveApiNameSubscriptionList
       parameters:
-        - $ref: '#/components/parameters/x-correlator'
+        - $ref: "#/components/parameters/x-correlator"
       security:
         - openId:
-          - api-name:read
+            - api-name:read
       responses:
         "200":
           description: List of event subscription details
           headers:
             x-correlator:
-              $ref: '#/components/headers/x-correlator'
+              $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
@@ -148,40 +148,40 @@ paths:
                 items:
                   $ref: '#/components/schemas/Subscription'
         "400":
-          $ref: '#/components/responses/Generic400'
+          $ref: "#/components/responses/Generic400"
         "401":
-          $ref: '#/components/responses/Generic401'
+          $ref: "#/components/responses/Generic401"
         "403":
-          $ref: '#/components/responses/Generic403'
+          $ref: "#/components/responses/Generic403"
         "500":
-          $ref: '#/components/responses/Generic500'
+          $ref: "#/components/responses/Generic500"
         "503":
-          $ref: '#/components/responses/Generic503'
+          $ref: "#/components/responses/Generic503"
   /subscriptions/{subscriptionId}:
     get:
       tags:
         - apiName subscription
-      summary: 'Retrieve a apiName event subscription'
+      summary: "Retrieve a apiName event subscription"
       description: retrieve apiName subscription information for a given subscription.
       operationId: retrieveApiNameSubscription
       security:
         - openId:
-          - api-name:read
+            - api-name:read
       parameters:
         - $ref: "#/components/parameters/SubscriptionId"
-        - $ref: '#/components/parameters/x-correlator'
+        - $ref: "#/components/parameters/x-correlator"
       responses:
         "200":
           description: OK
           headers:
             x-correlator:
-              $ref: '#/components/headers/x-correlator'
+              $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Subscription'
+                $ref: "#/components/schemas/Subscription"
         "400":
-          $ref: '#/components/responses/SubscriptionIdRequired'
+          $ref: "#/components/responses/SubscriptionIdRequired"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -195,32 +195,32 @@ paths:
     delete:
       tags:
         - apiName subscription
-      summary: 'Delete a apiName event subscription'
+      summary: "Delete a apiName event subscription"
       operationId: deleteApiNameSubscription
       description: delete a given apiName subscription.
       security:
         - openId:
-          - api-name:delete
+            - api-name:delete
       parameters:
         - $ref: "#/components/parameters/SubscriptionId"
-        - $ref: '#/components/parameters/x-correlator'
+        - $ref: "#/components/parameters/x-correlator"
       responses:
         "204":
           description: apiName subscription deleted
           headers:
             x-correlator:
-              $ref: '#/components/headers/x-correlator'
+              $ref: "#/components/headers/x-correlator"
         "202":
           description: Request accepted to be processed. It applies for async deletion process.
           headers:
             x-correlator:
-              $ref: '#/components/headers/x-correlator'
+              $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SubscriptionAsync'
+                $ref: "#/components/schemas/SubscriptionAsync"
         "400":
-          $ref: '#/components/responses/SubscriptionIdRequired'
+          $ref: "#/components/responses/SubscriptionIdRequired"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -243,7 +243,7 @@ components:
       description: Subscription identifier that was obtained from the create event subscription operation
       required: true
       schema:
-        $ref: '#/components/schemas/SubscriptionId'
+        $ref: "#/components/schemas/SubscriptionId"
     x-correlator:
       name: x-correlator
       in: header
@@ -272,7 +272,7 @@ components:
         message:
           type: string
           description: Detailed error description
-        
+
     SubscriptionRequest:
       description: The request for creating a event-type event subscription
       type: object
@@ -291,8 +291,8 @@ components:
           example: "https://endpoint.example.com/webhook"
         sinkCredential:
           allOf:
-          - description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
-          - $ref: '#/components/schemas/SinkCredential'
+            - description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+            - $ref: "#/components/schemas/SinkCredential"
         types:
           description: |
             Camara Event types eligible to be delivered by this subscription.
@@ -302,9 +302,16 @@ components:
           items:
             type: string
         config:
-          $ref: '#/components/schemas/Config'
+          $ref: "#/components/schemas/Config"
       discriminator:
         propertyName: protocol
+        mapping:
+          HTTP: "#/components/schemas/HTTPSubscriptionRequest"
+          MQTT3: "#/components/schemas/MQTTSubscriptionRequest"
+          MQTT5: "#/components/schemas/MQTTSubscriptionRequest"
+          AMQP: "#/components/schemas/AMQPSubscriptionRequest"
+          NATS: "#/components/schemas/NATSSubscriptionRequest"
+          KAFKA: "#/components/schemas/ApacheKafkaSubscriptionRequest"
 
     Protocol:
       type: string
@@ -323,7 +330,7 @@ components:
         - subscriptionDetail
       properties:
         subscriptionDetail:
-            $ref: '#/components/schemas/CreateSubscriptionDetail'
+          $ref: "#/components/schemas/CreateSubscriptionDetail"
         subscriptionExpireTime:
           type: string
           format: date-time
@@ -344,13 +351,13 @@ components:
     SinkCredential:
       type: object
       properties:
-         credentialType:
-            type: string
-            enum: 
-              - PLAIN
-              - ACCESSTOKEN
-              - REFRESHTOKEN
-            description: "The type of the credential."
+        credentialType:
+          type: string
+          enum:
+            - PLAIN
+            - ACCESSTOKEN
+            - REFRESHTOKEN
+          description: "The type of the credential."
       discriminator:
         propertyName: credentialType
       required:
@@ -388,7 +395,7 @@ components:
             accessTokenType:
               description: OPTIONAL. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
               type: string
-              enum: 
+              enum:
                 - Bearer
           required:
             - accessToken
@@ -434,50 +441,77 @@ components:
 
     Subscription:
       description: Represents a event-type subscription.
+      type: object
       required:
+        - sink
+        - protocol
+        - config
+        - types
+        - id
         - startsAt
-        - subscriptionId
-      allOf:
-        - $ref: '#/components/schemas/SubscriptionRequest'
-        - type: object
-          properties:
-            id:
-              type: string
-              description: The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#122-event-notification).
-              example: 1119920371
-            startsAt:
-              type: string
-              format: date-time
-              description: Date when the event subscription will begin/began
-            expiresAt:
-              type: string
-              format: date-time
-              description: Date when the event subscription will expire. Only provided when `subscriptionExpireTime` is indicated by API client or Telco Operator has specific policy about that.
-            status:
-              type: string
-              description: |-
-                  Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
-                    - `ACTIVATION_REQUESTED`: Subscription creation (POST) is triggered but subscription creation process is not finished yet.
-                    - `ACTIVE`: Subscription creation process is completed. Subscription is fully operative.
-                    - `DEACTIVE`: Subscription is temporarily inactive, but its workflow logic is not deleted.
-                    - `EXPIRED`: Subscription is ended (no longer active). This status applies when subscription is ended due to `SUBSCRIPTION_EXPIRED` event.
-                    - `DELETED`: Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its metainformation is kept).
-              enum:
-                - ACTIVATION_REQUESTED
-                - ACTIVE
-                - EXPIRED
-                - DEACTIVATE
-                - DELETED
-          required:
-            - id
-            - startsAt
+      properties:
+        protocol:
+          $ref: "#/components/schemas/Protocol"
+        sink:
+          type: string
+          format: url
+          description: The address to which events shall be delivered using the selected protocol.
+          example: "https://endpoint.example.com/webhook"
+        sinkCredential:
+          $ref: '#/components/schemas/SinkCredential'
+        types:
+          description: |
+            Camara Event types eligible to be delivered by this subscription.
+            Note: for the Commonalities meta-release v0.4 we enforce to have only event type per subscription then for following meta-release use of array MUST be decided
+             at API project level.
+          type: array
+          items:
+            type: string
+        config:
+          $ref: '#/components/schemas/Config'
+        id:
+          type: string
+          description: The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#122-event-notification).
+          example: 1119920371
+        startsAt:
+          type: string
+          format: date-time
+          description: Date when the event subscription will begin/began
+        expiresAt:
+          type: string
+          format: date-time
+          description: Date when the event subscription will expire. Only provided when `subscriptionExpireTime` is indicated by API client or Telco Operator has specific policy about that.
+        status:
+          type: string
+          description: |-
+            Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
+              - `ACTIVATION_REQUESTED`: Subscription creation (POST) is triggered but subscription creation process is not finished yet.
+              - `ACTIVE`: Subscription creation process is completed. Subscription is fully operative.
+              - `DEACTIVE`: Subscription is temporarily inactive, but its workflow logic is not deleted.
+              - `EXPIRED`: Subscription is ended (no longer active). This status applies when subscription is ended due to `SUBSCRIPTION_EXPIRED` event.
+              - `DELETED`: Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its metainformation is kept).
+          enum:
+            - ACTIVATION_REQUESTED
+            - ACTIVE
+            - EXPIRED
+            - DEACTIVATE
+            - DELETED
+      discriminator:
+        propertyName: protocol
+        mapping:
+          HTTP: '#/components/schemas/HTTPSubscriptionResponse'
+          MQTT3: '#/components/schemas/MQTTSubscriptionResponse'
+          MQTT5: '#/components/schemas/MQTTSubscriptionResponse'
+          AMQP: '#/components/schemas/AMQPSubscriptionResponse'
+          NATS: '#/components/schemas/NATSSubscriptionResponse'
+          KAFKA: '#/components/schemas/ApacheKafkaSubscriptionResponse'
 
     SubscriptionAsync:
       description: Response for a event-type subscription request managed asynchronously (Creation or Deletion)
       type: object
       properties:
-          id:
-              $ref: '#/components/schemas/SubscriptionId'
+        id:
+          $ref: "#/components/schemas/SubscriptionId"
 
     SubscriptionId:
       type: string
@@ -497,29 +531,29 @@ components:
           type: string
           description: identifier of this event, that must be unique in the source context.
         source:
-          $ref: '#/components/schemas/Source'
+          $ref: "#/components/schemas/Source"
         type:
-          $ref: '#/components/schemas/Event-typeNotification'
+          $ref: "#/components/schemas/Event-typeNotification"
         specversion:
           type: string
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
-          enum: 
+          enum:
             - "1.0"
         datacontenttype:
           type: string
           description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
           enum:
-	    - application/json
+            - application/json
         data:
           type: object
           description: Event details payload described in each CAMARA API and referenced by its type
         time:
           $ref: "#/components/schemas/DateTime"
       discriminator:
-        propertyName: 'type'
+        propertyName: "type"
         mapping:
-            org.camaraproject.api-name.v0.event-type: '#/components/schemas/Event-typeEvent'
-            org.camaraproject.api-name.v0.subscription-ends: '#/components/schemas/EventSubscriptionEnds'
+          org.camaraproject.api-name.v0.event-type: "#/components/schemas/Event-typeEvent"
+          org.camaraproject.api-name.v0.subscription-ends: "#/components/schemas/EventSubscriptionEnds"
 
     Source:
       type: string
@@ -538,26 +572,26 @@ components:
       type: string
       format: date-time
       description: Timestamp of when the occurrence happened. Must adhere to RFC 3339.
-      example: '2018-04-05T17:31:00Z'
+      example: "2018-04-05T17:31:00Z"
 
     Event-typeEvent:
-      description:  event structure for event-type event
+      description: event structure for event-type event
       allOf:
-        - $ref: '#/components/schemas/CloudEvent'
+        - $ref: "#/components/schemas/CloudEvent"
         - type: object
 
     EventSubscriptionEnds:
-      description:  event structure for event subscription ends
+      description: event structure for event subscription ends
       allOf:
-        - $ref: '#/components/schemas/CloudEvent'
+        - $ref: "#/components/schemas/CloudEvent"
         - type: object
           properties:
             data:
-              $ref: '#/components/schemas/SubscriptionEnds'
+              $ref: "#/components/schemas/SubscriptionEnds"
 
     SubscriptionEnds:
       description: Event detail structure for SUBSCRIPTION_ENDS event
-      type : object
+      type: object
       required:
         - terminationReason
         - subscriptionId
@@ -580,35 +614,50 @@ components:
         - NETWORK_TERMINATED
         - SUBSCRIPTION_EXPIRED
 
-    
     HTTPSubscriptionRequest:
       allOf:
         - $ref: "#/components/schemas/SubscriptionRequest"
         - type: object
           properties:
             protocolSettings:
+              $ref: "#/components/schemas/HTTPSettings"
+
+    HTTPSubscriptionResponse:
+      allOf:
+        - $ref: "#/components/schemas/Subscription"
+        - type: object
+          properties:
+            protocolSettings:
                 $ref: "#/components/schemas/HTTPSettings"
 
     HTTPSettings:
-        type: object
-        properties:
-            headers:
-                type: object
-                description: |-
-                  A set of key/value pairs that is copied into the HTTP request as custom headers.
-                  
-                  NOTE: Use/Applicability of this concept has not been discussed in Commonalities under the scope of Meta Release v0.4. When required by an API project as an option to meet a UC/Requirement, please generate an issue for Commonalities discussion about it. 
-                additionalProperties:
-                    type: string
-            method:
-                type: string
-                description: The HTTP method to use for sending the message.
-                enum:
-                  - POST
+      type: object
+      properties:
+        headers:
+          type: object
+          description: |-
+            A set of key/value pairs that is copied into the HTTP request as custom headers.
+
+            NOTE: Use/Applicability of this concept has not been discussed in Commonalities under the scope of Meta Release v0.4. When required by an API project as an option to meet a UC/Requirement, please generate an issue for Commonalities discussion about it.
+          additionalProperties:
+            type: string
+        method:
+          type: string
+          description: The HTTP method to use for sending the message.
+          enum:
+            - POST
 
     MQTTSubscriptionRequest:
       allOf:
         - $ref: "#/components/schemas/SubscriptionRequest"
+        - type: object
+          properties:
+            protocolSettings:
+              $ref: "#/components/schemas/MQTTSettings"
+
+    MQTTSubscriptionResponse:
+      allOf:
+        - $ref: "#/components/schemas/Subscription"
         - type: object
           properties:
             protocolSettings:
@@ -638,6 +687,14 @@ components:
         - type: object
           properties:
             protocolSettings:
+              $ref: "#/components/schemas/AMQPSettings"
+
+    AMQPSubscriptionResponse:
+      allOf:
+        - $ref: "#/components/schemas/Subscription"
+        - type: object
+          properties:
+            protocolSettings:
                 $ref: "#/components/schemas/AMQPSettings"
 
     AMQPSettings:
@@ -653,7 +710,7 @@ components:
         linkProperties:
           type: object
           additionalProperties:
-              type: string
+            type: string
 
     ApacheKafkaSubscriptionRequest:
       allOf:
@@ -663,17 +720,25 @@ components:
             protocolSettings:
               $ref: "#/components/schemas/ApacheKafkaSettings"
 
+    ApacheKafkaSubscriptionResponse:
+      allOf:
+        - $ref: "#/components/schemas/Subscription"
+        - type: object
+          properties:
+            protocolSettings:
+              $ref: "#/components/schemas/ApacheKafkaSettings"
+
     ApacheKafkaSettings:
       type: object
       properties:
-          topicName:
-            type: string
-          partitionKeyExtractor:
-            type: string
-          clientId:
-            type: string
-          ackMode:
-            type: integer
+        topicName:
+          type: string
+        partitionKeyExtractor:
+          type: string
+        clientId:
+          type: string
+        ackMode:
+          type: integer
       required:
         - topicName
 
@@ -683,13 +748,21 @@ components:
         - type: object
           properties:
             protocolSettings:
+              $ref: "#/components/schemas/NATSSettings"
+
+    NATSSubscriptionResponse:
+      allOf:
+        - $ref: "#/components/schemas/Subscription"
+        - type: object
+          properties:
+            protocolSettings:
                 $ref: "#/components/schemas/NATSSettings"
-          
+
     NATSSettings:
       type: object
       properties:
-          subject:
-            type: string
+        subject:
+          type: string
       required:
         - subject
   responses:
@@ -697,7 +770,7 @@ components:
       description: Problem with the client request
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -722,7 +795,7 @@ components:
       description: Problem with the client request
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -735,7 +808,7 @@ components:
       description: Authentication problem with the client request
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -749,7 +822,7 @@ components:
       description: Client does not have sufficient permission
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -769,7 +842,7 @@ components:
       description: Client does not have sufficient permission
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -782,7 +855,7 @@ components:
       description: Resource Not Found
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -795,7 +868,7 @@ components:
       description: Conflict
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -832,7 +905,7 @@ components:
       description: Server error
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -845,7 +918,7 @@ components:
       description: Service unavailable. Typically the server is down.
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -858,7 +931,7 @@ components:
       description: Problem with the client request
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
