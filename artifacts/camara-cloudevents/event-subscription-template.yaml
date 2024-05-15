@@ -15,7 +15,7 @@ info:
   version: 0.1.0-wip
 externalDocs:
   description: Product documentation at CAMARA
-  url: hhttps://github.com/camaraproject/
+  url: https://github.com/camaraproject/
 servers:
   - url: '{apiRoot}/{apiName}/v0'
     variables:
