@@ -537,18 +537,66 @@ These considerations are below:
 
 ## 5. Versioning
 
-### 5.1 Versioning Strategy
+Versioning is a practice by which, when a change occurs in the API, a new version of that API is released so that the new version and the previous one coexists for a certain period of time.
 
-Service versioning is a practice by which, when a change occurs in the API of a service, a new version of that service is released so that the new version and the previous one coexists for a certain period of time.
+API versions use a numbering scheme in the format x.y.z, where x, y and z are numbers corresponding to MAJOR, MINOR and PATCH versions. MAJOR, MINOR and PATCH refer to the types of changes made to an API through its evolution. Depending on the change type, the corresponding number is incremented. This is defined in the [Semantic Versioning 2.0.0 (semver.org)](https://semver.org/) standard.
 
-Consumers will be migrated to the new version of the service sequentially. When everyone is consuming the latest version of the service, the previous version is removed.
+### 5.1 API version
 
-Consumers can distinguish between one version of the service and another, the technique of adding the API version to the context of the base URL will be used, since this technique is the most used in the main reference APIs.
+The API version is defined in the "version" field (in the Info object) of the OAS definition file of an API. 
 
-The structure of the URL would have the following form:
-```http
-https://host:port/api/v1/resource
+
+```yaml
+info:
+  title: Number Verification
+  description: text describing the API
+  version: 2.2.0  
+  ...
 ```
+
+In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH version number, increments as follows:
+
+1. The MAJOR version when an incompatible / breaking API change is introduced
+2. The MINOR version when functionality is added that is backwards compatible
+3. The PATCH version when backward compatible bugs are fixed
+
+For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see (API versioning)(https://wiki.camaraproject.org/x/a4BaAQ). 
+
+It is recommended to avoid breaking backwards compatibility unless strictly necessary: new versions should be compatible with previous versions.
+
+More information on how to avoid breaking changes can be found here: API versioning - Breaking and non-breaking changes
+
+### 5.2 API version in URL
+
+The OAS file also defines the API version used in the URL of the API endpoint (in the servers object).
+
+The API endpoint URL only includes the "x" (MAJOR version) number of the API version as follows:
+
+```yaml
+servers:
+    url: {apiRoot}/qod/v2
+```
+
+NOTE: CAMARA exceptionally allows initial API versions (x=0) to have both the MAJOR and the MINOR version number (v0.y) separated by a dot (".") in the API version in the URL to allow for test and usage of initial API versions as they are evolving rapidly, e.g. /qod/v0.10, or /qod/v0.11alpha1. However, it should be acknowledged that any initial API version may change.
+
+### 5.3 API versions throughout the release process
+
+In preparation for its public-release, an API will go through various intermediate versions indicated by version extensions: alpha and release-candidate.
+
+Overall, an API can have any of the following versions:
+
+* work-in-progress (wip) API versions used during the development of an API before the first pre-release or in between pre-releases. Such API versions cannot be released and are not usable by API consumers.
+* alpha (x.y.z-alpha.m) API versions (with extensions) for CAMARA internal API rapid development purposes
+* release-candidate (x.y.z-rc.n) API versions (with extensions) for CAMARA internal API release bug fixing purposes
+* public-release (x.y.z) API versions for publication as part of a meta-release. These API versions only have API version number x.y.z (semver 2.0), no extension. The public-release API can have one of two maturity states: 
+  * initial - indicating that the API is still not fully stable (x=0)
+  * stable - indicate that the API has reached a certain level of maturity (x>0)
+
+The following table gives the values of the API version (Info object) and the API version in the URL used in the release process of the API, and dependent on whether it is an initial API version (x=0) or a stable API version (x>0).
+
+
+
+
 
 
 When we version through the URL, only the "MAJOR version" is included since this would change when a change incompatible with the previous version occurs.
