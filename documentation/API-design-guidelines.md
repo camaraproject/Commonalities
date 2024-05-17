@@ -75,12 +75,14 @@ This document captures guidelines for the API design in CAMARA project. These gu
 |**Camel Case**| It is a kind of define the fields’ compound name or phrases without whitespaces among words. It uses a capital letter at the beginning of each word. There are two different uses:<li>Upper Camel Case: When the first letter of each word is capital.</li><li>Lower Camel Case: Same to that Upper one, but with the first word in lowercase.</li>|
 |**Header**| HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by a colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.|
 |**HTTP**| Hypertext Transfer Protocol (HTTP) is a communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.|
-|**JSON**| JavaScript Object Notation|
-|**JWT**| JSON Web Token (JWT) is an open standard based on JSON proposed by IETF (RFC 7519) for access token creations allowing the identity and purposes spread. |
+|**JSON**| The JavaScript Object Notation (JSON) Data Interchange Format [RFC8259](https://datatracker.ietf.org/doc/html/rfc8259) |
+|**JWT**| JSON Web Token (JWT) is an open standard based on JSON [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519) |
 |**Kebab-case**| Practice in the words denomination where the hyphen is used to separate words. |
-|**OAuth**| Open Authorization is an open standard that allows simple Authorization flows to be used in websites or applications.|
+|**OAuth2**| Open Authorization is an open standard that allows simple Authorization flows to be used in websites or applications. [RFC6749](https://datatracker.ietf.org/doc/html/rfc6749)|
+|**OIDC**| [OpenId Connect](https://openid.net/specs/openid-connect-core-1_0.html) is standard based on OAuth2 that adds authentication and consent to OAuth2.|
+|**CIBA**| [Client-initiated Bachckannel authentication](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) is a standard based on OIDC that enabels API consumers to intiate an authentication.|
 |**REST**| Representational State Transfer.|
-|**TLS**| Transport Layer Security or TLS is a cryptographic protocol that provides secured network communications. |
+|**TLS**| Transport Layer Security is a cryptographic protocol that provides secured network communications. |
 |**URI**| Uniform Resource Identifier. |
 |**Snake_case**|Practice in the words denomination where the underscore is used to separate words. |
 
@@ -163,48 +165,7 @@ TM Forum further defines a set of reference APIs (TMF Open APIs) between the dif
 
 ### 2.4 Information Representation Standard
 
-As a messaging standard, the use of JSON is proposed by default, since it is a light data exchange format and is commonly adopted by current web technologies, although this does not imply that other types of data cannot be used depending on functional and technical requirements. 
-
-JSON is made up with two structures:
-
-- A collection of key/value pairs. In various languages this is known as an object, record, structure, dictionary, hash table, key list, or an associative array.
-- An ordered list of values. In most languages, this is implemented as arrays, vectors, lists, or sequences.
-Data exchange format that is independent of the programming language is based on universal structures supported virtually in all programming languages.
-
-In JSON, the following structures are represented.
-
-An **object** is an unordered set of key/value pairs. An object starts with a "`{`" opening brace and ends with a "`}`" closing brace. Each name is followed by a “`:`” colon and key/value pairs are separated by a “`,`” comma.
-<p align="center">
-<img src="./images/guidelines-fig-3.png" alt="drawing" width="300"/>
-</p>
-
-An **array** is a collection of values. An array starts with “`[`“ left bracket and ends with “`]`” right bracket. Values are separated by "`,`" comma.
-<p align="center">
-<img src="./images/guidelines-fig-4.png" alt="drawing" width="300"/>
-</p>
-
-A **value** can be a string with double quotes, or a number, or true or false or null, or an object or an array. These structures can be nested.
-<p align="center">
-<img src="./images/guidelines-fig-5.png" alt="drawing" width="300"/>
-</p>
-
-A **character string** is a collection of zero or more Unicode characters, enclosed in double quotes, using backslash escaping. A character is represented by a character string of a single character. A character string is similar to a C or Java character string.
-<p align="center">
-<img src="./images/guidelines-fig-6.png" height="300" width="300"/>
-</p>
-
-
-A **number** is similar to a C or Java number, except that octal and hexadecimal formats are not used.
-<p align="center">
-<img src="./images/guidelines-fig-7.png" height="300" width="300"/>
-</p>
-
-**White spaces** can be inserted between any pair of symbols.
-<p align="center">
-<img src="./images/guidelines-fig-8.png" alt="drawing" width="300"/>
-</p>
-
-Except for minor encoding details, the above-mentioned structures provide a full description of JSON language. 
+As a messaging standard, the use of [JSON](https://datatracker.ietf.org/doc/html/rfc8259) is proposed as the default in Camara, since it is a light data exchange format and is commonly adopted by current web technologies, although this does not imply that other types of data cannot be used depending on functional and technical requirements. 
 
 ## 2.5 Reduce telco-specific terminology in API definitions
 CAMARA aims to produce 'intent-based' APIs, which have two key benefits:
@@ -329,7 +290,7 @@ Common errors are captured in the table below.
 | 206 | 206 (Partial Content) The server has fulfilled the partial GET request for the resource.
 | 400 | 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something perceived as a client error (for example, malformed request syntax, invalid request message structure, or incorrect routing). <br>This code must be documented in all the operations in which it is necessary to receive data in the request.|
 | 401 | 401 (Unauthorized) status code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource.<br>This code has to be documented in all API operations that require subscription by a client.|
-| 403 | 403 (Forbidden) status code indicates that the server understood the request, but is refusing to authorize it. A server that wants to make public why the request was prohibited can describe that reason in the response payload (if applicable).<br>This code is usually documented in the operations. It will be returned when the OAuth token access does not have the required scope or when the user fails operational security.|
+| 403 | 403 (Forbidden) status code indicates that the server understood the request, but is refusing to authorize it. A server that wants to make public why the request was prohibited can describe that reason in the response payload (if applicable).<br>This code is usually documented in the operations. It will be returned when the OAuth2 token access does not have the required scope or when the user fails operational security.|
 | 404 | 404 (Not Found) status code indicates that the origin server either did not find a current representation for the target resource or is unwilling to reveal that it exists.<br>This code will occur on `GET` operations when the resource is not available, so it is necessary to document this return in such situations.|
 | 405 | 405 (Method Not Allowed) status code indicates that the origin server knows about the method received in the request line, but the target resource does not support it.<br>This code is documented at the API portal level, it should not be documented at the API level.|
 | 406 | 406 (Not Acceptable) status code indicates that the target resource does not have a current representation that would be acceptable to the user, based on the proactive negotiation header fields received in the request, and the server is unwilling to provide a predetermined representation. It must be reported when there is no response by default, and header fields are reported to carry out the content negotiation (Accept, Accept-Charset, Accept-Encoding, Accept-Language). |
@@ -399,7 +360,7 @@ The main HTTP headers are described below:
 - `Accept`: this header can be used to specify certain types of data that are acceptable for the response. `Accept` headers can be used to indicate that the request is specifically limited to a small set of desired types, as in the case of a request for an image.
 - `Accept-Encoding`: similar to the `Accept` header, but restricting the content encodings that are acceptable in the response. 
 - `Accept-Language`: the consumer defines the list of languages in order of preference. The server answer with the `Content-Language` field in the header with the response language.
-- `Authorization`: it allows sending the authorization token for API access, initially OAuth and JWT.
+- `Authorization`: it allows sending the authorization token for API access, initially OAuth2 and JWT.
 - `Content-Type`: it indicates the type of message sent to the recipient or, in the case of the HEAD method, the type of message that would have been sent if the request had been a GET. The MIME type of the response, or the content uploaded via POST/PUT in case it is a request. 
 - `Content-Length`: it indicates the message size, in octets, sent to the recipient or, in the case of the HEAD method, the message size that would have been sent if the request had been a GET. The size of the response in octets (8 bits) 
 - `Content-Encoding`: it is used as a message type modifier. The type of encoding used in the response is indicated.
@@ -854,10 +815,11 @@ In notification scenarios (i.e. POST request sent towards the listener to the `w
 
 ## 10. Security
 
-One of the key points in the API definition process is to specify and validate the security needs that will be maintained to guarantee data integrity and access control. There are multiple ways to secure a RESTful API, e.g. basic authentication, OAuth, etc., but one thing is for sure: RESTful APIs should be stateless, so authentication/authorization requests should not rely on cookies or sessions. Instead, each API request must come with some form of authentication credentials that must be validated on the server for each request.
+One of the key points in the API definition process is to specify and validate the security needs that will be maintained to guarantee data integrity and access control. There are multiple ways to secure a RESTful API, e.g. basic authentication, OAuth2, OIDC, etc., but one thing is for sure: RESTful APIs should be stateless, so authentication/authorization requests should not rely on cookies or sessions. Instead, each API request must come with some form of authentication credentials that must be validated on the server for each request.
 
 Basic idea in terms of security is to understand that various types of data will require different levels of security, depending on the confidentiality of the data you are trying to obtain and the level of trust between the API Provider and the consumer.
 
+The [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md) defines Security and Interoperablity rules and recommendations for Camara e.g details on OIDC and CIBA. The CAMARA Security and Interoperability Profile is maintained by the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement).
 
 ### 10.1 API REST Security
 
@@ -891,8 +853,8 @@ Passwords should never be sent in API bodies, but if it is necessary it must has
 Usernames, passwords, session tokens, and API keys should not appear in the URL, as this can be captured in web server logs, making them easily exploitable. For example, this URL (```https://api.domain.com/user-management/users/{id}/someAction?apiKey=abcd123456789```) exposes the API key. Therefore, never use this kind of security.
 
 5. **Authentication and authorization must be considered**
-   - The OAuth 2.0 authorization framework allows a third-party application to gain limited access to an HTTP service, either on behalf of a resource owner, by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party app get access on your behalf. 
-   - OpenID Connect is built on the OAuth 2.0 protocol and uses an additional JSON Web Token (JWT), called an ID token, to standardize areas that OAuth 2.0 leaves up to choice, such as scopes and endpoint discovery. It is specifically focused on user authentication and is widely used to enable user logins on consumer websites and mobile apps.<br>
+   - The OAuth2  authorization framework allows a third-party application to gain limited access to an HTTP service, either on behalf of a resource owner, by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party app get access on your behalf. 
+   - OpenID Connect is built on the OAuth2  protocol and uses an additional JSON Web Token (JWT), called an ID token, to standardize areas that OAuth2  leaves up to choice, such as scopes and endpoint discovery. It is specifically focused on user authentication and is widely used to enable user logins on consumer websites and mobile apps.<br>
    - All the information about the authN-authZ concepts for CAMARA APIs are documented in https://github.com/camaraproject/IdentityAndConsentManagement/tree/main/documentation/CAMARA-AuthN-AuthZ-Concept.md
   
 6. **Add request time flags should be considered**. 
@@ -939,7 +901,7 @@ The API must ensure that the consumer is known and can access the requested reso
 
 <u>a) OAuth</u><br>
 
-All APIs must be protected by the OAuth 2.0 Framework. All API requests must include an HTTP header called "Authorization" with a valid OAuth access token.
+All APIs must be protected by the OAuth2  Framework. All API requests must include an HTTP header called "Authorization" with a valid OAuth2 access token.
 
 The following controls will be performed on the access token:
 - **Check if the access token is still valid**. If it is expired or revoked, the API will return an HTTP 401 (Unauthorized) code.
@@ -949,7 +911,7 @@ The following controls will be performed on the access token:
 
 <u>b) Scopes</u><br>
 
-The scopes allow defining the permission scopes that a system or a user has on a resource, ensuring that they can only access the parts they need and not have access to more. These restrictions are done by limiting the permissions that are granted to OAuth tokens.
+The scopes allow defining the permission scopes that a system or a user has on a resource, ensuring that they can only access the parts they need and not have access to more. These restrictions are done by limiting the permissions that are granted to OAuth2 tokens.
 
 Scopes should be represented as below for all Camara APIs except the APIs that offer explicit event subscriptions:
 - API Name: qod, address-management, numbering-information...
@@ -1049,7 +1011,7 @@ Below considerations should be checked when an API is documented:
    -  Request Parameters ([Section 11.3](#113-request-parameters))
    -  Response Structure ([Section 11.4](#114-response-structure))
    -  Data Definitions ([Section 11.5](#115-data-definitions))
-   -  OAuth Definition ([Section 11.6](#116-oauth-definition))
+   -  Security Schemes ([Section 11.6](#116-oauth-definition))
 - To avoid issues with implementation using Open API generators:
   - Reserved words must not be used in the following parts of an API specification:
     - Path and operation names
