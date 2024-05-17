@@ -270,7 +270,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
-            status: 400
+            status: 410
             code: GONE
             message: "Access to the target resource is no longer available."
     Generic415:
