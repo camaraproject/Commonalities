@@ -270,6 +270,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
+            status: 400
             code: GONE
             message: "Access to the target resource is no longer available."
     Generic415:
@@ -282,6 +283,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
+            status: 415
             code: UNSUPPORTED_MEDIA_TYPE
             message: "The specified media type is not supported"
     Generic429:
@@ -294,6 +296,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
+            status: 429
             code: TOO_MANY_REQUESTS
             message: "Endpoint does not support as many requests per time slot"
     Generic500:

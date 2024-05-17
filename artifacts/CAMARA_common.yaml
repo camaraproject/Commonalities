@@ -339,3 +339,14 @@ components:
             message:
               The server refuses to accept the request because the payload format
               is in an unsupported format.
+    Gone:
+      description: Gone
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 410
+            code: GONE
+            message:
+              Access to the target resource is no longer available.
