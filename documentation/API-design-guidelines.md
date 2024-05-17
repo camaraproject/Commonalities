@@ -50,7 +50,6 @@ This document captures guidelines for the API design in CAMARA project. These gu
         - [Polymorphism](#polymorphism)
     - [11.6 Security definition](#116-security-definition)
       - [11.6.1 Scope naming](#1161-scope-naming)
-        - [Examples](#examples)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
