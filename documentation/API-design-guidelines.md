@@ -27,8 +27,10 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [4.1 URL Definition](#41-url-definition)
     - [4.2 Input/Output Resource Definition](#42-inputoutput-resource-definition)
   - [5. Versioning](#5-versioning)
-    - [5.1 Versioning Strategy](#51-versioning-strategy)
-    - [5.2 Backwards and Forward Compatibility](#52-backwards-and-forward-compatibility)
+    - [5.1 API version (OAS Info object)](#51-api-version-oas-info-object)
+    - [5.2 API version in URL (OAS servers object)](#52-api-version-in-url-oas-servers-object)
+    - [5.3 API versions throughout the release process](#53-api-versions-throughout-the-release-process)
+    - [5.4 Backwards and Forward Compatibility](#54-backwards-and-forward-compatibility)
   - [6. Error Responses](#6-error-responses)
   - [7. Common Data Types](#7-common-data-types)
   - [8. Pagination, Sorting and Filtering](#8-pagination-sorting-and-filtering)
@@ -537,45 +539,89 @@ These considerations are below:
 
 ## 5. Versioning
 
-### 5.1 Versioning Strategy
+Versioning is a practice by which, when a change occurs in the API, a new version of that API is released so that the new version and the previous one coexists for a certain period of time.
 
-Service versioning is a practice by which, when a change occurs in the API of a service, a new version of that service is released so that the new version and the previous one coexists for a certain period of time.
+API versions use a numbering scheme in the format: x.y.z
 
-Consumers will be migrated to the new version of the service sequentially. When everyone is consuming the latest version of the service, the previous version is removed.
+* x, y and z are numbers corresponding to MAJOR, MINOR and PATCH versions.
+* MAJOR, MINOR and PATCH refer to the types of changes made to an API through its evolution.
+* Depending on the change type, the corresponding number is incremented.
+* This is defined in the [Semantic Versioning 2.0.0 (semver.org)](https://semver.org/) standard.
 
-Consumers can distinguish between one version of the service and another, the technique of adding the API version to the context of the base URL will be used, since this technique is the most used in the main reference APIs.
+### 5.1 API version (OAS Info object)
 
-The structure of the URL would have the following form:
-```http
-https://host:port/api/v1/resource
+The API version is defined in the "version" field (in the Info object) of the OAS definition file of an API. 
+
+```yaml
+info:
+  title: Number Verification
+  description: text describing the API
+  version: 2.2.0  
+  ...
 ```
 
+In the URL, only the "MAJOR version" is included since this number would change when a change incompatible with the previous version occurs.
 
-When we version through the URL, only the "MAJOR version" is included since this would change when a change incompatible with the previous version occurs.
+In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH version number, increments as follows:
 
-API implementation versioning will follow semantic versioning. Given a `MAJOR.MINOR.PATCH` version number, it increments:
-1)	The `MAJOR` version when you make an incompatible API change.
-2)	The `MINOR` version when you add functionality that is backwards compatible.
-3)	The `PATCH` version when you fix backward compatible bugs.
+1. The MAJOR version when an incompatible / breaking API change is introduced
+2. The MINOR version when functionality is added that is backwards compatible
+3. The PATCH version when backward compatible bugs are fixed
 
-Related to the versioning of rest parts involved in Apification projects, best practises are detailed below:
+For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ). 
 
-SHARED CODE ON REPOSITORIES
+It is recommended to avoid breaking backwards compatibility unless strictly necessary: new versions should be backwards compatible with previous versions.
 
-1) MAJOR - Major of API Contract
-2) MINOR - Minor of API Contract
-3) PATCH - New Updates / Contributions of shared code
+More information on how to avoid breaking changes can be found below.
 
-MICROSERVICE DEPLOYMENTS (NOT MANDATORY BUT RECOMMENDED)
+### 5.2 API version in URL (OAS servers object)
 
-1) MAJOR - Major of API Contract
-2) MINOR - Minor of API Contract
-3) PATCH - New Microservice Deployments
+The OAS file also defines the API version used in the URL of the API endpoint (in the servers object).
 
+The API endpoint URL only includes the "x" (MAJOR version) number of the API version as follows:
 
-### 5.2 Backwards and Forward Compatibility
+```yaml
+servers:
+    url: {apiRoot}/qod/v2
+```
 
-Avoid breaking backwards compatibility unless strictly necessary, that means, new versions should be compatible with previous versions.
+NOTE: CAMARA exceptionally allows initial API versions (x=0) to have both the MAJOR and the MINOR version number (v0.y) separated by a dot (".") in the API version in the URL. 
+
+This allows for test and usage of initial API versions as they are evolving rapidly, e.g. /qod/v0.10, or /qod/v0.11alpha1. However, it should be acknowledged that any initial API version may change.
+
+### 5.3 API versions throughout the release process
+
+In preparation for its public-release, an API will go through various intermediate versions indicated by version extensions: alpha and release-candidate.
+
+Overall, an API can have any of the following versions:
+
+* work-in-progress (wip) API versions used during the development of an API before the first pre-release or in between pre-releases. Such API versions cannot be released and are not usable by API consumers.
+* alpha (x.y.z-alpha.m) API versions (with extensions) for CAMARA internal API rapid development purposes
+* release-candidate (x.y.z-rc.n) API versions (with extensions) for CAMARA internal API release bug fixing purposes
+* public-release (x.y.z) API versions for publication as part of a meta-release. These API versions only have API version number x.y.z (semver 2.0), no extension. The public-release API can have one of two maturity states: 
+  * initial - indicating that the API is still not fully stable (x=0)
+  * stable - indicate that the API has reached a certain level of maturity (x>0)
+
+The following table gives the values of the API version (Info object) and the API version in the URL used in the release process of the API, and dependent on whether it is an initial API version (x=0) or a stable API version (x>0).
+
+| API version in  release process | API version | initial (x=0) API version in URL | stable (x>0) API version in URL | API version can be released |
+|---------------|:------:|:------:|:------:|:------:|
+| work-in-progress | wip | vwip | vwip | No |
+| alpha | x.y.z-alpha.m | v0.yalpham | vxalpham |Yes (internal) |
+| release-candidate | x.y.z-rc.n | v0.yrcn | vxrcn | Yes (internal) |
+| public-release | x.y.z | v0.y | vx | Yes |
+
+Precedence examples:
+
+* 1.0.0 < 2.0.0 < 2.1.0 < 2.1.1 < 3.0.0.
+* 0.1.0 < 0.2.0-alpha.1 < 0.2.0-alpha.2 < 0.2.0-rc.1 < 0.2.0-rc.2 < 0.2.0 (initial public-release)
+* 1.0.0 < 1.1.0-alpha.1 < 1.1.0-alpha.2 < 1.1.0-rc.1 < 1.1.0-rc.2 < 1.1.0 (stable public-release)
+
+For more information, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the Release Management project Wiki.
+
+### 5.4 Backwards and Forward Compatibility
+
+Avoid breaking backwards compatibility, unless strictly necessary, means that new versions should be compatible with previous versions.
 
 Bearing in mind that APIs are continually evolving and certain operations will no longer be supported, the following considerations must be taken into account:
 
@@ -585,30 +631,36 @@ Bearing in mind that APIs are continually evolving and certain operations will n
 - Remove deprecated APIs documentation.
 - Never start using already deprecated APIs.
 
+<font size="3"><span style="color: blue"> Types of modification: </span></font>
 
-<font size="3"><span style="color: blue"> Types of modification </span></font>
+- Not all API changes have an impact on API consumers. Such changes are referred to as backward compatible changes.
+- If the API undergoes changes of this type, it shall be provided through a maintenance-release which will replace the current one.
+- Consumers shall be notified of the new release so that they take them into account.
 
-Not all API changes have an impact on API consumers. These changes are often referred to as backward compatible changes. If the API undergoes changes of this type, it should not be necessary to release a new version, it will suffice to replace the current one. What would be very convenient is to notify our consumers with the new changes so that they take them into account.
+Backward compatible changes to an API that **DO NOT** affect consumers:
 
-This is a list of changes to an API that **DO NOT** affect consumers:
+- Adding a new endpoint
+- Adding new operations on a resource (`PUT`, `POST`, ...).
+- Adding optional input parameters to requests on existing resources. For example, adding a new filter parameter in a GET on a collection of resources.
+- Changing an input parameter from reqmandatory to optional. For example: when creating a resource, a property of said resource that was previously mandatory becomes optional.
+- Adding new properties in the representation of a resource returned by the server. For example, adding a new age field to a Person resource, which originally was made up of nationality and name.
 
-- Add new operations to the service. Translated to REST, it would be to add new actions on a resource (`PUT`, `POST`, ...).
-- Add optional input parameters to requests on existing resources. For example, adding a new filter parameter in a GET on a collection of resources.
-- Modify input parameters from required to optional. For example: when creating a resource, a property of said resource that was previously mandatory becomes optional.
-- Add new properties in the representation of a resource returned by the server. For example, adding a new age field to a Person resource, which originally was made up of nationality and name. 
+Breaking changes to an API that **DO** affect consumers:
 
-This other list shows changes that **DO** affect consumers:
-- Delete operations or actions on a resource. For example:  POST requests on a resource are no longer accepted.
-- Add new mandatory input parameters. For example: now, to register a resource, a new required field must be sent in the body of the request.
-- Modify input parameters from optional to mandatory. For example: when creating a Person resource, the age field, which was previously optional, is now mandatory.
-- Modify a parameter in existing operations (resource verbs). Also applicable to parameter removal. For example, when consulting a resource, a certain field is no longer returned. Another example: a field that was previously a string is now numeric.
-- Add new responses to existing operations. For example: creating a resource can return a 412 response code.
+- Deleting operations or actions on a resource. For example:  POST requests on a resource are no longer accepted.
+- Adding new mandatory input parameters. For example: now, to register a resource, a new required field must be sent in the body of the request.
+- Modifying or removing an endpoint (breaks existing queries)
+- Changing input parameters from optional to mandatory. For example: when creating a Person resource, the age field, which was previously optional, is now mandatory.
+- Modifying or removing a mandatory parameter in existing operations (resource verbs). For example, when consulting a resource, a certain field is no longer returned. Another example: a field that was previously a string is now numeric.
+- Modifying or adding new responses to existing operations. For example: creating a resource can return a 412 response code.
 
 <font size="3"><span style="color: blue"> Compatibility management </span></font>
 
 Tho ensure this compatibility, the following must be followed.
 
-**As API producer**:
+**As API provider**:
+- Never change an endpoint name; instead, add a new one and mark the original one for deprecation in a minor release and remove it in a later major release (see semver FAQ entry: https://semver.org/#how-should-i-handle-deprecating-functionality)
+- If possible, do the same for attributes
 - New fields should always be added as optional.
 - Postel's Law: “<em>Be conservative in what you do, be liberal in what you accept from others</em>”. When you have input fields that need to be removed, mark them as unused, so they can be ignored. 
 - Do not change the field’s semantics.
@@ -616,6 +668,10 @@ Tho ensure this compatibility, the following must be followed.
 - Do not change the validation rules of the request fields to more restrictive ones.
 - If you use collections that can be returned with no content, then answer with an empty collection and not null.
 - Layout pagination support from the start.
+
+Make the information available:
+- provide an access to the new API version definition file (via a link or dedicated endpoint)
+- if possible, do the same to obtain the currently implemented API version definition file
 
 **As API consumer**:
 - Tolerant reader: if it does not recognize a field when faced with a response from a service, do not process it, but record it through the log (or resend it if applicable).
