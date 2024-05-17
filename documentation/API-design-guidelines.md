@@ -80,7 +80,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
 |**Kebab-case**| Practice in the words denomination where the hyphen is used to separate words. |
 |**OAuth2**| Open Authorization is an open standard that allows simple Authorization flows to be used in websites or applications. [RFC6749](https://datatracker.ietf.org/doc/html/rfc6749)|
 |**OIDC**| [OpenId Connect](https://openid.net/specs/openid-connect-core-1_0.html) is standard based on OAuth2 that adds authentication and consent to OAuth2.|
-|**CIBA**| [Client-initiated Bachckannel authentication](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) is a standard based on OIDC that enabels API consumers to intiate an authentication.|
+|**CIBA**| [Client-Initiated Backchannel Authentication](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) is a standard based on OIDC that enabels API consumers to intiate an authentication.|
 |**REST**| Representational State Transfer.|
 |**TLS**| Transport Layer Security is a cryptographic protocol that provides secured network communications. |
 |**URI**| Uniform Resource Identifier. |
