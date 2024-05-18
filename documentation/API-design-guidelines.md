@@ -899,7 +899,7 @@ These include:
 
 The API must ensure that the consumer is known and can access the requested resources.
 
-<u>a) OAuth</u><br>
+<u>a) OAuth2</u><br>
 
 All APIs must be protected by the OAuth2  Framework. All API requests must include an HTTP header called "Authorization" with a valid OAuth2 access token.
 
