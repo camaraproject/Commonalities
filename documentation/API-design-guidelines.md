@@ -1224,11 +1224,57 @@ When IpAddr is used in a payload, the property objectType MUST be present to ind
 
 ### 11.6 Security definition
 
-The [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#camara-api-specification---authorization-and-authentication-common-guidelines) are discussed and maintained by the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement). In particular, the following aspects are detailed:
+In general all APIs must be secured to assure who has access to what and for what purpose.
+Camara uses OIDC and CIBA for authentication and consent collection and to determine whether the user has e.g. opted-out of some API access.
 
-- Use of openIdConnect as protocol in `securitySchemes`.
-- How to fill the `security` property per operation.
-- How to fill the "Authorization and authentication" section in `info.description`.
+The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose is defined by W3C Privacy Vocabulatory in the [purpose section](https://w3c.github.io/dpv/dpv/#vocab-purposes).
+
+#### OpenAPI security schemes definition
+
+Security in OpenAPI is expressed by [security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object). Security can be expressed for the API as a whole or for each endpoint.
+
+All Camara OpenAPI files must include the following security scheme definition, with an adapted `openIdConnectUrl` in its components section:
+
+```yaml
+components:
+  securitySchemes:
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+```
+
+The key of the security scheme is arbitrary in OAS, but convention in CAMARA is to name it `openId`.
+
+#### Expressing Security Requirements
+
+Security requirements of an API are expressed in OpenAPI through [Security Requirement Objects](https://spec.openapis.org/oas/v3.0.3#security-requirement-object).
+
+Following is an example on how to use the `openId` security scheme defined above:
+
+```yaml
+paths:
+  {path}:
+    {method}:
+      ...
+      security:
+        - openId:
+            - {scope}
+```
+
+The name `openId` must be same as defined in the components.securitySchemes section.
+
+#### Mandatory template for `info.description` in CAMARA API specs
+
+The documentation template below must be used as part of the API documentation in  `info.description` property in the CAMARA API specs:
+
+```
+### Authorization and authentication
+
+The [CAMARA Interoperability and Security Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md) specifies which OIDC, CIBA authorization flows can be used in Camara by the API Client to optain access tokens and which client authentication methods are allowed in Camara.
+
+Which specific protocol and which authorization flows are to be used will be determined during onboarding process, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+```
+
 
 #### 11.6.1 Scope naming
 
