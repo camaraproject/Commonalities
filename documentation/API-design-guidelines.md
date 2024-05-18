@@ -853,9 +853,7 @@ Passwords should never be sent in API bodies, but if it is necessary it must has
 Usernames, passwords, session tokens, and API keys should not appear in the URL, as this can be captured in web server logs, making them easily exploitable. For example, this URL (```https://api.domain.com/user-management/users/{id}/someAction?apiKey=abcd123456789```) exposes the API key. Therefore, never use this kind of security.
 
 5. **Authentication and authorization must be considered**
-   - The OAuth2  authorization framework allows a third-party application to gain limited access to an HTTP service, either on behalf of a resource owner, by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party app get access on your behalf. 
-   - OpenID Connect is built on the OAuth2  protocol and uses an additional JSON Web Token (JWT), called an ID token, to standardize areas that OAuth2  leaves up to choice, such as scopes and endpoint discovery. It is specifically focused on user authentication and is widely used to enable user logins on consumer websites and mobile apps.<br>
-   - All the information about the authN-authZ concepts for CAMARA APIs are documented in https://github.com/camaraproject/IdentityAndConsentManagement/tree/main/documentation/CAMARA-AuthN-AuthZ-Concept.md
+   Camara uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md).
   
 6. **Add request time flags should be considered**. 
 Along with other request parameters, a request timestamp can be added as a custom HTTP header in API requests. The server will compare the current timestamp with the timestamp of the request and will only accept the request if it is within a reasonable time frame (1-2 minutes maybe).
