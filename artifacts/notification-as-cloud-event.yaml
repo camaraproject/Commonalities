@@ -86,30 +86,11 @@ paths:
                 $ref: '#/components/examples/QOS_STATUS_CHANGED_EXAMPLE'
 
       responses:
-        201:
-          description: Created
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-        202:
-          description: Accepted
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
         204:
           description: No Content
           headers:
-            x-correlator:
+            X-Correlator:
               $ref: "#/components/headers/x-correlator"
-        200:
-          description: Ok
-          headers:
-            x-correlator:
-              $ref: "#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                type: object
         400:
           $ref: "#/components/responses/Generic400"
         401:
@@ -202,6 +183,8 @@ components:
         datacontenttype:
           type: string
           description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
+          enum:
+            - application/json
         data:
           type: object
           description: Event details payload described in each CAMARA API and referenced by its type
@@ -338,4 +321,3 @@ components:
           sessionId: "6e8bc430-9c3a-11d9-9669-0800200c9a66"
           qosStatus: UNAVAILABLE
           statusInfo: DURATION_EXPIRED
-

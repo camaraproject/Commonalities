@@ -48,7 +48,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
       - [11.5.1 Usage of discriminator](#1151-usage-of-discriminator)
         - [Inheritance](#inheritance)
         - [Polymorphism](#polymorphism)
-    - [11.6 OAuth Definition](#116-oauth-definition)
+    - [11.6 Security Definition](#116-security-definition)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
@@ -953,15 +953,36 @@ The following controls will be performed on the access token:
 
 The scopes allow defining the permission scopes that a system or a user has on a resource, ensuring that they can only access the parts they need and not have access to more. These restrictions are done by limiting the permissions that are granted to OAuth tokens.
 
-Scopes should be represented as:
-- API Name: address-management, numbering-information...
-- Protected Resource: orders, billings…
+Scopes should be represented as below for all Camara APIs except the APIs that offer explicit event subscriptions:
+- API Name: qod, address-management, numbering-information...
+- Protected Resource: sessions, orders, billings…
 - Grant-level, action on resource: read, write…
+
+For e.g. qod:sessions:read
+
+The APIs that offer explicit event subscriptions must have a way to reflect which event types are being subscribed to, when a subscription create request is made. This will impact how consent management is handled for these APIs. 
+
+Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete:
+ 
+- API Name: device-roaming-subscriptions
+- Grant-level, action on resource: read, delete
+This type of formulation is not needed for the create action.
+
+For e.g. device-roaming-subscriptions:read 
+  
+The format to define scopes for explicit subscriptions with action create, includes the event type in its formulation to ensure that consent is managed at the level of subscribed event types. Scopes should be represented as below for APIs that offer explicit event subscriptions with action create:
+
+- API Name: device-roaming-subscriptions
+- Event-type: org.camaraproject.device-roaming-subscriptions.v0.roaming-on 
+- Grant-level, action on resource: create
+
+For e.g. device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create
   
 To correctly define the scopes, when creating them, the following recommendations should be taken:
 - **Appropriate granularity**. Scopes should be granular enough to match the types of resources and permissions you want to grant.
 - **Use a common nomenclature for all resources**.  Scopes must be descriptive names and that there is no conflict between the different resources.
 - **Use the kebab-case nomenclature** to define API names, resources, and scope permissions.
+- **Use ":" a separator** between API name, protected resources, event-types and grant-levels for consistency.
 
 See section [11.6 Security Definition](#116-security-definition) for detailed guidelines on how to define scopes and other security-related properties in a OpenAPI file.
 
@@ -1335,6 +1356,8 @@ A resource-based subscription is an event subscription managed as a resource. Th
 Note: It is perfectly valid for a CAMARA API to have several event types managed. The subscription endpoint will be unique, but 'eventType' attribute is used to distinguish distinct events subscribed.
 
 In order to ease developer adoption, the pattern for Resource-based event subscription should be consistent for all API providing this feature.
+
+To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
 4 operations must be defined:
 
