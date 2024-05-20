@@ -560,8 +560,6 @@ info:
   ...
 ```
 
-In the URL, only the "MAJOR version" is included since this number would change when a change incompatible with the previous version occurs.
-
 In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH version number, increments as follows:
 
 1. The MAJOR version when an incompatible / breaking API change is introduced
@@ -570,15 +568,13 @@ In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH versio
 
 For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ). 
 
-It is recommended to avoid breaking backwards compatibility unless strictly necessary: new versions should be backwards compatible with previous versions.
-
-More information on how to avoid breaking changes can be found below.
+It is recommended to avoid breaking backwards compatibility unless strictly necessary: new versions should be backwards compatible with previous versions. More information on how to avoid breaking changes can be found below.
 
 ### 5.2 API version in URL (OAS servers object)
 
 The OAS file also defines the API version used in the URL of the API endpoint (in the servers object).
 
-The API endpoint URL only includes the "x" (MAJOR version) number of the API version as follows:
+The API version in the URL only includes the "x" (MAJOR version) number of the API version as follows:
 
 ```yaml
 servers:
