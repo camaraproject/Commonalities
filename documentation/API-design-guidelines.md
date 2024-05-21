@@ -1268,11 +1268,10 @@ The documentation template below must be used as part of the API documentation i
 ```
 ### Authorization and authentication
 
-The [CAMARA Interoperability and Security Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md) specifies which OIDC, CIBA authorization flows can be used in Camara by the API Client to optain access tokens and which client authentication methods are allowed in Camara.
+CAMARA guidelines define a set of authorization flows which can grant API clients access to the API functionality, as outlined in the document [CAMARA Interoperability and Security Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md). Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
 
-Which specific protocol and which authorization flows are to be used will be determined during onboarding process, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
 ```
-
 
 #### 11.6.1 Scope naming
 
