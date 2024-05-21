@@ -158,7 +158,7 @@ Testing plans should identify the list of input values that have to be provided 
 
 ### Request sending <a name="request-sending"></a>
 
-For scenarios testing individual operations, the request will be send by means of a single `When` step, indicating the `operationId` specified in the spec, as the `operationId` uniquely identifies the HTTP method and resource path. E.g.:
+For scenarios testing individual operations, the request will be sent by means of a single `When` step, indicating the `operationId` specified in the spec, as the `operationId` uniquely identifies the HTTP method and resource path. E.g.:
 
 ```
 When the request "{operationId}" is sent
