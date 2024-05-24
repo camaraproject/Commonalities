@@ -566,7 +566,7 @@ In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH versio
 2. The MINOR version when functionality is added that is backwards compatible
 3. The PATCH version when backward compatible bugs are fixed
 
-For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ). 
+For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [versioning in the API release process](https://wiki.camaraproject.org/x/a4BaAQ) in the Release Management wiki. 
 
 It is recommended to avoid breaking backwards compatibility unless strictly necessary: new versions should be backwards compatible with previous versions. More information on how to avoid breaking changes can be found below.
 
@@ -581,7 +581,7 @@ servers:
     url: {apiRoot}/qod/v2
 ```
 
-NOTE: CAMARA exceptionally allows initial API versions (x=0) to have both the MAJOR and the MINOR version number (v0.y) separated by a dot (".") in the API version in the URL. 
+NOTE: CAMARA exceptionally allows to use both the MAJOR and the MINOR version number (v0.y) separated by a dot (".") in initial API versions (x=0) in the API version in the URL. 
 
 This allows for test and usage of initial API versions as they are evolving rapidly, e.g. /qod/v0.10, or /qod/v0.11alpha1. However, it should be acknowledged that any initial API version may change.
 
