@@ -1068,9 +1068,9 @@ Below considerations should be checked when an API is documented:
 ### 11.1 General Information
 
 This part must include the following information:
-- API Version in the next format: X.Y.Z.
 - API title with public name.
 - A brief description of the main functions of the API.
+- API Version in the format defined in [Chapter 5. Versioning](#5-versioning)
 - API Terms of Service.
 - Contact information, with name, email and website of the API Holder.
 - Licence information (name, website…)
