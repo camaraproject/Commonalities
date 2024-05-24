@@ -1079,9 +1079,33 @@ This part must include the following information:
 - Response format (“application/jwt”…)
 - Global `tags` object if tags are used for API operations
   
-<p align="center">
-<img src="./images/guidelines-fig-14.png" width="400"/>
-</p>
+The `info` object shall have the following content:
+
+```yaml
+info:
+  # title without "API" in it, e.g. "Number Verification"
+  title: Number Verification
+  # description explaining the API, part of the API documentation 
+  # text explaining how to fill the "Authorization and authentication" - see section 11.6
+  description: |
+    This API allows to verify that the provided mobile phone number is the one used in the device. It
+    verifies that the user is using a device with the same mobile phone number as it is declared.
+    ### Authorization and authentication
+    CAMARA guidelines defines a set of authorization flows ...
+  # API version - Aligned to SemVer 2.0 according to CAMARA versioning guidelines
+  version: 1.0.1
+  # Link to the page that describes the terms of service - to be replaced by the provider' terms'
+  termsOfService: http://example.com/terms/
+  # Contact information: name, email, URL
+  contact:
+    name: API Support
+    email: support@example.com
+    url: http://www.example.com/support
+  # Name of the license and a URL to the license description
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+```
 
 ### 11.2 Published Routes
 
