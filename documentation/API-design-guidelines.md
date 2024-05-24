@@ -1129,22 +1129,15 @@ This part must contain the list of published functions, with the following descr
    - Supported responses list, describing success and errors cases.
    - Allowed content type (“application/json”, “text/xml”…)
 
-<p align="center">
-<img src="./images/guidelines-fig-15.png" width="400"/>
-</p>
-
 ### 11.3 Request Parameters
 
 This part contains a list of expected payload requests, if any. This description should have the following items:
 - Parameter name, used to reference it in other sections
 - Parameter description
 - Parameter place (header, route…)
-- Type (basic types like chains, integers, complex objects,...)
+- Type (basic types like strings, integers, complex objects,...)
 - Required field or optional flag
 
-<p align="center">
-<img src="./images/guidelines-fig-16.png" width="400"/>
-</p>
 
 ### 11.4 Response Structure
 
@@ -1155,9 +1148,6 @@ This part describes the list of possible messages returned by the API. It also i
 - Allowed content type (“application/json”, “text/xml”…)
 - Metadata links (HATEOAS)
 
-<p align="center">
-<img src="./images/guidelines-fig-17.png" width="400"/>
-</p>
 
 
 ### 11.5 Data Definitions
@@ -1176,21 +1166,9 @@ This part captures a detailed description of all the data structures used in the
       - Integer ones: Format (int32, int64…), min value.
 
 
-In this part, the error response structure must also be defined, which must be as follows:
-- Type (Array, Integer, Object …)
-- Mandatory fields of the structure
-- Properties:
-   - Error Code
-      - Type (Array, Integer…)
-      - Error codes supported, as Enum list
-   - Error description
-       - Type (Array)
-       - Min longitude
-       - Max longitude
+In this part, the error response structure must also be defined following the guidelines in [Chapter 6. Error Responses](#6-error-responses).
 
-<p align="center">
-<img src="./images/guidelines-fig-18.png" width="400"/>
-</p>
+
 
 #### 11.5.1 Usage of discriminator
 As mentioned in OpenAPI doc [here](https://spec.openapis.org/oas/v3.0.3#discriminator-object) usage of discriminator may
