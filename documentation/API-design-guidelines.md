@@ -1074,9 +1074,7 @@ This part must include the following information:
 - API Terms of Service.
 - Contact information, with name, email and website of the API Holder.
 - Licence information (name, website…)
-- Schemes supported (HTTP, HTTPS…)
-- Allowed response formats (“application/json”, “text/xml”…)
-- Response format (“application/jwt”…)
+- API server and base URL
 - Global `tags` object if tags are used for API operations
   
 The `info` object shall have the following content:
@@ -1107,6 +1105,18 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 ```
 
+The `servers` object shall have the following content:
+
+```yaml
+servers:
+  # apiRoot variable and the fixed base path containing <api-name> and <api-version> as defined in chapter 5  
+  - url: "{apiRoot}/quality-on-demand/vwip"
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+```
+
 ### 11.2 Published Routes
 
 This part must contain the list of published functions, with the following description:
@@ -1117,6 +1127,7 @@ This part must contain the list of published functions, with the following descr
    - Optionally `tags` object for each API operation - Title Case is the recommended style for tag names.
    - Request param list, making reference to "Request params" part.
    - Supported responses list, describing success and errors cases.
+   - Allowed content type (“application/json”, “text/xml”…)
 
 <p align="center">
 <img src="./images/guidelines-fig-15.png" width="400"/>
@@ -1141,6 +1152,7 @@ This part describes the list of possible messages returned by the API. It also i
 - Name of the response object, used to refer to it in other sections.
 - Response object description.
 - Object type (basic types like string, integer... or even more complex objects defined in the "Data definition" part...)
+- Allowed content type (“application/json”, “text/xml”…)
 - Metadata links (HATEOAS)
 
 <p align="center">
