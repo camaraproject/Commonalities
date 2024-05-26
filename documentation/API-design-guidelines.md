@@ -1411,7 +1411,7 @@ The Following table provides `/subscriptions` attributes
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
-| protocol | string | Identifier of a delivery protocol. **Only** `HTPP` **is allowed for now**.| Mandatory |
+| protocol | string | Identifier of a delivery protocol. **Only** `HTTP` **is allowed for now**.| Mandatory |
 | sink | string | https callback address where the notification must be POST-ed | mandatory |
 | sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. | optional |
 | types | string | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required by API project to provide an enum for this attribute. `type` must follow the format: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter `v` and the major version like  ``org.camaraproject.device-roaming-subscriptions.v1.roaming-status`` - Note: An array of types could be passed **but as of now only one value MUST passed**. Use of multiple value will be open later at API level.| mandatory  |
