@@ -158,7 +158,7 @@ paths:
   /subscriptions/{subscriptionId}:
     get:
       tags:
-        - apiName subscription
+        - <apiName> Subscription
       summary: "Retrieve a apiName event subscription"
       description: retrieve apiName subscription information for a given subscription.
       operationId: retrieveApiNameSubscription
