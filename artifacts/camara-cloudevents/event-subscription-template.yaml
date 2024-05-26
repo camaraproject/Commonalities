@@ -26,7 +26,7 @@ servers:
         default: camaraAPI
         description: apiName will be replaced in WG by its value and not modelled as a variable
 tags:
-  - name: apiName subscription
+  - name: <apiName> Subscription
     description: Operations to manage event subscriptions on event-type event
 
 paths:
