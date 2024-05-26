@@ -33,7 +33,7 @@ paths:
   /subscriptions:
     post:
       tags:
-        - apiName subscription
+        - <apiName> Subscription
       summary: "Create a apiName event subscription"
       description: Create a apiName event subscription
       operationId: createApiNameSubscription
