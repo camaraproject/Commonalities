@@ -50,6 +50,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
         - [Polymorphism](#polymorphism)
     - [11.6 Security definition](#116-security-definition)
       - [11.6.1 Scope naming](#1161-scope-naming)
+        - [Examples](#examples)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
@@ -851,7 +852,7 @@ With the aim of standardizing the request observability and traceability process
 
 When the API Consumer includes the "X-Correlator" header in the request, the API provider must include it in the response with the same value that was used in the request. Otherwise, it is optional to include the "X-Correlator" header in the response with any valid value. Recommendation is to use UUID for values.
 
-In notification scenarios (i.e. POST request sent towards the listener to the `webhook.notificationUrl` indicated), the use of the "X-Correlator" is supported for the same aim as well. When the API request includes the "X-Correlator" header, it is recommended for the listener to include it in the response with the same value as was used in the request. Otherwise, it is optional to include the "X-Correlator" header in the response with any valid value.
+In notification scenarios (i.e. POST request sent towards the listener to the `sink.notificationUrl` indicated), the use of the "X-Correlator" is supported for the same aim as well. When the API request includes the "X-Correlator" header, it is recommended for the listener to include it in the response with the same value as was used in the request. Otherwise, it is optional to include the "X-Correlator" header in the response with any valid value.
 
 ## 10. Security
 
@@ -1323,12 +1324,12 @@ An instance-based subscription is a subscription indirectly created, additionall
 
 Providing this capability is optional for any CAMARA API depending on UC requirements.
 
-If this capability is present in CAMARA API, `webhook` object attribute **must** be used in the POST request. The `webhook` object contains following attributes :
+If this capability is present in CAMARA API, following attributes **must** be used in the POST request :
 
 | attribute name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  | -----  | 
 | sink | string | https callback address where the notification must be POST-ed | mandatory |
-| sinkCredential | object | A set of settings carrying credential information that is enabling the entity delivering events to the subscription target to be authorized for delivery at the `sink` endpoint.  In order to be updated in future this object is polymorphic | optional |
+| sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic | optional |
 
 Several types of `sinkCredential` could be available in future but for now only access token credential are managed.
 
@@ -1349,9 +1350,7 @@ If credentials are not required:
 ```json
 {
  /* Resource instance representation */
-"webhook": {
-   "sink": "https://callback..."
-   }
+  "sink": "https://callback..."
 }
 ```
 
@@ -1360,15 +1359,13 @@ If credentials are required:
 ```json
 {
  /* Resource instance representation */
-"webhook": {
-   "sink": "https://callback...",
-   "sinkCredential": {
-      "credentialType": "ACCESSTOKEN",
-      "accessToken" : "eyJ2ZXIiOiIxLjAiLCJ0eXAiOiJKV1QiL..",
-      "accessTokenExpireUtc" : "2024-12-06T14:37:56.147Z",
-      "accessTokenType" : "Bearer"
+  "sink": "https://callback...",
+  "sinkCredential": {
+    "credentialType": "ACCESSTOKEN",
+    "accessToken" : "eyJ2ZXIiOiIxLjAiLCJ0eXAiOiJKV1QiL..",
+    "accessTokenExpireUtc" : "2024-12-06T14:37:56.147Z",
+    "accessTokenType" : "Bearer"
     }
-   }
 }
 ```
 
@@ -1561,7 +1558,7 @@ CAMARA event notification leverages **[CloudEvents](https://cloudevents.io/)**  
 Note: The notification is the message posted on listener side. We describe the notification(s) in the CAMARA API using the `callbacks`. From API consumer it could be confusing because this endpoint must be implemented on the business API consumer side. This notice should be explicitly mentioned in all CAMARA API documentation featuring notifications.
 
 Only Operation POST is provided for event notification and the expected response code is `204`. 
-The URL for this `POST` operation must be specified in the swagger as `{$request.body#/webhook/notificationUrl}`. 
+The URL for this `POST` operation must be specified in the swagger as `{$request.body#/sink/notificationUrl}`. 
 The event notification is represented in the JavaScript Object Notation (JSON) Data Interchange Format ([RFC8259](https://datatracker.ietf.org/doc/html/rfc8259)). Such [CloudEvents representation](https://github.com/cloudevents/spec/blob/main/cloudevents/formats/json-format.md) must use the media type `application/cloudevents+json`.
 
 For consistency across CAMARA APIs, the uniform CloudEvents model must be used with following rules:
