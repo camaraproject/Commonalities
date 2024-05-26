@@ -1328,7 +1328,7 @@ If this capability is present in CAMARA API, `webhook` object attribute **must**
 | attribute name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  | -----  | 
 | sink | string | https callback address where the notification must be POST-ed | mandatory |
-| sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic | optional |
+| sinkCredential | object | A set of settings carrying credential information that is enabling the entity delivering events to the subscription target to be authorized for delivery at the `sink` endpoint.  In order to be updated in future this object is polymorphic | optional |
 
 Several types of `sinkCredential` could be available in future but for now only access token credential are managed.
 
