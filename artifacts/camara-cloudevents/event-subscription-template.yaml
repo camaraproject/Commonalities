@@ -52,8 +52,6 @@ paths:
         notifications:
           "{$request.body#/sink}":
             post:
-              tags:
-                - notifications callback
               summary: "notifications callback"
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
