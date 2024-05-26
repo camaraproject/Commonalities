@@ -116,6 +116,8 @@ paths:
           $ref: "#/components/responses/Generic409"
         "415":
           $ref: "#/components/responses/Generic415"
+        "422":
+          $ref: "#/components/responses/CreateSubscription422"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
@@ -287,7 +289,7 @@ components:
           type: string
           format: url
           description: The address to which events shall be delivered using the selected protocol.
-          example: "https://endpoint.example.com/webhook"
+          example: "https://endpoint.example.com/sink"
         sinkCredential:
           allOf:
             - description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
@@ -455,7 +457,7 @@ components:
           type: string
           format: url
           description: The address to which events shall be delivered using the selected protocol.
-          example: "https://endpoint.example.com/webhook"
+          example: "https://endpoint.example.com/sink"
         sinkCredential:
           $ref: '#/components/schemas/SinkCredential'
         types:
@@ -888,6 +890,21 @@ components:
           example:
             code: UNSUPPORTED_MEDIA_TYPE
             message: "The specified media type is not supported"
+    CreateSubscription422:
+      description: Unprocessable Entity
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            PermissionDenied:
+              value:
+                status: 422
+                code: "MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED"
+                message: "Multi event types subscription not managed"
     Generic429:
       description: Too Many Requests
       headers:
