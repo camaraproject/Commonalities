@@ -433,6 +433,9 @@ components:
               format: uri
               description: REQUIRED. A URL at which the refresh token can be traded for an access token.
       required:
+        - accessToken
+        - accessTokenExpiresUtc
+        - accessTokenType
         - refreshToken
         - refreshTokenEndpoint
 
