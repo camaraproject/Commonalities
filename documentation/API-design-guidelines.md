@@ -1096,6 +1096,7 @@ info:
   termsOfService: http://example.com/terms/
   # Contact information: name, email, URL
   contact:
+  # Link to the provider's support page.
     name: API Support
     email: support@example.com
     url: http://www.example.com/support
