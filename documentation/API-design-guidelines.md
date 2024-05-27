@@ -1531,7 +1531,7 @@ response:
   "config": {
     "subscriptionDetail": {
       "device": {
-        "phoneNumber": "12345678"
+        "phoneNumber": "+346661113334"
       }
     },
     "initialEvent" : true,
