@@ -413,6 +413,18 @@ components:
         - $ref: "#/components/schemas/AccessTokenCredential"
         - type: object
           properties:
+            accessToken:
+              description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
+              type: string
+            accessTokenExpiresUtc:
+              type: string
+              format: date-time
+              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired.
+            accessTokenType:
+              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
+              type: string
+              enum:
+                - Bearer
             refreshToken:
               description: REQUIRED. An refresh token credential used to acquire access tokens.
               type: string
