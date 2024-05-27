@@ -806,6 +806,11 @@ components:
                 status: 400
                 code: "INVALID_PROTOCOL"
                 message: "Only HTTP is supported"
+            InvalidCredential:
+              value:
+                status: 400
+                code: "INVALID_CREDENTIAL"
+                message: "Only Access token is supported"
             InvalidToken:
               value:
                 status: 400
