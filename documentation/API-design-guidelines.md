@@ -852,7 +852,7 @@ With the aim of standardizing the request observability and traceability process
 
 When the API Consumer includes the "X-Correlator" header in the request, the API provider must include it in the response with the same value that was used in the request. Otherwise, it is optional to include the "X-Correlator" header in the response with any valid value. Recommendation is to use UUID for values.
 
-In notification scenarios (i.e. POST request sent towards the listener to the `sink.notificationUrl` indicated), the use of the "X-Correlator" is supported for the same aim as well. When the API request includes the "X-Correlator" header, it is recommended for the listener to include it in the response with the same value as was used in the request. Otherwise, it is optional to include the "X-Correlator" header in the response with any valid value.
+In notification scenarios (i.e. POST request sent towards the listener to the `sink.notificationUrl` indicated), the use of the "x-correlator" is supported for the same aim as well. When the API request includes the "x-correlator" header, it is recommended for the listener to include it in the response with the same value as was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value.
 
 ## 10. Security
 
