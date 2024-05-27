@@ -1092,13 +1092,13 @@ info:
     CAMARA guidelines defines a set of authorization flows ...
   # API version - Aligned to SemVer 2.0 according to CAMARA versioning guidelines
   version: 1.0.1
-  # Link to the page that describes the terms of service - to be replaced by the provider' terms'
+  # Link to the page that describes the terms of service - to be replaced by the provider's terms
   termsOfService: http://example.com/terms/
   # Contact information: name, email, URL
   contact:
-  # Link to the provider's support page.
     name: API Support
     email: support@example.com
+  # Link to the provider's support page.
     url: http://www.example.com/support
   # Name of the license and a URL to the license description
   license:
