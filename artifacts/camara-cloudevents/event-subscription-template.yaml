@@ -655,7 +655,7 @@ components:
         - type: object
           properties:
             protocolSettings:
-                $ref: "#/components/schemas/HTTPSettings"
+              $ref: "#/components/schemas/HTTPSettings"
 
     HTTPSettings:
       type: object
