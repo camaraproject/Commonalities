@@ -960,6 +960,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
+            status: 429
             code: TOO_MANY_REQUESTS
             message: "Endpoint does not support as many requests per time slot"
     Generic500:
