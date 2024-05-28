@@ -783,7 +783,7 @@ components:
         - type: object
           properties:
             protocolSettings:
-                $ref: "#/components/schemas/NATSSettings"
+              $ref: "#/components/schemas/NATSSettings"
 
     NATSSettings:
       type: object
