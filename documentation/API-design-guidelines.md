@@ -1111,7 +1111,7 @@ The `servers` object shall have the following content:
 ```yaml
 servers:
   # apiRoot variable and the fixed base path containing <api-name> and <api-version> as defined in chapter 5  
-  - url: "{apiRoot}/quality-on-demand/vwip"
+  - url: {apiRoot}/quality-on-demand/v2
     variables:
       apiRoot:
         default: http://localhost:9091
