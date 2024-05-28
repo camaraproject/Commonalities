@@ -932,6 +932,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
+            status: 415
             code: UNSUPPORTED_MEDIA_TYPE
             message: "The specified media type is not supported"
     CreateSubscription422:
