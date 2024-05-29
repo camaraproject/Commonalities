@@ -1558,7 +1558,7 @@ CAMARA event notification leverages **[CloudEvents](https://cloudevents.io/)**  
 Note: The notification is the message posted on listener side. We describe the notification(s) in the CAMARA API using the `callbacks`. From API consumer it could be confusing because this endpoint must be implemented on the business API consumer side. This notice should be explicitly mentioned in all CAMARA API documentation featuring notifications.
 
 Only Operation POST is provided for event notification and the expected response code is `204`. 
-The URL for this `POST` operation must be specified in the swagger as `{$request.body#/sink/notificationUrl}`. 
+The URL for this `POST` operation must be specified in the API specification as `{$request.body#/sink}`. 
 The event notification is represented in the JavaScript Object Notation (JSON) Data Interchange Format ([RFC8259](https://datatracker.ietf.org/doc/html/rfc8259)). Such [CloudEvents representation](https://github.com/cloudevents/spec/blob/main/cloudevents/formats/json-format.md) must use the media type `application/cloudevents+json`.
 
 For consistency across CAMARA APIs, the uniform CloudEvents model must be used with following rules:
