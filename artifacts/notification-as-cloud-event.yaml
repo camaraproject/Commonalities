@@ -99,8 +99,6 @@ paths:
           $ref: "#/components/responses/Generic403"
         410:
           $ref: "#/components/responses/Generic410"
-        415:
-          $ref: "#/components/responses/Generic415"
         429:
           $ref: "#/components/responses/Generic429"
         500:
@@ -112,7 +110,7 @@ components:
     notificationsBearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
+      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
   schemas:
     ErrorInfo:
       type: object
@@ -256,19 +254,6 @@ components:
             status: 410
             code: GONE
             message: "Access to the target resource is no longer available."
-    Generic415:
-      description: Unsupported Media Type
-      headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 415
-            code: UNSUPPORTED_MEDIA_TYPE
-            message: "The specified media type is not supported"
     Generic429:
       description: Too Many Requests
       headers:
