@@ -1436,7 +1436,7 @@ The Following table provides `/subscriptions` attributes
 | attribute name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  | -----  | 
 | subscriptionMaxEvents | integer | Identifies the maximum number of event reports to be generated (>=1) - Once this number is reached, the subscription ends. Up to API project decision to keep it. | optional |
-| subscriptionDetail | object | Object defined for each event subscription depending on the event. This is in this object that for example the device identifier will be provided (see example below).  | mandatory |
+| subscriptionDetail | object | Object defined for each event subscription depending on the event. This is in this object that for example the device identifier will be provided (see example below). | mandatory |
 | subscriptionExpireTime | string (date-time) | The subscription expiration time (in date-time format) requested by the API consumer. Up to API project decision to keep it. | optional |
 | initialEvent | boolean | Set to true by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request. Example: Consumer request Roaming event. If consumer sets initialEvent to true and device is in roaming situation, an event is triggered. Up to API project decision to keep it. | optional |
 
