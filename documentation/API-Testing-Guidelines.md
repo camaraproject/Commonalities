@@ -23,7 +23,7 @@ This document captures guidelines for the API testing in CAMARA project. These g
 
 ## Test plan coverage <a name="coverage"></a>
 
-Based on the decision taken in the Release Management and Commonalities working groups, and as documented in [API-Readiness-Checklist](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-Readiness-Checklist.md), at least one Gherkin feature file will be added to the main subproject repo and this will fulfill the minimum criteria of readiness with respect to API test cases and documentation:
+Based on the decision taken in the [Release Management](https://github.com/camaraproject/ReleaseManagement) and Commonalities working groups, and as documented in [API Release Process](https://wiki.camaraproject.org/display/CAM/API+Release+Process)](https://wiki.camaraproject.org/display/CAM/API+Release+Process#APIReleaseProcess-APIreadinesschecklist), at least one Gherkin feature file will be added to the main subproject repo and this will fulfill the minimum criteria of readiness with respect to API test cases and documentation:
 
 * Release candidates must have at least a basic API test plan, covering sunny day scenarios. Scenarios are expected to validate that the implemented interface is compliant with the specification, in terms of syntax and support for the mandatory aspects. 
 * Any public release must include a full test plan, covering both sunny and rainy day scenarios, to be considered stable. This may include unusual or not explicitly specified error scenarios, semantic validations and corner cases.
