@@ -1427,7 +1427,7 @@ The Following table provides `/subscriptions` attributes
 | credentialtype | string | Type of the credential - MUST be set to `ACCESSTOKEN` for now | mandatory |
 | accessToken | string | Access Token granting access to the POST operation to create notification | mandatory |
 | accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory |
-| accessTokenType | string | Type of access token - MUST be set to `Bearer` for now | mandatory |
+| accessTokenType | string | Type of access token - MUST be set to `bearer` for now | mandatory |
 
 
 `config` attributes table:
