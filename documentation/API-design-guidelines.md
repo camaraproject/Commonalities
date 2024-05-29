@@ -1364,7 +1364,7 @@ If credentials are required:
     "credentialType": "ACCESSTOKEN",
     "accessToken" : "eyJ2ZXIiOiIxLjAiLCJ0eXAiOiJKV1QiL..",
     "accessTokenExpireUtc" : "2024-12-06T14:37:56.147Z",
-    "accessTokenType" : "Bearer"
+    "accessTokenType" : "bearer"
     }
 }
 ```
