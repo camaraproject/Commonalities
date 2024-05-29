@@ -1414,7 +1414,7 @@ The Following table provides `/subscriptions` attributes
 | types | string | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required by API project to provide an enum for this attribute. `type` must follow the format: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter `v` and the major version like  ``org.camaraproject.device-roaming-subscriptions.v1.roaming-status`` - Note: An array of types could be passed **but as of now only one value MUST passed**. Use of multiple value will be open later at API level.| mandatory |
 | config | object | Implementation-specific configuration parameters needed by the subscription manager for acquiring events. In CAMARA we have predefined attributes like ``subscriptionExpireTime``, ``subscriptionMaxEvents`` or ``initialEvent``. See detail below. | mandatory |
 | id | string | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server | mandatory in server response |
-| startsAt | string - date-time| Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints | optional |
+| startsAt | string - date-time | Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints | optional |
 | expiresAt | string - date-time | Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided (optionally) by API server. | optional |
 | status | string | Current status of the subscription - Management of Subscription state engine is not mandatory for now. Note: not all statuses may be considered to be implemented. See below status table. | optional |
 
@@ -1426,7 +1426,7 @@ The Following table provides `/subscriptions` attributes
 | ----- |	-----  |	 -----  | -----  | 
 | credentialtype | string | Type of the credential - MUST be set to `ACCESSTOKEN` for now | mandatory |
 | accessToken | string | Access Token granting access to the POST operation to create notification | mandatory |
-| accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory |
+| accessTokenExpireUtc | string - date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory |
 | accessTokenType | string | Type of access token - MUST be set to `bearer` for now | mandatory |
 
 
@@ -1437,7 +1437,7 @@ The Following table provides `/subscriptions` attributes
 | ----- |	-----  |	 -----  | -----  | 
 | subscriptionMaxEvents | integer | Identifies the maximum number of event reports to be generated (>=1) - Once this number is reached, the subscription ends. Up to API project decision to keep it. | optional |
 | subscriptionDetail | object | Object defined for each event subscription depending on the event. This is in this object that for example the device identifier will be provided (see example below). | mandatory |
-| subscriptionExpireTime | string (date-time) | The subscription expiration time (in date-time format) requested by the API consumer. Up to API project decision to keep it. | optional |
+| subscriptionExpireTime | string - date-time | The subscription expiration time (in date-time format) requested by the API consumer. Up to API project decision to keep it. | optional |
 | initialEvent | boolean | Set to true by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request. Example: Consumer request Roaming event. If consumer sets initialEvent to true and device is in roaming situation, an event is triggered. Up to API project decision to keep it. | optional |
 
 
