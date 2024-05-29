@@ -883,7 +883,7 @@ The following points can serve as a checklist to design the security mechanism o
 1. **Simple Management**. 
    Securing only the APIs that need to be secure. Any time the more complex solution is made "unnecessarily", it is also likely to leave a hole. 
 2. **HTTPs must be always used**. 
-   By always using SSL, authentication credentials can be simplified to a randomly generated access token. The token is delivered in the username field of HTTP Basic Auth. It is relatively easy to use, and you get a lot of security features for free.
+   TLS ensures the confidentiality of the transported data and that the servers's hostname matches the server's SSL certificate.
    - If HTTP 2 is used, to improve performance, you can even send multiple requests over a single connection, this way you will avoid the complete overhead of TCP and SSL on subsequent requests.
 
 3. **Using hash password**. 
