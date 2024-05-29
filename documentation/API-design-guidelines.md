@@ -1415,7 +1415,7 @@ The Following table provides `/subscriptions` attributes
 | config | object | Implementation-specific configuration parameters needed by the subscription manager for acquiring events. In CAMARA we have predefined attributes like ``subscriptionExpireTime``, ``subscriptionMaxEvents`` or ``initialEvent``. See detail below. | mandatory |
 | id | string | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server | mandatory in server response |
 | startsAt | string - date-time| Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints | optional |
-| expiresAt | string - date-time| Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided (optionally) by API server.  | optional |
+| expiresAt | string - date-time | Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided (optionally) by API server. | optional |
 | status | string | Current status of the subscription - Management of Subscription state engine is not mandatory for now. Note: not all statuses may be considered to be implemented. See below status table. | optional |
 
 
