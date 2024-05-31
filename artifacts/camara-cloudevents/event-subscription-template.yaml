@@ -241,6 +241,10 @@ components:
     openId:
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
+    notificationsBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
   parameters:
     SubscriptionId:
       name: subscriptionId
@@ -512,7 +516,7 @@ components:
               - `ACTIVATION_REQUESTED`: Subscription creation (POST) is triggered but subscription creation process is not finished yet.
               - `ACTIVE`: Subscription creation process is completed. Subscription is fully operative.
               - `DEACTIVE`: Subscription is temporarily inactive, but its workflow logic is not deleted.
-              - `EXPIRED`: Subscription is ended (no longer active). This status applies when subscription is ended due to `SUBSCRIPTION_EXPIRED` event.
+              - `EXPIRED`: Subscription is ended (no longer active). This status applies when subscription is ended due to `SUBSCRIPTION_EXPIRED` or `ACCESS_TOKEN_EXPIRED` event.
               - `DELETED`: Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its metainformation is kept).
           enum:
             - ACTIVATION_REQUESTED
@@ -636,10 +640,12 @@ components:
         - NETWORK_TERMINATED - API server stopped sending notification
         - SUBSCRIPTION_EXPIRED - Subscription expire time (optionally set by the requester) has been reached
         - MAX_EVENTS_REACHED - Maximum number of events (optionally set by the requester) has been reached
+        - ACCESS_TOKEN_EXPIRED - Access Token sinkCredential (optionally set by the requester) expiration time has been reached
       enum:
         - MAX_EVENTS_REACHED
         - NETWORK_TERMINATED
         - SUBSCRIPTION_EXPIRED
+        - ACCESS_TOKEN_EXPIRED
 
     HTTPSubscriptionRequest:
       allOf:
