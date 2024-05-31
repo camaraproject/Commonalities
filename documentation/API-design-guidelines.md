@@ -1442,7 +1442,7 @@ Managing subscription is a draft feature and it is not mandatory for now. An API
 | ACTIVATION_REQUESTED | Subscription creation (POST) is triggered but subscription creation process is not finished yet. |
 | ACTIVE | Subscription creation process is completed. Subscription is fully operative. |
 | DEACTIVE | Subscription is temporarily inactive, but its workflow logic is not deleted. DEACTIVE could be used when an user initially provided consent for the event monitor and then later denied this consent. For now we did not provide capability to reactive subscription. |
-| EXPIRED | Subscription is ended (no longer active). This status applies when subscription is ended due to max event reached or expire time reached. |
+| EXPIRED | Subscription is ended (no longer active). This status applies when subscription is ended due to max event reached, expire time reached or access token indicated for notification securization (i.e. sinkCredential) expiration time reached. |
 | DELETED | Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its metainformation is kept). |
 
 
