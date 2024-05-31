@@ -54,7 +54,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
-        - [Instance-based (implicit) subscription examples](#instance-based-implicit-subscription-examples)
+        - [Instance-based (implicit) subscription example](#instance-based-implicit-subscription-example)
       - [Resource-based (explicit) subscription](#resource-based-explicit-subscription)
         - [Error definition for resource-based (explicit) subscription](#error-definition-for-resource-based-explicit-subscription)
         - [Termination for resource-based (explicit) subscription](#termination-for-resource-based-explicit-subscription)
@@ -1343,18 +1343,9 @@ Several types of `sinkCredential` could be available in future but for now only 
 | accessTokenType | string | Type of access token - MUST be set to `Bearer` for now | mandatory |
 
 
-##### Instance-based (implicit) subscription examples
+##### Instance-based (implicit) subscription example
 
-If credentials are not required:
-
-```json
-{
- /* Resource instance representation */
-  "sink": "https://callback..."
-}
-```
-
-If credentials are required:
+Illustration with bearer access token
 
 ```json
 {
@@ -1404,13 +1395,13 @@ Notes:
 Note on the operation path:
 The recommended pattern is to use `/subscriptions` path for the subscription operation. But API design team, for specific case, has the option to append `/subscriptions` path with a prefix (e.g. `/roaming/subscriptions` and `/connectivity/subscriptions`). The rationale for using this alternate pattern should be explicitly provided (e.g. the notification source for each of the supported events may be completely different, in which case separating the implementations is beneficial). 
 
-The Following table provides `/subscriptions` attributes
+The following table provides `/subscriptions` attributes
 
 | name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  |  -----  | 
 | protocol | string | Identifier of a delivery protocol. **Only** `HTTP` **is allowed for now**.| Mandatory |
 | sink | string | https callback address where the notification must be POST-ed | mandatory |
-| sinkCredential | object | Sink credential provides authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. | optional |
+| sinkCredential | object | Sink credential provides authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. It is RECOMMENDED for subscription consumer to provide credentiel to protect notification enpoint.| optional |
 | types | string | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required by API project to provide an enum for this attribute. `type` must follow the format: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter `v` and the major version like  ``org.camaraproject.device-roaming-subscriptions.v1.roaming-status`` - Note: An array of types could be passed **but as of now only one value MUST passed**. Use of multiple value will be open later at API level.| mandatory |
 | config | object | Implementation-specific configuration parameters needed by the subscription manager for acquiring events. In CAMARA we have predefined attributes like ``subscriptionExpireTime``, ``subscriptionMaxEvents`` or ``initialEvent``. See detail below. | mandatory |
 | id | string | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server | mandatory in server response |
@@ -1429,6 +1420,7 @@ The Following table provides `/subscriptions` attributes
 | accessTokenExpireUtc | string - date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory |
 | accessTokenType | string | Type of access token - MUST be set to `bearer` for now | mandatory |
 
+Note about expired accessToken: when a notification is sent to the sink endpoint with sinkCredential it could occur a response back from the listener with an error about expired token. In this case the subscription will shift to EXPIRED status. (as we do not have as of now capability to allow consumer to modify `subscription`). Remark: This action will trigger a subscription-ends event with terminationReason set to "ACCESS_TOKEN_EXPIRED" (probably this notification will also get the EXPIRED status answer). 
 
 `config` attributes table:
 
@@ -1493,6 +1485,7 @@ Request:
 ```bash
 curl -X 'POST' \
   'http://localhost:9091/device-roaming-subscriptions/v1/subscriptions' \
+  -H 'Authorization: Bearer c8974e592c2fa383d4a3960714' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d
@@ -1630,7 +1623,7 @@ curl -X 'POST' \
  ```json 
 {
   "id": 123654,
-"source": "https://notificationSendServer12.supertelco.com",
+  "source": "https://notificationSendServer12.supertelco.com",
   "type": "org.camaraproject.device-roaming-subscriptions.v1.roaming-status",
   "specversion": "1.0",
   "datacontenttype": "application/json",
