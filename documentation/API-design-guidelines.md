@@ -1329,7 +1329,7 @@ If this capability is present in CAMARA API, following attributes **must** be us
 | attribute name | type | attribute description | cardinality |
 | ----- |	-----  |	 -----  | -----  | 
 | sink | string | https callback address where the notification must be POST-ed | mandatory |
-| sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic | optional |
+| sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. It is RECOMMENDED for subscription consumer to provide credential to protect notification enpoint. | optional |
 
 Several types of `sinkCredential` could be available in future but for now only access token credential are managed.
 
