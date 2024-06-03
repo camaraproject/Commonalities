@@ -1371,7 +1371,7 @@ Note: It is perfectly valid for a CAMARA API to have several event types managed
 
 In order to ease developer adoption, the pattern for Resource-based event subscription should be consistent for all API providing this feature.
 
-CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in [Commonalities/artifact](https://github.com/camaraproject/Commonalities/tree/main/artifacts) directory (event-subscription-template.yaml).
+CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in [Commonalities/artifacts/camara-cloudevents](https://github.com/camaraproject/Commonalities/tree/main/artifacts/https://github.com/camaraproject/Commonalities/tree/main/artifacts/camara-cloudevents) directory (event-subscription-template.yaml).
 
 To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
