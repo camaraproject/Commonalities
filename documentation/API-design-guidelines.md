@@ -671,37 +671,37 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 <font size="3"><span style="color: blue"> Syntax Exceptions </span></font>
 
-| **Error status** | **Error code** | **Description/Message** | **scope/applicability** |
+| **Error status** | **Error code** | **Message** | **scope/description** |
 | :--------------: | :------------: | ----------------------- | ----------------------- |
 | 400 | `INVALID_ARGUMENT` | Client specified an invalid argument, request body or query param. | Generic Syntax Exception |
-| 400 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_DESCRIPTION}}` | Specific Syntax Exception regarding a field that is relevant in the context of the API (e.g. format of an amount) |
+| 400 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Specific Syntax Exception regarding a field that is relevant in the context of the API (e.g. format of an amount) |
 | 400 | `OUT_OF_RANGE` | Client specified an invalid range. | Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested |
 | 403 | `PERMISSION_DENIED` | Client does not have sufficient permissions to perform this action. | OAuth2 token access does not have the required scope or when the user fails operational security |
 | 403 | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token. | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token |
-| 409 | `ABORTED` | Concurrency conflict. | Concurreny of processes of the same nature scope |
+| 409 | `ABORTED` | Concurrency conflict. | Concurreny of processes of the same nature/scope |
 | 409 | `ALREADY_EXISTS` | The resource that a client tried to create already exists. | Trying to create an existing resource |
 | 409 | `CONFLICT` | A specified resource duplicate entry found. | Duplication of an existing resource |
-| 409 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_DESCRIPTION}}` | Specific conflict situation that is relevant in the context of the API |
+| 409 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Specific conflict situation that is relevant in the context of the API |
 
 <font size="3"><span style="color: blue"> Service Exceptions </span></font>
 
-| **Error status** | **Error code** | **Description/Message** | **scope/applicability** |
+| **Error status** | **Error code** | **Message** | **scope/description** |
 | :--------------: | :------------: | ----------------------- | ----------------------- |
 | 401 | `UNAUTHENTICATED` | Request not authenticated due to missing, invalid, or expired credentials. | Request cannot be authenticated |
 | 401 | `AUTHENTICATION_REQUIRED` | New authentication is required. | New authentication is needed, authentication is no longer valid |
-| 403 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_DESCRIPTION}}` | Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API (e.g QoD session cannot be created for a set of users) |
+| 403 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API (e.g QoD session cannot be created for a set of users) |
 | 404 | `NOT_FOUND` | The specified resource is not found. | Resource is not found |
 | 404 | `DEVICE_NOT_FOUND` | Device identifier not found. | Device identifier not found |
-| 404 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_DESCRIPTION}}` | Specific situation to highlight the resource/concept not found (e.g. use in device) |
+| 404 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Specific situation to highlight the resource/concept not found (e.g. use in device) |
 | 422 | `DEVICE_IDENTIFIERS_MISMATCH` | Provided device identifiers are not consistent. | Inconsistency between device identifiers not pointing to the same device |
 | 422 | `DEVICE_NOT_APPLICABLE` | The service is not available for the provided device. | Service is not available for the provided device |
-| 422 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_DESCRIPTION}}` | Any semantic condition associated to business logic, specifically related to a field or data structure |
+| 422 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Any semantic condition associated to business logic, specifically related to a field or data structure |
 | 429 | `QUOTA_EXCEEDED` | Either out of resource quota or reaching rate limiting. | Request is rejected due to exceeding a business quota limit |
 | 429 | `TOO_MANY_REQUESTS` | Either out of resource quota or reaching rate limiting. | API Server request limit is overpassed |
 
 <font size="3"><span style="color: blue"> Server Exceptions </span></font>
 
-| **Error status** | **Error code** | **Description/Message** | **scope/applicability** |
+| **Error status** | **Error code** | **Message** | **scope/description** |
 | :--------------: | :------------: | ----------------------- | ----------------------- |
 | 405 | `METHOD_NOT_ALLOWED` | The requested method is not allowed/supported on the target resource. | Invalid HTTP verb used with a given endpoint |
 | 406 | `NOT_ACCEPTABLE` | The server cannot produce a response matching the content requested by the client through `Accept-*` headers. | API Server does not accept the media type (`Accept-*` header) indicated by API client |
