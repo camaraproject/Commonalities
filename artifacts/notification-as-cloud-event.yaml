@@ -74,7 +74,7 @@ paths:
         URL, i.e.: notifications won't be sent to /event-notification/vX/your_webhook_notification_url.
       operationId: sendEvent
       parameters:
-        - $ref: "#/components/parameters/X-Correlator"
+        - $ref: "#/components/parameters/x-correlator"
       requestBody:
         required: true
         content:
@@ -90,7 +90,7 @@ paths:
           description: No Content
           headers:
             X-Correlator:
-              $ref: "#/components/headers/X-Correlator"
+              $ref: "#/components/headers/x-correlator"
         400:
           $ref: "#/components/responses/Generic400"
         401:
@@ -99,8 +99,6 @@ paths:
           $ref: "#/components/responses/Generic403"
         410:
           $ref: "#/components/responses/Generic410"
-        415:
-          $ref: "#/components/responses/Generic415"
         429:
           $ref: "#/components/responses/Generic429"
         500:
@@ -112,7 +110,7 @@ components:
     notificationsBearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
+      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
   schemas:
     ErrorInfo:
       type: object
@@ -191,13 +189,13 @@ components:
         time:
           $ref: "#/components/schemas/DateTime"
   headers:
-    X-Correlator:
+    x-correlator:
       description: Correlation id for the different services
       schema:
         type: string
   parameters:
-    X-Correlator:
-      name: X-Correlator
+    x-correlator:
+      name: x-correlator
       in: header
       description: Correlation id for the different services
       schema:
@@ -207,8 +205,8 @@ components:
     Generic400:
       description: Problem with the client request
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -220,8 +218,8 @@ components:
     Generic401:
       description: Authentication problem with the client request
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -233,8 +231,8 @@ components:
     Generic403:
       description: Client does not have sufficient permission
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -246,44 +244,34 @@ components:
     Generic410:
       description: Gone
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
+            status: 410
             code: GONE
             message: "Access to the target resource is no longer available."
-    Generic415:
-      description: Unsupported Media Type
-      headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          example:
-            code: UNSUPPORTED_MEDIA_TYPE
-            message: "The specified media type is not supported"
     Generic429:
       description: Too Many Requests
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
+            status: 429
             code: TOO_MANY_REQUESTS
             message: "Endpoint does not support as many requests per time slot"
     Generic500:
       description: Server error
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -295,8 +283,8 @@ components:
     Generic503:
       description: Service unavailable. Typically the server is down.
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
