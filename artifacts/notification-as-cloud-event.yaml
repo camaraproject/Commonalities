@@ -89,7 +89,7 @@ paths:
         204:
           description: No Content
           headers:
-            X-Correlator:
+            x-correlator:
               $ref: "#/components/headers/x-correlator"
         400:
           $ref: "#/components/responses/Generic400"
