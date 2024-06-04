@@ -2,9 +2,47 @@
 
 ## Table of Contents
 
+- [v0.4.0-alpha.1](#v040-alpha1)
 - [v0.3.0](#v030)
 - [v0.2.0](#v020)
 - [v0.1.0 - Initial version](#v010---initial-version)
+
+# v0.4.0-alpha.1
+
+## Please note:
+This is **ALPHA** version for Commonalities release 0.4.0
+
+
+### Added
+* Usage and style of operation tags in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/152
+* x-correlator support in notifications in API Design Guidelines by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/170
+* Create subscription-notification-template.yaml by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/189
+* 
+
+### Changed
+* API Design Guidelines updated with subscriptionMaxEvents by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/131
+* 'specversion' in CloudEvents as enum by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/187
+* 'datacontenttype' in CloudEvents as enum by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/193
+* API Design Guidelines updated on Explicit Subscriptions by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/177
+* API Design Guidelines updated on x-correlator format by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/194
+
+### Fixed
+* API Design Guidelines updated with character set guidance by @trehman-gsma in https://github.com/camaraproject/Commonalities/pull/143
+* Mandated '+' in all phoneNumber formats by @fernandopradocabrillo in https://github.com/camaraproject/Commonalities/pull/148
+* Linting rules problem with Traffic Influence API #161 by @VijayKesharwani in https://github.com/camaraproject/Commonalities/pull/169
+* CAMARA_common.yaml - bugs and typos fix by @fernandopradocabrillo in https://github.com/camaraproject/Commonalities/pull/174
+* API Design Guidelines updated on HTTPs usage by @AxelNennker in https://github.com/camaraproject/Commonalities/pull/205
+
+
+### Removed
+* Removed UUID pattern for x-correlator by @jlurien in https://github.com/camaraproject/Commonalities/pull/168
+
+
+
+* x-correlator_guideline_format_convention by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/194
+
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/v0.3.0...v0.4.0-alpha.1
 
 # v0.3.0
 
