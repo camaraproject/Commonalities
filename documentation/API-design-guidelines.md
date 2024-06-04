@@ -1492,7 +1492,6 @@ curl -X 'POST' \
   -H 'Authorization: Bearer c8974e592c2fa383d4a3960714' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
-  -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbG...."
   -d
  ```
  ```json 
