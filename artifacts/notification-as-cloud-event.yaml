@@ -74,7 +74,7 @@ paths:
         URL, i.e.: notifications won't be sent to /event-notification/vX/your_webhook_notification_url.
       operationId: sendEvent
       parameters:
-        - $ref: "#/components/parameters/X-Correlator"
+        - $ref: "#/components/parameters/x-correlator"
       requestBody:
         required: true
         content:
@@ -86,30 +86,11 @@ paths:
                 $ref: '#/components/examples/QOS_STATUS_CHANGED_EXAMPLE'
 
       responses:
-        201:
-          description: Created
-          headers:
-            X-Correlator:
-              $ref: "#/components/headers/X-Correlator"
-        202:
-          description: Accepted
-          headers:
-            X-Correlator:
-              $ref: "#/components/headers/X-Correlator"
         204:
           description: No Content
           headers:
             X-Correlator:
-              $ref: "#/components/headers/X-Correlator"
-        200:
-          description: Ok
-          headers:
-            X-Correlator:
-              $ref: "#/components/headers/X-Correlator"
-          content:
-            application/json:
-              schema:
-                type: object
+              $ref: "#/components/headers/x-correlator"
         400:
           $ref: "#/components/responses/Generic400"
         401:
@@ -118,8 +99,6 @@ paths:
           $ref: "#/components/responses/Generic403"
         410:
           $ref: "#/components/responses/Generic410"
-        415:
-          $ref: "#/components/responses/Generic415"
         429:
           $ref: "#/components/responses/Generic429"
         500:
@@ -131,7 +110,7 @@ components:
     notificationsBearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
+      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
   schemas:
     ErrorInfo:
       type: object
@@ -202,19 +181,21 @@ components:
         datacontenttype:
           type: string
           description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
+          enum:
+            - application/json
         data:
           type: object
           description: Event details payload described in each CAMARA API and referenced by its type
         time:
           $ref: "#/components/schemas/DateTime"
   headers:
-    X-Correlator:
+    x-correlator:
       description: Correlation id for the different services
       schema:
         type: string
   parameters:
-    X-Correlator:
-      name: X-Correlator
+    x-correlator:
+      name: x-correlator
       in: header
       description: Correlation id for the different services
       schema:
@@ -224,8 +205,8 @@ components:
     Generic400:
       description: Problem with the client request
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -237,8 +218,8 @@ components:
     Generic401:
       description: Authentication problem with the client request
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -250,8 +231,8 @@ components:
     Generic403:
       description: Client does not have sufficient permission
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -263,44 +244,34 @@ components:
     Generic410:
       description: Gone
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
+            status: 410
             code: GONE
             message: "Access to the target resource is no longer available."
-    Generic415:
-      description: Unsupported Media Type
-      headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          example:
-            code: UNSUPPORTED_MEDIA_TYPE
-            message: "The specified media type is not supported"
     Generic429:
       description: Too Many Requests
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
+            status: 429
             code: TOO_MANY_REQUESTS
             message: "Endpoint does not support as many requests per time slot"
     Generic500:
       description: Server error
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -312,8 +283,8 @@ components:
     Generic503:
       description: Service unavailable. Typically the server is down.
       headers:
-        X-Correlator:
-          $ref: "#/components/headers/X-Correlator"
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -335,4 +306,3 @@ components:
           sessionId: "6e8bc430-9c3a-11d9-9669-0800200c9a66"
           qosStatus: UNAVAILABLE
           statusInfo: DURATION_EXPIRED
-

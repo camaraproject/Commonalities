@@ -848,11 +848,15 @@ With the aim of standardizing the request observability and traceability process
 
 | Name | Description |  Type | Location | Required by API Consumer | Required in OAS Definition |	Example | 
 |---|---|---|---|---|---|---|
-| `X-Correlator`|	Service correlator to make E2E observability |		String | Request/Response | No | Yes |	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
+| `x-correlator`|	Service correlator to make E2E observability |		String | Request/Response | No | Yes |	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
 
-When the API Consumer includes the "X-Correlator" header in the request, the API provider must include it in the response with the same value that was used in the request. Otherwise, it is optional to include the "X-Correlator" header in the response with any valid value. Recommendation is to use UUID for values.
+When the API Consumer includes the "x-correlator" header in the request, the API provider must include it in the response with the same value that was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value. Recommendation is to use UUID for values.
 
-In notification scenarios (i.e. POST request sent towards the listener to the `sink` indicated), the use of the "x-correlator" is supported for the same aim as well. When the API request includes the "x-correlator" header, it is recommended for the listener to include it in the response with the same value as was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value.
+
+In notification scenarios (i.e. POST request sent towards the listener to the `webhook.notificationUrl` indicated), the use of the "x-correlator" is supported for the same aim as well. When the API request includes the "x-correlator" header, it is recommended for the listener to include it in the response with the same value as was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value.
+
+NOTE: HTTP headers are case insensitive. The use of the naming `x-correlator` is a guideline to align the format across CAMARA APIs. 
+
 
 ## 10. Security
 
@@ -883,7 +887,7 @@ The following points can serve as a checklist to design the security mechanism o
 1. **Simple Management**. 
    Securing only the APIs that need to be secure. Any time the more complex solution is made "unnecessarily", it is also likely to leave a hole. 
 2. **HTTPs must be always used**. 
-   By always using SSL, authentication credentials can be simplified to a randomly generated access token. The token is delivered in the username field of HTTP Basic Auth. It is relatively easy to use, and you get a lot of security features for free.
+   TLS ensures the confidentiality of the transported data and that the servers's hostname matches the server's SSL certificate.
    - If HTTP 2 is used, to improve performance, you can even send multiple requests over a single connection, this way you will avoid the complete overhead of TCP and SSL on subsequent requests.
 
 3. **Using hash password**. 
@@ -1578,7 +1582,7 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 | ... | ... | Specific attribute(s) related to the notification event | ... |
 
 
-Note: For operational and troubleshooting purposes it is relevant to accommodate use of `X-Correlator` header attribute. API listener implementations have to be ready to support and receive this data.
+Note: For operational and troubleshooting purposes it is relevant to accommodate use of `x-correlator` header attribute. API listener implementations have to be ready to support and receive this data.
 
 Specific event notification type "subscription-ends" is defined to inform listener about subscription termination. It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notification prematurely. For this specific event, the `data` must feature `terminationReason` attribute.
 Note: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example if a client request a `subscriptionMaxEvents` to 2, later, received 2 notification, then a third notification will be send for "subscription-ends")
