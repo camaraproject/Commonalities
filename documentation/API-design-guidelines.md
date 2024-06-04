@@ -853,7 +853,7 @@ With the aim of standardizing the request observability and traceability process
 When the API Consumer includes the "x-correlator" header in the request, the API provider must include it in the response with the same value that was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value. Recommendation is to use UUID for values.
 
 
-In notification scenarios (i.e. POST request sent towards the listener to the `webhook.notificationUrl` indicated), the use of the "x-correlator" is supported for the same aim as well. When the API request includes the "x-correlator" header, it is recommended for the listener to include it in the response with the same value as was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value.
+In notification scenarios (i.e. POST request sent towards the listener indicated by `sink` address), the use of the "x-correlator" is supported for the same aim as well. When the API request includes the "x-correlator" header, it is recommended for the listener to include it in the response with the same value as was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value.
 
 NOTE: HTTP headers are case insensitive. The use of the naming `x-correlator` is a guideline to align the format across CAMARA APIs. 
 
