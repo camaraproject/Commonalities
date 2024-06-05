@@ -1257,7 +1257,6 @@ paths:
       security:
         - openId:
             - {scope}
-```
 
 The name `openId` must be same as defined in the components.securitySchemes section.
 
