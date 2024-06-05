@@ -759,7 +759,7 @@ content:
         $ref: ""#/components/examples/{{case_2}}"      
 ```
 
-##### example template
+##### Examples template
 
 One case will be needed per row in the table above, following this template:
 
