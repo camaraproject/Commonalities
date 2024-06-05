@@ -1231,7 +1231,7 @@ The [Camara Security and Interoperability Profile](https://github.com/camaraproj
 
 Security in OpenAPI is expressed by [security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object). Security can be expressed for the API as a whole or for each endpoint.
 
-All Camara OpenAPI files must include the following security scheme definition, with an adapted `openIdConnectUrl` in its components section:
+As specified in https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes, all Camara OpenAPI files must include the following a scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
 
 ```yaml
 components:
