@@ -522,7 +522,7 @@ components:
             - ACTIVATION_REQUESTED
             - ACTIVE
             - EXPIRED
-            - DEACTIVATE
+            - DEACTIVE
             - DELETED
       discriminator:
         propertyName: protocol
