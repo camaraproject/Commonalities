@@ -1262,8 +1262,7 @@ The name `openId` must be same as defined in the components.securitySchemes sect
 
 #### Mandatory template for `info.description` in CAMARA API specs
 
-The documentation template available in https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs must be used as part of the API documentation in  `info.description` property in the CAMARA API specs:
-```
+The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) must be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specs.
 
 #### 11.6.1 Scope naming
 
