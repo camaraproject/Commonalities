@@ -685,7 +685,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 <font size="3"><span style="color: blue"> Service Exceptions </span></font>
 
-| **Error status** | **Error code** | **Message** | **scope/description** |
+| **Error status** | **Error code** | **Message example** | **Scope/description** |
 | :--------------: | :------------: | ----------------------- | ----------------------- |
 | 401 | `UNAUTHENTICATED` | Request not authenticated due to missing, invalid, or expired credentials. | Request cannot be authenticated |
 | 401 | `AUTHENTICATION_REQUIRED` | New authentication is required. | New authentication is needed, authentication is no longer valid |
