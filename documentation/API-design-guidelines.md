@@ -763,7 +763,7 @@ content:
 
 One case will be needed per row in the table above, following this template:
 
-```
+```yaml
 components:
   examples:
     {{case_N}}:
