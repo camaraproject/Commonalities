@@ -701,7 +701,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 <font size="3"><span style="color: blue"> Server Exceptions </span></font>
 
-| **Error status** | **Error code** | **Message** | **scope/description** |
+| **Error status** | **Error code** | **Message example** | **Scope/description** |
 | :--------------: | :------------: | ----------------------- | ----------------------- |
 | 405 | `METHOD_NOT_ALLOWED` | The requested method is not allowed/supported on the target resource. | Invalid HTTP verb used with a given endpoint |
 | 406 | `NOT_ACCEPTABLE` | The server cannot produce a response matching the content requested by the client through `Accept-*` headers. | API Server does not accept the media type (`Accept-*` header) indicated by API client |
