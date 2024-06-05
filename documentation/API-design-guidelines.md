@@ -671,7 +671,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 <font size="3"><span style="color: blue"> Syntax Exceptions </span></font>
 
-| **Error status** | **Error code** | **Message** | **scope/description** |
+| **Error status** | **Error code** | **Message example** | **Scope/description** |
 | :--------------: | :------------: | ----------------------- | ----------------------- |
 | 400 | `INVALID_ARGUMENT` | Client specified an invalid argument, request body or query param. | Generic Syntax Exception |
 | 400 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Specific Syntax Exception regarding a field that is relevant in the context of the API (e.g. format of an amount) |
