@@ -738,7 +738,7 @@ Following table compiles the guidelines to be adopted:
 
 #### Templates
 
-##### response template
+##### Response template
 
 A response will group all examples for same operation and status code
 Schema is common for all errors
