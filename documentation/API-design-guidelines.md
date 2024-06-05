@@ -767,12 +767,12 @@ One case will be needed per row in the table above, following this template:
 components:
   examples:
     {{case_N}}:
-      summary: {{validation_description}}
+      summary: {{Description}}
       description: {{informative description}}
       value:
-        status: {{status_value}}
-        code: {{code_value}}
-        message: {{message_example}}
+        status: {{Error status}}
+        code: {{Error code}}
+        message: {{Message example}}
 ```
 
 
