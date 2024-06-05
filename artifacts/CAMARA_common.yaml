@@ -15,6 +15,13 @@ components:
    description: Correlation id for the different services
    schema:
     type: string
+ parameters:
+  x-correlator:
+   name: x-correlator
+   in: header
+   description: Correlation id for the different services
+   schema:
+    type: string
  schemas:
   TimePeriod:
    properties:
