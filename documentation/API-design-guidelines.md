@@ -1297,7 +1297,7 @@ where
     - `update`: For operations modifying the resource, typically `PUT` or `PATCH`.
     - `delete`: For operations removing the resource, typically `DELETE`.
     - `write` : For operations creating or modifying the resource, when differentiation between `create` and `update` is not needed.
-    - 
+     
 * Eventually we may need to add an additional level to the scope, such as `api-name:[resource:]action[:detail]`, to deal with cases when only a set of parameters/information has to be allowed to be returned. Guidelines should be enhanced when those cases happen.
 ###### Examples
 
