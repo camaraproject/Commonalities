@@ -634,7 +634,7 @@ In order to guarantee interoperability, one of the most important points is to c
 An error representation must not be different from the representation of any resource. A main error message is defined, with JSON structure with the following fields:
 - A field "`status`", which can be identified in the response as a standard code from a list of Hypertext Transfer Protocol (HTTP) response status codes.
 - A unique error "`code`", which can be identified and traced for more details. It must be human readable; therefore, it must not be a numeric code. In turn, to achieve a better location of the error, you can reference the value or field that is causing it, and include it in the message. 
-- A detailed description of "`message`"
+- A detailed description in "`message`"  - in English language in API specification, it can be changed  to other language in implementation if needed. 
 
 All these aforementioned fields are mandatory in Error Responses.
 `status` and `code` fields have normative nature, so as their use has to be standardized (see [Section 6.1](#61-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
