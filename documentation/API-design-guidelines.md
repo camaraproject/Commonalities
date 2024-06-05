@@ -743,7 +743,7 @@ Following table compiles the guidelines to be adopted:
 A response will group all examples for same operation and status code
 Schema is common for all errors
 
-```
+```yaml
 description: |
   The examples section includes the list of subcases for this status error code to be implemented. In each example `status` and `code` are normative for the specific error case. `message` may be adjusted or localized by the implementation.
 headers: 
