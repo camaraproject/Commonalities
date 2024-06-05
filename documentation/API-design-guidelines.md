@@ -1310,7 +1310,7 @@ where
 <br>
 
 
-##### Regarding scope naming for APIs which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format and this is described below:
+#### Regarding scope naming for APIs which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format and this is described below:
 
 Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete:
 
