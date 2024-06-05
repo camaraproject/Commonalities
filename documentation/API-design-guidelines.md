@@ -727,7 +727,7 @@ This section is focused in the guidelines about error responses around the conce
 
 Following table compiles the guidelines to be adopted:
 
-| Case # | validation_description | status_value | code_value | message_example |
+| **Case #** | **Description** | **Error status** | **Error code**  | **Message example** |
 | :---: | :--- | :---: | :---: | :--- |
 | 0 | The request body does not comply with the schema | 400 | INVALID_ARGUMENT | device does not comply with the schema. |
 | 1 | None of the provided device identifiers is supported by the implementation | 422 | UNSUPPORTED_DEVICE_IDENTIFIERS | phoneNumber is required. |
