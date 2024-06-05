@@ -1325,7 +1325,7 @@ Event-type: org.camaraproject.device-roaming-subscriptions.v0.roaming-on
 Grant-level, action on resource: create
 For e.g. device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create
 
-##### API-level scopes (sometimes referred to as wildcard scopes in Camara)
+##### API-level scopes (sometimes referred to as wildcard scopes in CAMARA)
 The decision on the API-level scopes was made within the ICM working group and is documented in the design guidelines to ensure completeness of this document. The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject. 
 
 
