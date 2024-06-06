@@ -1071,12 +1071,13 @@ This part must include the following information:
 - API title with public name.
 - A brief description of the main functions of the API.
 - API Version in the format defined in [Chapter 5. Versioning](#5-versioning)
-- API Terms of Service.
-- Contact information, with name, email and website of the API Holder.
 - Licence information (name, website…)
 - API server and base URL
 - Global `tags` object if tags are used for API operations
-  
+
+#### Info object
+
+ 
 The `info` object shall have the following content:
 
 ```yaml
@@ -1092,19 +1093,20 @@ info:
     CAMARA guidelines defines a set of authorization flows ...
   # API version - Aligned to SemVer 2.0 according to CAMARA versioning guidelines
   version: 1.0.1
-  # Link to the page that describes the terms of service - to be replaced by the provider's terms
-  termsOfService: http://example.com/terms/
-  # Contact information: name, email, URL
-  contact:
-    name: API Support
-    email: support@example.com
-  # Link to the provider's support page.
-    url: http://www.example.com/support
   # Name of the license and a URL to the license description
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
+  # CAMARA Commonalities version - x.y.z
+  x-camara-commonalities: 0.4.0
 ```
+
+The `termsOfService` and `contact` fields are optional in OpenAPI specification and may be added by API Providers documenting their APIs.
+
+The extension field `x-camara-commonalities` indicates version of CAMARA Commonalities guidelines that given API specification adheres to.
+
+
+#### Servers object
 
 The `servers` object shall have the following content:
 
