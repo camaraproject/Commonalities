@@ -28,12 +28,11 @@ The content of the release includes:
 * Usage and style of operation tags in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/152
 * x-correlator support in notifications in API Design Guidelines by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/170
 * Create subscription-notification-template.yaml by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/189
-
+* Added a different scope naming format for APIs that deal with explicit subscriptions by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/177 
 ### Changed
 * API Design Guidelines updated with subscriptionMaxEvents by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/131
 * 'specversion' in CloudEvents as enum by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/187
 * 'datacontenttype' in CloudEvents as enum by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/193
-* API Design Guidelines updated on Explicit Subscriptions by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/177
 * API Design Guidelines updated on x-correlator format by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/194
 * API Design Guidelines for Notification Subscription by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/198
 * API Design Guidelines updated on scope definition including wildcard scopes by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/221
