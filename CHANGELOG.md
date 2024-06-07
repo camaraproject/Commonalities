@@ -49,7 +49,7 @@ The content of the release includes:
 * Removed UUID pattern for x-correlator by @jlurien in https://github.com/camaraproject/Commonalities/pull/168
 
 
-**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/v0.3.0...v0.4.0-alpha.1
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/v0.3.0...r0.4.0-alpha.1
 
 # v0.3.0
 
