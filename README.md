@@ -39,11 +39,9 @@ A list of some of the frequently accessed documents that are an output of the wo
 | [API-Testing-Guidelines.md](documentation/API-Testing-Guidelines.md)             | Guidelines for the API testing in CAMARA project                                                                                                   |
 
 
-
 ## Status and released versions
 
-
-* Release 0.4.0-alpaha.1 of guidelines and assets for CAMARA APIs is available within the tag [r0.4.0-alpha.1](https://github.com/camaraproject/Commonalities/tree/r0.4.0-alpha.1):
+* Release 0.4.0-alpha.1 of guidelines and assets for CAMARA APIs is available with the [r0.4.0-alpha.1 tag](https://github.com/camaraproject/Commonalities/tree/r0.4.0-alpha.1):
 * Release 0.3.0 of guidelines and assets for CAMARA APIs is available within the [release-0.3.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.3.0):
 * Release 0.2.0 of guidelines and assets for CAMARA APIs is available within the [release-0.2.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.2.0):
 * Release 0.1.0 of guidelines and assets for CAMARA APIs is available within the [release-0.1.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.1.0):
