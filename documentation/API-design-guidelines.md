@@ -1247,7 +1247,7 @@ The key of the security scheme is arbitrary in OAS, but convention in CAMARA is 
 
 Security requirements of an API are expressed in OpenAPI through [Security Requirement Objects](https://spec.openapis.org/oas/v3.0.3#security-requirement-object).
 
-Following is an example on how to use the `openId` security scheme defined above as defined in [Use of security property](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-security-property):
+The following is an example of how to use the `openId` security scheme defined above as described in [Use of security property](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-security-property):
 
 ```yaml
 paths:
@@ -1257,6 +1257,7 @@ paths:
       security:
         - openId:
             - {scope}
+```
 
 The name `openId` must be same as defined in the components.securitySchemes section.
 
