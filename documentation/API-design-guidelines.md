@@ -72,23 +72,23 @@ This document captures guidelines for the API design in CAMARA project. These gu
 
 ## Common Vocabulary and Acronyms
 
-| **Term** | Description |
-| --- | --- | 
-|**API** | Application Programming Interface. It is a rule & specification group (code) that applications follow to communicate between them, used as interface among programs developed with different technologies.|
-|**Body**| HTTP Message body (If exists) is used to carry the entity data associated with the request or response.|
-|**Camel Case**| It is a kind of define the fields’ compound name or phrases without whitespaces among words. It uses a capital letter at the beginning of each word. There are two different uses:<li>Upper Camel Case: When the first letter of each word is capital.</li><li>Lower Camel Case: Same to that Upper one, but with the first word in lowercase.</li>|
-|**Header**| HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by a colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.|
-|**HTTP**| Hypertext Transfer Protocol (HTTP) is a communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.|
-|**JSON**| The JavaScript Object Notation (JSON) Data Interchange Format [RFC8259](https://datatracker.ietf.org/doc/html/rfc8259) |
-|**JWT**| JSON Web Token (JWT) is an open standard based on JSON [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519) |
-|**Kebab-case**| Practice in the words denomination where the hyphen is used to separate words. |
-|**OAuth2**| Open Authorization is an open standard that allows simple Authorization flows to be used in websites or applications. [RFC6749](https://datatracker.ietf.org/doc/html/rfc6749)|
-|**OIDC**| [OpenId Connect](https://openid.net/specs/openid-connect-core-1_0.html) is standard based on OAuth2 that adds authentication and consent to OAuth2.|
-|**CIBA**| [Client-Initiated Backchannel Authentication](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) is a standard based on OIDC that enables API consumers to intiate an authentication.|
-|**REST**| Representational State Transfer.|
-|**TLS**| Transport Layer Security is a cryptographic protocol that provides secured network communications. |
-|**URI**| Uniform Resource Identifier. |
-|**Snake_case**|Practice in the words denomination where the underscore is used to separate words. |
+| **Term**       | Description                                                                                                                                                                                                                                                                                                                                         |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
+| **API**        | Application Programming Interface. It is a rule & specification group (code) that applications follow to communicate between them, used as interface among programs developed with different technologies.                                                                                                                                          |
+| **Body**       | HTTP Message body (If exists) is used to carry the entity data associated with the request or response.                                                                                                                                                                                                                                             |
+| **Camel Case** | It is a kind of define the fields’ compound name or phrases without whitespaces among words. It uses a capital letter at the beginning of each word. There are two different uses:<li>Upper Camel Case: When the first letter of each word is capital.</li><li>Lower Camel Case: Same to that Upper one, but with the first word in lowercase.</li> |
+| **Header**     | HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by a colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.                                                               |
+| **HTTP**       | Hypertext Transfer Protocol (HTTP) is a communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.                                                                                                                                                                                                   |
+| **JSON**       | The JavaScript Object Notation (JSON) Data Interchange Format [RFC8259](https://datatracker.ietf.org/doc/html/rfc8259)                                                                                                                                                                                                                              |
+| **JWT**        | JSON Web Token (JWT) is an open standard based on JSON [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519)                                                                                                                                                                                                                                     |
+| **Kebab-case** | Practice in the words denomination where the hyphen is used to separate words.                                                                                                                                                                                                                                                                      |
+| **OAuth2**     | Open Authorization is an open standard that allows simple Authorization flows to be used in websites or applications. [RFC6749](https://datatracker.ietf.org/doc/html/rfc6749)                                                                                                                                                                      |
+| **OIDC**       | [OpenId Connect](https://openid.net/specs/openid-connect-core-1_0.html) is standard based on OAuth2 that adds authentication and consent to OAuth2.                                                                                                                                                                                                 |
+| **CIBA**       | [Client-Initiated Backchannel Authentication](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) is a standard based on OIDC that enables API consumers to intiate an authentication.                                                                                                                       |
+| **REST**       | Representational State Transfer.                                                                                                                                                                                                                                                                                                                    |
+| **TLS**        | Transport Layer Security is a cryptographic protocol that provides secured network communications.                                                                                                                                                                                                                                                  |
+| **URI**        | Uniform Resource Identifier.                                                                                                                                                                                                                                                                                                                        |
+| **Snake_case** | Practice in the words denomination where the underscore is used to separate words.                                                                                                                                                                                                                                                                  |
 
 
 ## 1. Introduction
@@ -120,7 +120,7 @@ The DDD approach is particularly suitable for complex domains, where a lot of me
 The DDD principles are based on:
 
 - Placing the organization's business models and rules in the core of the application.
-- Obtain a better perspective at the level of collaboration between domain experts and developers, to conceive software with very clear objectives.
+- Get a better perspective at the level of collaboration between domain experts and developers, to conceive software with very clear objectives.
 
 As an initial reference to define the different domains and subdomains, we rely on the TM Forum SID model, illustrated in the figure below.
 
@@ -1050,14 +1050,14 @@ The API must ensure that the information sent is as expected and has not been al
 
 An attacker can collect information from an API by sending malicious data via headers, so the API must verify that:
 
-1.	API must receive supported headers only. 
+1.)	API must receive supported headers only. 
 
 ```
 HEADER.HACK: SELECT* FROM USERS;
 Authorization: Bearer 7894df-ds8f7-sdf84-sdf878u
 ````
 
-2. Supported headers must have values and longitudes agreed.
+2.) Supported headers must have values and longitudes agreed.
 
 ```
 Authorization: INSERT INTO …
@@ -1106,7 +1106,7 @@ Below considerations should be checked when an API is documented:
    -  Request Parameters ([Section 11.3](#113-request-parameters))
    -  Response Structure ([Section 11.4](#114-response-structure))
    -  Data Definitions ([Section 11.5](#115-data-definitions))
-   -  Security Schemes ([Section 11.6](#116-oauth-definition))
+   -  Security Schemes ([Section 11.6](#116-security-definition))
 - To avoid issues with implementation using Open API generators:
   - Reserved words must not be used in the following parts of an API specification:
     - Path and operation names
@@ -1319,14 +1319,16 @@ When IpAddr is used in a payload, the property objectType MUST be present to ind
 
 ### 11.6 Security definition
 
-In general all APIs must be secured to assure who has access to what and for what purpose.
-Camara uses OIDC and CIBA for authentication and consent collection and to determine whether the user has e.g. opted-out of some API access.
+In general, all APIs must be secured to ensure who has access to what and for what purpose.
+Camara uses OIDC and CIBA for authentication and consent collection and to determine whether the user has,
+e.g., opted out of some API access.
 
-The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose is defined by W3C Privacy Vocabulatory in the [purpose section](https://w3c.github.io/dpv/dpv/#vocab-purposes).
+The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose is defined by W3C Privacy Vocabulary in the [purpose section](https://w3c.github.io/dpv/dpv/#vocab-purposes).
 
 #### OpenAPI security schemes definition
 
-Security in OpenAPI is expressed by [security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object). Security can be expressed for the API as a whole or for each endpoint.
+[Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object)express security in OpenAPI. 
+Security can be expressed for the API as a whole or for each endpoint.
 
 As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all Camara OpenAPI files must include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
 
