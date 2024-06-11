@@ -2,13 +2,58 @@
 
 ## Table of Contents
 
+- [v0.4.0-alpha.1](#v040-alpha1)
 - [v0.3.0](#v030)
 - [v0.2.0](#v020)
 - [v0.1.0 - Initial version](#v010---initial-version)
 
+# v0.4.0-alpha.1
+
+**This version introduces Event Subscription model based on [CloudEvents Subscriptions API draft](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) and other changes to documents and artifacts approved since v0.3.0.**
+
+## Please note:
+This is **ALPHA** version for Commonalities release 0.4.0. The following changes are expected to be added in the **Release Candidate**:
+* Error model alignment [PR#213](https://github.com/camaraproject/Commonalities/pull/213)
+* Enhance API-Testing-Guidelines.md [PR#203](https://github.com/camaraproject/Commonalities/pull/203)
+* API Design Guidelines chapter 11: 'info' object, 'servers' object and cleanup  [PR#214](https://github.com/camaraproject/Commonalities/pull/214)
+* Alignment with ICM and Release Management
+
+The content of the release includes:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r0.4.0-alpha.1/documentation)** folder
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r0.4.0-alpha.1/artifacts)** folder
+  - **New:**
+    - [Notification Subscription Template](https://github.com/camaraproject/Commonalities/blob/r0.4.0-alpha.1/artifacts/camara-cloudevents/event-subscription-template.yaml)
+
+### Added
+* Usage and style of operation tags in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/152
+* x-correlator support in notifications in API Design Guidelines by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/170
+* Create subscription-notification-template.yaml by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/189
+* Added a different scope naming format for APIs that deal with explicit subscriptions by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/177 
+### Changed
+* API Design Guidelines updated with subscriptionMaxEvents by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/131
+* 'specversion' in CloudEvents as enum by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/187
+* 'datacontenttype' in CloudEvents as enum by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/193
+* API Design Guidelines updated on x-correlator format by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/194
+* API Design Guidelines for Notification Subscription by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/198
+* API Design Guidelines updated on scope definition including wildcard scopes by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/221
+
+### Fixed
+* API Design Guidelines updated with character set guidance by @trehman-gsma in https://github.com/camaraproject/Commonalities/pull/143
+* Mandated '+' in all phoneNumber formats by @fernandopradocabrillo in https://github.com/camaraproject/Commonalities/pull/148
+* Linting rules problem with Traffic Influence API #161 by @VijayKesharwani in https://github.com/camaraproject/Commonalities/pull/169
+* CAMARA_common.yaml - bugs and typos fix by @fernandopradocabrillo in https://github.com/camaraproject/Commonalities/pull/174
+* API Design Guidelines updated on HTTPs usage by @AxelNennker in https://github.com/camaraproject/Commonalities/pull/205
+* Artifacts aligned with API Design Guidelines for Notification Subscription by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/219
+
+### Removed
+* Removed UUID pattern for x-correlator by @jlurien in https://github.com/camaraproject/Commonalities/pull/168
+
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/v0.3.0...r0.4.0-alpha.1
+
 # v0.3.0
 
-**This version introduces API Testing Guidelines and initial linting ruleset  and other changes to documents and artifacts approved since v0.2.0.**
+**This version introduces API Testing Guidelines and initial linting ruleset and other changes to documents and artifacts approved since v0.2.0.**
 
 ## Please note:
 The content of the release includes:

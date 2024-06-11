@@ -6,7 +6,7 @@ info:
 
     Note on ``security`` - ``openId`` scope: The value in this yaml `api-name:event-type:grant-level` must be replaced accordingly to the format defined in the guideline document.
 
-  termsOfService: http://swagger.io/terms/
+  termsOfService: https://swagger.io/terms/
   contact:
     email: project-email@sample.com
   license:
@@ -63,7 +63,7 @@ paths:
               requestBody:
                 required: true
                 content:
-                  application/json:
+                  application/cloudevents+json:
                     schema:
                       $ref: "#/components/schemas/CloudEvent"
 
@@ -447,20 +447,14 @@ components:
         - refreshToken
         - refreshTokenEndpoint
 
-    SubscriptionDetail:
-      description: The detail of the requested event subscription
-      type: object
-
     CreateSubscriptionDetail:
-      description: The detail of the requested event subscription
+      description: The detail of the requested event subscription.
       type: object
-      required:
-        - type
 
     Event-typeNotification:
       type: string
       description: |
-        event-type - Event triggered when a event-type event occured
+        event-type - Event triggered when an event-type event occurred
 
         subscription-ends: Event triggered when the subscription ends
       enum:
@@ -498,9 +492,7 @@ components:
         config:
           $ref: '#/components/schemas/Config'
         id:
-          type: string
-          description: The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#122-event-notification).
-          example: '1119920371'
+          $ref: '#/components/schemas/SubscriptionId'
         startsAt:
           type: string
           format: date-time
@@ -515,14 +507,14 @@ components:
             Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
               - `ACTIVATION_REQUESTED`: Subscription creation (POST) is triggered but subscription creation process is not finished yet.
               - `ACTIVE`: Subscription creation process is completed. Subscription is fully operative.
-              - `DEACTIVE`: Subscription is temporarily inactive, but its workflow logic is not deleted.
+              - `INACTIVE`: Subscription is temporarily inactive, but its workflow logic is not deleted.
               - `EXPIRED`: Subscription is ended (no longer active). This status applies when subscription is ended due to `SUBSCRIPTION_EXPIRED` or `ACCESS_TOKEN_EXPIRED` event.
-              - `DELETED`: Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its metainformation is kept).
+              - `DELETED`: Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its meta-information is kept).
           enum:
             - ACTIVATION_REQUESTED
             - ACTIVE
             - EXPIRED
-            - DEACTIVATE
+            - INACTIVE
             - DELETED
       discriminator:
         propertyName: protocol
@@ -874,7 +866,7 @@ components:
             TokenMismatch:
               value:
                 status: 403
-                code: "SUSBCRIPTION_MISMATCH"
+                code: "SUBSCRIPTION_MISMATCH"
                 message: "Inconsistent access token for requested events subscription"
     Generic403:
       description: Client does not have sufficient permission

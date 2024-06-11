@@ -1359,7 +1359,7 @@ The [CAMARA API Specification - Authorization and authentication common guidelin
 
 #### 11.6.1 Scope naming
 
-Regarding scope naming, the guidelines are:
+#### Regarding scope naming for APIs which do not deal with explicit subscriptions, the guidelines are:
 
 * Define a scope per API operation with the structure:
 
@@ -1380,16 +1380,36 @@ where
     - `update`: For operations modifying the resource, typically `PUT` or `PATCH`.
     - `delete`: For operations removing the resource, typically `DELETE`.
     - `write` : For operations creating or modifying the resource, when differentiation between `create` and `update` is not needed.
-
+     
 * Eventually we may need to add an additional level to the scope, such as `api-name:[resource:]action[:detail]`, to deal with cases when only a set of parameters/information has to be allowed to be returned. Guidelines should be enhanced when those cases happen.
-
-##### Examples
+###### Examples
 
 | API | path | method | scope |
 | --- | --- | --- | --- |
 | location-verification | /verify | POST | `location-verification:verify` |
 | qod | /sessions | POST | `qod:sessions:create`, or<br>`qod:sessions:write` |
 | qod | /qos-profiles | GET | `qod:qos-profiles:read` |
+
+<br>
+
+
+#### Regarding scope naming for APIs which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format and this is described below:
+
+Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete:
+
+API Name: device-roaming-subscriptions
+Grant-level, action on resource: read, delete This type of formulation is not needed for the create action.
+For e.g. device-roaming-subscriptions:read
+
+The format to define scopes for explicit subscriptions with action create, includes the event type in its formulation to ensure that consent is managed at the level of subscribed event types. Scopes should be represented as below for APIs that offer explicit event subscriptions with action create:
+
+API Name: device-roaming-subscriptions
+Event-type: org.camaraproject.device-roaming-subscriptions.v0.roaming-on
+Grant-level, action on resource: create
+For e.g. device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create
+
+#### API-level scopes (sometimes referred to as wildcard scopes in CAMARA)
+The decision on the API-level scopes was made within the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement) and is documented in the design guidelines to ensure completeness of this document. The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject. 
 
 
 ## 12. Subscription, Notification & Event
