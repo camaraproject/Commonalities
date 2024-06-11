@@ -1,8 +1,8 @@
-# CAMARA OpenAPI Linting Rules Implementaion Guideline [ How to integrate the rules into CAMARA repository ]
+# CAMARA OpenAPI Linting Rules Implementation Guideline [ How to integrate the rules into CAMARA repository ]
 
 ## Introduction
 
-This guide provides instructions how to implement linting rules for the CAMARA APIs using two methods: **[GitHub Actions](API-linting-Implementation-Guideline.md#github-actions-integration)** and **[local deployment](API-linting-Implementation-Guideline.md#github-actions-integration)**, both methods use [Spectral tool](https://docs.stoplight.io/docs/spectral/674b27b261c3c-overview).
+This guide provides instructions on how to implement linting rules for the CAMARA APIs using two methods: **[GitHub Actions](API-linting-Implementation-Guideline.md#github-actions-integration)** and **[local deployment](API-linting-Implementation-Guideline.md#github-actions-integration)**, both methods use [Spectral tool](https://docs.stoplight.io/docs/spectral/674b27b261c3c-overview).
 All needed files are stored in [artifacts subfolder](https://github.com/camaraproject/Commonalities/tree/API-linting-Implementation-Guideline/artifacts/linting_rules).
 
 The target method is linting rules integration with CAMARA API subproject repositories using GitHub Actions.
@@ -43,12 +43,12 @@ This file consolidates all rules:
 The rules will be applied to all files with *.yaml extension in '/code/API_definitions/' folder of the repository.
 Write access to the repository is required to perform these steps.
 
-The output from Spectral can be seen by expanding the step **Run Spectral Linting** of given worflow run Actions section of GitHub repository.
+The output from Spectral can be seen by expanding the step **Run Spectral Linting** of the given workflow run Actions section of GitHub repository.
 
 
 ### Megalinter integration
 
-[Megalinter](https://megalinter.io/latest/) is an Open-Source tool for CI/CD workflows that analyzes the consistency of code, configurations and scripts in repository sources. Megalinter supports Spectral linting.
+[Megalinter](https://megalinter.io/latest/) is an Open-Source tool for CI/CD workflows that analyzes the consistency of code, configurations, and scripts in repository sources. Megalinter supports Spectral linting.
 The Megalinter job will be automatically activated once you submit a pull request on the [main/master] branch of the CAMARA repository, as configured in megalinter.yml.
 
 The Megalinter configuration consists of the <b><a href="https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/lint_function/workflows/megalinter.yml">megalinter.yml </a></b> file containing the necessary settings to run Megalinter and Spectral jobs on GitHub actions.
@@ -74,7 +74,7 @@ Additionally, Megalinter also supports linting of YAML files. To enable this, us
 
     Save ".spectral.yml" file (contains Linting rules) and lint_function folder (contains JavaScript customized functions) at the root location.
 
-4.  Apply spectral rules on API specification loacally:
+4.  Apply spectral rules on API specification locally:
 
         spectral lint openapi.yaml --verbose --ruleset .spectral.yml
 
