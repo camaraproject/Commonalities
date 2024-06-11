@@ -63,17 +63,17 @@ For path resources with CRUD (Create/Read/Update/Delete) operations, some scenar
 
 For operation with implicit subscriptions:
 
-* Check that when a webhook is provided, the expected events are received in the `notificationUrl`, with the right `notificationAuthToken`, for those situations specified in the API.
+* Check that when a webhook (i.e. callbackURL) is provided, the expected events are received in the `sink`, with the right `sinkCredential`, for those situations specified in the API.
 * If the API allows to update a previously provided webhook:
-  - If the `notificationUrl` is modified, validate that events are received in the modified value.
-  - If the `notificationUrl` can be nullified, validate that events are not longer received.
-  - If the `notificationAuthToken` is modified, validate that the new token is used for the events.
+  - If the `sink` is modified, validate that events are received in the modified value.
+  - If the `sink` can be nullified, validate that events are not longer received.
+  - If the `sinkCredential` is modified, validate that the new token is used for the events.
 
 For the explicit subscriptions model:
 
-* Validate that the subscribed events are received in the `notificationUrl`, with the right `notificationAuthToken`, for those situations specified in the API.
+* Validate that the subscribed events are received in the `sink`, with the right `sinkCredential`, for those situations specified in the API.
 * For subscriptions that provide `subscriptionExpireTime`, validate that the subscribed events are not longer received after the expiration time.
-* For subscriptions that provide `subscriptionMaxEvents`, validate that the subscribed events are not longer received after the maximum events limit is reached..
+* For subscriptions that provide `subscriptionMaxEvents`, validate that the subscribed events are not longer received after the maximum events limit is reached.
 * Validate that after a subscription is deleted, the subscribed events are not longer received.
 
 ### Error scenarios <a name="error-scenarios"></a>
