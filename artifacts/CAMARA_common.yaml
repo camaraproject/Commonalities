@@ -59,14 +59,11 @@ components:
         * `ipv4Address`
         * `ipv6Address`
         * `phoneNumber`
-        * `networkAccessIdentifier`
         NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
    type: object
    properties:
     phoneNumber:
      $ref: "#/components/schemas/PhoneNumber"
-    networkAccessIdentifier:
-     $ref: "#/components/schemas/NetworkAccessIdentifier"
     ipv4Address:
      $ref: "#/components/schemas/DeviceIpv4Addr"
     ipv6Address:
@@ -78,11 +75,6 @@ components:
    type: string
    pattern: '^\+[1-9][0-9]{4,14}$'
    example: "+123456789"
-
-  NetworkAccessIdentifier:
-   description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
-   type: string
-   example: "123456789@domain.com"
 
   DeviceIpv4Addr:
    type: object

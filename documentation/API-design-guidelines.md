@@ -50,7 +50,10 @@ This document captures guidelines for the API design in CAMARA project. These gu
         - [Polymorphism](#polymorphism)
     - [11.6 Security definition](#116-security-definition)
       - [11.6.1 Scope naming](#1161-scope-naming)
-        - [Examples](#examples)
+      - [Regarding scope naming for APIs which do not deal with explicit subscriptions, the guidelines are:](#regarding-scope-naming-for-apis-which-do-not-deal-with-explicit-subscriptions-the-guidelines-are)
+          - [Examples](#examples)
+      - [Regarding scope naming for APIs which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format and this is described below:](#regarding-scope-naming-for-apis-which-deal-with-explicit-subscriptions-the-guidelines-propose-some-changes-as-compared-to-the-above-format-and-this-is-described-below)
+      - [API-level scopes (sometimes referred to as wildcard scopes in CAMARA)](#api-level-scopes-sometimes-referred-to-as-wildcard-scopes-in-camara)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
@@ -66,6 +69,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
       - [Security Considerations](#security-considerations)
       - [Abuse Protection](#abuse-protection)
       - [Notification examples](#notification-examples)
+  - [Appendix A: `info.description` template for `device` identification from access token](#appendix-a-infodescription-template-for-device-identification-from-access-token)
 
 
 ## Common Vocabulary and Acronyms
@@ -1704,3 +1708,40 @@ response:
 ```http
 204 No Content
 ```
+
+## Appendix A: `info.description` template for `device` identification from access token
+
+The documentation template below must be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
+
+
+```md
+# Identifying a user device from the access token
+
+This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token and the device can be uniquelly identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API. This mechanism reduces the need for multiple identifiers and extensive validation.
+
+## Handling of device information:
+
+### Optional device object for 3-legged tokens:
+
+- When using a 3-legged access token, the device associated with the access token must be considered as the device for the API request. This means that the device object is not required in the request, and if included it must identify the same device, therefore **it is recommended NOT to include it in these scenarios** to simplify the API usage and avoid additional validations.
+
+### Validation mechanism:
+
+- The server will extract the device identification from the access token, if available.
+- If the API request additionally includes a `device` object when using a 3-legged access token, the API will validate that the device identifier provided matches the one associated with the access token.
+- If there is a mismatch, the API will respond with a 403 - INVALID_TOKEN_CONTEXT error, indicating that the device information in the request does not match the token.
+
+### Error handling for unidentifiable devices:
+
+- If the `device` object is not included in the request and the device information cannot be derived from the 3-legged access token, the server will return a 422 `UNIDENTIFIABLE_DEVICE` error.
+
+### Restrictions for tokens without an associated authenticated identifier:
+
+- For tokens that do not have an associated authenticated identifier, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
+
+By following these guidelines, API consumers can use the authenticated device identifier associated with 3-legged access tokens, simplifying implementation and validation. This mechanism ensures that device identification is handled efficiently and securely, and appropriately accommodates different token types.
+```
+
+Depending on the functionality provided by the CAMARA API, some API subprojects may still define other specific identifiers that differs from the common `device` object definition. Not all APIs necessarily have to refer to a user device, e.g. Carrier Billing API only defines a phone number as a way to identify the mobile account to be billed, Know Your Costumer only defines a phone number as a way to identify the associated account data or Home Devices QoD API defines public IP v4 address as a way to identify the user home network. 
+
+Therefore, the mechanism described in this template is not applicable to all APIs, but could be used as way to make `device` object more interoperable and usable for API consumers.
