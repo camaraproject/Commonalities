@@ -63,7 +63,7 @@ For path resources with CRUD (Create/Read/Update/Delete) operations, some scenar
 
 For operation with implicit subscriptions:
 
-* Check that when a webhook is provided, the expected events are received in the `notificationUrl`, with the right `notificationAuthToken`, for those situations specified in the API.
+* Check that when a webhook (i.e. callbackURL) is provided, the expected events are received in the `sink`, with the right `sinkCredential`, for those situations specified in the API.
 * If the API allows to update a previously provided webhook:
   - If the `notificationUrl` is modified, validate that events are received in the modified value.
   - If the `notificationUrl` can be nullified, validate that events are not longer received.
