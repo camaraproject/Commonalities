@@ -21,7 +21,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [3.3 Query Parameters Use](#33-query-parameters-use)
     - [3.4 Path Parameters Use](#34-path-parameters-use)
     - [3.5 HTTP Headers Definition](#35-http-headers-definition)
-    - [3.6 MIME Types](#36-mime-types-)
+    - [3.6 MIME Types](#36-mime-types)
       - [3.6.1 Content-Type character set](#361-content-type-character-set)
   - [4. API Resource Definition](#4-api-resource-definition)
     - [4.1 URL Definition](#41-url-definition)
@@ -30,7 +30,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [5.1 Versioning Strategy](#51-versioning-strategy)
     - [5.2 Backwards and Forward Compatibility](#52-backwards-and-forward-compatibility)
   - [6. Error Responses](#6-error-responses)
-  - [7. Common Data Types](#7-common-data-types-)
+  - [7. Common Data Types](#7-common-data-types)
   - [8. Pagination, Sorting and Filtering](#8-pagination-sorting-and-filtering)
     - [8.1 Pagination](#81-pagination)
     - [8.2 Sorting](#82-sorting)
@@ -144,9 +144,7 @@ Among the main benefits of an "API First" development strategy, we can highlight
 - Ensures good developer experiences.
 
 
-<a id="23-interface-standardization-standardization-fora">
-### 2.3 Interface standardization. Standardization fora. 
-</a>
+### 2.3 Interface standardization. Standardization fora.
 Ensuring the reusability of integrations between elements and systems requires industry-wide agreement.
 This involves defining a series of interfaces (by network element providers,
 system providers, customer service providers, ...) to guarantee specific functionality and responses.
@@ -437,7 +435,7 @@ To avoid cluttering the CAMARA OAS (Swagger) definition files, the above headers
 - `Pragma`. The `Cache-Control` header will do the same job as "Pragma" too, it is more standard, so should be avoided.
 
 
-### 3.6 MIME Types 
+### 3.6 MIME Types
 During the API definition process, API MIME types must be identified, explaining how the data will be sent to the resource and how the resource will return it to the consumption.
 
 Due to interoperability reasons and in order to comply as closely as possible with REST, it is recommended using standard mime-types, avoid the creation of new mime-types.
@@ -703,7 +701,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 > _NOTE: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, a `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
 
 
-## 7. Common Data Types 
+## 7. Common Data Types
 
 The aim of this clause is to detail standard data types that will be used over time in all definitions, as long as they satisfy the information that must be covered.
 
