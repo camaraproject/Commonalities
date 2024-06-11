@@ -603,8 +603,8 @@ The following table gives the values of the API version (Info object) and the AP
 | API version in  release process | API version | initial (x=0) API version in URL | stable (x>0) API version in URL | API version can be released |
 |---------------|:------:|:------:|:------:|:------:|
 | work-in-progress | wip | vwip | vwip | No |
-| alpha | x.y.z-alpha.m | v0.yalpham | vxalpham |Yes (internal) |
-| release-candidate | x.y.z-rc.n | v0.yrcn | vxrcn | Yes (internal) |
+| alpha | x.y.z-alpha.m | v0.yalpham | vxalpham |Yes (internal pre-release) |
+| release-candidate | x.y.z-rc.n | v0.yrcn | vxrcn | Yes (internal pre-release) |
 | public-release | x.y.z | v0.y | vx | Yes |
 
 Precedence examples:
