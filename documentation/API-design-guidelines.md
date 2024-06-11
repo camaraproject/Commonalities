@@ -710,7 +710,6 @@ In the following, we elaborate on the existing client errors. In particular, we 
 | 410 | `GONE` | Access to the target resource is no longer available. | Use in notifications flow to allow API Consumer to indicate that its callback is no longer available |
 | 412 | `FAILED_PRECONDITION` | Request cannot be executed in the current system state. | Indication by the API Server that the request cannot be processed in current system state |
 | 415 | `UNSUPPORTED_MEDIA_TYPE` | The server refuses to accept the request because the payload format is in an unsupported format. | Payload format of the request is in an unsupported format by the Server. Should not happen |
-| 500 | `DATA_LOSS` | Unrecoverable data loss or data corruption. | Some data is lost or corrupted when the server is processing the request so as it cannot manage it properly. It may point to a potential problem at DD.BB. level |
 | 500 | `INTERNAL` | Unknown server error. Typically a server bug. | Problem in Server side. Regular Server Exception |
 | 501 | `NOT_IMPLEMENTED` | This functionality is not implemented yet. | Service not implemented. The use of this code should be avoided as far as possible to get the objective to reach aligned implementations |
 | 502 | `BAD_GATEWAY` | An upstream internal service cannot be reached. | Internal routing problem in the Server side that blocks to manage the service properly |

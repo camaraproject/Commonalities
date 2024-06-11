@@ -407,12 +407,6 @@ components:
      schema:
       $ref: "#/components/schemas/ErrorInfo"
      examples:
-      GENERIC_500_DATA_LOSS:
-       description: Some data is lost or corrupted when the server is processing the request so as it cannot manage it properly. It may point to a potential problem at DD.BB. level
-       value:
-        status: 500
-        code: DATA_LOSS
-        message: Unrecoverable data loss or data corruption.
       GENERIC_500_INTERNAL:
        description: Problem in Server side. Regular Server Exception
        value:
