@@ -30,6 +30,8 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [5.1 Versioning Strategy](#51-versioning-strategy)
     - [5.2 Backwards and Forward Compatibility](#52-backwards-and-forward-compatibility)
   - [6. Error Responses](#6-error-responses)
+    - [### 6.1 Standardized use of CAMARA error responses](#61-standardized-use-of-camara-error-responses)
+    - [### 6.2 Error Responses - Device Object](#62-error-responses---device-object)
   - [7. Common Data Types](#7-common-data-types)
   - [8. Pagination, Sorting and Filtering](#8-pagination-sorting-and-filtering)
     - [8.1 Pagination](#81-pagination)
@@ -278,7 +280,7 @@ HTTP status response codes indicate if a request has been completed successfully
 4.	Client Errors (4XX)
 5.	Server Errors (5XX)
 
-Status codes are defined in the [RFC 2616](https://tools.ietf.org/html/rfc2616#section-10) 10th section. You can get the updated specifications from [RFC 7231](https://tools.ietf.org/html/rfc7231#section-6.5.1).
+Status codes are defined in the [RFC 2616](https://tools.ietf.org/html/rfc2616#section-10) 10th section. You can get the updated specifications from [RFC 9110 Status Codes](https://datatracker.ietf.org/doc/html/rfc9110#section-15).
 
 Common errors are captured in the table below. 
 
@@ -298,6 +300,7 @@ Common errors are captured in the table below.
 | 406 | 406 (Not Acceptable) status code indicates that the target resource does not have a current representation that would be acceptable to the user, based on the proactive negotiation header fields received in the request, and the server is unwilling to provide a predetermined representation. It must be reported when there is no response by default, and header fields are reported to carry out the content negotiation (Accept, Accept-Charset, Accept-Encoding, Accept-Language). |
 | 408 | Status code 408 (Request Timeout) indicates that the server did not receive the complete request message within the expected time.<br>This code is documented at the API portal level, it should not be documented at the API level.|
 | 409 | The 409 (Conflict) status code indicates when a request conflicts with the current state of the server. |
+| 410 | The 410 (Gone) status code indicates that access to the target resource is no longer available at the origin server and that this condition is likely to be permanent.
 | 415 | The 415 (Unsupported Media Type) status code indicates that the server cannot accept the format of the request body as indicated by the `Content-Type` or `Content-Encoding` request header. The API specification will state what request body format should be used. |
 | 429 | The 429 (Too Many Requests) status code indicates that the server is temporarily unable to accept any more requests from the client due to the high number of requests recently sent. A `Retry-After` response header may indicate how long the client should wait before trying again. |
 | 500 | Status code 500 (Internal Server Error) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.<br>This code must always be documented. It should be used as a general system error.|
@@ -586,15 +589,19 @@ Tho ensure this compatibility, the following must be followed.
 - Variable order rule: DO NOT rely on the order in which data appears in responses from the JSON service, unless the service explicitly specifies it.
 - Clients MUST NOT transmit personally identifiable information (PII) parameters in the URL. If necessary, use headers.
 
+
 ## 6. Error Responses
 
 In order to guarantee interoperability, one of the most important points is to carry out error management aimed at strictly complying with the error codes defined in the HTTP protocol.
 
 An error representation must not be different from the representation of any resource. A main error message is defined, with JSON structure with the following fields:
 - A field "`status`", which can be identified in the response as a standard code from a list of Hypertext Transfer Protocol (HTTP) response status codes.
-- A unique error "`code`", which can be identified and traced for more details. It must be human readable; therefore, it must not be a numeric code. In turn, to achieve a better location of the error, you can reference the value or field that is causing it, and include it in the message. 
-- A detailed description of "`message`"
-  
+- A unique error "`code`", which can be identified and traced for more details. It must be human readable; therefore, it must not be a numeric code. In turn, to achieve a better location of the error, you can reference the value or field that is causing it, and include it in the message.
+- A detailed description in "`message`" - in English language in API specification, it can be changed to other language in implementation if needed.
+
+All these aforementioned fields are mandatory in Error Responses.
+`status` and `code` fields have normative nature, so as their use has to be standardized (see [Section 6.1](#61-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
+
 A JSON error structure is proposed below: 
 
 ```json
@@ -614,44 +621,119 @@ The essential requirements to consider would be:
 - Customization of the generated error based on the error content returned by the final core service should be contemplated.
 - Latency should be minimized in its management.
 
-In the following, we elaborate on the existing client errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature: i) syntax exceptions, ii) service exceptions, and iii) server errors. 
+> _NOTE: When standardized AuthN/AuthZ flows are used, please refer to [10.2 Security Implementation](#102-security-implementation) and [11.6 Security Definition](#116-security-definition), the format and content of Error Response for those procedures SHALL follow the guidelines of those standards.
+
+### 6.1 Standardized use of CAMARA error responses
+
+This section aims to provide a common use of the fields `status` and `code` across CAMARA APIs.
+
+In the following, we elaborate on the existing client errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature:
+- i) syntax exceptions
+- ii) service exceptions
+- iii) server errors 
 
 <font size="3"><span style="color: blue"> Syntax Exceptions </span></font>
 
-| **Error code** | Description |
-|-----|-----|
-|`INVALID_ARGUMENT` |  A specified resource duplicate entry found. |
-|`CONFLICT` |  A specified resource duplicate entry found. |
-|`OUT_OF_RANGE`| Client specified an invalid range. |
-|`PERMISSION_DENIED`|  Client does not have sufficient permissions to perform this action. |
-|`ABORTED` |  Concurrency conflict.|
-|`ALREADY_EXISTS` | The resource that a client tried to create already exists. |
+| **Error status** | **Error code** | **Message example** | **Scope/description** |
+| :--------------: | :------------: | ----------------------- | ----------------------- |
+| 400 | `INVALID_ARGUMENT` | Client specified an invalid argument, request body or query param. | Generic Syntax Exception |
+| 400 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Specific Syntax Exception regarding a field that is relevant in the context of the API (e.g. format of an amount) |
+| 400 | `OUT_OF_RANGE` | Client specified an invalid range. | Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested |
+| 403 | `PERMISSION_DENIED` | Client does not have sufficient permissions to perform this action. | OAuth2 token access does not have the required scope or when the user fails operational security |
+| 403 | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token. | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token |
+| 409 | `ABORTED` | Concurrency conflict. | Concurreny of processes of the same nature/scope |
+| 409 | `ALREADY_EXISTS` | The resource that a client tried to create already exists. | Trying to create an existing resource |
+| 409 | `CONFLICT` | A specified resource duplicate entry found. | Duplication of an existing resource |
+| 409 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Specific conflict situation that is relevant in the context of the API |
 
 <font size="3"><span style="color: blue"> Service Exceptions </span></font>
 
-| **Error code** | Description |
-|-----|-----|
-|`UNAUTHENTICATED` |  Request not authenticated due to missing, invalid, or expired credentials.|
-|`NOT_FOUND`|  The specified resource is not found. |
-|`TOO_MANY_REQUESTS`| Either out of resource quota or reaching rate limiting. |
-|`AUTHENTICATION_REQUIRED`|  New authentication is required. |
+| **Error status** | **Error code** | **Message example** | **Scope/description** |
+| :--------------: | :------------: | ----------------------- | ----------------------- |
+| 401 | `UNAUTHENTICATED` | Request not authenticated due to missing, invalid, or expired credentials. | Request cannot be authenticated |
+| 401 | `AUTHENTICATION_REQUIRED` | New authentication is required. | New authentication is needed, authentication is no longer valid |
+| 403 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API (e.g QoD session cannot be created for a set of users) |
+| 404 | `NOT_FOUND` | The specified resource is not found. | Resource is not found |
+| 404 | `DEVICE_NOT_FOUND` | Device identifier not found. | Device identifier not found |
+| 404 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Specific situation to highlight the resource/concept not found (e.g. use in device) |
+| 422 | `DEVICE_IDENTIFIERS_MISMATCH` | Provided device identifiers are not consistent. | Inconsistency between device identifiers not pointing to the same device |
+| 422 | `DEVICE_NOT_APPLICABLE` | The service is not available for the provided device. | Service is not available for the provided device |
+| 422 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Any semantic condition associated to business logic, specifically related to a field or data structure |
+| 429 | `QUOTA_EXCEEDED` | Either out of resource quota or reaching rate limiting. | Request is rejected due to exceeding a business quota limit |
+| 429 | `TOO_MANY_REQUESTS` | Either out of resource quota or reaching rate limiting. | API Server request limit is overpassed |
 
 <font size="3"><span style="color: blue"> Server Exceptions </span></font>
 
-| **Error code** | Description |
-|-----|-----|
-|`FAILED_PRECONDITION` |  Request cannot be executed in the current system state.|
-|`DATA_LOSS`| Unrecoverable data loss or data corruption. |
-|`INTERNAL`| Unknown server error. Typically a server bug.|
-|`BAD_GATEWAY`| An upstream internal service cannot be reached. |
-|`UNAVAILABLE`| Request timeout exceeded. |
-|`TIMEOUT`| Request timeout exceeded. |
-|`NOT_IMPLEMENTED`| This functionality is not implemented yet |
-|`METHOD_NOT_ALLOWED`|	The requested method is not allowed/supported on the target resource. |
-|`NOT_ACCEPTABLE` | The server cannot produce a response matching the content requested by the client through `Accept-*` headers. |
-|`UNSUPPORTED_MEDIA_TYPE`	| The server refuses to accept the request because the payload format is in an unsupported format. |
+| **Error status** | **Error code** | **Message example** | **Scope/description** |
+| :--------------: | :------------: | ----------------------- | ----------------------- |
+| 405 | `METHOD_NOT_ALLOWED` | The requested method is not allowed/supported on the target resource. | Invalid HTTP verb used with a given endpoint |
+| 406 | `NOT_ACCEPTABLE` | The server cannot produce a response matching the content requested by the client through `Accept-*` headers. | API Server does not accept the media type (`Accept-*` header) indicated by API client |
+| 410 | `GONE` | Access to the target resource is no longer available. | Use in notifications flow to allow API Consumer to indicate that its callback is no longer available |
+| 412 | `FAILED_PRECONDITION` | Request cannot be executed in the current system state. | Indication by the API Server that the request cannot be processed in current system state |
+| 415 | `UNSUPPORTED_MEDIA_TYPE` | The server refuses to accept the request because the payload format is in an unsupported format. | Payload format of the request is in an unsupported format by the Server. Should not happen |
+| 500 | `INTERNAL` | Unknown server error. Typically a server bug. | Problem in Server side. Regular Server Exception |
+| 501 | `NOT_IMPLEMENTED` | This functionality is not implemented yet. | Service not implemented. The use of this code should be avoided as far as possible to get the objective to reach aligned implementations |
+| 502 | `BAD_GATEWAY` | An upstream internal service cannot be reached. | Internal routing problem in the Server side that blocks to manage the service properly |
+| 503 | `UNAVAILABLE` | Service Unavailable. | Service is not available. Temporary situation usually related to maintenance process in the server side |
+| 504 | `TIMEOUT` | Request timeout exceeded. | API Server Timeout |
 
-> _NOTE: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, a `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
+> _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, a `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
+
+> _NOTE 2: A {{SPECIFIC_CODE}}, unless it may have traversal scope (i.e. re-usable among different APIs), SHALL follow this scheme for a specific API: {{API_NAME}}.{{SPECIFIC_CODE}}
+
+### 6.2 Error Responses - Device Object
+
+This section is focused in the guidelines about error responses around the concept of `device` object.
+
+Following table compiles the guidelines to be adopted:
+
+| **Case #** | **Description** | **Error status** | **Error code**  | **Message example** |
+| :---: | :--- | :---: | :---: | :--- |
+| 0 | The request body does not comply with the schema | 400 | INVALID_ARGUMENT | device does not comply with the schema. |
+| 1 | None of the provided device identifiers is supported by the implementation | 422 | UNSUPPORTED_DEVICE_IDENTIFIERS | phoneNumber is required. |
+| 2 | Some identifier cannot be matched to a device | 404 | DEVICE_NOT_FOUND | Device identifier not found. |  
+| 3 | Device identifiers mismatch | 422 | DEVICE_IDENTIFIERS_MISMATCH | Provided device identifiers are not consistent. |
+| 4 | Invalid access token context | 403 | INVALID_TOKEN_CONTEXT | Device identifiers are not consistent with access token. |
+| 5 | Service not applicable to the device | 422 | DEVICE_NOT_APPLICABLE | The service is not available for the provided device. |
+
+#### Templates
+
+##### Response template
+
+A response will group all examples for same operation and status code
+Schema is common for all errors
+
+```yaml
+description: |
+  The examples section includes the list of subcases for this status error code to be implemented. In each example `status` and `code` are normative for the specific error case. `message` may be adjusted or localized by the implementation.
+headers: 
+  {{response_headers}}
+content:
+  application/json:
+    schema:
+      $ref: "#/components/schemas/ErrorInfo"
+    examples:
+      {{case_1}}:
+        $ref: ""#/components/examples/{{case_1}}"
+      {{case_2}}:
+        $ref: ""#/components/examples/{{case_2}}"      
+```
+
+##### Examples template
+
+One case will be needed per row in the table above, following this template:
+
+```yaml
+components:
+  examples:
+    {{case_N}}:
+      summary: {{Description}}
+      description: {{informative description}}
+      value:
+        status: {{Error status}}
+        code: {{Error code}}
+        message: {{Message example}}
+```
 
 
 ## 7. Common Data Types 
