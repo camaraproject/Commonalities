@@ -4,7 +4,7 @@
 - [Introduction](#introduction)
 - [Test plan coverage](#coverage)
   - [Independent operations](#independent-operations)
-  - [CRUD operations](#crud-operations)
+  - [Operations modifying resources](#operations-modifying-resources)
   - [Notifications](#notifications)
   - [Error scenarios](#error-scenarios)
 - [Test plan design guidelines](#guidelines)
@@ -23,7 +23,7 @@ This document captures guidelines for the API testing in CAMARA project. These g
 
 ## Test plan coverage <a name="coverage"></a>
 
-Based on the decision taken in the [Release Management](https://github.com/camaraproject/ReleaseManagement) and Commonalities working groups, and as documented in [API Release Process](https://wiki.camaraproject.org/display/CAM/API+Release+Process)](https://wiki.camaraproject.org/display/CAM/API+Release+Process#APIReleaseProcess-APIreadinesschecklist), at least one Gherkin feature file will be added to the main subproject repo and this will fulfill the minimum criteria of readiness with respect to API test cases and documentation:
+Based on the decision taken in the [Release Management](https://github.com/camaraproject/ReleaseManagement) and Commonalities working groups, and as documented in [API Release Process](https://wiki.camaraproject.org/display/CAM/API+Release+Process)](https://wiki.camaraproject.org/display/CAM/API+Release+Process#APIReleaseProcess-APIreadinesschecklist), at least one Gherkin feature file per API will be added to the API repo folder for test plans, and this test plan must fulfill the minimum criteria of readiness with respect to API test cases and documentation:
 
 * Release candidates must have at least a basic API test plan, covering sunny day scenarios. Scenarios are expected to validate that the implemented interface is compliant with the specification, in terms of syntax and support for the mandatory aspects. 
 * Any public release must include a full test plan, covering both sunny and rainy day scenarios, to be considered stable. This may include unusual or not explicitly specified error scenarios, semantic validations and corner cases.
@@ -37,16 +37,16 @@ If subprojects also intend to add test implementations, an aligned single implem
 
 ### Independent operations <a name="independent-operations"></a>
 
-Operations that execute an action or retrieve information from the operator, without modifying a resource, will be tested in its own dedicated feature file. 
+Operations that execute an action or retrieve information from the operator, without modifying a resource, will usually be tested in its own dedicated feature file. Splitting a test plan into several features is a test plan design decision, taking into account the complexity of the test plan.
 
 Test plan must validate that providing a valid input, a success response is received and that the response body complies with the JSON-schema in the API spec.
 
 For operations receiving an input request body with optional properties, several scenarios should be included, testing different sets of valid inputs.
 
 
-### CRUD operations <a name="crud-operations"></a>
+### Operations modifying resources <a name="operations-modifying-resources"></a>
 
-For path resources with CRUD (Create/Read/Update/Delete) operations, some scenario should validate that the new state of the resource is coherent with the response to the operation.
+For path resources with CRUD (Create/Read/Update/Delete) operations, some scenario should validate that the new state of the resource is coherent with the result of the operation:
 
 * For Create operations:
   - If operation success returns the created object, validate that the properties of the response object are coherent with the request object
@@ -79,7 +79,7 @@ For the explicit subscriptions model:
 ### Error scenarios <a name="error-scenarios"></a>
 
 * All errors explicitly documented in the API spec must be covered by one or more dedicated error scenarios.
-  - In particular operations that expect a `device` object allowing one or more identifiers to be provided, must include scenarios to test all error cases defined. 
+  - In particular operations that expect a `device` object allowing one or more identifiers to be provided, must include scenarios to test the error cases defined, aligned with the device error management section of the API design guidelines. 
 
 * It must be validated that the HTTP status code and response property `code` are exactly those specified in the API spec.
 
@@ -113,7 +113,7 @@ Filename:
 
 - APIs with a single feature file will use the api-name as file name: E.g. `location-verification.feature`
 - For APIs with several operations that split the test plan in one feature file per operation, recommendation is to use the `operationId` as file name: `createSession.feature`.
-- For APIs with several feature files, not split by operation, may use the api-name along some other description, e.g.: `qod-notifications.feature`
+- APIs with several feature files, not split by operation, should use the api-name along some other description, e.g.: `qod-notifications.feature`
 
 ### Feature structure <a name="feature-structure"></a>
 
