@@ -1742,7 +1742,7 @@ This specification defines the `device` object field as optional in API requests
 
 ### Restrictions for tokens without an associated authenticated identifier:
 
-- For tokens that do not have an associated authenticated identifier, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
+- For scenarios which do not have a single device identifier associated to the token during the authentication flow, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
 
 By following these guidelines, API consumers can use the authenticated device identifier associated with 3-legged access tokens, simplifying implementation and validation. This mechanism ensures that device identification is handled efficiently and securely, and appropriately accommodates different token types.
 ```
