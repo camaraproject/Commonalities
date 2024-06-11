@@ -11,7 +11,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
   - [2. APIfication Principles](#2-apification-principles)
     - [2.1 Domain Driven Design](#21-domain-driven-design)
     - [2.2 API First](#22-api-first)
-    - [2.3 Interface standardization. Standardization fora.](#23-interface-standardization-standardization-fora-)
+    - [2.3 Interface standardization. Standardization fora.](#23-interface-standardization-standardization-fora)
     - [2.4 Information Representation Standard](#24-information-representation-standard)
   - [2.5 Reduce telco-specific terminology in API definitions](#25-reduce-telco-specific-terminology-in-api-definitions)
   - [3. API Definition](#3-api-definition)
@@ -144,9 +144,9 @@ Among the main benefits of an "API First" development strategy, we can highlight
 - Ensures good developer experiences.
 
 
-
+<a id="23-interface-standardization-standardization-fora">
 ### 2.3 Interface standardization. Standardization fora. 
-
+</a>
 Ensuring the reusability of integrations between elements and systems requires industry-wide agreement.
 This involves defining a series of interfaces (by network element providers,
 system providers, customer service providers, ...) to guarantee specific functionality and responses.
