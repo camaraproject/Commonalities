@@ -50,10 +50,10 @@ This document captures guidelines for the API design in CAMARA project. These gu
         - [Polymorphism](#polymorphism)
     - [11.6 Security definition](#116-security-definition)
       - [11.6.1 Scope naming](#1161-scope-naming)
-      - [Regarding scope naming for APIs which do not deal with explicit subscriptions, the guidelines are:](#regarding-scope-naming-for-apis-which-do-not-deal-with-explicit-subscriptions-the-guidelines-are)
+        - [APIs which do not deal with explicit subscriptions](#apis-which-do-not-deal-with-explicit-subscriptions)
           - [Examples](#examples)
-      - [Regarding scope naming for APIs which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format and this is described below:](#regarding-scope-naming-for-apis-which-deal-with-explicit-subscriptions-the-guidelines-propose-some-changes-as-compared-to-the-above-format-and-this-is-described-below)
-      - [API-level scopes (sometimes referred to as wildcard scopes in CAMARA)](#api-level-scopes-sometimes-referred-to-as-wildcard-scopes-in-camara)
+        - [APIs which deal with explicit subscriptions](#apis-which-deal-with-explicit-subscriptions)
+        - [API-level scopes (sometimes referred to as wildcard scopes in CAMARA)](#api-level-scopes-sometimes-referred-to-as-wildcard-scopes-in-camara)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
@@ -1280,7 +1280,9 @@ The [CAMARA API Specification - Authorization and authentication common guidelin
 
 #### 11.6.1 Scope naming
 
-#### Regarding scope naming for APIs which do not deal with explicit subscriptions, the guidelines are:
+##### APIs which do not deal with explicit subscriptions
+
+Regarding scope naming for APIs which do not deal with explicit subscriptions, the guidelines are:
 
 * Define a scope per API operation with the structure:
 
@@ -1303,6 +1305,7 @@ where
     - `write` : For operations creating or modifying the resource, when differentiation between `create` and `update` is not needed.
      
 * Eventually we may need to add an additional level to the scope, such as `api-name:[resource:]action[:detail]`, to deal with cases when only a set of parameters/information has to be allowed to be returned. Guidelines should be enhanced when those cases happen.
+
 ###### Examples
 
 | API | path | method | scope |
@@ -1313,8 +1316,9 @@ where
 
 <br>
 
+##### APIs which deal with explicit subscriptions
 
-#### Regarding scope naming for APIs which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format and this is described below:
+Regarding scope naming for APIs which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format and this is described below:
 
 Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete:
 
@@ -1329,7 +1333,8 @@ Event-type: org.camaraproject.device-roaming-subscriptions.v0.roaming-on
 Grant-level, action on resource: create
 For e.g. device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create
 
-#### API-level scopes (sometimes referred to as wildcard scopes in CAMARA)
+##### API-level scopes (sometimes referred to as wildcard scopes in CAMARA)
+
 The decision on the API-level scopes was made within the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement) and is documented in the design guidelines to ensure completeness of this document. The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject. 
 
 
