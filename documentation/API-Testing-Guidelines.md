@@ -73,7 +73,7 @@ For the explicit subscriptions model:
 
 * Validate that the subscribed events are received in the `sink`, with the right `sinkCredential`, for those situations specified in the API.
 * For subscriptions that provide `subscriptionExpireTime`, validate that the subscribed events are not longer received after the expiration time.
-* For subscriptions that provide `subscriptionMaxEvents`, validate that the subscribed events are not longer received after the maximum events limit is reached..
+* For subscriptions that provide `subscriptionMaxEvents`, validate that the subscribed events are not longer received after the maximum events limit is reached.
 * Validate that after a subscription is deleted, the subscribed events are not longer received.
 
 ### Error scenarios <a name="error-scenarios"></a>
