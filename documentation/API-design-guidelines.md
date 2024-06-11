@@ -539,7 +539,7 @@ These considerations are below:
 
 ## 5. Versioning
 
-Versioning is a practice by which, when a change occurs in the API, a new version of that API is released so that the new version and the previous one coexists for a certain period of time.
+Versioning is a practice by which, when a change occurs in the API, a new version of that API is released. The new version and the previous one may coexist for a certain period of time.
 
 API versions use a numbering scheme in the format: x.y.z
 
@@ -629,9 +629,10 @@ Bearing in mind that APIs are continually evolving and certain operations will n
 
 <font size="3"><span style="color: blue"> Types of modification: </span></font>
 
-- Not all API changes have an impact on API consumers. Such changes are referred to as backward compatible changes.
-- If the API undergoes changes of this type, it shall be provided through a maintenance-release which will replace the current one.
-- Consumers shall be notified of the new release so that they take them into account.
+- Not all API changes have an impact on API consumers. These are referred to as backward compatible changes.
+- In case of such changes, the update produces a new API version that increases the MINOR or PATCH version number.
+- The update can be deployed transparently as it does not change the endpoint of the API which only contains the MAJOR version number which has not changed, and all previously existing behaviour shall be the same.
+- API consumers shall be notified of the new version availability so that they can take it into account.
 
 Backward compatible changes to an API that **DO NOT** affect consumers:
 
