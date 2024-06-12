@@ -539,7 +539,7 @@ These considerations are below:
 
 ## 5. Versioning
 
-Versioning is a practice by which, when a change occurs in the API, a new version of that API is released. The new version and the previous one may coexist for a certain period of time.
+Versioning is a practice by which, when a change occurs in the API, a new version of that API is created.
 
 API versions use a numbering scheme in the format: x.y.z
 
@@ -566,7 +566,7 @@ In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH versio
 2. The MINOR version when functionality is added that is backwards compatible
 3. The PATCH version when backward compatible bugs are fixed
 
-For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [versioning in the API release process](https://wiki.camaraproject.org/x/a4BaAQ) in the Release Management wiki. 
+For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the CAMARA wiki. 
 
 It is recommended to avoid breaking backwards compatibility unless strictly necessary: new versions should be backwards compatible with previous versions. More information on how to avoid breaking changes can be found below.
 
@@ -587,31 +587,31 @@ This allows for test and usage of initial API versions as they are evolving rapi
 
 ### 5.3 API versions throughout the release process
 
-In preparation for its public-release, an API will go through various intermediate versions indicated by version extensions: alpha and release-candidate.
+In preparation for its public release, an API will go through various intermediate versions indicated by version extensions: alpha and release-candidate.
 
 Overall, an API can have any of the following versions:
 
 * work-in-progress (wip) API versions used during the development of an API before the first pre-release or in between pre-releases. Such API versions cannot be released and are not usable by API consumers.
 * alpha (x.y.z-alpha.m) API versions (with extensions) for CAMARA internal API rapid development purposes
 * release-candidate (x.y.z-rc.n) API versions (with extensions) for CAMARA internal API release bug fixing purposes
-* public-release (x.y.z) API versions for publication as part of a meta-release. These API versions only have API version number x.y.z (semver 2.0), no extension. The public-release API can have one of two maturity states: 
+* public (x.y.z) API versions for usage in commercial contexts. These API versions only have API version number x.y.z (semver 2.0), no extension. Public APIs can have one of two maturity states: 
   * initial - indicating that the API is still not fully stable (x=0)
   * stable - indicate that the API has reached a certain level of maturity (x>0)
 
-The following table gives the values of the API version (Info object) and the API version in the URL used in the release process of the API, and dependent on whether it is an initial API version (x=0) or a stable API version (x>0).
+The following table gives the values of the API version (Info object) and the API version in the URL as used in the different API version types created during the API release process. For public API versions, this information is also dependent on whether it is an initial (x=0) or a stable public API version (x>0). 
 
-| API version in  release process | API version | initial (x=0) API version in URL | stable (x>0) API version in URL | API version can be released |
+| API version type | API version | initial (x=0) API version in URL | stable (x>0) API version in URL | API version can be released |
 |---------------|:------:|:------:|:------:|:------:|
 | work-in-progress | wip | vwip | vwip | No |
 | alpha | x.y.z-alpha.m | v0.yalpham | vxalpham |Yes (internal pre-release) |
 | release-candidate | x.y.z-rc.n | v0.yrcn | vxrcn | Yes (internal pre-release) |
-| public-release | x.y.z | v0.y | vx | Yes |
+| public | x.y.z | v0.y | vx | Yes |
 
 Precedence examples:
 
 * 1.0.0 < 2.0.0 < 2.1.0 < 2.1.1 < 3.0.0.
-* 0.1.0 < 0.2.0-alpha.1 < 0.2.0-alpha.2 < 0.2.0-rc.1 < 0.2.0-rc.2 < 0.2.0 (initial public-release)
-* 1.0.0 < 1.1.0-alpha.1 < 1.1.0-alpha.2 < 1.1.0-rc.1 < 1.1.0-rc.2 < 1.1.0 (stable public-release)
+* 0.1.0 < 0.2.0-alpha.1 < 0.2.0-alpha.2 < 0.2.0-rc.1 < 0.2.0-rc.2 < 0.2.0 (initial public API version)
+* 1.0.0 < 1.1.0-alpha.1 < 1.1.0-alpha.2 < 1.1.0-rc.1 < 1.1.0-rc.2 < 1.1.0 (stable public API version)
 
 For more information, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the Release Management project Wiki.
 
@@ -621,7 +621,7 @@ Avoid breaking backwards compatibility, unless strictly necessary, means that ne
 
 Bearing in mind that APIs are continually evolving and certain operations will no longer be supported, the following considerations must be taken into account:
 
-- Agree to discontinue an API with consumers.
+- Agree to discontinue an API version with consumers.
 - Establish the obsolescence of the API in a reasonable period (6 months).
 - Monitor the use of deprecated APIs.
 - Remove deprecated APIs documentation.
