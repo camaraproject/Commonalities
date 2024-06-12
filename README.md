@@ -33,10 +33,10 @@ A list of some of the frequently accessed documents that are an output of the wo
 |-------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
  | [API-design-guidelines.md](documentation/API-design-guidelines.md)               | This document captures guidelines for the API design in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative. |
 | [API-DocumentationTemplate.md](documentation/API-DocumentationTemplate.md)       | Template for documenting the APIs                                                                                                                                  |
-| [API-Readiness-Checklist.md](documentation/API-Readiness-Checklist.md)           | A checklist that describes the minimum criteria for considering an API Ready                                                                                       |
-| [Camara_Versioning_Guidelines.md](documentation/Camara_Versioning_Guidelines.md) | Guidelines for API Subprojects on making releases                                                                                                                  |
 | [Glossary.md](documentation/Glossary.md)                                         | A glossary of the common terms and their API parameter/field names for use in the APIs                                                                             |
 | [API-Testing-Guidelines.md](documentation/API-Testing-Guidelines.md)             | Guidelines for the API testing in CAMARA project                                                                                                   |
+
+NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-Checklist, are located within [ReleaseManagement](https://github.com/camaraproject/ReleaseManagement). The versioning of APIs is defined within the [API-design-guidelines.md](documentation/API-design-guidelines.md#5-versioning). 
 
 
 
