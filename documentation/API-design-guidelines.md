@@ -656,7 +656,7 @@ Breaking changes to an API that **DO** affect consumers:
 Tho ensure this compatibility, the following must be followed.
 
 **As API provider**:
-- Never change an endpoint name; instead, add a new one and mark the original one for deprecation in a minor release and remove it in a later major release (see semver FAQ entry: https://semver.org/#how-should-i-handle-deprecating-functionality)
+- Never change an endpoint name; instead, add a new one and mark the original one for deprecation in a MINOR change and remove it in a later MAJOR change (see semver FAQ entry: https://semver.org/#how-should-i-handle-deprecating-functionality)
 - If possible, do the same for attributes
 - New fields should always be added as optional.
 - Postel's Law: “<em>Be conservative in what you do, be liberal in what you accept from others</em>”. When you have input fields that need to be removed, mark them as unused, so they can be ignored. 
