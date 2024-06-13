@@ -581,7 +581,16 @@ servers:
     url: {apiRoot}/qod/v2
 ```
 
-NOTE: CAMARA exceptionally allows to use both the MAJOR and the MINOR version number (v0.y) separated by a dot (".") in initial API versions (x=0) in the API version in the URL. 
+---
+
+IMPORTANT: CAMARA initial public APIs (see explanation below) shall use both the MAJOR and the MINOR version number (v0.y) separated by a dot (".") in the API version in the URL.
+
+---
+
+```yaml
+servers:
+    url: {apiRoot}/number-verification/v0.3
+```
 
 This allows for test and usage of initial API versions as they are evolving rapidly, e.g. /qod/v0.10, or /qod/v0.11alpha1. However, it should be acknowledged that any initial API version may change.
 
