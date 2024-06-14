@@ -112,8 +112,8 @@ E.g.:
 Filename:
 
 - APIs with a single feature file will use the api-name as file name: E.g. `location-verification.feature`
-- For APIs with several operations that split the test plan in one feature file per operation, recommendation is to use the `operationId` as file name: `createSession.feature`.
-- APIs with several feature files, not split by operation, should use the api-name along some other description, e.g.: `qod-notifications.feature`
+- For APIs with several operations that split the test plan in one feature file per operation, recommendation is to add the `operationId` to the api-name as file name: `quality-on-demand-createSession.feature`.
+- APIs with several feature files, not split by operation, should use the api-name along some other description, e.g.: `quality-on-demand-notifications.feature`
 
 ### Feature structure <a name="feature-structure"></a>
 
