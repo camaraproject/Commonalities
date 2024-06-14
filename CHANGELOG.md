@@ -2,10 +2,33 @@
 
 ## Table of Contents
 
+- [v0.4.0-rc.1](v040-rc1)
 - [v0.4.0-alpha.1](#v040-alpha1)
 - [v0.3.0](#v030)
 - [v0.2.0](#v020)
 - [v0.1.0 - Initial version](#v010---initial-version)
+
+
+# v0.4.0-rc.1
+
+**This is the release candidate of Commonalites v0.4.0**
+
+## Changes compared to [v0.4.0-alpha.1](#v040-alpha1)
+
+
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/v0.3.0...r0.4.0-alpha.1
+
+
 
 # v0.4.0-alpha.1
 
