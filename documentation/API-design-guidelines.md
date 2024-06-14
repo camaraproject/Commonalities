@@ -27,10 +27,10 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [4.1 URL Definition](#41-url-definition)
     - [4.2 Input/Output Resource Definition](#42-inputoutput-resource-definition)
   - [5. Versioning](#5-versioning)
-    - [5.1 API version (OAS Info object)](#51-api-version-oas-info-object)
+    - [5.1 API version (OAS info object)](#51-api-version-oas-info-object)
     - [5.2 API version in URL (OAS servers object)](#52-api-version-in-url-oas-servers-object)
     - [5.3 API versions throughout the release process](#53-api-versions-throughout-the-release-process)
-    - [5.4 Backwards and Forward Compatibility](#54-backwards-and-forward-compatibility)
+    - [5.4 Backward and forward compatibility](#54-backward-and-forward-compatibility)
   - [6. Error Responses](#6-error-responses)
   - [7. Common Data Types](#7-common-data-types)
   - [8. Pagination, Sorting and Filtering](#8-pagination-sorting-and-filtering)
@@ -541,16 +541,16 @@ These considerations are below:
 
 Versioning is a practice by which, when a change occurs in the API, a new version of that API is created.
 
-API versions use a numbering scheme in the format: x.y.z
+API versions use a numbering scheme in the format: `x.y.z`
 
 * x, y and z are numbers corresponding to MAJOR, MINOR and PATCH versions.
 * MAJOR, MINOR and PATCH refer to the types of changes made to an API through its evolution.
 * Depending on the change type, the corresponding number is incremented.
 * This is defined in the [Semantic Versioning 2.0.0 (semver.org)](https://semver.org/) standard.
 
-### 5.1 API version (OAS Info object)
+### 5.1 API version (OAS info object)
 
-The API version is defined in the "version" field (in the Info object) of the OAS definition file of an API. 
+The API version is defined in the `version` field (in the `info` object) of the OAS definition file of an API. 
 
 ```yaml
 info:
@@ -568,13 +568,13 @@ In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH versio
 
 For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the CAMARA wiki. 
 
-It is recommended to avoid breaking backwards compatibility unless strictly necessary: new versions should be backwards compatible with previous versions. More information on how to avoid breaking changes can be found below.
+It is recommended to avoid breaking backward compatibility unless strictly necessary: new versions should be backwards compatible with previous versions. More information on how to avoid breaking changes can be found below.
 
 ### 5.2 API version in URL (OAS servers object)
 
-The OAS file also defines the API version used in the URL of the API endpoint (in the servers object).
+The OAS file also defines the API version used in the URL of the API (in the `servers` object).
 
-The API version in the URL only includes the "x" (MAJOR version) number of the API version as follows:
+The API version in the `url` field only includes the "x" (MAJOR version) number of the API version as follows:
 
 ```yaml
 servers:
@@ -583,7 +583,7 @@ servers:
 
 ---
 
-IMPORTANT: CAMARA initial public APIs (see explanation below) shall use both the MAJOR and the MINOR version number (v0.y) separated by a dot (".") in the API version in the URL.
+IMPORTANT: CAMARA public APIs with x=0 (`v0.x.y`) MUST use both the MAJOR and the MINOR version number separated by a dot (".") in the API version in the `url` field: `v0.y`.
 
 ---
 
@@ -592,7 +592,7 @@ servers:
     url: {apiRoot}/number-verification/v0.3
 ```
 
-This allows for test and usage of initial API versions as they are evolving rapidly, e.g. /qod/v0.10, or /qod/v0.11alpha1. However, it should be acknowledged that any initial API version may change.
+This allows for both test and commercial usage of initial API versions as they are evolving rapidly, e.g. `/qod/v0.10alpha1`, `/qod/v0.10rc1`, or `/qod/v0.10`. However, it should be acknowledged that any initial API version may change.
 
 ### 5.3 API versions throughout the release process
 
@@ -600,10 +600,10 @@ In preparation for its public release, an API will go through various intermedia
 
 Overall, an API can have any of the following versions:
 
-* work-in-progress (wip) API versions used during the development of an API before the first pre-release or in between pre-releases. Such API versions cannot be released and are not usable by API consumers.
-* alpha (x.y.z-alpha.m) API versions (with extensions) for CAMARA internal API rapid development purposes
-* release-candidate (x.y.z-rc.n) API versions (with extensions) for CAMARA internal API release bug fixing purposes
-* public (x.y.z) API versions for usage in commercial contexts. These API versions only have API version number x.y.z (semver 2.0), no extension. Public APIs can have one of two maturity states: 
+* work-in-progress (`wip`) API versions used during the development of an API before the first pre-release or in between pre-releases. Such API versions cannot be released and are not usable by API consumers.
+* alpha (`x.y.z-alpha.m`) API versions (with extensions) for CAMARA internal API rapid development purposes
+* release-candidate (`x.y.z-rc.n`) API versions (with extensions) for CAMARA internal API release bug fixing purposes
+* public (`x.y.z`) API versions for usage in commercial contexts. These API versions only have API version number x.y.z (semver 2.0), no extension. Public APIs can have one of two maturity states (used in release management): 
   * initial - indicating that the API is still not fully stable (x=0)
   * stable - indicate that the API has reached a certain level of maturity (x>0)
 
@@ -624,9 +624,9 @@ Precedence examples:
 
 For more information, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the Release Management project Wiki.
 
-### 5.4 Backwards and Forward Compatibility
+### 5.4 Backward and forward compatibility
 
-Avoid breaking backwards compatibility, unless strictly necessary, means that new versions should be compatible with previous versions.
+Avoid breaking backward compatibility, unless strictly necessary, means that new versions should be compatible with previous versions.
 
 Bearing in mind that APIs are continually evolving and certain operations will no longer be supported, the following considerations must be taken into account:
 
@@ -636,7 +636,7 @@ Bearing in mind that APIs are continually evolving and certain operations will n
 - Remove deprecated APIs documentation.
 - Never start using already deprecated APIs.
 
-<font size="3"><span style="color: blue"> Types of modification: </span></font>
+Types of modification:
 
 - Not all API changes have an impact on API consumers. These are referred to as backward compatible changes.
 - In case of such changes, the update produces a new API version that increases the MINOR or PATCH version number.
@@ -660,9 +660,9 @@ Breaking changes to an API that **DO** affect consumers:
 - Modifying or removing a mandatory parameter in existing operations (resource verbs). For example, when consulting a resource, a certain field is no longer returned. Another example: a field that was previously a string is now numeric.
 - Modifying or adding new responses to existing operations. For example: creating a resource can return a 412 response code.
 
-<font size="3"><span style="color: blue"> Compatibility management </span></font>
+Compatibility management:
 
-Tho ensure this compatibility, the following must be followed.
+To ensure this compatibility, the following guidelines must be applied.
 
 **As API provider**:
 - Never change an endpoint name; instead, add a new one and mark the original one for deprecation in a MINOR change and remove it in a later MAJOR change (see semver FAQ entry: https://semver.org/#how-should-i-handle-deprecating-functionality)
