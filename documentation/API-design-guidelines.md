@@ -648,7 +648,7 @@ Backward compatible changes to an API that **DO NOT** affect consumers:
 - Adding a new endpoint
 - Adding new operations on a resource (`PUT`, `POST`, ...).
 - Adding optional input parameters to requests on existing resources. For example, adding a new filter parameter in a GET on a collection of resources.
-- Changing an input parameter from reqmandatory to optional. For example: when creating a resource, a property of said resource that was previously mandatory becomes optional.
+- Changing an input parameter from mandatory to optional. For example: when creating a resource, a property of said resource that was previously mandatory becomes optional.
 - Adding new properties in the representation of a resource returned by the server. For example, adding a new age field to a Person resource, which originally was made up of nationality and name.
 
 Breaking changes to an API that **DO** affect consumers:
