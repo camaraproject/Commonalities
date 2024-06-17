@@ -30,8 +30,8 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [5.1 Versioning Strategy](#51-versioning-strategy)
     - [5.2 Backwards and Forward Compatibility](#52-backwards-and-forward-compatibility)
   - [6. Error Responses](#6-error-responses)
-    - [### 6.1 Standardized use of CAMARA error responses](#61-standardized-use-of-camara-error-responses)
-    - [### 6.2 Error Responses - Device Object](#62-error-responses---device-object)
+    - [6.1 Standardized use of CAMARA error responses](#61-standardized-use-of-camara-error-responses)
+    - [6.2 Error Responses - Device Object](#62-error-responses---device-object)
   - [7. Common Data Types](#7-common-data-types)
   - [8. Pagination, Sorting and Filtering](#8-pagination-sorting-and-filtering)
     - [8.1 Pagination](#81-pagination)
@@ -709,7 +709,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 > _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, a `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
 
-> _NOTE 2: A {{SPECIFIC_CODE}}, unless it may have traversal scope (i.e. re-usable among different APIs), SHALL follow this scheme for a specific API: {{API_NAME}}.{{SPECIFIC_CODE}}
+> _NOTE 2: A {{SPECIFIC_CODE}}, unless it may have traversal scope (i.e. re-usable among different APIs), SHALL follow this scheme for a specific API: {{API_NAME}}.{{SPECIFIC_CODE}}_
 
 ### 6.2 Error Responses - Device Object
 
