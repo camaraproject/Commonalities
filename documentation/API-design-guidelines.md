@@ -396,11 +396,11 @@ The main HTTP headers are described below:
 
 - `HTTP Strict Transport Security`: a web security policy mechanism which helps to protect websites against protocol downgrade attacks and cookie hijacking. It allows web servers to declare that web browsers (or other complying user agents) should only interact with it using secure HTTPS connections, and never via the insecure HTTP protocol.
 - `X-Frame-Options`: a response header (also named XFO) which improves the protection of web applications against clickjacking. It instructs the browser whether the content can be displayed within frames.
-- `X-Content-Type-Options`: setting this header will prevent the browser from interpreting files as a different MIME type to what is specified in the Content-Type HTTP header (e.g., treating text/plain as text/css).
-- `Content-Security-Policy`: it requires careful tuning and precise definition of the policy. If enabled, CSP has a significant impact on the way browsers render pages (e.g., inline JavaScript is disabled by default and must be explicitly allowed in the policy). CSP prevents a wide range of attacks, including cross-site scripting and other cross-site injections.
+- `X-Content-Type-Options`: setting this header will prevent the browser from interpreting files as a different MIME type to what is specified in the Content-Type HTTP header (e.g. treating text/plain as text/css).
+- `Content-Security-Policy`: it requires careful tuning and precise definition of the policy. If enabled, CSP has a significant impact on the way browsers render pages (e.g. inline JavaScript is disabled by default and must be explicitly allowed in the policy). CSP prevents a wide range of attacks, including cross-site scripting and other cross-site injections.
 - `X-Permitted-Cross-Domain-Policies`: a cross-domain policy file is an XML document that grants a web client, such as Adobe Flash Player or Adobe Acrobat (though not necessarily limited to these), permission to handle data across domains. When clients request content hosted on a particular source domain and that content makes requests directed towards a domain other than its own, the remote domain needs to host a cross-domain policy file. This file grants access to the source domain, allowing the client to continue the transaction.
 - `Referrer-Policy`: it governs which referrer information (sent in the Referrer header) should be included with requests made.
-- `Clear-Site-Data`: it clears browsing data (e.g., cookies, storage, cache) associated with the requesting website. It allows web developers to have more control over the data stored locally by a browser for their origins.
+- `Clear-Site-Data`: it clears browsing data (e.g. cookies, storage, cache) associated with the requesting website. It allows web developers to have more control over the data stored locally by a browser for their origins.
 - `Cross-Origin-Embedder-Policy`: it prevents a document from loading any cross-origin resources that don’t explicitly grant the document permission.
 - `Cross-Origin-Opener-Policy`: this response header (also referred to as COOP) allows you to ensure a top-level document does not share a browsing context group with cross-origin documents. COOP will process-isolate your document and potential attackers can’t access to your global object if they were opening it in a popup, preventing a set of cross-origin attacks dubbed XS-Leaks.
 - `Cross-Origin-Resource-Policy`: this response header (also referred to as CORP) allows to define a policy that lets websites and applications opt in to protection against certain requests from other origins (such as those issued with elements like "`<script>`" and "`<img>`"), to mitigate speculative side-channel attacks, like Spectre, as well as Cross-Site Script Inclusion (XSSI) attacks.
@@ -940,7 +940,7 @@ NOTE: HTTP headers are case-insensitive. The use of the naming `x-correlator` is
 
 ## 10. Security
 
-One of the key points in the API definition process is to specify and validate the security needs that will be maintained to guarantee data integrity and access control. There are multiple ways to secure a RESTful API, e.g., basic authentication, OAuth2, OIDC, etc., but one thing is for sure: RESTful APIs should be stateless, so authentication/authorization requests should not rely on cookies or sessions. Instead, each API request must come with some form of authentication credentials that must be validated on the server for each request.
+One of the key points in the API definition process is to specify and validate the security needs that will be maintained to guarantee data integrity and access control. There are multiple ways to secure a RESTful API, e.g. basic authentication, OAuth2, OIDC, etc., but one thing is for sure: RESTful APIs should be stateless, so authentication/authorization requests should not rely on cookies or sessions. Instead, each API request must come with some form of authentication credentials that must be validated on the server for each request.
 
 The basic idea in terms of security is
 to understand that various types of data will require different levels of security.
@@ -1209,7 +1209,7 @@ info:
 
 The `termsOfService` and `contact` fields are optional in OpenAPI specification and may be added by API Providers documenting their APIs.
 
-The extension field `x-camara-commonalities` indicates version of CAMARA Commonalities guidelines that given API specification adheres to.
+The extension field `x-camara-commonalities` indicates a version of CAMARA Commonalities guidelines that given API specification adheres to.
 
 
 #### Servers object
@@ -1387,7 +1387,7 @@ When IpAddr is used in a payload, the property objectType MUST be present to ind
 
 In general, all APIs must be secured to ensure who has access to what and for what purpose.
 Camara uses OIDC and CIBA for authentication and consent collection and to determine whether the user has,
-e.g., opted out of some API access.
+e.g. opted out of some API access.
 
 The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose is defined by W3C Privacy Vocabulary in the [purpose section](https://w3c.github.io/dpv/dpv/#vocab-purposes).
 
@@ -1563,7 +1563,7 @@ the pattern for Resource-based event subscription should be consistent with all 
 
 CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in [Commonalities/artifacts/camara-cloudevents](https://github.com/camaraproject/Commonalities/tree/main/artifacts/camara-cloudevents) directory (event-subscription-template.yaml).
 
-To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g., device-roaming-subscriptions.yaml
+To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
 Four operations must be defined:
 
@@ -1589,7 +1589,7 @@ The recommended pattern is to use `/subscriptions` path for the subscription ope
 But an API design team, for a specific case, can append `/subscriptions` path with a prefix
 (e.g. `/roaming/subscriptions` and `/connectivity/subscriptions`).
 The rationale for using this alternate pattern should be explicitly provided
-(e.g., the notification source for each of the supported events may be completely different,
+(e.g. the notification source for each of the supported events may be completely different,
 in which case, separating the implementations is beneficial). 
 
 The following table provides `/subscriptions` attributes
