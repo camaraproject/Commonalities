@@ -1174,20 +1174,57 @@ Below considerations should be checked when an API is documented:
 ### 11.1 General Information
 
 This part must include the following information:
-- API Version in the next format: X.Y.Z.
 - API title with public name.
 - A concise overview outlining the primary functions of the API.
-- API Terms of Service.
-- Contact information, with name, email and website of the API Holder.
+- API Version in the format defined in [Chapter 5. Versioning](#5-versioning)
 - Licence information (name, website…)
-- Schemes supported (HTTP, HTTPS…)
-- Allowed response formats (“application/json”, “text/xml”…)
-- Response format (“application/jwt”…)
+- API server and base URL
 - Global `tags` object if tags are used for API operations
 
-<p style="text-align: center;">
-  <img src="./images/guidelines-fig-14.png" alt="drawing" width="400"/>
-</p>
+#### Info object
+
+ 
+The `info` object shall have the following content:
+
+```yaml
+info:
+  # title without "API" in it, e.g. "Number Verification"
+  title: Number Verification
+  # description explaining the API, part of the API documentation 
+  # text explaining how to fill the "Authorization and authentication" - see section 11.6
+  description: |
+    This API allows to verify that the provided mobile phone number is the one used in the device. It
+    verifies that the user is using a device with the same mobile phone number as it is declared.
+    ### Authorization and authentication
+    CAMARA guidelines defines a set of authorization flows ...
+  # API version - Aligned to SemVer 2.0 according to CAMARA versioning guidelines
+  version: 1.0.1
+  # Name of the license and a URL to the license description
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  # CAMARA Commonalities version - x.y.z
+  x-camara-commonalities: 0.4.0
+```
+
+The `termsOfService` and `contact` fields are optional in OpenAPI specification and may be added by API Providers documenting their APIs.
+
+The extension field `x-camara-commonalities` indicates version of CAMARA Commonalities guidelines that given API specification adheres to.
+
+
+#### Servers object
+
+The `servers` object shall have the following content:
+
+```yaml
+servers:
+  # apiRoot variable and the fixed base path containing <api-name> and <api-version> as defined in chapter 5  
+  - url: {apiRoot}/quality-on-demand/v2
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+```
 
 ### 11.2 Published Routes
 
@@ -1199,10 +1236,7 @@ This part must contain the list of published functions, with the following descr
    - Optionally `tags` object for each API operation - Title Case is the recommended style for tag names.
    - Request param list, making reference to "Request params" part.
    - Supported responses list, describing success and errors cases.
-
-<p style="text-align: center;">
-  <img src="./images/guidelines-fig-15.png" alt="drawing" width="400"/>
-</p>
+   - Allowed content type (“application/json”, “text/xml”…)
 
 ### 11.3 Request Parameters
 
@@ -1210,12 +1244,9 @@ This part contains a list of expected payload requests, if any. This description
 - Parameter name, used to reference it in other sections
 - Parameter description
 - Parameter place (header, route…)
-- Type (basic types like chains, integers, complex objects, ...)
+- Type (basic types like strings, integers, complex objects, ...)
 - Required field or optional flag
 
-<p style="text-align: center;">
-  <img src="./images/guidelines-fig-16.png" alt="drawing" width="400"/>
-</p>
 
 ### 11.4 Response Structure
 
@@ -1223,11 +1254,9 @@ This part describes the list of possible messages returned by the API. It also i
 - Name of the response object, used to refer to it in other sections.
 - Response object description.
 - Object type (basic types like string, integer... or even more complex objects defined in the "Data definition" part...)
+- Allowed content type (“application/json”, “text/xml”…)
 - Metadata links (HATEOAS)
 
-<p style="text-align: center;">
-  <img src="./images/guidelines-fig-17.png" alt="drawing" width="400"/>
-</p>
 
 
 ### 11.5 Data Definitions
@@ -1246,21 +1275,9 @@ This part captures a detailed description of all the data structures used in the
       - Integer ones: Format (int32, int64…), min value.
 
 
-In this part, the error response structure must also be defined, which must be as follows:
-- Type (Array, Integer, Object …)
-- Mandatory fields of the structure
-- Properties:
-   - Error Code
-      - Type (Array, Integer…)
-      - Error codes supported, as Enum list
-   - Error description
-       - Type (Array)
-       - Min longitude
-       - Max longitude
+In this part, the error response structure must also be defined following the guidelines in [Chapter 6. Error Responses](#6-error-responses).
 
-<p style="text-align: center;">
-  <img src="./images/guidelines-fig-18.png" alt="drawing" width="400"/>
-</p>
+
 
 #### 11.5.1 Usage of discriminator
 As mentioned in OpenAPI doc [here](https://spec.openapis.org/oas/v3.0.3#discriminator-object) usage of discriminator may
