@@ -30,6 +30,8 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [5.1 Versioning Strategy](#51-versioning-strategy)
     - [5.2 Backwards and Forward Compatibility](#52-backwards-and-forward-compatibility)
   - [6. Error Responses](#6-error-responses)
+    - [### 6.1 Standardized use of CAMARA error responses](#61-standardized-use-of-camara-error-responses)
+    - [### 6.2 Error Responses - Device Object](#62-error-responses---device-object)
   - [7. Common Data Types](#7-common-data-types)
   - [8. Pagination, Sorting and Filtering](#8-pagination-sorting-and-filtering)
     - [8.1 Pagination](#81-pagination)
@@ -81,12 +83,14 @@ This document captures guidelines for the API design in CAMARA project. These gu
 |**Camel Case**| It is a kind of define the fields’ compound name or phrases without whitespaces among words. It uses a capital letter at the beginning of each word. There are two different uses:<li>Upper Camel Case: When the first letter of each word is capital.</li><li>Lower Camel Case: Same to that Upper one, but with the first word in lowercase.</li>|
 |**Header**| HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by a colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.|
 |**HTTP**| Hypertext Transfer Protocol (HTTP) is a communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.|
-|**JSON**| JavaScript Object Notation|
-|**JWT**| JSON Web Token (JWT) is an open standard based on JSON proposed by IETF (RFC 7519) for access token creations allowing the identity and purposes spread. |
+|**JSON**| The JavaScript Object Notation (JSON) Data Interchange Format [RFC8259](https://datatracker.ietf.org/doc/html/rfc8259) |
+|**JWT**| JSON Web Token (JWT) is an open standard based on JSON [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519) |
 |**Kebab-case**| Practice in the words denomination where the hyphen is used to separate words. |
-|**OAuth**| Open Authorization is an open standard that allows simple Authorization flows to be used in websites or applications.|
+|**OAuth2**| Open Authorization is an open standard that allows simple Authorization flows to be used in websites or applications. [RFC6749](https://datatracker.ietf.org/doc/html/rfc6749)|
+|**OIDC**| [OpenId Connect](https://openid.net/specs/openid-connect-core-1_0.html) is standard based on OAuth2 that adds authentication and consent to OAuth2.|
+|**CIBA**| [Client-Initiated Backchannel Authentication](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) is a standard based on OIDC that enables API consumers to intiate an authentication.|
 |**REST**| Representational State Transfer.|
-|**TLS**| Transport Layer Security or TLS is a cryptographic protocol that provides secured network communications. |
+|**TLS**| Transport Layer Security is a cryptographic protocol that provides secured network communications. |
 |**URI**| Uniform Resource Identifier. |
 |**Snake_case**|Practice in the words denomination where the underscore is used to separate words. |
 
@@ -169,48 +173,7 @@ TM Forum further defines a set of reference APIs (TMF Open APIs) between the dif
 
 ### 2.4 Information Representation Standard
 
-As a messaging standard, the use of JSON is proposed by default, since it is a light data exchange format and is commonly adopted by current web technologies, although this does not imply that other types of data cannot be used depending on functional and technical requirements. 
-
-JSON is made up with two structures:
-
-- A collection of key/value pairs. In various languages this is known as an object, record, structure, dictionary, hash table, key list, or an associative array.
-- An ordered list of values. In most languages, this is implemented as arrays, vectors, lists, or sequences.
-Data exchange format that is independent of the programming language is based on universal structures supported virtually in all programming languages.
-
-In JSON, the following structures are represented.
-
-An **object** is an unordered set of key/value pairs. An object starts with a "`{`" opening brace and ends with a "`}`" closing brace. Each name is followed by a “`:`” colon and key/value pairs are separated by a “`,`” comma.
-<p align="center">
-<img src="./images/guidelines-fig-3.png" alt="drawing" width="300"/>
-</p>
-
-An **array** is a collection of values. An array starts with “`[`“ left bracket and ends with “`]`” right bracket. Values are separated by "`,`" comma.
-<p align="center">
-<img src="./images/guidelines-fig-4.png" alt="drawing" width="300"/>
-</p>
-
-A **value** can be a string with double quotes, or a number, or true or false or null, or an object or an array. These structures can be nested.
-<p align="center">
-<img src="./images/guidelines-fig-5.png" alt="drawing" width="300"/>
-</p>
-
-A **character string** is a collection of zero or more Unicode characters, enclosed in double quotes, using backslash escaping. A character is represented by a character string of a single character. A character string is similar to a C or Java character string.
-<p align="center">
-<img src="./images/guidelines-fig-6.png" height="300" width="300"/>
-</p>
-
-
-A **number** is similar to a C or Java number, except that octal and hexadecimal formats are not used.
-<p align="center">
-<img src="./images/guidelines-fig-7.png" height="300" width="300"/>
-</p>
-
-**White spaces** can be inserted between any pair of symbols.
-<p align="center">
-<img src="./images/guidelines-fig-8.png" alt="drawing" width="300"/>
-</p>
-
-Except for minor encoding details, the above-mentioned structures provide a full description of JSON language. 
+As a messaging standard, the use of [JSON](https://datatracker.ietf.org/doc/html/rfc8259) is proposed as the default in Camara, since it is a light data exchange format and is commonly adopted by current web technologies, although this does not imply that other types of data cannot be used depending on functional and technical requirements. 
 
 ## 2.5 Reduce telco-specific terminology in API definitions
 CAMARA aims to produce 'intent-based' APIs, which have two key benefits:
@@ -321,7 +284,7 @@ HTTP status response codes indicate if a request has been completed successfully
 4.	Client Errors (4XX)
 5.	Server Errors (5XX)
 
-Status codes are defined in the [RFC 2616](https://tools.ietf.org/html/rfc2616#section-10) 10th section. You can get the updated specifications from [RFC 7231](https://tools.ietf.org/html/rfc7231#section-6.5.1).
+Status codes are defined in the [RFC 2616](https://tools.ietf.org/html/rfc2616#section-10) 10th section. You can get the updated specifications from [RFC 9110 Status Codes](https://datatracker.ietf.org/doc/html/rfc9110#section-15).
 
 Common errors are captured in the table below. 
 
@@ -335,12 +298,13 @@ Common errors are captured in the table below.
 | 206 | 206 (Partial Content) The server has fulfilled the partial GET request for the resource.
 | 400 | 400 (Bad Request) status code indicates that the server cannot or will not process the request due to something perceived as a client error (for example, malformed request syntax, invalid request message structure, or incorrect routing). <br>This code must be documented in all the operations in which it is necessary to receive data in the request.|
 | 401 | 401 (Unauthorized) status code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource.<br>This code has to be documented in all API operations that require subscription by a client.|
-| 403 | 403 (Forbidden) status code indicates that the server understood the request, but is refusing to authorize it. A server that wants to make public why the request was prohibited can describe that reason in the response payload (if applicable).<br>This code is usually documented in the operations. It will be returned when the OAuth token access does not have the required scope or when the user fails operational security.|
+| 403 | 403 (Forbidden) status code indicates that the server understood the request, but is refusing to authorize it. A server that wants to make public why the request was prohibited can describe that reason in the response payload (if applicable).<br>This code is usually documented in the operations. It will be returned when the OAuth2 token access does not have the required scope or when the user fails operational security.|
 | 404 | 404 (Not Found) status code indicates that the origin server either did not find a current representation for the target resource or is unwilling to reveal that it exists.<br>This code will occur on `GET` operations when the resource is not available, so it is necessary to document this return in such situations.|
 | 405 | 405 (Method Not Allowed) status code indicates that the origin server knows about the method received in the request line, but the target resource does not support it.<br>This code is documented at the API portal level, it should not be documented at the API level.|
 | 406 | 406 (Not Acceptable) status code indicates that the target resource does not have a current representation that would be acceptable to the user, based on the proactive negotiation header fields received in the request, and the server is unwilling to provide a predetermined representation. It must be reported when there is no response by default, and header fields are reported to carry out the content negotiation (Accept, Accept-Charset, Accept-Encoding, Accept-Language). |
 | 408 | Status code 408 (Request Timeout) indicates that the server did not receive the complete request message within the expected time.<br>This code is documented at the API portal level, it should not be documented at the API level.|
 | 409 | The 409 (Conflict) status code indicates when a request conflicts with the current state of the server. |
+| 410 | The 410 (Gone) status code indicates that access to the target resource is no longer available at the origin server and that this condition is likely to be permanent.
 | 415 | The 415 (Unsupported Media Type) status code indicates that the server cannot accept the format of the request body as indicated by the `Content-Type` or `Content-Encoding` request header. The API specification will state what request body format should be used. |
 | 429 | The 429 (Too Many Requests) status code indicates that the server is temporarily unable to accept any more requests from the client due to the high number of requests recently sent. A `Retry-After` response header may indicate how long the client should wait before trying again. |
 | 500 | Status code 500 (Internal Server Error) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.<br>This code must always be documented. It should be used as a general system error.|
@@ -405,7 +369,7 @@ The main HTTP headers are described below:
 - `Accept`: this header can be used to specify certain types of data that are acceptable for the response. `Accept` headers can be used to indicate that the request is specifically limited to a small set of desired types, as in the case of a request for an image.
 - `Accept-Encoding`: similar to the `Accept` header, but restricting the content encodings that are acceptable in the response. 
 - `Accept-Language`: the consumer defines the list of languages in order of preference. The server answer with the `Content-Language` field in the header with the response language.
-- `Authorization`: it allows sending the authorization token for API access, initially OAuth and JWT.
+- `Authorization`: it allows sending the authorization token for API access, initially OAuth2 and JWT.
 - `Content-Type`: it indicates the type of message sent to the recipient or, in the case of the HEAD method, the type of message that would have been sent if the request had been a GET. The MIME type of the response, or the content uploaded via POST/PUT in case it is a request. 
 - `Content-Length`: it indicates the message size, in octets, sent to the recipient or, in the case of the HEAD method, the message size that would have been sent if the request had been a GET. The size of the response in octets (8 bits) 
 - `Content-Encoding`: it is used as a message type modifier. The type of encoding used in the response is indicated.
@@ -629,15 +593,19 @@ Tho ensure this compatibility, the following must be followed.
 - Variable order rule: DO NOT rely on the order in which data appears in responses from the JSON service, unless the service explicitly specifies it.
 - Clients MUST NOT transmit personally identifiable information (PII) parameters in the URL. If necessary, use headers.
 
+
 ## 6. Error Responses
 
 In order to guarantee interoperability, one of the most important points is to carry out error management aimed at strictly complying with the error codes defined in the HTTP protocol.
 
 An error representation must not be different from the representation of any resource. A main error message is defined, with JSON structure with the following fields:
 - A field "`status`", which can be identified in the response as a standard code from a list of Hypertext Transfer Protocol (HTTP) response status codes.
-- A unique error "`code`", which can be identified and traced for more details. It must be human readable; therefore, it must not be a numeric code. In turn, to achieve a better location of the error, you can reference the value or field that is causing it, and include it in the message. 
-- A detailed description of "`message`"
-  
+- A unique error "`code`", which can be identified and traced for more details. It must be human readable; therefore, it must not be a numeric code. In turn, to achieve a better location of the error, you can reference the value or field that is causing it, and include it in the message.
+- A detailed description in "`message`" - in English language in API specification, it can be changed to other language in implementation if needed.
+
+All these aforementioned fields are mandatory in Error Responses.
+`status` and `code` fields have normative nature, so as their use has to be standardized (see [Section 6.1](#61-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
+
 A JSON error structure is proposed below: 
 
 ```json
@@ -657,44 +625,119 @@ The essential requirements to consider would be:
 - Customization of the generated error based on the error content returned by the final core service should be contemplated.
 - Latency should be minimized in its management.
 
-In the following, we elaborate on the existing client errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature: i) syntax exceptions, ii) service exceptions, and iii) server errors. 
+> _NOTE: When standardized AuthN/AuthZ flows are used, please refer to [10.2 Security Implementation](#102-security-implementation) and [11.6 Security Definition](#116-security-definition), the format and content of Error Response for those procedures SHALL follow the guidelines of those standards.
+
+### 6.1 Standardized use of CAMARA error responses
+
+This section aims to provide a common use of the fields `status` and `code` across CAMARA APIs.
+
+In the following, we elaborate on the existing client errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature:
+- i) syntax exceptions
+- ii) service exceptions
+- iii) server errors 
 
 <font size="3"><span style="color: blue"> Syntax Exceptions </span></font>
 
-| **Error code** | Description |
-|-----|-----|
-|`INVALID_ARGUMENT` |  A specified resource duplicate entry found. |
-|`CONFLICT` |  A specified resource duplicate entry found. |
-|`OUT_OF_RANGE`| Client specified an invalid range. |
-|`PERMISSION_DENIED`|  Client does not have sufficient permissions to perform this action. |
-|`ABORTED` |  Concurrency conflict.|
-|`ALREADY_EXISTS` | The resource that a client tried to create already exists. |
+| **Error status** | **Error code** | **Message example** | **Scope/description** |
+| :--------------: | :------------: | ----------------------- | ----------------------- |
+| 400 | `INVALID_ARGUMENT` | Client specified an invalid argument, request body or query param. | Generic Syntax Exception |
+| 400 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Specific Syntax Exception regarding a field that is relevant in the context of the API (e.g. format of an amount) |
+| 400 | `OUT_OF_RANGE` | Client specified an invalid range. | Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested |
+| 403 | `PERMISSION_DENIED` | Client does not have sufficient permissions to perform this action. | OAuth2 token access does not have the required scope or when the user fails operational security |
+| 403 | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token. | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token |
+| 409 | `ABORTED` | Concurrency conflict. | Concurreny of processes of the same nature/scope |
+| 409 | `ALREADY_EXISTS` | The resource that a client tried to create already exists. | Trying to create an existing resource |
+| 409 | `CONFLICT` | A specified resource duplicate entry found. | Duplication of an existing resource |
+| 409 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Specific conflict situation that is relevant in the context of the API |
 
 <font size="3"><span style="color: blue"> Service Exceptions </span></font>
 
-| **Error code** | Description |
-|-----|-----|
-|`UNAUTHENTICATED` |  Request not authenticated due to missing, invalid, or expired credentials.|
-|`NOT_FOUND`|  The specified resource is not found. |
-|`TOO_MANY_REQUESTS`| Either out of resource quota or reaching rate limiting. |
-|`AUTHENTICATION_REQUIRED`|  New authentication is required. |
+| **Error status** | **Error code** | **Message example** | **Scope/description** |
+| :--------------: | :------------: | ----------------------- | ----------------------- |
+| 401 | `UNAUTHENTICATED` | Request not authenticated due to missing, invalid, or expired credentials. | Request cannot be authenticated |
+| 401 | `AUTHENTICATION_REQUIRED` | New authentication is required. | New authentication is needed, authentication is no longer valid |
+| 403 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API (e.g QoD session cannot be created for a set of users) |
+| 404 | `NOT_FOUND` | The specified resource is not found. | Resource is not found |
+| 404 | `DEVICE_NOT_FOUND` | Device identifier not found. | Device identifier not found |
+| 404 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Specific situation to highlight the resource/concept not found (e.g. use in device) |
+| 422 | `DEVICE_IDENTIFIERS_MISMATCH` | Provided device identifiers are not consistent. | Inconsistency between device identifiers not pointing to the same device |
+| 422 | `DEVICE_NOT_APPLICABLE` | The service is not available for the provided device. | Service is not available for the provided device |
+| 422 | `{{SPECIFIC_CODE}}` | `{{SPECIFIC_CODE_MESSAGE}}` | Any semantic condition associated to business logic, specifically related to a field or data structure |
+| 429 | `QUOTA_EXCEEDED` | Either out of resource quota or reaching rate limiting. | Request is rejected due to exceeding a business quota limit |
+| 429 | `TOO_MANY_REQUESTS` | Either out of resource quota or reaching rate limiting. | API Server request limit is overpassed |
 
 <font size="3"><span style="color: blue"> Server Exceptions </span></font>
 
-| **Error code** | Description |
-|-----|-----|
-|`FAILED_PRECONDITION` |  Request cannot be executed in the current system state.|
-|`DATA_LOSS`| Unrecoverable data loss or data corruption. |
-|`INTERNAL`| Unknown server error. Typically a server bug.|
-|`BAD_GATEWAY`| An upstream internal service cannot be reached. |
-|`UNAVAILABLE`| Request timeout exceeded. |
-|`TIMEOUT`| Request timeout exceeded. |
-|`NOT_IMPLEMENTED`| This functionality is not implemented yet |
-|`METHOD_NOT_ALLOWED`|	The requested method is not allowed/supported on the target resource. |
-|`NOT_ACCEPTABLE` | The server cannot produce a response matching the content requested by the client through `Accept-*` headers. |
-|`UNSUPPORTED_MEDIA_TYPE`	| The server refuses to accept the request because the payload format is in an unsupported format. |
+| **Error status** | **Error code** | **Message example** | **Scope/description** |
+| :--------------: | :------------: | ----------------------- | ----------------------- |
+| 405 | `METHOD_NOT_ALLOWED` | The requested method is not allowed/supported on the target resource. | Invalid HTTP verb used with a given endpoint |
+| 406 | `NOT_ACCEPTABLE` | The server cannot produce a response matching the content requested by the client through `Accept-*` headers. | API Server does not accept the media type (`Accept-*` header) indicated by API client |
+| 410 | `GONE` | Access to the target resource is no longer available. | Use in notifications flow to allow API Consumer to indicate that its callback is no longer available |
+| 412 | `FAILED_PRECONDITION` | Request cannot be executed in the current system state. | Indication by the API Server that the request cannot be processed in current system state |
+| 415 | `UNSUPPORTED_MEDIA_TYPE` | The server refuses to accept the request because the payload format is in an unsupported format. | Payload format of the request is in an unsupported format by the Server. Should not happen |
+| 500 | `INTERNAL` | Unknown server error. Typically a server bug. | Problem in Server side. Regular Server Exception |
+| 501 | `NOT_IMPLEMENTED` | This functionality is not implemented yet. | Service not implemented. The use of this code should be avoided as far as possible to get the objective to reach aligned implementations |
+| 502 | `BAD_GATEWAY` | An upstream internal service cannot be reached. | Internal routing problem in the Server side that blocks to manage the service properly |
+| 503 | `UNAVAILABLE` | Service Unavailable. | Service is not available. Temporary situation usually related to maintenance process in the server side |
+| 504 | `TIMEOUT` | Request timeout exceeded. | API Server Timeout |
 
-> _NOTE: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, a `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
+> _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, a `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
+
+> _NOTE 2: A {{SPECIFIC_CODE}}, unless it may have traversal scope (i.e. re-usable among different APIs), SHALL follow this scheme for a specific API: {{API_NAME}}.{{SPECIFIC_CODE}}
+
+### 6.2 Error Responses - Device Object
+
+This section is focused in the guidelines about error responses around the concept of `device` object.
+
+Following table compiles the guidelines to be adopted:
+
+| **Case #** | **Description** | **Error status** | **Error code**  | **Message example** |
+| :---: | :--- | :---: | :---: | :--- |
+| 0 | The request body does not comply with the schema | 400 | INVALID_ARGUMENT | device does not comply with the schema. |
+| 1 | None of the provided device identifiers is supported by the implementation | 422 | UNSUPPORTED_DEVICE_IDENTIFIERS | phoneNumber is required. |
+| 2 | Some identifier cannot be matched to a device | 404 | DEVICE_NOT_FOUND | Device identifier not found. |  
+| 3 | Device identifiers mismatch | 422 | DEVICE_IDENTIFIERS_MISMATCH | Provided device identifiers are not consistent. |
+| 4 | Invalid access token context | 403 | INVALID_TOKEN_CONTEXT | Device identifiers are not consistent with access token. |
+| 5 | Service not applicable to the device | 422 | DEVICE_NOT_APPLICABLE | The service is not available for the provided device. |
+
+#### Templates
+
+##### Response template
+
+A response will group all examples for same operation and status code
+Schema is common for all errors
+
+```yaml
+description: |
+  The examples section includes the list of subcases for this status error code to be implemented. In each example `status` and `code` are normative for the specific error case. `message` may be adjusted or localized by the implementation.
+headers: 
+  {{response_headers}}
+content:
+  application/json:
+    schema:
+      $ref: "#/components/schemas/ErrorInfo"
+    examples:
+      {{case_1}}:
+        $ref: ""#/components/examples/{{case_1}}"
+      {{case_2}}:
+        $ref: ""#/components/examples/{{case_2}}"      
+```
+
+##### Examples template
+
+One case will be needed per row in the table above, following this template:
+
+```yaml
+components:
+  examples:
+    {{case_N}}:
+      summary: {{Description}}
+      description: {{informative description}}
+      value:
+        status: {{Error status}}
+        code: {{Error code}}
+        message: {{Message example}}
+```
 
 
 ## 7. Common Data Types 
@@ -864,10 +907,11 @@ NOTE: HTTP headers are case insensitive. The use of the naming `x-correlator` is
 
 ## 10. Security
 
-One of the key points in the API definition process is to specify and validate the security needs that will be maintained to guarantee data integrity and access control. There are multiple ways to secure a RESTful API, e.g. basic authentication, OAuth, etc., but one thing is for sure: RESTful APIs should be stateless, so authentication/authorization requests should not rely on cookies or sessions. Instead, each API request must come with some form of authentication credentials that must be validated on the server for each request.
+One of the key points in the API definition process is to specify and validate the security needs that will be maintained to guarantee data integrity and access control. There are multiple ways to secure a RESTful API, e.g. basic authentication, OAuth2, OIDC, etc., but one thing is for sure: RESTful APIs should be stateless, so authentication/authorization requests should not rely on cookies or sessions. Instead, each API request must come with some form of authentication credentials that must be validated on the server for each request.
 
 Basic idea in terms of security is to understand that various types of data will require different levels of security, depending on the confidentiality of the data you are trying to obtain and the level of trust between the API Provider and the consumer.
 
+The [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md) defines Security and Interoperablity rules and recommendations for Camara e.g details on OIDC and CIBA. The CAMARA Security and Interoperability Profile is maintained by the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement).
 
 ### 10.1 API REST Security
 
@@ -901,9 +945,7 @@ Passwords should never be sent in API bodies, but if it is necessary it must has
 Usernames, passwords, session tokens, and API keys should not appear in the URL, as this can be captured in web server logs, making them easily exploitable. For example, this URL (```https://api.domain.com/user-management/users/{id}/someAction?apiKey=abcd123456789```) exposes the API key. Therefore, never use this kind of security.
 
 5. **Authentication and authorization must be considered**
-   - The OAuth 2.0 authorization framework allows a third-party application to gain limited access to an HTTP service, either on behalf of a resource owner, by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party app get access on your behalf. 
-   - OpenID Connect is built on the OAuth 2.0 protocol and uses an additional JSON Web Token (JWT), called an ID token, to standardize areas that OAuth 2.0 leaves up to choice, such as scopes and endpoint discovery. It is specifically focused on user authentication and is widely used to enable user logins on consumer websites and mobile apps.<br>
-   - All the information about the authN-authZ concepts for CAMARA APIs are documented in https://github.com/camaraproject/IdentityAndConsentManagement/tree/main/documentation/CAMARA-AuthN-AuthZ-Concept.md
+   Camara uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md).
   
 6. **Add request time flags should be considered**. 
 Along with other request parameters, a request timestamp can be added as a custom HTTP header in API requests. The server will compare the current timestamp with the timestamp of the request and will only accept the request if it is within a reasonable time frame (1-2 minutes maybe).
@@ -947,9 +989,9 @@ These include:
 
 The API must ensure that the consumer is known and can access the requested resources.
 
-<u>a) OAuth</u><br>
+<u>a) OAuth2</u><br>
 
-All APIs must be protected by the OAuth 2.0 Framework. All API requests must include an HTTP header called "Authorization" with a valid OAuth access token.
+All APIs must be protected by the OAuth2  Framework. All API requests must include an HTTP header called "Authorization" with a valid OAuth2 access token.
 
 The following controls will be performed on the access token:
 - **Check if the access token is still valid**. If it is expired or revoked, the API will return an HTTP 401 (Unauthorized) code.
@@ -959,7 +1001,7 @@ The following controls will be performed on the access token:
 
 <u>b) Scopes</u><br>
 
-The scopes allow defining the permission scopes that a system or a user has on a resource, ensuring that they can only access the parts they need and not have access to more. These restrictions are done by limiting the permissions that are granted to OAuth tokens.
+The scopes allow defining the permission scopes that a system or a user has on a resource, ensuring that they can only access the parts they need and not have access to more. These restrictions are done by limiting the permissions that are granted to OAuth2 tokens.
 
 Scopes should be represented as below for all Camara APIs except the APIs that offer explicit event subscriptions:
 - API Name: qod, address-management, numbering-information...
@@ -1059,7 +1101,7 @@ Below considerations should be checked when an API is documented:
    -  Request Parameters ([Section 11.3](#113-request-parameters))
    -  Response Structure ([Section 11.4](#114-response-structure))
    -  Data Definitions ([Section 11.5](#115-data-definitions))
-   -  OAuth Definition ([Section 11.6](#116-oauth-definition))
+   -  Security Schemes ([Section 11.6](#116-oauth-definition))
 - To avoid issues with implementation using Open API generators:
   - Reserved words must not be used in the following parts of an API specification:
     - Path and operation names
@@ -1078,20 +1120,57 @@ Below considerations should be checked when an API is documented:
 ### 11.1 General Information
 
 This part must include the following information:
-- API Version in the next format: X.Y.Z.
 - API title with public name.
 - A brief description of the main functions of the API.
-- API Terms of Service.
-- Contact information, with name, email and website of the API Holder.
+- API Version in the format defined in [Chapter 5. Versioning](#5-versioning)
 - Licence information (name, website…)
-- Schemes supported (HTTP, HTTPS…)
-- Allowed response formats (“application/json”, “text/xml”…)
-- Response format (“application/jwt”…)
+- API server and base URL
 - Global `tags` object if tags are used for API operations
-  
-<p align="center">
-<img src="./images/guidelines-fig-14.png" width="400"/>
-</p>
+
+#### Info object
+
+ 
+The `info` object shall have the following content:
+
+```yaml
+info:
+  # title without "API" in it, e.g. "Number Verification"
+  title: Number Verification
+  # description explaining the API, part of the API documentation 
+  # text explaining how to fill the "Authorization and authentication" - see section 11.6
+  description: |
+    This API allows to verify that the provided mobile phone number is the one used in the device. It
+    verifies that the user is using a device with the same mobile phone number as it is declared.
+    ### Authorization and authentication
+    CAMARA guidelines defines a set of authorization flows ...
+  # API version - Aligned to SemVer 2.0 according to CAMARA versioning guidelines
+  version: 1.0.1
+  # Name of the license and a URL to the license description
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  # CAMARA Commonalities version - x.y.z
+  x-camara-commonalities: 0.4.0
+```
+
+The `termsOfService` and `contact` fields are optional in OpenAPI specification and may be added by API Providers documenting their APIs.
+
+The extension field `x-camara-commonalities` indicates version of CAMARA Commonalities guidelines that given API specification adheres to.
+
+
+#### Servers object
+
+The `servers` object shall have the following content:
+
+```yaml
+servers:
+  # apiRoot variable and the fixed base path containing <api-name> and <api-version> as defined in chapter 5  
+  - url: {apiRoot}/quality-on-demand/v2
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+```
 
 ### 11.2 Published Routes
 
@@ -1103,10 +1182,7 @@ This part must contain the list of published functions, with the following descr
    - Optionally `tags` object for each API operation - Title Case is the recommended style for tag names.
    - Request param list, making reference to "Request params" part.
    - Supported responses list, describing success and errors cases.
-
-<p align="center">
-<img src="./images/guidelines-fig-15.png" width="400"/>
-</p>
+   - Allowed content type (“application/json”, “text/xml”…)
 
 ### 11.3 Request Parameters
 
@@ -1114,12 +1190,9 @@ This part contains a list of expected payload requests, if any. This description
 - Parameter name, used to reference it in other sections
 - Parameter description
 - Parameter place (header, route…)
-- Type (basic types like chains, integers, complex objects,...)
+- Type (basic types like strings, integers, complex objects,...)
 - Required field or optional flag
 
-<p align="center">
-<img src="./images/guidelines-fig-16.png" width="400"/>
-</p>
 
 ### 11.4 Response Structure
 
@@ -1127,11 +1200,9 @@ This part describes the list of possible messages returned by the API. It also i
 - Name of the response object, used to refer to it in other sections.
 - Response object description.
 - Object type (basic types like string, integer... or even more complex objects defined in the "Data definition" part...)
+- Allowed content type (“application/json”, “text/xml”…)
 - Metadata links (HATEOAS)
 
-<p align="center">
-<img src="./images/guidelines-fig-17.png" width="400"/>
-</p>
 
 
 ### 11.5 Data Definitions
@@ -1150,21 +1221,9 @@ This part captures a detailed description of all the data structures used in the
       - Integer ones: Format (int32, int64…), min value.
 
 
-In this part, the error response structure must also be defined, which must be as follows:
-- Type (Array, Integer, Object …)
-- Mandatory fields of the structure
-- Properties:
-   - Error Code
-      - Type (Array, Integer…)
-      - Error codes supported, as Enum list
-   - Error description
-       - Type (Array)
-       - Min longitude
-       - Max longitude
+In this part, the error response structure must also be defined following the guidelines in [Chapter 6. Error Responses](#6-error-responses).
 
-<p align="center">
-<img src="./images/guidelines-fig-18.png" width="400"/>
-</p>
+
 
 #### 11.5.1 Usage of discriminator
 As mentioned in OpenAPI doc [here](https://spec.openapis.org/oas/v3.0.3#discriminator-object) usage of discriminator may
@@ -1272,11 +1331,48 @@ When IpAddr is used in a payload, the property objectType MUST be present to ind
 
 ### 11.6 Security definition
 
-The [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#camara-api-specification---authorization-and-authentication-common-guidelines) are discussed and maintained by the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement). In particular, the following aspects are detailed:
+In general all APIs must be secured to assure who has access to what and for what purpose.
+Camara uses OIDC and CIBA for authentication and consent collection and to determine whether the user has e.g. opted-out of some API access.
 
-- Use of openIdConnect as protocol in `securitySchemes`.
-- How to fill the `security` property per operation.
-- How to fill the "Authorization and authentication" section in `info.description`.
+The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose is defined by W3C Privacy Vocabulatory in the [purpose section](https://w3c.github.io/dpv/dpv/#vocab-purposes).
+
+#### OpenAPI security schemes definition
+
+Security in OpenAPI is expressed by [security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object). Security can be expressed for the API as a whole or for each endpoint.
+
+As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all Camara OpenAPI files must include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
+
+```yaml
+components:
+  securitySchemes:
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+```
+
+The key of the security scheme is arbitrary in OAS, but convention in CAMARA is to name it `openId`.
+
+#### Expressing Security Requirements
+
+Security requirements of an API are expressed in OpenAPI through [Security Requirement Objects](https://spec.openapis.org/oas/v3.0.3#security-requirement-object).
+
+The following is an example of how to use the `openId` security scheme defined above as described in [Use of security property](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-security-property):
+
+```yaml
+paths:
+  {path}:
+    {method}:
+      ...
+      security:
+        - openId:
+            - {scope}
+```
+
+The name `openId` must be same as defined in the components.securitySchemes section.
+
+#### Mandatory template for `info.description` in CAMARA API specs
+
+The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) must be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specs.
 
 #### 11.6.1 Scope naming
 
