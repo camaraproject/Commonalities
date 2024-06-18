@@ -30,8 +30,11 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [5.1 Versioning Strategy](#51-versioning-strategy)
     - [5.2 Backwards and Forward Compatibility](#52-backwards-and-forward-compatibility)
   - [6. Error Responses](#6-error-responses)
-    - [### 6.1 Standardized use of CAMARA error responses](#61-standardized-use-of-camara-error-responses)
-    - [### 6.2 Error Responses - Device Object](#62-error-responses---device-object)
+    - [6.1 Standardized use of CAMARA error responses](#61-standardized-use-of-camara-error-responses)
+    - [6.2 Error Responses - Device Object](#62-error-responses---device-object)
+      - [Templates](#templates)
+        - [Response template](#response-template)
+        - [Examples template](#examples-template)
   - [7. Common Data Types](#7-common-data-types)
   - [8. Pagination, Sorting and Filtering](#8-pagination-sorting-and-filtering)
     - [8.1 Pagination](#81-pagination)
@@ -43,6 +46,8 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [10.2 Security Implementation](#102-security-implementation)
   - [11. Definition in OpenAPI](#11-definition-in-openapi)
     - [11.1 General Information](#111-general-information)
+      - [Info object](#info-object)
+      - [Servers object](#servers-object)
     - [11.2 Published Routes](#112-published-routes)
     - [11.3 Request Parameters](#113-request-parameters)
     - [11.4 Response Structure](#114-response-structure)
@@ -51,6 +56,9 @@ This document captures guidelines for the API design in CAMARA project. These gu
         - [Inheritance](#inheritance)
         - [Polymorphism](#polymorphism)
     - [11.6 Security definition](#116-security-definition)
+      - [OpenAPI security schemes definition](#openapi-security-schemes-definition)
+      - [Expressing Security Requirements](#expressing-security-requirements)
+      - [Mandatory template for `info.description` in CAMARA API specs](#mandatory-template-for-infodescription-in-camara-api-specs)
       - [11.6.1 Scope naming](#1161-scope-naming)
         - [APIs which do not deal with explicit subscriptions](#apis-which-do-not-deal-with-explicit-subscriptions)
           - [Examples](#examples)
@@ -1814,6 +1822,7 @@ response:
 
 The documentation template below must be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
 
+Note: With the current 3-legged authorization flows, only a single end user can be associated with the access token. For the OIDC authorization code flow, only a single device can call the `/authorize` endpoint and obtain the code. And for CIBA, `login_hint` is currently limited to a single phone number or IP address (that can optionally include a port).
 
 ```md
 # Identifying a user device from the access token
