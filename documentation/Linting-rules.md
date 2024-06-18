@@ -12,7 +12,8 @@ With `extends: "spectral:oas"` ("oas" being shorthand for OpenAPI Specification)
 All the rules in this ruleset are described in [OpenAPI Rules](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules).
 
 
-`extends: [[spectral:oas, off]]`  - This avoids running any rules from the extended ruleset as they are disabled. Each rule then can be [enabled individually](https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all#enabling-rules).
+`extends: [[spectral:oas, off]]` - This avoids running any rules from the extended ruleset as they are disabled. Each rule then can be [enabled individually](https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all#enabling-rules).
+
 
 ### Recommended rules
 Spectral's built-in OpenAPI ruleset is a two-tier system: with subset of rules marked as [recommended](https://docs.stoplight.io/docs/spectral/0a73453054745-recommended-or-all#recommended-or-all) to be used by default, and additional rules marked with `recommended: false`.
