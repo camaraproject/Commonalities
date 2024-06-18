@@ -1822,7 +1822,7 @@ response:
 
 The documentation template below must be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
 
-Note: With the current 3-legged authorization flows, only a single end user can be associated with the access token. For the OIDC authorization code flow, only a single device can call the `/authorize` endpoint and obtain the code. And for CIBA, `login_hint` is currently limited to a single phone number or IP address (that can optionally include a port).
+Note: With the current 3-legged authorization flows used by CAMARA, only a single end user can be associated with the access token. For the OIDC authorization code flow, only a single device can call the `/authorize` endpoint and obtain the code. And for CIBA, `login_hint` is currently limited to a single phone number or IP address (which can optionally include a port).
 
 ```md
 # Identifying a user device from the access token
