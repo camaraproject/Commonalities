@@ -1820,14 +1820,14 @@ response:
 
 ## Appendix A: `info.description` template for `device` identification from access token
 
-The documentation template below must be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
+The documentation template below is recommended to be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
 
 Note: With the current 3-legged authorization flows used by CAMARA, only a single end user can be associated with the access token. For the OIDC authorization code flow, only a single device can call the `/authorize` endpoint and obtain the code. And for CIBA, `login_hint` is currently limited to a single phone number or IP address (which can optionally include a port).
 
 ```md
-# Identifying a user device from the access token
+# Identifying a device from the access token
 
-This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token and the device can be uniquelly identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API. This mechanism reduces the need for multiple identifiers and extensive validation.
+This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token and the device can be uniquelly identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API.
 
 ## Handling of device information:
 
@@ -1848,10 +1848,10 @@ This specification defines the `device` object field as optional in API requests
 ### Restrictions for tokens without an associated authenticated identifier:
 
 - For scenarios which do not have a single device identifier associated to the token during the authentication flow, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
-
-By following these guidelines, API consumers can use the authenticated device identifier associated with 3-legged access tokens, simplifying implementation and validation. This mechanism ensures that device identification is handled efficiently and securely, and appropriately accommodates different token types.
 ```
 
-Depending on the functionality provided by the CAMARA API, some API subprojects may still define other specific identifiers that differs from the common `device` object definition. Not all APIs necessarily have to refer to a user device, e.g. Carrier Billing API only defines a phone number as a way to identify the mobile account to be billed, Know Your Costumer only defines a phone number as a way to identify the associated account data or Home Devices QoD API defines public IP v4 address as a way to identify the user home network. 
+By following these guidelines, API consumers can use the authenticated device identifier associated with 3-legged access tokens, simplifying implementation and validation. This mechanism ensures that device identification is handled efficiently and securely, and appropriately accommodates different token types.
+
+Depending on the functionality provided by the CAMARA API, some API subprojects may still define other specific identifiers that differs from the common `device` object definition. Not all APIs necessarily have to refer to a device, e.g. Carrier Billing API only defines a phone number as a way to identify the mobile account to be billed, Know Your Costumer only defines a phone number as a way to identify the associated account data or Home Devices QoD API defines public IP v4 address as a way to identify the user home network. 
 
 Therefore, the mechanism described in this template is not applicable to all APIs, but could be used as way to make `device` object more interoperable and usable for API consumers.
