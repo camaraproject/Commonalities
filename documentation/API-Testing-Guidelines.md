@@ -269,7 +269,7 @@ Typical response validations:
 - the response body complies with the OAS schema at "{oas_schema_json_path}"
 ```
 
-- additional constraints for optional or independent properties in the response body, e.g.:
+- additional constraints for optional or dependent properties in the response body, e.g.:
 
 ```
 - the response property "{json_path}" exists
