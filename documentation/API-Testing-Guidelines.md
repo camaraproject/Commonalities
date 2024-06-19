@@ -127,7 +127,7 @@ Feature: CAMARA Device location verification API, v0.2.0 - Operation verifyLocat
 
 ### Environment variables
 
-Commonly, some values to fill the request bodies will not be known in advance and cannot be specified as part of the feature file, as they will be specific for the test environment, and they will have to be provided by the implementation of the tester as a separate set of environment or configuration variables.
+Commonly, some values to fill the request bodies will not be known in advance and cannot be specified as part of the feature file, as they will be specific for the test environment, and they will have to be provided by the implementation to the tester as a separate set of environment or configuration variables.
 
 How those variables are set and feed into the testing execution will depend on the testing tool (Postman environment, context in Behave, etc.). 
 
