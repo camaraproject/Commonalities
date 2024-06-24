@@ -13,6 +13,8 @@
 
 **This version introduces Event Subscription model based on [CloudEvents Subscriptions API draft](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) and other changes to documents and artifacts approved since [v0.3.0](#v030).**
 
+**The relevant details of authentication and consent collection are covered by [version 0.2.0](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
 ## Please note:
 This is the first **Release Candidate** version for Commonalities release 0.4.0. 
 
