@@ -32,8 +32,11 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [5.3 API versions throughout the release process](#53-api-versions-throughout-the-release-process)
     - [5.4 Backward and forward compatibility](#54-backward-and-forward-compatibility)
   - [6. Error Responses](#6-error-responses)
-    - [### 6.1 Standardized use of CAMARA error responses](#61-standardized-use-of-camara-error-responses)
-    - [### 6.2 Error Responses - Device Object](#62-error-responses---device-object)
+    - [6.1 Standardized use of CAMARA error responses](#61-standardized-use-of-camara-error-responses)
+    - [6.2 Error Responses - Device Object](#62-error-responses---device-object)
+      - [Templates](#templates)
+        - [Response template](#response-template)
+        - [Examples template](#examples-template)
   - [7. Common Data Types](#7-common-data-types)
   - [8. Pagination, Sorting and Filtering](#8-pagination-sorting-and-filtering)
     - [8.1 Pagination](#81-pagination)
@@ -45,6 +48,8 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [10.2 Security Implementation](#102-security-implementation)
   - [11. Definition in OpenAPI](#11-definition-in-openapi)
     - [11.1 General Information](#111-general-information)
+      - [Info object](#info-object)
+      - [Servers object](#servers-object)
     - [11.2 Published Routes](#112-published-routes)
     - [11.3 Request Parameters](#113-request-parameters)
     - [11.4 Response Structure](#114-response-structure)
@@ -53,8 +58,14 @@ This document captures guidelines for the API design in CAMARA project. These gu
         - [Inheritance](#inheritance)
         - [Polymorphism](#polymorphism)
     - [11.6 Security definition](#116-security-definition)
+      - [OpenAPI security schemes definition](#openapi-security-schemes-definition)
+      - [Expressing Security Requirements](#expressing-security-requirements)
+      - [Mandatory template for `info.description` in CAMARA API specs](#mandatory-template-for-infodescription-in-camara-api-specs)
       - [11.6.1 Scope naming](#1161-scope-naming)
-        - [Examples](#examples)
+        - [APIs which do not deal with explicit subscriptions](#apis-which-do-not-deal-with-explicit-subscriptions)
+          - [Examples](#examples)
+        - [APIs which deal with explicit subscriptions](#apis-which-deal-with-explicit-subscriptions)
+        - [API-level scopes (sometimes referred to as wildcard scopes in CAMARA)](#api-level-scopes-sometimes-referred-to-as-wildcard-scopes-in-camara)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
@@ -70,6 +81,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
       - [Security Considerations](#security-considerations)
       - [Abuse Protection](#abuse-protection)
       - [Notification examples](#notification-examples)
+  - [Appendix A: `info.description` template for `device` identification from access token](#appendix-a-infodescription-template-for-device-identification-from-access-token)
 
 
 ## Common Vocabulary and Acronyms
@@ -1434,7 +1446,9 @@ The documentation template available in [CAMARA API Specification - Authorizatio
 
 #### 11.6.1 Scope naming
 
-#### Regarding scope naming for APIs which do not deal with explicit subscriptions, the guidelines are:
+##### APIs which do not deal with explicit subscriptions
+
+Regarding scope naming for APIs which do not deal with explicit subscriptions, the guidelines are:
 
 * Define a scope per API operation with the structure:
 
@@ -1457,6 +1471,7 @@ where
     - `write` : For operations creating or modifying the resource, when differentiation between `create` and `update` is not needed.
      
 * Eventually we may need to add an additional level to the scope, such as `api-name:[resource:]action[:detail]`, to deal with cases when only a set of parameters/information has to be allowed to be returned. Guidelines should be enhanced when those cases happen.
+
 ###### Examples
 
 | API | path | method | scope |
@@ -1467,8 +1482,9 @@ where
 
 <br>
 
+##### APIs which deal with explicit subscriptions
 
-#### Regarding scope naming for APIs which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format and this is described below:
+Regarding scope naming for APIs which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format and this is described below:
 
 Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete:
 
@@ -1483,7 +1499,8 @@ Event-type: org.camaraproject.device-roaming-subscriptions.v0.roaming-on
 Grant-level, action on resource: create
 For e.g. device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create
 
-#### API-level scopes (sometimes referred to as wildcard scopes in CAMARA)
+##### API-level scopes (sometimes referred to as wildcard scopes in CAMARA)
+
 The decision on the API-level scopes was made within the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement) and is documented in the design guidelines to ensure completeness of this document. The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject. 
 
 
@@ -1862,3 +1879,41 @@ response:
 ```http
 204 No Content
 ```
+
+## Appendix A: `info.description` template for `device` identification from access token
+
+The documentation template below is recommended to be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
+
+Note: With the current 3-legged authorization flows used by CAMARA, only a single end user can be associated with the access token. For the OIDC authorization code flow, only a single device can call the `/authorize` endpoint and obtain the code. And for CIBA, `login_hint` is currently limited to a single phone number or IP address (which can optionally include a port).
+
+```md
+# Identifying a device from the access token
+
+This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token and the device can be uniquelly identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API.
+
+## Handling of device information:
+
+### Optional device object for 3-legged tokens:
+
+- When using a 3-legged access token, the device associated with the access token must be considered as the device for the API request. This means that the device object is not required in the request, and if included it must identify the same device, therefore **it is recommended NOT to include it in these scenarios** to simplify the API usage and avoid additional validations.
+
+### Validation mechanism:
+
+- The server will extract the device identification from the access token, if available.
+- If the API request additionally includes a `device` object when using a 3-legged access token, the API will validate that the device identifier provided matches the one associated with the access token.
+- If there is a mismatch, the API will respond with a 403 - INVALID_TOKEN_CONTEXT error, indicating that the device information in the request does not match the token.
+
+### Error handling for unidentifiable devices:
+
+- If the `device` object is not included in the request and the device information cannot be derived from the 3-legged access token, the server will return a 422 `UNIDENTIFIABLE_DEVICE` error.
+
+### Restrictions for tokens without an associated authenticated identifier:
+
+- For scenarios which do not have a single device identifier associated to the token during the authentication flow, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
+```
+
+By following these guidelines, API consumers can use the authenticated device identifier associated with 3-legged access tokens, simplifying implementation and validation. This mechanism ensures that device identification is handled efficiently and securely, and appropriately accommodates different token types.
+
+Depending on the functionality provided by the CAMARA API, some API subprojects may still define other specific identifiers that differs from the common `device` object definition. Not all APIs necessarily have to refer to a device, e.g. Carrier Billing API only defines a phone number as a way to identify the mobile account to be billed, Know Your Costumer only defines a phone number as a way to identify the associated account data or Home Devices QoD API defines public IP v4 address as a way to identify the user home network. 
+
+Therefore, the mechanism described in this template is not applicable to all APIs, but could be used as way to make `device` object more interoperable and usable for API consumers.
