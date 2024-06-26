@@ -557,7 +557,7 @@ info:
   title: Number Verification
   description: text describing the API
   version: 2.2.0  
-  ...
+  #...
 ```
 
 In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH version number, increments as follows:
@@ -609,12 +609,12 @@ Overall, an API can have any of the following versions:
 
 The following table gives the values of the API version (Info object) and the API version in the URL as used in the different API version types created during the API release process. For public API versions, this information is also dependent on whether it is an initial (x=0) or a stable public API version (x>0). 
 
-| API version type | API version | initial (x=0) API version in URL | stable (x>0) API version in URL | API version can be released |
-|---------------|:------:|:------:|:------:|:------:|
-| work-in-progress | wip | vwip | vwip | No |
-| alpha | x.y.z-alpha.m | v0.yalpham | vxalpham |Yes (internal pre-release) |
-| release-candidate | x.y.z-rc.n | v0.yrcn | vxrcn | Yes (internal pre-release) |
-| public | x.y.z | v0.y | vx | Yes |
+| API version type  |  API version  | initial (x=0) API version in URL | stable (x>0) API version in URL | API version can be released |
+|-------------------|:-------------:|:--------------------------------:|:-------------------------------:|:---------------------------:|
+| work-in-progress  |      wip      |               vwip               |              vwip               |             No              |
+| alpha             | x.y.z-alpha.m |            v0.yalpham            |            vxalpham             | Yes (internal pre-release)  |
+| release-candidate |   x.y.z-rc.n  |             v0.yrcn              |              vxrcn              | Yes (internal pre-release)  |
+| public            |     x.y.z     |               v0.y               |               vx                |             Yes             |
 
 Precedence examples:
 
@@ -676,8 +676,8 @@ To ensure this compatibility, the following guidelines must be applied.
 - Layout pagination support from the start.
 
 Make the information available:
-- provide an access to the new API version definition file (via a link or dedicated endpoint)
-- if possible, do the same to obtain the currently implemented API version definition file
+- provide access to the new API version definition file (via a link or dedicated endpoint)
+- if possible, do the same to get the currently implemented API version definition file
 
 **As API consumer**:
 - Tolerant reader: if it does not recognize a field when faced with a response from a service, do not process it, but record it through the log (or resend it if applicable).
@@ -787,7 +787,7 @@ The Following table compiles the guidelines to be adopted:
 
 | **Case #** | **Description**                                                            | **Error status** |         **Error code**         | **Message example**                                      |
 |:----------:|:---------------------------------------------------------------------------|:----------------:|:------------------------------:|:---------------------------------------------------------|
-|     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.                  |
+|     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.            |
 |     1      | None of the provided device identifiers is supported by the implementation |       422        | UNSUPPORTED_DEVICE_IDENTIFIERS | phoneNumber is required.                                 |
 |     2      | Some identifier cannot be matched to a device                              |       404        |        DEVICE_NOT_FOUND        | Device identifier not found.                             |  
 |     3      | Device identifiers mismatch                                                |       422        |  DEVICE_IDENTIFIERS_MISMATCH   | Provided device identifiers are not consistent.          |
@@ -1972,12 +1972,12 @@ response:
 
 The documentation template below is recommended to be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
 
-Note: With the current 3-legged authorization flows used by CAMARA, only a single end user can be associated with the access token. For the OIDC authorization code flow, only a single device can call the `/authorize` endpoint and obtain the code. And for CIBA, `login_hint` is currently limited to a single phone number or IP address (which can optionally include a port).
+Note: With the current 3-legged authorization flows used by CAMARA, only a single end user can be associated with the access token. For the OIDC authorization code flow, only a single device can call the `/authorize` endpoint and get the code. And for CIBA, `login_hint` is currently limited to a single phone number or IP address (which can optionally include a port).
 
 ```md
 # Identifying a device from the access token
 
-This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token and the device can be uniquelly identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API.
+This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token, and the device can be uniquely identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API.
 
 ## Handling of device information:
 
