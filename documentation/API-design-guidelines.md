@@ -719,7 +719,7 @@ The Following table compiles the guidelines to be adopted:
 
 | **Case #** | **Description**                                                            | **Error status** |         **Error code**         | **Message example**                                      |
 |:----------:|:---------------------------------------------------------------------------|:----------------:|:------------------------------:|:---------------------------------------------------------|
-|     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | device does not comply with the schema.                  |
+|     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.                  |
 |     1      | None of the provided device identifiers is supported by the implementation |       422        | UNSUPPORTED_DEVICE_IDENTIFIERS | phoneNumber is required.                                 |
 |     2      | Some identifier cannot be matched to a device                              |       404        |        DEVICE_NOT_FOUND        | Device identifier not found.                             |  
 |     3      | Device identifiers mismatch                                                |       422        |  DEVICE_IDENTIFIERS_MISMATCH   | Provided device identifiers are not consistent.          |
