@@ -27,11 +27,16 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [4.1 URL Definition](#41-url-definition)
     - [4.2 Input/Output Resource Definition](#42-inputoutput-resource-definition)
   - [5. Versioning](#5-versioning)
-    - [5.1 Versioning Strategy](#51-versioning-strategy)
-    - [5.2 Backwards and Forward Compatibility](#52-backwards-and-forward-compatibility)
+    - [5.1 API version (OAS info object)](#51-api-version-oas-info-object)
+    - [5.2 API version in URL (OAS servers object)](#52-api-version-in-url-oas-servers-object)
+    - [5.3 API versions throughout the release process](#53-api-versions-throughout-the-release-process)
+    - [5.4 Backward and forward compatibility](#54-backward-and-forward-compatibility)
   - [6. Error Responses](#6-error-responses)
     - [6.1 Standardized use of CAMARA error responses](#61-standardized-use-of-camara-error-responses)
     - [6.2 Error Responses - Device Object](#62-error-responses---device-object)
+      - [Templates](#templates)
+        - [Response template](#response-template)
+        - [Examples template](#examples-template)
   - [7. Common Data Types](#7-common-data-types)
   - [8. Pagination, Sorting and Filtering](#8-pagination-sorting-and-filtering)
     - [8.1 Pagination](#81-pagination)
@@ -43,6 +48,8 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [10.2 Security Implementation](#102-security-implementation)
   - [11. Definition in OpenAPI](#11-definition-in-openapi)
     - [11.1 General Information](#111-general-information)
+      - [Info object](#info-object)
+      - [Servers object](#servers-object)
     - [11.2 Published Routes](#112-published-routes)
     - [11.3 Request Parameters](#113-request-parameters)
     - [11.4 Response Structure](#114-response-structure)
@@ -51,8 +58,14 @@ This document captures guidelines for the API design in CAMARA project. These gu
         - [Inheritance](#inheritance)
         - [Polymorphism](#polymorphism)
     - [11.6 Security definition](#116-security-definition)
+      - [OpenAPI security schemes definition](#openapi-security-schemes-definition)
+      - [Expressing Security Requirements](#expressing-security-requirements)
+      - [Mandatory template for `info.description` in CAMARA API specs](#mandatory-template-for-infodescription-in-camara-api-specs)
       - [11.6.1 Scope naming](#1161-scope-naming)
-        - [Examples](#examples)
+        - [APIs which do not deal with explicit subscriptions](#apis-which-do-not-deal-with-explicit-subscriptions)
+          - [Examples](#examples)
+        - [APIs which deal with explicit subscriptions](#apis-which-deal-with-explicit-subscriptions)
+        - [API-level scopes (sometimes referred to as wildcard scopes in CAMARA)](#api-level-scopes-sometimes-referred-to-as-wildcard-scopes-in-camara)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
@@ -68,6 +81,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
       - [Security Considerations](#security-considerations)
       - [Abuse Protection](#abuse-protection)
       - [Notification examples](#notification-examples)
+  - [Appendix A: `info.description` template for `device` identification from access token](#appendix-a-infodescription-template-for-device-identification-from-access-token)
 
 
 ## Common Vocabulary and Acronyms
@@ -525,84 +539,134 @@ These considerations are below:
 
 ## 5. Versioning
 
-### 5.1 Versioning Strategy
+Versioning is a practice by which, when a change occurs in the API, a new version of that API is created.
 
-Service versioning is a practice whereby, when a change occurs in the API of a service, a new version of that service is released. This allows the new version and the previous one to coexist for a certain period of time.
+API versions use a numbering scheme in the format: `x.y.z`
 
-Consumers will be migrated to the new version of the service sequentially. When everyone is consuming the latest version of the service, the previous version is removed.
+* x, y and z are numbers corresponding to MAJOR, MINOR and PATCH versions.
+* MAJOR, MINOR and PATCH refer to the types of changes made to an API through its evolution.
+* Depending on the change type, the corresponding number is incremented.
+* This is defined in the [Semantic Versioning 2.0.0 (semver.org)](https://semver.org/) standard.
 
-Consumers can distinguish between one version of the service and another.
-The technique of adding the API version to the context of the base URL will be used,
-since this technique is the most used in the main reference APIs.
+### 5.1 API version (OAS info object)
 
-The structure of the URL would have the following form:
-```http
-https://host:port/api/v1/resource
+The API version is defined in the `version` field (in the `info` object) of the OAS definition file of an API. 
+
+```yaml
+info:
+  title: Number Verification
+  description: text describing the API
+  version: 2.2.0  
+  ...
 ```
 
+In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH version number, increments as follows:
 
-When we version through the URL, only the "MAJOR version" is included since this would change when a change incompatible with the previous version occurs.
+1. The MAJOR version when an incompatible / breaking API change is introduced
+2. The MINOR version when functionality is added that is backwards compatible
+3. The PATCH version when backward compatible bugs are fixed
 
-API implementation versioning will follow semantic versioning. Given a `MAJOR.MINOR.PATCH` version number, it increments:
-1)	The `MAJOR` version when you make an incompatible API change.
-2)	The `MINOR` version when you add functionality that is backwards compatible.
-3)	The `PATCH` version when you fix backward compatible bugs.
+For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the CAMARA wiki. 
 
-Related to the versioning of rest parts involved in APIfication projects, the best practises are detailed below:
+It is recommended to avoid breaking backward compatibility unless strictly necessary: new versions should be backwards compatible with previous versions. More information on how to avoid breaking changes can be found below.
 
-SHARED CODE ON REPOSITORIES
+### 5.2 API version in URL (OAS servers object)
 
-1) MAJOR - Major of API Contract
-2) MINOR - Minor of API Contract
-3) PATCH - New Updates / Contributions of shared code
+The OAS file also defines the API version used in the URL of the API (in the `servers` object).
 
-MICROSERVICE DEPLOYMENTS (NOT MANDATORY BUT RECOMMENDED)
+The API version in the `url` field only includes the "x" (MAJOR version) number of the API version as follows:
 
-1) MAJOR - Major of API Contract
-2) MINOR - Minor of API Contract
-3) PATCH - New Microservice Deployments
+```yaml
+servers:
+    url: {apiRoot}/qod/v2
+```
 
+---
 
-### 5.2 Backwards and Forward Compatibility
+IMPORTANT: CAMARA public APIs with x=0 (`v0.x.y`) MUST use both the MAJOR and the MINOR version number separated by a dot (".") in the API version in the `url` field: `v0.y`.
 
-Avoid breaking backwards compatibility unless strictly necessary. That means new versions should be compatible with previous versions.
+---
+
+```yaml
+servers:
+    url: {apiRoot}/number-verification/v0.3
+```
+
+This allows for both test and commercial usage of initial API versions as they are evolving rapidly, e.g. `/qod/v0.10alpha1`, `/qod/v0.10rc1`, or `/qod/v0.10`. However, it should be acknowledged that any initial API version may change.
+
+### 5.3 API versions throughout the release process
+
+In preparation for its public release, an API will go through various intermediate versions indicated by version extensions: alpha and release-candidate.
+
+Overall, an API can have any of the following versions:
+
+* work-in-progress (`wip`) API versions used during the development of an API before the first pre-release or in between pre-releases. Such API versions cannot be released and are not usable by API consumers.
+* alpha (`x.y.z-alpha.m`) API versions (with extensions) for CAMARA internal API rapid development purposes
+* release-candidate (`x.y.z-rc.n`) API versions (with extensions) for CAMARA internal API release bug fixing purposes
+* public (`x.y.z`) API versions for usage in commercial contexts. These API versions only have API version number x.y.z (semver 2.0), no extension. Public APIs can have one of two maturity states (used in release management): 
+  * initial - indicating that the API is still not fully stable (x=0)
+  * stable - indicate that the API has reached a certain level of maturity (x>0)
+
+The following table gives the values of the API version (Info object) and the API version in the URL as used in the different API version types created during the API release process. For public API versions, this information is also dependent on whether it is an initial (x=0) or a stable public API version (x>0). 
+
+| API version type | API version | initial (x=0) API version in URL | stable (x>0) API version in URL | API version can be released |
+|---------------|:------:|:------:|:------:|:------:|
+| work-in-progress | wip | vwip | vwip | No |
+| alpha | x.y.z-alpha.m | v0.yalpham | vxalpham |Yes (internal pre-release) |
+| release-candidate | x.y.z-rc.n | v0.yrcn | vxrcn | Yes (internal pre-release) |
+| public | x.y.z | v0.y | vx | Yes |
+
+Precedence examples:
+
+* 1.0.0 < 2.0.0 < 2.1.0 < 2.1.1 < 3.0.0.
+* 0.1.0 < 0.2.0-alpha.1 < 0.2.0-alpha.2 < 0.2.0-rc.1 < 0.2.0-rc.2 < 0.2.0 (initial public API version)
+* 1.0.0 < 1.1.0-alpha.1 < 1.1.0-alpha.2 < 1.1.0-rc.1 < 1.1.0-rc.2 < 1.1.0 (stable public API version)
+
+For more information, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the Release Management project Wiki.
+
+### 5.4 Backward and forward compatibility
+
+Avoid breaking backward compatibility, unless strictly necessary, means that new versions should be compatible with previous versions.
 
 Bearing in mind that APIs are continually evolving and certain operations will no longer be supported, the following considerations must be taken into account:
 
-- Agree to discontinue an API with consumers.
+- Agree to discontinue an API version with consumers.
 - Establish the obsolescence of the API in a reasonable period (6 months).
 - Monitor the use of deprecated APIs.
 - Remove deprecated APIs documentation.
 - Never start using already deprecated APIs.
 
+Types of modification:
 
-<font size="3"><span style="color: blue"> Types of modification </span></font>
+- Not all API changes have an impact on API consumers. These are referred to as backward compatible changes.
+- In case of such changes, the update produces a new API version that increases the MINOR or PATCH version number.
+- The update can be deployed transparently as it does not change the endpoint of the API which only contains the MAJOR version number which has not changed, and all previously existing behaviour shall be the same.
+- API consumers shall be notified of the new version availability so that they can take it into account.
 
-Not all API changes have an impact on API consumers.
-These changes are often referred to as backward compatible changes.
-If the API undergoes changes of this type, it should not be necessary to release a new version.
-It will suffice to replace the current one.
-What would be very convenient is to notify our consumers with the new changes so that they take them into account.
+Backward compatible changes to an API that **DO NOT** affect consumers:
 
-This is a list of changes to an API that **DO NOT** affect consumers:
+- Adding a new endpoint
+- Adding new operations on a resource (`PUT`, `POST`, ...).
+- Adding optional input parameters to requests on existing resources. For example, adding a new filter parameter in a GET on a collection of resources.
+- Changing an input parameter from mandatory to optional. For example: when creating a resource, a property of said resource that was previously mandatory becomes optional.
+- Adding new properties in the representation of a resource returned by the server. For example, adding a new age field to a Person resource, which originally was made up of nationality and name.
 
-- Add new operations to the service. Translated to REST, it would be to add new actions on a resource (`PUT`, `POST`, ...).
-- Add optional input parameters to requests on existing resources. For example, adding a new filter parameter in a GET on a collection of resources.
-- Modify input parameters from required to optional. For example, when creating a resource, a property of said resource that was previously mandatory becomes optional.
-- Add new properties in the representation of a resource returned by the server. For example, adding a new age field to a Person's resource, which originally was made up of nationality and name. 
+Breaking changes to an API that **DO** affect consumers:
 
-This other list shows changes that **DO** affect consumers:
-- Delete operations or actions on a resource. For example, POST requests on a resource are no longer accepted.
-- Add new mandatory input parameters. For example, now, to register a resource, a new required field must be sent in the body of the request.
-- Modify input parameters from optional to mandatory. For example, when creating a Person's resource, the age field, which was previously optional, is now mandatory.
-- Modify a parameter in existing operations (resource verbs). Also, applicable to parameter removal. For example, when consulting a resource, a certain field is no longer returned. Another example: a field that was previously a string is now numeric.
-- Add new responses to existing operations. For example, creating a resource can return a 412 response code.
+- Deleting operations or actions on a resource. For example:  POST requests on a resource are no longer accepted.
+- Adding new mandatory input parameters. For example: now, to register a resource, a new required field must be sent in the body of the request.
+- Modifying or removing an endpoint (breaks existing queries)
+- Changing input parameters from optional to mandatory. For example: when creating a Person resource, the age field, which was previously optional, is now mandatory.
+- Modifying or removing a mandatory parameter in existing operations (resource verbs). For example, when consulting a resource, a certain field is no longer returned. Another example: a field that was previously a string is now numeric.
+- Modifying or adding new responses to existing operations. For example: creating a resource can return a 412 response code.
 
-<font size="3"><span style="color: blue"> Compatibility management </span></font>
+Compatibility management:
 
-To ensure this compatibility, the following must be followed.
+To ensure this compatibility, the following guidelines must be applied.
 
-**As API producer**:
+**As API provider**:
+- Never change an endpoint name; instead, add a new one and mark the original one for deprecation in a MINOR change and remove it in a later MAJOR change (see semver FAQ entry: https://semver.org/#how-should-i-handle-deprecating-functionality)
+- If possible, do the same for attributes
 - New fields should always be added as optional.
 - Postel's Law: “<em>Be conservative in what you do, be liberal in what you accept from others</em>”. When you have input fields that need to be removed, mark them as unused, so they can be ignored. 
 - Do not change the field’s semantics.
@@ -610,6 +674,10 @@ To ensure this compatibility, the following must be followed.
 - Do not change the validation rules of the request fields to more restrictive ones.
 - If you use collections that can be returned with no content, then answer with an empty collection and not null.
 - Layout pagination support from the start.
+
+Make the information available:
+- provide an access to the new API version definition file (via a link or dedicated endpoint)
+- if possible, do the same to obtain the currently implemented API version definition file
 
 **As API consumer**:
 - Tolerant reader: if it does not recognize a field when faced with a response from a service, do not process it, but record it through the log (or resend it if applicable).
@@ -1432,7 +1500,9 @@ The documentation template available in [CAMARA API Specification - Authorizatio
 
 #### 11.6.1 Scope naming
 
-#### Regarding scope naming for APIs, which do not deal with explicit subscriptions, the guidelines are:
+##### APIs which do not deal with explicit subscriptions
+
+Regarding scope naming for APIs, which do not deal with explicit subscriptions, the guidelines are:
 
 * Define a scope per API operation with the structure:
 
@@ -1465,8 +1535,9 @@ where
 
 <br>
 
+##### APIs which deal with explicit subscriptions
 
-#### Regarding scope naming for APIs, which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format, and this is described below:
+Regarding scope naming for APIs, which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format, and this is described below:
 
 Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete:
 
@@ -1483,7 +1554,8 @@ Event-type: org.camaraproject.device-roaming-subscriptions.v0.roaming-on
 Grant-level: action on resource: create
 For e.g., device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create
 
-#### API-level scopes (sometimes referred to as wildcard scopes in CAMARA)
+##### API-level scopes (sometimes referred to as wildcard scopes in CAMARA)
+
 The decision on the API-level scopes was made within the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement) and is documented in the design guidelines to ensure the completeness of this document. 
 The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject. 
 
@@ -1895,3 +1967,41 @@ response:
 ```http
 204 No Content
 ```
+
+## Appendix A: `info.description` template for `device` identification from access token
+
+The documentation template below is recommended to be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
+
+Note: With the current 3-legged authorization flows used by CAMARA, only a single end user can be associated with the access token. For the OIDC authorization code flow, only a single device can call the `/authorize` endpoint and obtain the code. And for CIBA, `login_hint` is currently limited to a single phone number or IP address (which can optionally include a port).
+
+```md
+# Identifying a device from the access token
+
+This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token and the device can be uniquelly identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API.
+
+## Handling of device information:
+
+### Optional device object for 3-legged tokens:
+
+- When using a 3-legged access token, the device associated with the access token must be considered as the device for the API request. This means that the device object is not required in the request, and if included it must identify the same device, therefore **it is recommended NOT to include it in these scenarios** to simplify the API usage and avoid additional validations.
+
+### Validation mechanism:
+
+- The server will extract the device identification from the access token, if available.
+- If the API request additionally includes a `device` object when using a 3-legged access token, the API will validate that the device identifier provided matches the one associated with the access token.
+- If there is a mismatch, the API will respond with a 403 - INVALID_TOKEN_CONTEXT error, indicating that the device information in the request does not match the token.
+
+### Error handling for unidentifiable devices:
+
+- If the `device` object is not included in the request and the device information cannot be derived from the 3-legged access token, the server will return a 422 `UNIDENTIFIABLE_DEVICE` error.
+
+### Restrictions for tokens without an associated authenticated identifier:
+
+- For scenarios which do not have a single device identifier associated to the token during the authentication flow, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
+```
+
+By following these guidelines, API consumers can use the authenticated device identifier associated with 3-legged access tokens, simplifying implementation and validation. This mechanism ensures that device identification is handled efficiently and securely, and appropriately accommodates different token types.
+
+Depending on the functionality provided by the CAMARA API, some API subprojects may still define other specific identifiers that differs from the common `device` object definition. Not all APIs necessarily have to refer to a device, e.g. Carrier Billing API only defines a phone number as a way to identify the mobile account to be billed, Know Your Costumer only defines a phone number as a way to identify the associated account data or Home Devices QoD API defines public IP v4 address as a way to identify the user home network. 
+
+Therefore, the mechanism described in this template is not applicable to all APIs, but could be used as way to make `device` object more interoperable and usable for API consumers.
