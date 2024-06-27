@@ -20,9 +20,14 @@ This is the first **Release Candidate** version for Commonalities release 0.4.0.
 
 The content of the release includes:
 * Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r0.4.0-rc.1/documentation)** folder
+  - **Removed or deprecated:**
+    - API-Readiness-Checklist.md
+    - Camara_Versioning_Guidelines.md
+    - CHANGELOG_TEMPLATE.md
 * Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r0.4.0-rc.1/artifacts)** folder
   - **New:**
     - [Notification Subscription Template](https://github.com/camaraproject/Commonalities/blob/r0.4.0-rc.1/artifacts/camara-cloudevents/event-subscription-template.yaml)
+
 
 ### Added
 * Usage and style of operation tags in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/152
