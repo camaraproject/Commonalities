@@ -39,7 +39,6 @@ The content of the release includes:
 * `minItems: 1` & `maxItems: 1` for subscription `types` in event-subscription-template.yaml by @maxl2287 in https://github.com/camaraproject/Commonalities/pull/236
 * `SUBSCRIPTION_DELETED` as new `terminationReason` for CloudEvents by @maxl2287 in https://github.com/camaraproject/Commonalities/pull/238
 
-
 ### Changed
 * API Design Guidelines updated with subscriptionMaxEvents by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/131
 * 'specversion' in CloudEvents as enum by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/187
@@ -52,7 +51,6 @@ The content of the release includes:
 * Enhanced API-Testing-Guidelines.md by @jlurien in https://github.com/camaraproject/Commonalities/pull/203
 * Updated API versioning guidelines chapter 5 of API Design Guidelines by @tanjadegroot in https://github.com/camaraproject/Commonalities/pull/215
   
-
 ### Fixed
 * API Design Guidelines updated with character set guidance by @trehman-gsma in https://github.com/camaraproject/Commonalities/pull/143
 * Mandated '+' in all phoneNumber formats by @fernandopradocabrillo in https://github.com/camaraproject/Commonalities/pull/148
@@ -60,6 +58,8 @@ The content of the release includes:
 * CAMARA_common.yaml - bugs and typos fix by @fernandopradocabrillo in https://github.com/camaraproject/Commonalities/pull/174
 * API Design Guidelines updated on HTTPs usage by @AxelNennker in https://github.com/camaraproject/Commonalities/pull/205
 * Artifacts aligned with API Design Guidelines for Notification Subscription by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/219
+* API Design Guidelines - fixed typos and internal references, formatted tables, restructured sentences by @maxl2287 in https://github.com/camaraproject/Commonalities/pull/229
+* Files in documentation folder - formatted tables, fixed grammar and style issues by @maxl2287 in https://github.com/camaraproject/Commonalities/pull/234
 
 ### Removed
 * Removed UUID pattern for x-correlator by @jlurien in https://github.com/camaraproject/Commonalities/pull/168
