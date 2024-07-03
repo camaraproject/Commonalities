@@ -65,6 +65,7 @@ The content of the release includes:
 * Removed UUID pattern for x-correlator by @jlurien in https://github.com/camaraproject/Commonalities/pull/168
 * Deprecated API-Readiness-Checklist.md by @rartych in https://github.com/camaraproject/Commonalities/pull/220
 * Removed Camara_Versioning_Guidelines.md by @tanjadegroot in https://github.com/camaraproject/Commonalities/pull/215
+* Deprecated CHANGELOG_TEMPLATE.md by @rartych in https://github.com/camaraproject/Commonalities/pull/239
 
 **Full Changelog**: https://github.com/camaraproject/Commonalities/compare/v0.3.0...r0.4.0-rc.1
 
