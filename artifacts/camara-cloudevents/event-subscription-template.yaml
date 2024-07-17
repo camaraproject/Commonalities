@@ -111,11 +111,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/SubscriptionAsync"
         "400":
-          $ref: "#/components/responses/Generic400"
+          $ref: "#/components/responses/CreateSubscriptionBadRequest400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/CreateSubscriptionBadRequest403"
         "409":
           $ref: "#/components/responses/Generic409"
         "415":
@@ -799,7 +799,7 @@ components:
       required:
         - subject
   responses:
-    Generic400:
+    CreateSubscriptionBadRequest400:
       description: Problem with the client request
       headers:
         x-correlator:
@@ -836,6 +836,28 @@ components:
                 status: 400
                 code: "INVALID_TOKEN"
                 message: "Only bearer token is supported"
+    Generic400:
+      description: Problem with the client request
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
     Generic401:
       description: Authentication problem with the client request
       headers:
@@ -874,6 +896,22 @@ components:
                 status: 403
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
+    CreateSubscriptionBadRequest403:
+      description: Client does not have sufficient permission
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_403_PERMISSION_DENIED:
+              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
+              value:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action.
             GENERIC_403_INVALID_TOKEN_CONTEXT:
               description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
               value:
@@ -896,18 +934,6 @@ components:
                 status: 404
                 code: NOT_FOUND
                 message: The specified resource is not found.
-            GENERIC_404_DEVICE_NOT_FOUND:
-              description: Device identifier not found
-              value:
-                status: 404
-                code: DEVICE_NOT_FOUND
-                message: Device identifier not found.
-            GENERIC_404_{{SPECIFIC_CODE}}:
-              description: Specific situation to highlight the resource/concept not found
-              value:
-                status: 404
-                code: { { SPECIFIC_CODE } }
-                message: { { SPECIFIC_CODE_MESSAGE } }
     Generic409:
       description: Conflict
       headers:
