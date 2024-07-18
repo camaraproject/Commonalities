@@ -896,7 +896,7 @@ components:
                 status: 403
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
-    CreateSubscriptionBadRequest403:
+    CreateSubscriptionPermissionDenied403:
       description: Client does not have sufficient permission
       headers:
         x-correlator:
