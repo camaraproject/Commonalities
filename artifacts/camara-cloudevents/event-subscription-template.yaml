@@ -115,7 +115,7 @@ paths:
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/CreateSubscriptionBadRequest403"
+          $ref: "#/components/responses/CreateSubscriptionPermissionDenied403"
         "409":
           $ref: "#/components/responses/Generic409"
         "415":
