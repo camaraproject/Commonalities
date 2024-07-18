@@ -1004,7 +1004,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           examples:
-            MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED:
+            GENERIC_422_MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED:
               value:
                 status: 422
                 code: "MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED"
