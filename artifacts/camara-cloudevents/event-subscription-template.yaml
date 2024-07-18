@@ -115,13 +115,13 @@ paths:
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/CreateSubscriptionPermissionDenied403"
+          $ref: "#/components/responses/SubscriptionPermissionDenied403"
         "409":
           $ref: "#/components/responses/Generic409"
         "415":
           $ref: "#/components/responses/Generic415"
         "422":
-          $ref: "#/components/responses/Generic422"
+          $ref: "#/components/responses/CreateSubscriptionUnprocessableEntity422"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
@@ -157,7 +157,7 @@ paths:
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/SubscriptionPermissionDenied403"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
@@ -190,7 +190,7 @@ paths:
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/SubscriptionPermissionDenied403"
         "404":
           $ref: "#/components/responses/Generic404"
         "500":
@@ -887,13 +887,8 @@ components:
               value:
                 status: 403
                 code: PERMISSION_DENIED
-                message: Client does not have sufficient permissions to perform this action.
-            GENERIC_403_SUBSCRIPTION_MISMATCH:
-              value:
-                status: 403
-                code: "SUBSCRIPTION_MISMATCH"
-                message: "Inconsistent access token for requested events subscription"
-    CreateSubscriptionPermissionDenied403:
+                message: Client does not have sufficient permissions to perform this action.          
+    SubscriptionPermissionDenied403:
       description: Client does not have sufficient permission
       headers:
         x-correlator:
@@ -915,6 +910,11 @@ components:
                 status: 403
                 code: INVALID_TOKEN_CONTEXT
                 message: "{{field}} is not consistent with access token."
+            GENERIC_403_SUBSCRIPTION_MISMATCH:
+              value:
+                status: 403
+                code: "SUBSCRIPTION_MISMATCH"
+                message: "Inconsistent access token for requested events subscription"
     Generic404:
       description: Resource Not Found
       headers:
@@ -985,7 +985,7 @@ components:
                 status: 415
                 code: UNSUPPORTED_MEDIA_TYPE
                 message: The server refuses to accept the request because the payload format is in an unsupported format
-    Generic422:
+    CreateSubscriptionUnprocessableEntity422:
       description: Unprocessable Entity
       headers:
         x-correlator:
