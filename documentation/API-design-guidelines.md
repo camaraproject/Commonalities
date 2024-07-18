@@ -1539,20 +1539,23 @@ where
 
 Regarding scope naming for APIs, which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format, and this is described below:
 
-Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete:
+Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete, for example:
 
-API Name: device-roaming-subscriptions
-Grant-level, action on resource: read, delete This type of formulation is not needed for the creation action.
-For e.g., device-roaming-subscriptions:read
+- API Name: `device-roaming-subscriptions`
+- Grant-level, action on resource: `read`, `delete` 
+
+results in scope: `device-roaming-subscriptions:read`.
+This type of formulation is not used for the creation action.
 
 The format to define scopes for explicit subscriptions with action creation,
 includes the event type in its formulation to ensure that consent is managed at the level of subscribed event types.
-Scopes should be represented as below for APIs that offer explicit event subscriptions with action create:
+Scopes should be represented as below for APIs that offer explicit event subscriptions with action create, for example:
 
-API Name: device-roaming-subscriptions
-Event-type: org.camaraproject.device-roaming-subscriptions.v0.roaming-on
-Grant-level: action on resource: create
-For e.g., device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create
+- API Name: `device-roaming-subscriptions`
+- Event-type: `org.camaraproject.device-roaming-subscriptions.v0.roaming-on`
+- Grant-level: action on resource: `create`
+
+makes scope name: `device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create`.
 
 ##### API-level scopes (sometimes referred to as wildcard scopes in CAMARA)
 
