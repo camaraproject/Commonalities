@@ -195,8 +195,6 @@ paths:
           $ref: "#/components/responses/Generic404"
         "500":
           $ref: "#/components/responses/Generic500"
-        "501":
-          $ref: "#/components/responses/Generic501"
         "503":
           $ref: "#/components/responses/Generic503"
     delete:
@@ -852,12 +850,6 @@ components:
                 status: 400
                 code: INVALID_ARGUMENT
                 message: Client specified an invalid argument, request body or query param.
-            GENERIC_400_OUT_OF_RANGE:
-              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
-              value:
-                status: 400
-                code: OUT_OF_RANGE
-                message: Client specified an invalid range.
     Generic401:
       description: Authentication problem with the client request
       headers:
@@ -896,6 +888,11 @@ components:
                 status: 403
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
+            GENERIC_403_SUBSCRIPTION_MISMATCH:
+              value:
+                status: 403
+                code: "SUBSCRIPTION_MISMATCH"
+                message: "Inconsistent access token for requested events subscription"
     CreateSubscriptionPermissionDenied403:
       description: Client does not have sufficient permission
       headers:
@@ -956,12 +953,6 @@ components:
                 status: 409
                 code: ALREADY_EXISTS
                 message: The resource that a client tried to create already exists.
-            GENERIC_409_CONFLICT:
-              description: Duplication of an existing resource
-              value:
-                status: 409
-                code: CONFLICT
-                message: A specified resource duplicate entry found.
     Generic410:
       description: Gone
       headers:
@@ -1059,22 +1050,6 @@ components:
                 status: 500
                 code: INTERNAL
                 message: Unknown server error. Typically a server bug.
-    Generic501:
-      description: Not Implemented
-      headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            GENERIC_501_NOT_IMPLEMENTED:
-              description: Service not implemented. The use of this code should be avoided as far as possible to get the objective to reach aligned implementations
-              value:
-                status: 501
-                code: NOT_IMPLEMENTED
-                message: This functionality is not implemented yet.
     Generic503:
       description: Service unavailable. Typically the server is down.
       headers:
