@@ -66,7 +66,6 @@ paths:
                   application/cloudevents+json:
                     schema:
                       $ref: "#/components/schemas/CloudEvent"
-
               responses:
                 "204":
                   description: Successful notification
@@ -157,7 +156,7 @@ paths:
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/SubscriptionPermissionDenied403"
+          $ref: "#/components/responses/Generic403"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
@@ -190,7 +189,7 @@ paths:
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/SubscriptionPermissionDenied403"
+          $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/Generic404"
         "500":
