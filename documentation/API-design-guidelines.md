@@ -793,6 +793,9 @@ The Following table compiles the guidelines to be adopted:
 |     3      | Device identifiers mismatch                                                |       422        |  DEVICE_IDENTIFIERS_MISMATCH   | Provided device identifiers are not consistent.          |
 |     4      | Invalid access token context                                               |       403        |     INVALID_TOKEN_CONTEXT      | Device identifiers are not consistent with access token. |
 |     5      | Service not applicable to the device                                       |       422        |     DEVICE_NOT_APPLICABLE      | The service is not available for the provided device.    |
+|     6      |  The device identifier is not included in the request and the device information cannot be derived from the 3-legged access token |       422        |     UNIDENTIFIABLE_DEVICE      | The device cannot be identified    |
+
+
 
 #### Templates
 
