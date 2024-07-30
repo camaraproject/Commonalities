@@ -371,7 +371,8 @@ components:
                 code: DEVICE_NOT_APPLICABLE
                 message: The service is not available for the provided device.
             GENERIC_422_UNIDENTIFIABLE_DEVICE:
-              description: Service is not available for the provided device
+              description: The device identifier is not included in the request and the device information cannot be derived from the 3-legged access token
+
               value:
                 status: 422
                 code: UNIDENTIFIABLE_DEVICE
