@@ -2,12 +2,12 @@ openapi: 3.0.3
 info:
   title: Camara common data types
   description: Common data types for Camara APIs
-  contact:
-    email: sp-com@lists.camaraproject.org
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.4.0-wip
+  version: 0.5.0
+  x-camara-commonalities: 0.4.0
+  
 paths: {}
 components:
   headers:
