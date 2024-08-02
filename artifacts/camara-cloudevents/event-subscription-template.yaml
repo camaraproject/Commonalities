@@ -6,18 +6,17 @@ info:
 
     Note on ``security`` - ``openId`` scope: The value in this yaml `api-name:event-type:grant-level` must be replaced accordingly to the format defined in the guideline document.
 
-  termsOfService: https://swagger.io/terms/
-  contact:
-    email: project-email@sample.com
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.1.0-wip
+  version: 0.1.0
+  x-camara-commonalities: 0.4.0
+  
 externalDocs:
   description: Product documentation at CAMARA
   url: https://github.com/camaraproject/
 servers:
-  - url: "{apiRoot}/{apiName}/v0"
+  - url: "{apiRoot}/{apiName}/v0.1"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -471,7 +470,6 @@ components:
         - config
         - types
         - id
-        - startsAt
       properties:
         protocol:
           $ref: "#/components/schemas/Protocol"
