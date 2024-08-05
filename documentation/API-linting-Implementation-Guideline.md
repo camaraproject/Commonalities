@@ -2,11 +2,11 @@
 
 ## Introduction
 
-This guide provides instructions on how to implement linting rules for the CAMARA APIs using two methods: **[GitHub Actions](API-linting-Implementation-Guideline.md#github-actions-integration)** and **[local deployment](API-linting-Implementation-Guideline.md#github-actions-integration)**, both methods use [Spectral tool](https://docs.stoplight.io/docs/spectral/674b27b261c3c-overview).
-All needed files are stored in [artifacts subfolder](https://github.com/camaraproject/Commonalities/tree/API-linting-Implementation-Guideline/artifacts/linting_rules).
+This guide provides instructions on how to implement linting rules for the CAMARA APIs using two methods:
+- [GitHub Actions](https://github.com/eric-murray/Commonalities/blob/main/documentation/API-linting-Implementation-Guideline.md#github-actions-integration)
+- [Local Deployment](https://github.com/eric-murray/Commonalities/blob/main/documentation/API-linting-Implementation-Guideline.md#api-linting-configuration-steps-for-local-deployment)
 
-The target method is linting rules integration with CAMARA API subproject repositories using GitHub Actions.
-
+Both methods use the [Spectral](https://docs.stoplight.io/docs/spectral/674b27b261c3c-overview) tool. All needed files are stored in the [artifacts subfolder](https://github.com/camaraproject/Commonalities/tree/main/artifacts/linting_rules). The target method is linting rules integration with CAMARA API subproject repositories using GitHub Actions.
 
 ## Spectral Configuration
 
@@ -28,7 +28,7 @@ This file consolidates all rules:
 
 2. Create **lint-function** folder
 
-   Make a folder named `lint_function` at root location and add custom [JavaScript function files](https://github.com/camaraproject/Commonalities/tree/API-linting-Implementation-Guideline/artifacts/linting_rules/lint_function) that are imported in .spectral.yml (some rules require custom JavaScript functions to execute).
+   Make a folder named `lint_function` at root location and add custom [JavaScript function files](https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/lint_function) that are imported in .spectral.yml (some rules require custom JavaScript functions to execute).
 
 3. Add **[spectral_oas_lint.yml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/.github/workflows/spectral_oas_lint.yml)** to GitHub action workflows in `.github/workflows` folder
    which includes the configuration of Spectral workflow for GitHub actions.
@@ -51,11 +51,11 @@ The output from Spectral can be seen by expanding the step **Run Spectral Lintin
 [Megalinter](https://megalinter.io/latest/) is an Open-Source tool for CI/CD workflows that analyzes the consistency of code, configurations, and scripts in repository sources. Megalinter supports Spectral linting.
 The Megalinter job will be automatically activated once you submit a pull request on the [main/master] branch of the CAMARA repository, as configured in megalinter.yml.
 
-The Megalinter configuration consists of the <b><a href="https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/lint_function/workflows/megalinter.yml">megalinter.yml </a></b> file containing the necessary settings to run Megalinter and Spectral jobs on GitHub actions.
+The Megalinter configuration consists of the <b><a href="https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/.github/workflows/megalinter.yml">megalinter.yml </a></b> file containing the necessary settings to run Megalinter and Spectral jobs on GitHub actions.
 
 Additionally, Megalinter also supports linting of YAML files. To enable this, users need to add the following ruleset files to the root location.
 
--  <b>YAML Linting:</b> <a href="https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/lint_function/workflows.yamllint.yaml"> .yamllint.yaml </a>
+-  <b>YAML Linting:</b> <a href="https://github.com/eric-murray/Commonalities/blob/main/artifacts/linting_rules/.yamllint.yaml"> .yamllint.yaml </a>
 
 
 
