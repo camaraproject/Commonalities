@@ -22,11 +22,11 @@ It contains the following corrections compared to [v0.4.0-rc.1](#v040-rc1).
 ### Changed
 * Errors in event-subscription-template.yaml aligned with CAMARA_common.yaml by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/251
 * CAMARA_common.yaml - info object aligned with API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/257
-
+* API-DocumentationTemplate.md marked as deprecated by @rartych in https://github.com/camaraproject/Commonalities/pull/261
+* 
 ### Fixed
 * API Design Guidelines - formatting corrected in section 11.6.1 by @rartych in https://github.com/camaraproject/Commonalities/pull/255
 * MNO abbreviation replaced in CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/270
-* API-DocumentationTemplate.md marked as deprecated by @rartych in https://github.com/camaraproject/Commonalities/pull/261
 
 ### Removed
 * N/A
