@@ -3,8 +3,8 @@
 ## Introduction
 
 This guide provides instructions on how to implement linting rules for the CAMARA APIs using two methods:
-- [GitHub Actions](https://github.com/eric-murray/Commonalities/blob/main/documentation/API-linting-Implementation-Guideline.md#github-actions-integration)
-- [Local Deployment](https://github.com/eric-murray/Commonalities/blob/main/documentation/API-linting-Implementation-Guideline.md#api-linting-configuration-steps-for-local-deployment)
+- [GitHub Actions](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-linting-Implementation-Guideline.md#spectral-configuration)
+- [Local Deployment](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-linting-Implementation-Guideline.md#api-linting-configuration-steps-for-local-deployment)
 
 Both methods use the [Spectral](https://docs.stoplight.io/docs/spectral/674b27b261c3c-overview) tool. All needed files are stored in the [artifacts subfolder](https://github.com/camaraproject/Commonalities/tree/main/artifacts/linting_rules). The target method is linting rules integration with CAMARA API subproject repositories using GitHub Actions.
 
@@ -20,7 +20,6 @@ This file consolidates all rules:
 
 2.  Spectral rules with built-in functions
 3.  Spectral rules with custom<a href="https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/lint_function"> JavaScript functions</a>
-
 
 ## GitHub Actions Integration
 
@@ -45,7 +44,6 @@ Write access to the repository is required to perform these steps.
 
 The output from Spectral can be seen by expanding the step **Run Spectral Linting** of the given workflow run Actions section of GitHub repository.
 
-
 ### Megalinter integration
 
 [Megalinter](https://megalinter.io/latest/) is an Open-Source tool for CI/CD workflows that analyzes the consistency of code, configurations, and scripts in repository sources. Megalinter supports Spectral linting.
@@ -55,10 +53,7 @@ The Megalinter configuration consists of the <b><a href="https://github.com/cama
 
 Additionally, Megalinter also supports linting of YAML files. To enable this, users need to add the following ruleset files to the root location.
 
--  <b>YAML Linting:</b> <a href="https://github.com/eric-murray/Commonalities/blob/main/artifacts/linting_rules/.yamllint.yaml"> .yamllint.yaml </a>
-
-
-
+-  <b>YAML Linting:</b> <a href="https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/.yamllint.yaml"> .yamllint.yaml </a>
 
 ## API Linting configuration steps for local deployment
 
