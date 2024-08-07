@@ -450,7 +450,7 @@ components:
       description: The detail of the requested event subscription.
       type: object
 
-    Event-typeNotification:
+    EventTypeNotification:
       type: string
       description: |
         event-type - Event triggered when an event-type event occurred
@@ -553,7 +553,7 @@ components:
         source:
           $ref: "#/components/schemas/Source"
         type:
-          $ref: "#/components/schemas/Event-typeNotification"
+          $ref: "#/components/schemas/EventTypeNotification"
         specversion:
           type: string
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
