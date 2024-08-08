@@ -314,16 +314,11 @@ components:
         propertyName: protocol
         mapping:
           HTTP: "#/components/schemas/HTTPSubscriptionRequest"
-          MQTT3: "#/components/schemas/MQTTSubscriptionRequest"
-          MQTT5: "#/components/schemas/MQTTSubscriptionRequest"
-          AMQP: "#/components/schemas/AMQPSubscriptionRequest"
-          NATS: "#/components/schemas/NATSSubscriptionRequest"
-          KAFKA: "#/components/schemas/ApacheKafkaSubscriptionRequest"
 
     Protocol:
       type: string
-      enum: ["HTTP", "MQTT3", "MQTT5", "AMQP", "NATS", "KAFKA"]
-      description: Identifier of a delivery protocol. Only HTTP is allowed for now
+      enum: ["HTTP"]
+      description: Identifier of a delivery protocol. Only HTTP is allowed in Camara
       example: "HTTP"
 
     Config:
@@ -362,34 +357,14 @@ components:
         credentialType:
           type: string
           enum:
-            - PLAIN
             - ACCESSTOKEN
-            - REFRESHTOKEN
           description: "The type of the credential."
       discriminator:
         propertyName: credentialType
         mapping:
-          PLAIN: "#/components/schemas/PlainCredential"
           ACCESSTOKEN: "#/components/schemas/AccessTokenCredential"
-          REFRESHTOKEN: "#/components/schemas/RefreshTokenCredential"
       required:
         - credentialType
-    PlainCredential:
-      type: object
-      description: A plain credential as a combination of an identifier and a secret.
-      allOf:
-        - $ref: "#/components/schemas/SinkCredential"
-        - type: object
-          required:
-            - identifier
-            - secret
-          properties:
-            identifier:
-              description: The identifier might be an account or username.
-              type: string
-            secret:
-              description: The secret might be a password or passphrase.
-              type: string
     AccessTokenCredential:
       type: object
       description: An access token credential.
@@ -398,7 +373,7 @@ components:
         - type: object
           properties:
             accessToken:
-              description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
+              description: REQUIRED. An access token is a previously acquired token granting access to the target resource. An access token is a shared secret with a lifetime.
               type: string
             accessTokenExpiresUtc:
               type: string
@@ -412,39 +387,10 @@ components:
           required:
             - accessToken
             - accessTokenExpiresUtc
-            - accessTokenType
-    RefreshTokenCredential:
-      type: object
-      description: An access token credential with a refresh token.
-      allOf:
-        - $ref: "#/components/schemas/SinkCredential"
-        - type: object
-          properties:
-            accessToken:
-              description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
-              type: string
-            accessTokenExpiresUtc:
-              type: string
-              format: date-time
-              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired.
-            accessTokenType:
-              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
-              type: string
-              enum:
-                - bearer
-            refreshToken:
-              description: REQUIRED. An refresh token credential used to acquire access tokens.
-              type: string
-            refreshTokenEndpoint:
-              type: string
-              format: uri
-              description: REQUIRED. A URL at which the refresh token can be traded for an access token.
-      required:
+            - accessTokenType      required:
         - accessToken
         - accessTokenExpiresUtc
         - accessTokenType
-        - refreshToken
-        - refreshTokenEndpoint
 
     CreateSubscriptionDetail:
       description: The detail of the requested event subscription.
@@ -475,7 +421,7 @@ components:
         sink:
           type: string
           format: url
-          description: The address to which events shall be delivered using the selected protocol.
+          description: The address to which events shall be delivered using the selected protocol. The URL-scheme MUST be https.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
           $ref: '#/components/schemas/SinkCredential'
@@ -520,11 +466,6 @@ components:
         propertyName: protocol
         mapping:
           HTTP: '#/components/schemas/HTTPSubscriptionResponse'
-          MQTT3: '#/components/schemas/MQTTSubscriptionResponse'
-          MQTT5: '#/components/schemas/MQTTSubscriptionResponse'
-          AMQP: '#/components/schemas/AMQPSubscriptionResponse'
-          NATS: '#/components/schemas/NATSSubscriptionResponse'
-          KAFKA: '#/components/schemas/ApacheKafkaSubscriptionResponse'
 
     SubscriptionAsync:
       description: Response for a event-type subscription request managed asynchronously (Creation or Deletion)
@@ -566,7 +507,7 @@ components:
             - application/json
         data:
           type: object
-          description: Event details payload described in each CAMARA API and referenced by its type
+          description: Event details payload described in each CAMARA API and referenced by its type. It is RECOMMENDED that data is first signed using JWS and then encrypted using JWE.
         time:
           $ref: "#/components/schemas/DateTime"
       discriminator:
@@ -674,124 +615,6 @@ components:
           enum:
             - POST
 
-    MQTTSubscriptionRequest:
-      allOf:
-        - $ref: "#/components/schemas/SubscriptionRequest"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "#/components/schemas/MQTTSettings"
-
-    MQTTSubscriptionResponse:
-      allOf:
-        - $ref: "#/components/schemas/Subscription"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "#/components/schemas/MQTTSettings"
-
-    MQTTSettings:
-      type: object
-      properties:
-        topicName:
-          type: string
-        qos:
-          type: integer
-          format: int32
-        retain:
-          type: boolean
-        expiry:
-          type: integer
-          format: int32
-        userProperties:
-          type: object
-      required:
-        - topicName
-
-    AMQPSubscriptionRequest:
-      allOf:
-        - $ref: "#/components/schemas/SubscriptionRequest"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "#/components/schemas/AMQPSettings"
-
-    AMQPSubscriptionResponse:
-      allOf:
-        - $ref: "#/components/schemas/Subscription"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "#/components/schemas/AMQPSettings"
-
-    AMQPSettings:
-      type: object
-      properties:
-        address:
-          type: string
-        linkName:
-          type: string
-        senderSettlementMode:
-          type: string
-          enum: ["settled", "unsettled"]
-        linkProperties:
-          type: object
-          additionalProperties:
-            type: string
-
-    ApacheKafkaSubscriptionRequest:
-      allOf:
-        - $ref: "#/components/schemas/SubscriptionRequest"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "#/components/schemas/ApacheKafkaSettings"
-
-    ApacheKafkaSubscriptionResponse:
-      allOf:
-        - $ref: "#/components/schemas/Subscription"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "#/components/schemas/ApacheKafkaSettings"
-
-    ApacheKafkaSettings:
-      type: object
-      properties:
-        topicName:
-          type: string
-        partitionKeyExtractor:
-          type: string
-        clientId:
-          type: string
-        ackMode:
-          type: integer
-      required:
-        - topicName
-
-    NATSSubscriptionRequest:
-      allOf:
-        - $ref: "#/components/schemas/SubscriptionRequest"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "#/components/schemas/NATSSettings"
-
-    NATSSubscriptionResponse:
-      allOf:
-        - $ref: "#/components/schemas/Subscription"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "#/components/schemas/NATSSettings"
-
-    NATSSettings:
-      type: object
-      properties:
-        subject:
-          type: string
-      required:
-        - subject
   responses:
     CreateSubscriptionBadRequest400:
       description: Problem with the client request
