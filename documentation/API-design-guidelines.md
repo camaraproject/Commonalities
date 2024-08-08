@@ -1892,7 +1892,24 @@ Note: There is no normative enforcement to use any of these patterns, and they c
 
 #### Security Considerations
 
-As notification may carry sensitive information, privacy and security constraints have to be considered. CloudEvents specification provides some guidance there: https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md#privacy-and-security
+As notifications may carry sensitive information, privacy and security constraints have to be considered. 
+
+CloudEvents specification only provide some limited guidance there: https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md#privacy-and-security
+CloudEvents allows many protocols which each have their own security measures.
+
+Camara Notifications MUST use HTTPS. The implementation of the Notification Sender MUST follow [10.2 Security Implementation](#102-security-implementation).
+
+Camara restricts the the `credentialType` to ACCESSTOKEN. Neither `PLAIN`nor `REFRESHTOKEN` are allowed. 
+CloudEvent access tokens are basically shared secrets (PLAIN) with a lifetime.
+
+CloudEvent Security and Privacy considerations RECOMMEND protecting event data through signature and encryption. 
+As Camara Notifications are JSON, Camara RECOMMENDS that the Camara Notification is signed and encrypted using [JSON Web Signature (JWS)](https://datatracker.ietf.org/doc/html/rfc7515) and [JSON Web Encryption (JWE)](https://datatracker.ietf.org/doc/html/rfc7516). The signing key should be made available through an public URL, which is agreed upon at API Consumer onboarding-time. The public key to which the notification event data is encrypted should be availabe through public URL, which is agreed upon at API Consumer onboarding-time.
+
+To prevent notification-replay attacks the API Consumer SHOULD inspect the notification's `id` and `time` fields. Whether to reject or ignore notifications that have already been received or that are too old is a API Consumer's policy decision.
+
+It is RECOMMENDED that the API consumer inspects all the fields of the notification, especially `source` and `type`. It is RECOMMENDED that if the notification event data is signed, that then the `source` and the signature key are associated.
+
+API Consumers SHOULD validate the schema of the notification event data that is defined by the API subproject. It is RECOMMENDED that additional fields are ignored. Reliance on additional fields is an interoperability issue. Additional fields can lead to security issues.
 
 #### Abuse Protection
 
