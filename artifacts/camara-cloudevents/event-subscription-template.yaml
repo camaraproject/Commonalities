@@ -387,11 +387,8 @@ components:
           required:
             - accessToken
             - accessTokenExpiresUtc
-            - accessTokenType      required:
-        - accessToken
-        - accessTokenExpiresUtc
-        - accessTokenType
-
+            - accessTokenType
+            
     CreateSubscriptionDetail:
       description: The detail of the requested event subscription.
       type: object
