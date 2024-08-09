@@ -49,7 +49,7 @@ The output from Spectral can be seen by expanding the step **Run Spectral Lintin
 [Megalinter](https://megalinter.io/latest/) is an Open-Source tool for CI/CD workflows that analyzes the consistency of code, configurations, and scripts in repository sources. Megalinter supports Spectral linting.
 The Megalinter job will be automatically activated once you submit a pull request on the [main/master] branch of the CAMARA repository, as configured in megalinter.yml.
 
-The Megalinter configuration consists of the <b><a href="/artifacts/linting_rules/.github/workflows/megalinter.yml">megalinter.yml </a></b> file containing the necessary settings to run Megalinter and Spectral jobs on GitHub actions.
+The Megalinter configuration consists of the <b><a href="/artifacts/linting_rules/.github/workflows/megalinter.yml">megalinter.yml</a></b> file containing the necessary settings to run Megalinter and Spectral jobs on GitHub actions.
 
 Additionally, Megalinter also supports linting of YAML files. To enable this, users need to add the following ruleset files to the root location.
 
