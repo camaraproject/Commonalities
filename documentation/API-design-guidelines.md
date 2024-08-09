@@ -1892,20 +1892,21 @@ Note: There is no normative enforcement to use any of these patterns, and they c
 
 #### Security Considerations
 
-As notifications may carry sensitive information, privacy and security constraints have to be considered. 
+As notifications may carry sensitive information, privacy and security have to be considered. 
 
-CloudEvents specification only provide some limited guidance there: https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md#privacy-and-security
-CloudEvents allows many protocols which each have their own security measures.
+CloudEvents specification only provide some limited privacy and security guidance there: https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md#privacy-and-security
 
-Camara Notifications MUST use HTTPS. The implementation of the Notification Sender MUST follow [10.2 Security Implementation](#102-security-implementation).
+This document restricts the allowed values of `protocol` to `HTTP`. CloudEvents allows many protocols which each have their own security measures. 
+This Security Considerations need to be reconsidered if other protocols than `HTTP` are allowed.
+Camara Notifications MUST use HTTPS. The value of `sink` MUST be an URL with url-scheme `https`. 
+The implementation of the Notification Sender MUST follow [10.2 Security Implementation](#102-security-implementation).
 
-Camara restricts the the `credentialType` to ACCESSTOKEN. Neither `PLAIN`nor `REFRESHTOKEN` are allowed. 
-CloudEvent access tokens are basically shared secrets (PLAIN) with a lifetime.
+This document restricts the `credendentialType` to `ACCESSTOKEN`. Neither `PLAIN`nor `REFRESHTOKEN` are allowed. 
+This Security Considerations need to be reconsidered if other `credentialsType` values are allowed.
 
-CloudEvent Security and Privacy considerations RECOMMEND protecting event data through signature and encryption. 
-As Camara Notifications are JSON, Camara RECOMMENDS that the Camara Notification is signed and encrypted using [JSON Web Signature (JWS)](https://datatracker.ietf.org/doc/html/rfc7515) and [JSON Web Encryption (JWE)](https://datatracker.ietf.org/doc/html/rfc7516). The signing key should be made available through an public URL, which is agreed upon at API Consumer onboarding-time. The public key to which the notification event data is encrypted should be availabe through public URL, which is agreed upon at API Consumer onboarding-time.
-
-To prevent notification-replay attacks the API Consumer SHOULD inspect the notification's `id` and `time` fields. Whether to reject or ignore notifications that have already been received or that are too old is a API Consumer's policy decision.
+CloudEvent Security and Privacy considerations RECOMMEND protecting event **data** through signature and encryption. The value of the `data` field of the notifications SHOULD be signed and encrypted.
+As Camara Notifications are JSON, Camara RECOMMENDS that the Camara Notification is signed and then encrypted using [JSON Web Signature (JWS)](https://datatracker.ietf.org/doc/html/rfc7515) and [JSON Web Encryption (JWE)](https://datatracker.ietf.org/doc/html/rfc7516). 
+The API Consumer and event producer have to agree which keys to use for signing and encryption e.g. at onboarding time or at subscription time.
 
 It is RECOMMENDED that the API consumer inspects all the fields of the notification, especially `source` and `type`. It is RECOMMENDED that if the notification event data is signed, that then the `source` and the signature key are associated.
 
@@ -1914,6 +1915,8 @@ API Consumers SHOULD validate the schema of the notification event data that is 
 #### Abuse Protection
 
 Any system permitting the registration and delivery of notifications to arbitrary HTTP endpoints holds the potential for abuse. This could occur if someone, either intentionally or unintentionally, registers the address of a system unprepared for such requests, or for which the registering party lacks authorization to perform such registration.
+
+To prevent notification-replay attacks the API Consumer SHOULD inspect the notification's `id` and `time` fields. Whether to reject or ignore notifications that have already been received or that are too old is a API Consumer's policy decision.
 
 To protect the sender, CloudEvents specification provides some guidance there: https://github.com/cloudevents/spec/blob/main/cloudevents/http-webhook.md#4-abuse-protection
 
