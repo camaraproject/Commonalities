@@ -6,18 +6,17 @@ info:
 
     Note on ``security`` - ``openId`` scope: The value in this yaml `api-name:event-type:grant-level` must be replaced accordingly to the format defined in the guideline document.
 
-  termsOfService: https://swagger.io/terms/
-  contact:
-    email: project-email@sample.com
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.1.0-wip
+  version: 0.1.0
+  x-camara-commonalities: 0.4.0
+  
 externalDocs:
   description: Product documentation at CAMARA
   url: https://github.com/camaraproject/
 servers:
-  - url: "{apiRoot}/{apiName}/v0"
+  - url: "{apiRoot}/{apiName}/v0.1"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -298,9 +297,7 @@ components:
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
-          allOf:
-            - description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
-            - $ref: "#/components/schemas/SinkCredential"
+          $ref: "#/components/schemas/SinkCredential"
         types:
           description: |
             Camara Event types eligible to be delivered by this subscription.
@@ -359,6 +356,7 @@ components:
             Up to API project decision to keep it.
 
     SinkCredential:
+      description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
       type: object
       properties:
         credentialType:
@@ -452,7 +450,7 @@ components:
       description: The detail of the requested event subscription.
       type: object
 
-    Event-typeNotification:
+    EventTypeNotification:
       type: string
       description: |
         event-type - Event triggered when an event-type event occurred
@@ -471,7 +469,6 @@ components:
         - config
         - types
         - id
-        - startsAt
       properties:
         protocol:
           $ref: "#/components/schemas/Protocol"
@@ -556,7 +553,7 @@ components:
         source:
           $ref: "#/components/schemas/Source"
         type:
-          $ref: "#/components/schemas/Event-typeNotification"
+          $ref: "#/components/schemas/EventTypeNotification"
         specversion:
           type: string
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
