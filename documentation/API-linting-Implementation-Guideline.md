@@ -10,7 +10,7 @@ Both methods use the [Spectral](https://docs.stoplight.io/docs/spectral/674b27b2
 
 ## Spectral Configuration
 
-The Spectral configuration consists of <b><a href="/artifacts/linting_rules/.spectral.yml"> .spectral.yml</a></b> file, which contains all the rules defined for CAMARA OpenAPI specification as described in [Linting-rules.md](Linting-rules.md)
+The Spectral configuration consists of <b><a href="/artifacts/linting_rules/.spectral.yml">.spectral.yml</a></b> file, which contains all the rules defined for CAMARA OpenAPI specification as described in [Linting-rules.md](Linting-rules.md)
 
 This file consolidates all rules:
 
