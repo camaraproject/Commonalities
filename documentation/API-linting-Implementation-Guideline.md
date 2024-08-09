@@ -53,7 +53,7 @@ The Megalinter configuration consists of the <b><a href="/artifacts/linting_rule
 
 Additionally, Megalinter also supports linting of YAML files. To enable this, users need to add the following ruleset files to the root location.
 
--  <b>YAML Linting:</b> <a href="/artifacts/linting_rules/.yamllint.yaml"> .yamllint.yaml </a>
+-  <b>YAML Linting:</b> <a href="/artifacts/linting_rules/.yamllint.yaml">.yamllint.yaml</a>
 
 ## API Linting configuration steps for local deployment
 
