@@ -19,7 +19,7 @@ This file consolidates all rules:
     `Ruleset extension: extends: "spectral:oas"`
 
 2.  Spectral rules with built-in functions
-3.  Spectral rules with custom<a href="/artifacts/linting_rules/lint_function">JavaScript functions</a>
+3.  Spectral rules with custom <a href="/artifacts/linting_rules/lint_function">JavaScript functions</a>
 
 ## GitHub Actions Integration
 
