@@ -23,6 +23,7 @@ The documents that are relevant for CAMARA API Sub Projects are found in the `do
 The `artifacts` directory contains:
 * templates for creating Github issues
 * common data and error formats for CAMARA APIs in [CAMARA_common.yaml](artifacts/CAMARA_common.yaml)
+* notification subscription template: [event-subscription-template.yaml](artifacts/camara-cloudevents/event-subscription-template.yaml)
 * OAS definition of CAMARA Event using CloudEvents: [notification-as-cloud-event.yaml](artifacts/notification-as-cloud-event.yaml)
 
 ### Frequently-accessed output documents
@@ -32,7 +33,6 @@ A list of some of the frequently accessed documents that are an output of the wo
 | Document name                                                                                                                             | Purpose                                                                                                                                                            |
 |-------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
  | [API-design-guidelines.md](documentation/API-design-guidelines.md)               | This document captures guidelines for the API design in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative. |
-| [API-DocumentationTemplate.md](documentation/API-DocumentationTemplate.md)       | Template for documenting the APIs                                                                                                                                  |
 | [Glossary.md](documentation/Glossary.md)                                         | A glossary of the common terms and their API parameter/field names for use in the APIs                                                                             |
 | [API-Testing-Guidelines.md](documentation/API-Testing-Guidelines.md)             | Guidelines for the API testing in CAMARA project                                                                                                   |
 
@@ -41,7 +41,7 @@ NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-
 
 ## Status and released versions
 
-* Release 0.4.0-rc.1 of guidelines and assets for CAMARA APIs is available with the [r0.4.0-rc.1 tag](https://github.com/camaraproject/Commonalities/tree/r0.4.0-rc.1):
+* Release 0.4.0-rc.2 of guidelines and assets for CAMARA APIs is available with the [r0.4.0-rc.2 tag](https://github.com/camaraproject/Commonalities/tree/r0.4.0-rc.2):
 * Release 0.3.0 of guidelines and assets for CAMARA APIs is available within the [release-0.3.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.3.0):
 * Release 0.2.0 of guidelines and assets for CAMARA APIs is available within the [release-0.2.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.2.0):
 * Release 0.1.0 of guidelines and assets for CAMARA APIs is available within the [release-0.1.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.1.0):

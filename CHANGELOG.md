@@ -2,11 +2,38 @@
 
 ## Table of Contents
 
+- [v0.4.0-rc.2](#v040-rc2)
 - [v0.4.0-rc.1](#v040-rc1)
 - [v0.4.0-alpha.1](#v040-alpha1)
 - [v0.3.0](#v030)
 - [v0.2.0](#v020)
 - [v0.1.0 - Initial version](#v010---initial-version)
+
+
+# v0.4.0-rc.2
+
+**This is the second Release Candidate version for Commonalities release 0.4.0.**
+
+It contains the following corrections compared to [v0.4.0-rc.1](#v040-rc1).
+
+### Added
+* Error 422 UNIDENTIFIABLE_DEVICE added in API Design Guidelines and CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/256
+
+### Changed
+* Errors in event-subscription-template.yaml aligned with CAMARA_common.yaml by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/251
+* CAMARA_common.yaml - info object aligned with API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/257
+* API-DocumentationTemplate.md marked as deprecated by @rartych in https://github.com/camaraproject/Commonalities/pull/261
+* Updated event-subscription-template.yaml with attribute startsAt set optional, sinkCredential definition, and other corrections by @rartych in https://github.com/camaraproject/Commonalities/pull/267
+
+  
+### Fixed
+* API Design Guidelines - formatting corrected in section 11.6.1 by @rartych in https://github.com/camaraproject/Commonalities/pull/255
+* MNO abbreviation replaced in CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/270
+
+### Removed
+* N/A
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r0.4.0-rc.1...r0.4.0-rc.2
 
 
 # v0.4.0-rc.1
