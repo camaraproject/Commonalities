@@ -1641,7 +1641,7 @@ but the 'eventType' attribute is used to distinguish distinct events subscribed.
 To ease developer adoption,
 the pattern for Resource-based event subscription should be consistent with all API providing this feature.
 
-CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in [Commonalities/artifacts/camara-cloudevents](https://github.com/camaraproject/Commonalities/tree/main/artifacts/camara-cloudevents) directory (event-subscription-template.yaml).
+CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in [Commonalities/artifacts/camara-cloudevents](../artifacts/camara-cloudevents) directory (event-subscription-template.yaml).
 
 To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
@@ -1738,7 +1738,7 @@ The Following Error codes must be present:
 * for `GET .../{subscriptionId}`: 400, 401, 403, 404, 500, 503
 * for `DELETE`: 400, 401, 403, 404, 500, 503
 
-Please see in [Commonalities/artifact directory](https://github.com/camaraproject/Commonalities/tree/main/artifacts) ``event-subscription-template.yaml`` for more information and error examples. 
+Please see in [Commonalities/artifact directory](../artifacts) ``event-subscription-template.yaml`` for more information and error examples. 
 
 
 ##### Termination for resource-based (explicit) subscription
@@ -1978,7 +1978,7 @@ response:
 
 ## Appendix A: `info.description` template for `device` identification from access token
 
-The documentation template below is recommended to be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
+The documentation template below is recommended to be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](../artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
 
 Note: With the current 3-legged authorization flows used by CAMARA, only a single end user can be associated with the access token. For the OIDC authorization code flow, only a single device can call the `/authorize` endpoint and get the code. And for CIBA, `login_hint` is currently limited to a single phone number or IP address (which can optionally include a port).
 
