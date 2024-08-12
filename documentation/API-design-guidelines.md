@@ -1738,7 +1738,7 @@ The Following Error codes must be present:
 * for `GET .../{subscriptionId}`: 400, 401, 403, 404, 500, 503
 * for `DELETE`: 400, 401, 403, 404, 500, 503
 
-Please see in [Commonalities/artifact directory](../artifacts) ``event-subscription-template.yaml`` for more information and error examples. 
+Please see in [Commonalities/artifacts/camara-cloudevents directory](../artifacts/camara-cloudevents) ``event-subscription-template.yaml`` for more information and error examples. 
 
 
 ##### Termination for resource-based (explicit) subscription
