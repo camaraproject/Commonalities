@@ -90,12 +90,12 @@ _Spectral rule_: [camara-language-spelling]()
 
 ### Reduce telco-specific terminology in API definitions
 
-API Design Guidelines: [2.5 Reduce telco-specific terminology in API definitions](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#25-reduce-telco-specific-terminology-in-api-definitions)
+API Design Guidelines: [2.5 Reduce telco-specific terminology in API definitions](../API-design-guidelines.md#25-reduce-telco-specific-terminology-in-api-definitions)
 
 Consider and account for how the API can be fulfilled on a range of network types.
 Avoid terms/types specific to a given telco domain - terms should be inclusive beyond mobile network. 
 
-See also [CAMARA Glossary](https://github.com/camaraproject/Commonalities/blob/main/documentation/Glossary.md)
+See also [CAMARA Glossary](../Glossary.md)
 
 
 | ❌ &nbsp; Not recommended | 👍  &nbsp; Recommended |
@@ -118,7 +118,7 @@ _Spectral rule_: [camara-language-avoid-telco]()
 ### Openapi property
 
 API Design Guidelines: 
-[11. Definition in OpenAPI](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#11-definition-in-openapi)
+[11. Definition in OpenAPI](../API-design-guidelines.md#11-definition-in-openapi)
 
 The API functionalities must be implemented following the specifications of the **Open API version 3.0.3** 
 
@@ -135,7 +135,7 @@ _Spectral rule_: [camara-oas-version]()
 ### Info object
 
 API Design Guidelines: 
-[11.1 General Information](hhttps://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#111-general-information)
+[11.1 General Information](../API-design-guidelines.md#111-general-information)
 
 
 Info object must include the following information: API title with public name.
@@ -147,7 +147,7 @@ _Spectral rule_: [camara-info−title]()
 
 
 API Design Guidelines: 
-[11.1 General Information](hhttps://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#111-general-information)
+[11.1 General Information](../API-design-guidelines.md#111-general-information)
 
 
 Info object must include the following information: API Version in the format: X.Y.Z.
@@ -163,7 +163,7 @@ _Spectral rule_: [camara-info−version-format]()
 ### Path parameters
 
 API Design Guidelines: 
-[3.4 Path Parameters Use](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#34-path-parameters-use)
+[3.4 Path Parameters Use](../API-design-guidelines.md#34-path-parameters-use)
 
 Point 2 The attribute must be identifying itself, it is not enough with "{id}"
 
@@ -203,7 +203,7 @@ _Spectral rule_: [camara-security-no-secrets-in-path-or-query-parameters]()
 ### HTTP verbs
 
 API Design Guidelines: 
-[3.1 API REST](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#31-api-rest)
+[3.1 API REST](../API-design-guidelines.md#31-api-rest)
 
 Valid methods are: GET, PUT, POST, DELETE, PATCH, OPTIONS
 
@@ -224,7 +224,7 @@ _Spectral rule_: [camara-get-no-request-body]()
 ### Reserved words
 
 API Design Guidelines: 
-[11. Definition in OpenAPI](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#11-definition-in-openapi)
+[11. Definition in OpenAPI](../API-design-guidelines.md#11-definition-in-openapi)
 
 To avoid issues with implementation using Open API generators:
 
@@ -258,7 +258,7 @@ _Spectral rule_: [camara-resource-reserved-words]()
  
 ### Descriptions
 
-API Design Guidelines: [11.2 Published routes](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#112-published-routes)
+API Design Guidelines: [11.2 Published routes](../API-design-guidelines.md#112-published-routes)
 
 Functionality methods must have a description.
 
@@ -266,7 +266,7 @@ _Spectral rule_: [camara-routes-descriptions]()
 
 *Severity*: `warn`
 
-API Design Guidelines: [11.3 Request Parameters](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#113-request-parameters)
+API Design Guidelines: [11.3 Request Parameters](../API-design-guidelines.md#113-request-parameters)
 
 All parameters must have a description. 
 
@@ -274,7 +274,7 @@ _Spectral rule_: [camara-parameters-descriptions]()
 
 *Severity*: `warn`
 
-API Design Guidelines: [11.4 Response Structure](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#114-response-structure)
+API Design Guidelines: [11.4 Response Structure](../API-design-guidelines.md#114-response-structure)
 
 All response objects must have a description. 
 
@@ -282,7 +282,7 @@ _Spectral rule_: [camara-response-descriptions]()
 
 *Severity*: `warn`
 
-API Design Guidelines: [11.5 Data Definitions](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#115-data-definitions)
+API Design Guidelines: [11.5 Data Definitions](../API-design-guidelines.md#115-data-definitions)
 
 All properties within the object must have a description. 
 
@@ -290,7 +290,7 @@ _Spectral rule_: [camara-properties-descriptions]()
 
 *Severity*: `warn`
 
-API Design Guidelines: [11.2 Published Routes](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#112-published-routes)
+API Design Guidelines: [11.2 Published Routes](../API-design-guidelines.md#112-published-routes)
 Summary must be defined on each operation, describing with a short summary what the operation does.  
 _Spectral rule_: [camara-operation-summary]()
 
@@ -299,7 +299,7 @@ _Spectral rule_: [camara-operation-summary]()
 ### Usage of discriminator
 
 API Design Guidelines: 
-[11.5.1 Usage of discriminator](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#1151-usage-of-discriminator)
+[11.5.1 Usage of discriminator](../API-design-guidelines.md#1151-usage-of-discriminator)
 
 When request bodies or response payloads may be one of a number of different schemas (containing `oneOf` or `anyOf` section), a `discriminator` object can be used to aid in serialization, deserialization, and validation. 
 
@@ -336,7 +336,7 @@ _Spectral rule_: [camara-enum-casing-convention]()
 #### Operation ID
 
 API Design Guidelines: 
-[4.1 URL Definition](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#41-url-definition)
+[4.1 URL Definition](../API-design-guidelines.md#41-url-definition)
 >   OperationIds are defined in lowerCamelCase: For example: `helloWorld`
 
 Operation ids should follow a specific case convention: `camel` case.
@@ -347,7 +347,7 @@ _Spectral rule_: [camara-operationid-casing-convention]()
 
 #### Path parameters / Query parameters
 
-API Design Guidelines: [4.1 URL Definition](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#41-url-definition)
+API Design Guidelines: [4.1 URL Definition](../API-design-guidelines.md#41-url-definition)
 > URI with lowercase and hyphens. URIs must be "human-readable" to facilitate identification of the offered resources. Lowercase words and hyphenation (kebab-case) help achieve this best practice. For example: `/customer-segments`
 
 Path parameter should follow a specific case convention, with the default being `kebab` case.
@@ -358,7 +358,7 @@ _Spectral rule_: [camara-parameter-casing-convention]()
 
 #### Property names
 
-API Design Guidelines: [4.1 URL Definition](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#41-url-definition)
+API Design Guidelines: [4.1 URL Definition](../API-design-guidelines.md#41-url-definition)
 
 > Objects are defined in CamelCase inside the property field. For example: Greetings, ExampleObject.
 
