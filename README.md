@@ -41,7 +41,7 @@ NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-
 
 ## Status and released versions
 
-* Release 0.4.0-rc.2 of guidelines and assets for CAMARA APIs is available with the [r0.4.0-rc.2 tag](https://github.com/camaraproject/Commonalities/tree/r0.4.0-rc.2):
+* Release 0.4.0 of guidelines and assets for CAMARA APIs is available with the [r0.4.0 tag](https://github.com/camaraproject/Commonalities/tree/r0.4.0):
 * Release 0.3.0 of guidelines and assets for CAMARA APIs is available within the [release-0.3.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.3.0):
 * Release 0.2.0 of guidelines and assets for CAMARA APIs is available within the [release-0.2.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.2.0):
 * Release 0.1.0 of guidelines and assets for CAMARA APIs is available within the [release-0.1.0 branch](https://github.com/camaraproject/Commonalities/tree/release-0.1.0):
