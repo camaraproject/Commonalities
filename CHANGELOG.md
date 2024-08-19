@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- [v0.4.0](#v040)
 - [v0.4.0-rc.2](#v040-rc2)
 - [v0.4.0-rc.1](#v040-rc1)
 - [v0.4.0-alpha.1](#v040-alpha1)
@@ -9,6 +10,72 @@
 - [v0.2.0](#v020)
 - [v0.1.0 - Initial version](#v010---initial-version)
 
+
+# v0.4.0
+
+**This is the public release of Commonalities version 0.4.0.**
+**This version introduces Event Subscription model based on [CloudEvents Subscriptions API draft](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) and other changes to documents and artifacts approved since [v0.3.0](#v030).**
+
+**The relevant details of authentication and consent collection are covered by [version 0.2.0](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
+
+The content of the release includes:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r0.4.0-rc.1/documentation)** folder
+  - **Removed or deprecated:**
+    - API-Readiness-Checklist.md
+    - Camara_Versioning_Guidelines.md
+    - CHANGELOG_TEMPLATE.md
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r0.4.0-rc.1/artifacts)** folder
+  - **New:**
+    - [Notification Subscription Template](https://github.com/camaraproject/Commonalities/blob/r0.4.0-rc.1/artifacts/camara-cloudevents/event-subscription-template.yaml)
+
+
+### Added
+* Usage and style of operation tags in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/152
+* x-correlator support in notifications in API Design Guidelines by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/170
+* Create subscription-notification-template.yaml by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/189
+* Added a different scope naming format for APIs that deal with explicit subscriptions by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/177
+* 'info' object, 'servers' added in chapter 11 of API Design Guidelines:  by @rartych in https://github.com/camaraproject/Commonalities/pull/214
+* Guidelines on device identification in Annex A of API Design Guidelines and device object usage in CAMARA_common.yaml by @jpengar in https://github.com/camaraproject/Commonalities/pull/233
+* `minItems: 1` & `maxItems: 1` for subscription `types` in event-subscription-template.yaml by @maxl2287 in https://github.com/camaraproject/Commonalities/pull/236
+* `SUBSCRIPTION_DELETED` as new `terminationReason` for CloudEvents by @maxl2287 in https://github.com/camaraproject/Commonalities/pull/238
+* Error 422 UNIDENTIFIABLE_DEVICE added in API Design Guidelines and CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/256
+    
+### Changed
+* API Design Guidelines updated with subscriptionMaxEvents by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/131
+* 'specversion' in CloudEvents as enum by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/187
+* 'datacontenttype' in CloudEvents as enum by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/193
+* API Design Guidelines updated on x-correlator format by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/194
+* API Design Guidelines for Notification Subscription by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/198
+* API Design Guidelines updated on scope definition including wildcard scopes by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/221
+* API Design Guidelines adapted to ICM Security and Interoperability Profile by @AxelNennker in https://github.com/camaraproject/Commonalities/pull/208
+* Error response model updated in chapter 6 of API Design Guidelines by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/213
+* Enhanced API-Testing-Guidelines.md by @jlurien in https://github.com/camaraproject/Commonalities/pull/203
+* Updated API versioning guidelines chapter 5 of API Design Guidelines by @tanjadegroot in https://github.com/camaraproject/Commonalities/pull/215
+* Errors in event-subscription-template.yaml aligned with CAMARA_common.yaml by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/251
+* CAMARA_common.yaml - info object aligned with API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/257
+* API-DocumentationTemplate.md marked as deprecated by @rartych in https://github.com/camaraproject/Commonalities/pull/261
+* Updated event-subscription-template.yaml with attribute startsAt set optional, sinkCredential definition, and other corrections by @rartych in https://github.com/camaraproject/Commonalities/pull/267
+  
+### Fixed
+* API Design Guidelines updated with character set guidance by @trehman-gsma in https://github.com/camaraproject/Commonalities/pull/143
+* Mandated '+' in all phoneNumber formats by @fernandopradocabrillo in https://github.com/camaraproject/Commonalities/pull/148
+* Linting rules problem with Traffic Influence API #161 by @VijayKesharwani in https://github.com/camaraproject/Commonalities/pull/169
+* CAMARA_common.yaml - bugs and typos fix by @fernandopradocabrillo in https://github.com/camaraproject/Commonalities/pull/174
+* API Design Guidelines updated on HTTPs usage by @AxelNennker in https://github.com/camaraproject/Commonalities/pull/205
+* Artifacts aligned with API Design Guidelines for Notification Subscription by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/219
+* API Design Guidelines - fixed typos and internal references, formatted tables, restructured sentences by @maxl2287 in https://github.com/camaraproject/Commonalities/pull/229
+* Files in documentation folder - formatted tables, fixed grammar and style issues by @maxl2287 in https://github.com/camaraproject/Commonalities/pull/234
+* API Design Guidelines - formatting corrected in section 11.6.1 by @rartych in https://github.com/camaraproject/Commonalities/pull/255
+* MNO abbreviation replaced in CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/270
+
+### Removed
+* Removed UUID pattern for x-correlator by @jlurien in https://github.com/camaraproject/Commonalities/pull/168
+* Deprecated API-Readiness-Checklist.md by @rartych in https://github.com/camaraproject/Commonalities/pull/220
+* Removed Camara_Versioning_Guidelines.md by @tanjadegroot in https://github.com/camaraproject/Commonalities/pull/215
+* Deprecated CHANGELOG_TEMPLATE.md by @rartych in https://github.com/camaraproject/Commonalities/pull/239
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/v0.3.0...r0.4.0
 
 # v0.4.0-rc.2
 
