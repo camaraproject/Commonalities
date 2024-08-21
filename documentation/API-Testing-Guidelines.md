@@ -102,7 +102,7 @@ For operations with a request body, several scenarios are expected to test diffe
 
 The feature files will reside under 
 
-`{Subproject_Repository}/code/Test_definitions/file_name.feature`
+`{Subproject_Repository}/code/Test_definitions/file-name.feature`
 
 E.g.: 
 
