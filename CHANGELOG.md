@@ -14,20 +14,20 @@
 # v0.4.0
 
 **This is the public release of Commonalities version 0.4.0.**
-**This version introduces Event Subscription model based on [CloudEvents Subscriptions API draft](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) and other changes to documents and artifacts approved since [v0.3.0](#v030).**
+**This version introduces Event Subscription model based on [CloudEvents Subscriptions API draft](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) and other changes to documents and artifacts approved since [version 0.3.0](https://github.com/camaraproject/Commonalities/releases/tag/v0.3.0).**
 
 **The relevant details of authentication and consent collection are covered by [version 0.2.0](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
 
 
 The content of the release includes:
-* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r0.4.0-rc.1/documentation)** folder
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r0.4.0/documentation)** folder
   - **Removed or deprecated:**
     - API-Readiness-Checklist.md
     - Camara_Versioning_Guidelines.md
     - CHANGELOG_TEMPLATE.md
-* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r0.4.0-rc.1/artifacts)** folder
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r0.4.0/artifacts)** folder
   - **New:**
-    - [Notification Subscription Template](https://github.com/camaraproject/Commonalities/blob/r0.4.0-rc.1/artifacts/camara-cloudevents/event-subscription-template.yaml)
+    - [Notification Subscription Template](https://github.com/camaraproject/Commonalities/blob/r0.4.0/artifacts/camara-cloudevents/event-subscription-template.yaml)
 
 
 ### Added
@@ -56,6 +56,7 @@ The content of the release includes:
 * CAMARA_common.yaml - info object aligned with API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/257
 * API-DocumentationTemplate.md marked as deprecated by @rartych in https://github.com/camaraproject/Commonalities/pull/261
 * Updated event-subscription-template.yaml with attribute startsAt set optional, sinkCredential definition, and other corrections by @rartych in https://github.com/camaraproject/Commonalities/pull/267
+* Filename boilerplate changed to kebab-case to match examples in API-Testing-Guidelines.md by @Kevsy in https://github.com/camaraproject/Commonalities/pull/281
   
 ### Fixed
 * API Design Guidelines updated with character set guidance by @trehman-gsma in https://github.com/camaraproject/Commonalities/pull/143
@@ -68,6 +69,8 @@ The content of the release includes:
 * Files in documentation folder - formatted tables, fixed grammar and style issues by @maxl2287 in https://github.com/camaraproject/Commonalities/pull/234
 * API Design Guidelines - formatting corrected in section 11.6.1 by @rartych in https://github.com/camaraproject/Commonalities/pull/255
 * MNO abbreviation replaced in CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/270
+* Broken links replaced with relative links in API-linting-Implementation-Guideline.md by @eric-murray in https://github.com/camaraproject/Commonalities/pull/274
+* Links between Commonalities documents set to relative (in API Design Guidelines, Issue and PR template Howto, Linting-rules) by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/283
 
 ### Removed
 * Removed UUID pattern for x-correlator by @jlurien in https://github.com/camaraproject/Commonalities/pull/168
