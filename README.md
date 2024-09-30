@@ -48,7 +48,7 @@ For changes see [CHANGELOG.md](https://github.com/camaraproject/Commonalities/bl
 
 ## Meetings
 * Meetings are held virtually on the LF Platform: [Meeting Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/91016460698?password=d031b0e3-8d49-49ae-958f-af3213b1e547)
-* Schedule: bi-weekly, Monday, 4 PM CET/CEST (3 PM BST, 15:00 UTC). The date of the next meeting can be found in the previous [meeting minutes](https://wiki.camaraproject.org/display/CAM/2024+Commonalities+WG+Minutes).
+* Schedule: bi-weekly, Monday, 4 PM CET/CEST (3 PM BST, 15:00 UTC). The date of the next meeting can be found in the previous [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/Fzje).
 
 
 ## Contributorship and mailing list
