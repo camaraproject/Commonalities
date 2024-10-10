@@ -1754,7 +1754,7 @@ It could be useful to provide a mechanism to inform subscriber for all cases. In
 
 _Termination rules regarding subscriptionExpireTime & subscriptionMaxEvents usage_
 * When client side providing a `subscriptionExpireTime` and/or `subscriptionMaxEvents` service side has to terminate the subscription without expecting a `DELETE` operation.
-* CAMARA did not impose limitations for `subscriptionExpireTime` or `subscriptionMaxEvents` but API provider enforce limitations and have to document them.
+* CAMARA did not impose limitations for `subscriptionExpireTime` or `subscriptionMaxEvents` but API providers may enforce limitations and must document them accordinly.
 * If both `subscriptionExpireTime` and `subscriptionMaxEvents` are provided, the subscription will end when the first one is reached.
 * When none `subscriptionExpireTime` and `subscriptionMaxEvents` are not provided, client side has to trigger a `DELETE` operation to terminate it.
 * It is perfectly valid for client side to trigger a DELETE operation before `subscriptionExpireTime` and/or `subscriptionMaxEvents` reached. 
