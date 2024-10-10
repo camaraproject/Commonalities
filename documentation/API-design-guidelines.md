@@ -1874,7 +1874,11 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 
 Note: For operational and troubleshooting purposes it is relevant to accommodate use of `x-correlator` header attribute. API listener implementations have to be ready to support and receive this data.
 
-Specific event notification type "subscription-ends" is defined to inform listener about subscription termination. It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notification prematurely. For this specific event, the `data` must feature `terminationReason` attribute.
+#### subscription-ends event
+Specific event notification type "subscription-ends" is defined to inform listener about subscription termination.
+
+It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notification prematurely, or if the subscription request is managed asynchronously by the server and it is not able to provide the service. For this specific event, the `data` must feature `terminationReason` attribute. An enumeration of `terminationReason` is provided in event-subscription-template.yaml. 
+
 Note: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request a `subscriptionMaxEvents` to 2, later, received second notification, then a third notification will be sent for "subscription-ends")
 
 #### Error definition for event notification
