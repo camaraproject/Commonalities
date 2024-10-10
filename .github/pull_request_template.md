@@ -1,6 +1,6 @@
 #### What type of PR is this?
 
-Add one of the following kinds:
+<!-- Add one of the following kinds: -->
 * bug
 * correction
 * enhancement/feature
@@ -8,7 +8,6 @@ Add one of the following kinds:
 * documentation
 * subproject management
 * tests
-
 
 #### What this PR does / why we need it:
 
@@ -21,6 +20,14 @@ Add one of the following kinds:
 Usage: `Fixes #<issue number>`, or `Fixes (paste link of issue)`. -->
 
 Fixes #
+
+
+#### Does this PR introduce a breaking change?
+
+- [ ] Yes
+- [ ] No
+
+<!-- If indicated yes above, please describe the breaking change(s). -->
 
 #### Special notes for reviewers:
 
