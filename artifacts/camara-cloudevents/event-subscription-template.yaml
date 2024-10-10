@@ -634,13 +634,14 @@ components:
         - MAX_EVENTS_REACHED - Maximum number of events (optionally set by the requester) has been reached
         - ACCESS_TOKEN_EXPIRED - Access Token sinkCredential (optionally set by the requester) expiration time has been reached
         - SUBSCRIPTION_DELETED - Subscription was deleted by the requester
+        - SUBSCRIPTION_UNPROCESSABLE - Subscription cannot be processed due to some reason, e.g. because the specified area cannot be managed. Useful for asynchronous subscription creation.
       enum:
         - MAX_EVENTS_REACHED
         - NETWORK_TERMINATED
         - SUBSCRIPTION_EXPIRED
         - ACCESS_TOKEN_EXPIRED
         - SUBSCRIPTION_DELETED
-
+        - SUBSCRIPTION_UNPROCESSABLE
     HTTPSubscriptionRequest:
       allOf:
         - $ref: "#/components/schemas/SubscriptionRequest"
