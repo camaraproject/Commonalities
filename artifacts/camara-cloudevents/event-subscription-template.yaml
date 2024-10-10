@@ -98,7 +98,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Subscription"
+                $ref: "#/components/schemas/SubscriptionCreationResponse"
         "202":
           description: Request accepted to be processed. It applies for async creation process.
           headers:
@@ -294,7 +294,7 @@ components:
         sink:
           type: string
           format: url
-          description: The address to which events shall be delivered, using the HTTP protocol.
+          description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
           $ref: "#/components/schemas/SinkCredential"
@@ -460,6 +460,15 @@ components:
         - org.camaraproject.api-name.v0.event-type
         - org.camaraproject.api-name.v0.subscription-ends
 
+    SubscriptionCreationResponse:
+      description: Response for the POST request
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/SubscriptionId'
+
     Subscription:
       description: Represents a event-type subscription.
       type: object
@@ -477,8 +486,6 @@ components:
           format: url
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
-        sinkCredential:
-          $ref: '#/components/schemas/SinkCredential'
         types:
           description: |
             Camara Event types eligible to be delivered by this subscription.
@@ -634,14 +641,13 @@ components:
         - MAX_EVENTS_REACHED - Maximum number of events (optionally set by the requester) has been reached
         - ACCESS_TOKEN_EXPIRED - Access Token sinkCredential (optionally set by the requester) expiration time has been reached
         - SUBSCRIPTION_DELETED - Subscription was deleted by the requester
-        - SUBSCRIPTION_UNPROCESSABLE - Subscription cannot be processed due to some reason, e.g. because the specified area cannot be managed. Useful for asynchronous subscription creation.
       enum:
         - MAX_EVENTS_REACHED
         - NETWORK_TERMINATED
         - SUBSCRIPTION_EXPIRED
         - ACCESS_TOKEN_EXPIRED
         - SUBSCRIPTION_DELETED
-        - SUBSCRIPTION_UNPROCESSABLE
+
     HTTPSubscriptionRequest:
       allOf:
         - $ref: "#/components/schemas/SubscriptionRequest"
