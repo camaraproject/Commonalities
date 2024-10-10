@@ -98,7 +98,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Subscription"
+                $ref: "#/components/schemas/SubscriptionCreationResponse"
         "202":
           description: Request accepted to be processed. It applies for async creation process.
           headers:
@@ -460,6 +460,15 @@ components:
         - org.camaraproject.api-name.v0.event-type
         - org.camaraproject.api-name.v0.subscription-ends
 
+    SubscriptionCreationResponse:
+      description: Response for the POST request
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/SubscriptionId'
+
     Subscription:
       description: Represents a event-type subscription.
       type: object
@@ -477,8 +486,6 @@ components:
           format: url
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
-        sinkCredential:
-          $ref: '#/components/schemas/SinkCredential'
         types:
           description: |
             Camara Event types eligible to be delivered by this subscription.
