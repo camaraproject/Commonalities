@@ -701,6 +701,8 @@ An error representation must not be different from the representation of any res
 All these aforementioned fields are mandatory in Error Responses.
 `status` and `code` fields have normative nature, so as their use has to be standardized (see [Section 6.1](#61-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
 
+Fields `status` and `code` values are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/CAMARA_common.yaml).
+
 A JSON error structure is proposed below: 
 
 ```json
@@ -790,7 +792,7 @@ The Following table compiles the guidelines to be adopted:
 | **Case #** | **Description**                                                            | **Error status** |         **Error code**         | **Message example**                                      |
 |:----------:|:---------------------------------------------------------------------------|:----------------:|:------------------------------:|:---------------------------------------------------------|
 |     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.            |
-|     1      | None of the provided device identifiers is supported by the implementation |       422        | UNSUPPORTED_DEVICE_IDENTIFIERS | phoneNumber is required.                                 |
+|     1      | None of the provided device identifiers is supported by the implementation |       422        | UNSUPPORTED_DEVICE_IDENTIFIERS | The device provided is not supported.                                 |
 |     2      | Some identifier cannot be matched to a device                              |       404        |        DEVICE_NOT_FOUND        | Device identifier not found.                             |  
 |     3      | Device identifiers mismatch                                                |       422        |  DEVICE_IDENTIFIERS_MISMATCH   | Provided device identifiers are not consistent.          |
 |     4      | Invalid access token context                                               |       403        |     INVALID_TOKEN_CONTEXT      | Device identifiers are not consistent with access token. |
@@ -814,7 +816,17 @@ headers:
 content:
   application/json:
     schema:
-      $ref: "#/components/schemas/ErrorInfo"
+      allOf:
+        - $ref: "#/components/schemas/ErrorInfo"
+        - type: object
+          properties:
+            status:
+              enum:
+                - <status>
+            code:
+              enum:
+                - <code1>
+                - <code2>
     examples:
       {{case_1}}:
         $ref: ""#/components/examples/{{case_1}}"
