@@ -54,10 +54,10 @@ info:
   
 ```
 #### Title
-API name shall be specified in the title but this shall not include the term "API" in it.
+Title describes the API shortly. The title shall not include the term "API" in it.
 
 #### Description
-Description should shortly describe the API.
+Description should provide a slightly longer description of the API as compared to the title.
 
 #### Version
 APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
@@ -89,4 +89,9 @@ servers:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 ```
-API-name and API-Version shall be same as the [Title](#title) and [Version](#version) in the Info Object respectively.
+API-name is what is specified as the base path, prior to the API version, in the servers[*].url property. For example, from /location-verification/v0, it would be location-verification. 
+If more than one server object instances are listed, each servers[*].url property must have the same string for the API name and version in respective instance
+
+API-Version shall be same as the [Version](#version) in the info object.
+
+### Paths
