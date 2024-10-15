@@ -66,7 +66,7 @@ APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wi
 Terms of service shall not be included. API providers may add this content when documenting their APIs.
 
 #### Contact information
-Contact information shall not be includeds. API providers may add this content when documenting their APIs.
+Contact information shall not be included. API providers may add this content when documenting their APIs.
 
 #### License
 The license object shall include the following fields:
