@@ -89,8 +89,17 @@ servers:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 ```
-API-name is what is specified as the base path, prior to the API version, in the servers[*].url property. For example, from /location-verification/v0, it would be location-verification. 
-If more than one server object instances are listed, each servers[*].url property must have the same string for the API name and version in respective instance
+<b>API-Name</b>  
+API-Name is what is specified as the base path, prior to the API version, in the servers[*].url property. If more than one server object instances are listed, each servers[*].url property must have the same string for the API name and version in respective instance
+
+For the below example, the API-name would be location-verification.
+ ```
+ /location-verification/v0
+```
+
+ </br>
+
+<b>API-Version </b> </br>
 
 API-Version shall be same as the [Version](#version) in the info object.
 
