@@ -57,7 +57,7 @@ info:
 Title describes the API shortly. The title shall not include the term "API" in it.
 
 #### Description
-Description should provide a slightly longer description of the API as compared to the title.
+No special restrictions specified in Camara.
 
 #### Version
 APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
@@ -104,3 +104,5 @@ For the below example, the API-name would be location-verification.
 API-Version shall be same as the [Version](#version) in the info object.
 
 ### Paths
+No special restrictions or changes specified in Camara.
+
