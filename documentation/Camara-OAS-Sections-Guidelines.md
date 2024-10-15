@@ -54,9 +54,10 @@ info:
   
 ```
 #### Title
-Title should describe the API but shall not include the term "API" at the begining or at the end.
+API name shall be specified in the title but this shall not include the term "API" in it.
 
 #### Description
+Description should shortly describe the API.
 
 #### Version
 APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
