@@ -78,3 +78,15 @@ license
 
 #### Extension field
 The API shall specify the commonalities release number they are compliant to, by including the x-camara-commonalities extension field.
+
+### Servers
+The servers object shall have the following content:
+```
+servers:
+  - url: {apiRoot}/<api-name>/<api-version>
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+```
+API-name and API-Version shall be same as the [Title](#title) and [Version](#version) in the Info Object respectively.
