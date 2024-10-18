@@ -1750,7 +1750,7 @@ Remark: This action will trigger a subscription-ends event with terminationReaso
 Unless explicitly decided otherwise by the API WG,  if an event is triggered following initialEvent set to `true`, this event will be counted towards subscriptionMaxEvents (if provided).
 It is recommended to provide this clarification in all subscriptions API featuring subscriptionMaxEvents and initialEvent.
 
-Subscription status value table:
+**Subscription status value table**:
 
 Managing subscription is a draft feature, and it is not mandatory for now. An API project could decide to use/not use it. A list of status is provided for global consistency.
 
