@@ -1746,7 +1746,7 @@ Remark: This action will trigger a subscription-ends event with terminationReaso
 | initialEvent           | boolean            | Set to true by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request. Example: Consumer request Roaming event. If consumer sets initialEvent to true and device is in roaming situation, an event is triggered. Up to API project decision to keep it. | optional    |
 
 
-Note on combined usage of initialEvent and subscriptionMaxEvents: 
+**Note** on combined usage of initialEvent and subscriptionMaxEvents: 
 Unless explicitly decided otherwise by the API WG,  if an event is triggered following initialEvent set to `true`, this event will be counted towards subscriptionMaxEvents (if provided).
 It is recommended to provide this clarification in all subscriptions API featuring subscriptionMaxEvents and initialEvent.
 
