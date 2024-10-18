@@ -1575,7 +1575,7 @@ The scopes will always be those defined in the API Specs YAML files. Thus, a sco
 
 ### 11.7 API access restriction (Based on token & client Id)
 
-In some CAMARA API we have functions to create resource (via POST) and then later query them via id and/or list (with GET) or delete them (via DELETE). For example we have sessions, payments, subscriptions, etc..
+In some CAMARA APIs there are functions to create resource (via POST) and then later query them via id and/or list (with GET) or delete them (via DELETE). For example we have sessions, payments, subscriptions, etc..
 
 For the GET and DELETE operations we must restrict the resource(s) targeted depending on the information provided in the request. Basically we consider 2 filters:
 * API client (aka ClientId)
