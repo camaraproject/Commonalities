@@ -1698,7 +1698,7 @@ in which case, separating the implementations is beneficial).
 
 These rules apply for subscription with device identifier
 - If 3-legged access token is used, the POST and GET responses must not provide any device identifier.
-- If 2-legged access token is used, the presence of a device identifier in the response is mandatory and should the same identifier type than the one provided in the request.
+- If 2-legged access token is used, the presence of a device identifier in the response is mandatory and should be the same identifier type than the one provided in the request.
 
 
 
