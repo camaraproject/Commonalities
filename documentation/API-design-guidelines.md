@@ -1982,13 +1982,14 @@ When an API requires a User or Resource Owner (the "subject" of the API) to be i
 - If the access token is a 3-legged access token, then it is the `sub` claim of associated the ID token, which in turn may be identfied from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` of the OIDC CIBA flow, where `login_hint` can be either the IP address (and optional port) of a physical device, or the phone number associated with the user's account.
 - If the access token is a 2-legged access token, an explicit API subject identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact.
 
-This pattern requires that API Providers that allow both 2- and 3-legged access tokens to be used for a given API to detect the following errors:
+If an API provider issues 3-legged access tokens, the following error may occur :
 - Both a 3-legged access token and an explicit API subject identifier are provided by the API consumer.
 
   Whilst it might be considered harmless to proceed if both identify the same API subject, returning an error only when the two subjects do not match would allow the API consumer to confirm the identity associated with the access token, which they might otherwise not know. Although this functionality is supported by some APIs (e.g. Number Verification), for others it may exceed the scope consented to by the User or Resource Owner.
 
-  In this case, a `422 UNNECESSARY_DEVICE_IDENTIFIER` error code MUST be returned unless the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the 3-legged token"
+  In this case, a `422 UNNECESSARY_DEVICE_IDENTIFIER` error code MUST be returned unless the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the 3-legged token.
 
+If an API provider issues 2-legged access tokens, the following error may occur :
 - Neither a 3-legged access token nor an explicit API subject identifier are provided by the API consumer.
 
   One or other MUST be provided.
