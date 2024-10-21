@@ -1979,7 +1979,7 @@ response:
 ## Appendix A (Informative): `info.description` template for when API subject identification can be from either an access token or explicit identifier
 
 When an API requires a User or Resource Owner (the "subject" of the API) to be identified in order to get access to the subject's data, that subject can be identified in one of two ways:
-- If the access token is a 3-legged access token, then it is the `sub` claim of associated the ID token, which in turn may be identfied from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` of the OIDC CIBA flow, where `login_hint` can be either the phone number or IP address (and optional port) of a physical device.
+- If the access token is a 3-legged access token, then it is the `sub` claim of associated the ID token, which in turn may be identfied from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` of the OIDC CIBA flow, where `login_hint` can be either the IP address (and optional port) of a physical device, or the phone number associated with the user's account.
 - If the access token is a 2-legged access token, an explicit API subject identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact.
 
 This pattern requires that API Providers that allow both 2- and 3-legged access tokens to be used for a given API to detect the following errors:
