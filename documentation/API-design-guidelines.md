@@ -1994,9 +1994,11 @@ If an API provider issues 2-legged access tokens, the following error may occur 
 
   One or other MUST be provided.
 
-  In this case, `422 UNIDENTIFIABLE_DEVICE` error code MUST be returned, indicating that the API provider cannot identify the API subject from the provided information.
+  In this case, a `422 UNIDENTIFIABLE_DEVICE` error code MUST be returned, indicating that the API provider cannot identify the API subject from the provided information.
 
-The documentation template below is RECOMMENDED to be used as part of the `info.description` API documentation to explain to the API consumer how the pattern works. This template is applicable to CAMARA APIs which:
+The documentation template below is RECOMMENDED to be used as part of the `info.description` API documentation to explain to the API consumer how the pattern works.
+
+This template is applicable to CAMARA APIs which:
 - require an API subject to be identified; and
 - may have implementations which accept 2-legged access tokens; and
 - whose scope does not allow the API to confirm whether or not the optional API subject identifier when provided matches that of the 3-legged access token
