@@ -2009,7 +2009,7 @@ The template should be customised for each API using it by deleting one of the o
 # Identifying the API subject from the access token
 
 The API subject is the user or resource owner whose data is being requested or processed by this API.
-- When the API is invoked using a 2-legged access token, the API subject will be identified from the optional [`device` object | `phoneNumber` field](*).
+- When the API is invoked using a 2-legged access token, the API subject will be identified from the optional [`device` object | `phoneNumber` field](*), which therefore MUST be provided.
 - When a 3-legged access token is used however, this optional identifer MUST NOT be provided, as the API subject will be uniquely identified from the token.
 
 This approach simplifies API usage for API consumers using a 3-legged access token to invoke the API by relying on the API subject information that is associated with the access token and was identified during the API consumer authentication process.
