@@ -2005,7 +2005,7 @@ This template is applicable to CAMARA APIs which:
 
 The template should be customised for each API using it by deleting one of the options where marked by (*)
 
->```md
+```md
 # Identifying the API subject from the access token
 
 The API subject is the user or resource owner whose data is being requested or processed by this API.
