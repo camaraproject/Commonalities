@@ -1585,7 +1585,7 @@ For the GET and DELETE operations we must restrict the resource(s) targeted depe
 |-----------|--------------------------------|-------------------------------|
 | GET/{id} | - The resource queried must have been created for the end user associated with the access token. <br> - The resource queried must must have been created by the same API client given in the access token. | - The resource queried must have been created by the same API client given in the access token. |
 | GET/ | - Return all resource(s) created by the API consumer that are associated with both the end user identified by the access token and the same API client given in the access token. | - Return all resource(s) created by the same API client given in the access token. |
-| DELETE/{id} | - The resource to be deleted must have been created for the end user associated with the access token. <br> - The resource to be deleted must must have been created by the same API client given in the access token. | - The resource to be deleted must must have been created by the same API client given in the access token. |
+| DELETE/{id} | - The resource to be deleted must have been created for the end user associated with the access token. <br> - The resource to be deleted must have been created by the same API client given in the access token. | - The resource to be deleted must have been created by the same API client given in the access token. |
 
 
 
