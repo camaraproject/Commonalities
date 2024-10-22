@@ -1700,7 +1700,7 @@ These rules apply for subscription with device identifier
 - If 3-legged access token is used, the POST and GET responses must not provide any device identifier.
 - If 2-legged access token is used, the presence of a device identifier in the response is mandatory and should be the same identifier type than the one provided in the request.
 
-
+Application of data minimization design must be considered by the API working group for event structure definition.
 
 ##### Subscriptions data model
 The following table provides `/subscriptions` attributes
