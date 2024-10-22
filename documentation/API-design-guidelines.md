@@ -793,9 +793,9 @@ The Following table compiles the guidelines to be adopted:
 |     1      | None of the provided device identifiers is supported by the implementation |       422        | UNSUPPORTED_DEVICE_IDENTIFIERS | phoneNumber is required.                                 |
 |     2      | Some identifier cannot be matched to a device                              |       404        |        DEVICE_NOT_FOUND        | Device identifier not found.                             |  
 |     3      | Device identifiers mismatch                                                |       422        |  DEVICE_IDENTIFIERS_MISMATCH   | Provided device identifiers are not consistent.          |
-|     4      | An explicit device identifier is provided when an API subject has already been identified from the access token |       422        | UNNECESSARY_DEVICE_IDENTIFIER  | The API subject is already identified by the access token. |
+|     4      | An explicit identifier is provided when an API subject has already been identified from the access token |       422        | UNNECESSARY_IDENTIFIER  | The device is already identified by the access token. |
 |     5      | Service not applicable to the device                                       |       422        |     DEVICE_NOT_APPLICABLE      | The service is not available for the provided device.    |
-|     6      | The device identifier is not included in the request and the device information cannot be derived from the 3-legged access token |       422        |     UNIDENTIFIABLE_DEVICE      | The device cannot be identified. |
+|     6      | An identifier is not included in the request and the API subject cannot be derived from the 3-legged access token |       422        |     MISSING_IDENTIFIER      | The device cannot be identified. |
 
 
 
@@ -1976,25 +1976,25 @@ response:
 204 No Content
 ```
 
-## Appendix A (Informative): `info.description` template for when API subject identification can be from either an access token or explicit identifier
+## Appendix A (Normative): `info.description` template for when API subject identification can be from either an access token or explicit identifier
 
 When an API requires a User or Resource Owner (the "subject" of the API) to be identified in order to get access to the subject's data, that subject can be identified in one of two ways:
 - If the access token is a 3-legged access token, then it is the `sub` claim of associated the ID token, which in turn may be identfied from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` of the OIDC CIBA flow, where `login_hint` can be either the IP address (and optional port) of a physical device, or the phone number associated with the user's account.
 - If the access token is a 2-legged access token, an explicit API subject identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact.
 
-If an API provider issues 3-legged access tokens, the following error may occur :
+If an API provider issues 3-legged access tokens for use with the API, the following error may occur :
 - Both a 3-legged access token and an explicit API subject identifier are provided by the API consumer.
 
   Whilst it might be considered harmless to proceed if both identify the same API subject, returning an error only when the two subjects do not match would allow the API consumer to confirm the identity associated with the access token, which they might otherwise not know. Although this functionality is supported by some APIs (e.g. Number Verification), for others it may exceed the scope consented to by the User or Resource Owner.
 
-  In this case, a `422 UNNECESSARY_DEVICE_IDENTIFIER` error code MUST be returned unless the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the 3-legged token.
+  In this case, a `422 UNNECESSARY_IDENTIFIER` error code MUST be returned unless the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the 3-legged token.
 
-If an API provider issues 2-legged access tokens, the following error may occur :
+If an API provider issues 2-legged access tokens for use with the API, the following error may occur :
 - Neither a 3-legged access token nor an explicit API subject identifier are provided by the API consumer.
 
-  One or other MUST be provided.
+  One or other MUST be provided to identify the API subject.
 
-  In this case, a `422 UNIDENTIFIABLE_DEVICE` error code MUST be returned, indicating that the API provider cannot identify the API subject from the provided information.
+  In this case, a `422 MISSING_IDENTIFIER` error code MUST be returned, indicating that the API provider cannot identify the API subject from the provided information.
 
 The documentation template below is RECOMMENDED to be used as part of the `info.description` API documentation to explain to the API consumer how the pattern works.
 
@@ -2003,20 +2003,19 @@ This template is applicable to CAMARA APIs which:
 - may have implementations which accept 2-legged access tokens; and
 - whose scope does not allow the API to confirm whether or not the optional API subject identifier when provided matches that of the 3-legged access token
 
-The template should be customised for each API using it by deleting one of the options where marked by (*)
-
+The template SHOULD be customised for each API using it by deleting one of the options where marked by (*)
 ```md
-# Identifying the API subject from the access token
+# Identifying the [ device | phone number ](*) from the access token
 
-The API subject is the user or resource owner whose data is being requested or processed by this API.
-- When the API is invoked using a 2-legged access token, the API subject will be identified from the optional [`device` object | `phoneNumber` field](*), which therefore MUST be provided.
-- When a 3-legged access token is used however, this optional identifer MUST NOT be provided, as the API subject will be uniquely identified from the token.
+This API requires the API consumer to identify a [ device | phone number ](*) as the subject of the API as follows:
+- When the API is invoked using a 2-legged access token, the subject will be identified from the optional [`device` object | `phoneNumber` field](*), which therefore MUST be provided.
+- When a 3-legged access token is used however, this optional identifer MUST NOT be provided, as the subject will be uniquely identified from the token.
 
-This approach simplifies API usage for API consumers using a 3-legged access token to invoke the API by relying on the API subject information that is associated with the access token and was identified during the API consumer authentication process.
+This approach simplifies API usage for API consumers using a 3-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the API consumer authentication process.
 
 ## Error handling:
 
-- If the API subject cannot be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is not included in the request, then the server will return an error with the `422 UNIDENTIFIABLE_DEVICE` error code.
+- If the subject cannot be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is not included in the request, then the server will return an error with the `422 MISSING_IDENTIFIER` error code.
 
-- If the API subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_DEVICE_IDENTIFIER` error code. This will the case even if the same user or resource owner is identified by these two methods.
+- If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
