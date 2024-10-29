@@ -118,8 +118,6 @@ paths:
           $ref: "#/components/responses/SubscriptionPermissionDenied403"
         "409":
           $ref: "#/components/responses/Generic409"
-        "415":
-          $ref: "#/components/responses/Generic415"
         "422":
           $ref: "#/components/responses/CreateSubscriptionUnprocessableEntity422"
         "429":
@@ -974,22 +972,6 @@ components:
                 status: 410
                 code: GONE
                 message: Access to the target resource is no longer available.
-    Generic415:
-      description: Unsupported Media Type
-      headers:
-        X-Correlator:
-          $ref: "#/components/headers/x-correlator"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            GENERIC_415_UNSUPPORTED_MEDIA_TYPE:
-              description: Payload format of the request is in an unsupported format by the Server. Should not happen
-              value:
-                status: 415
-                code: UNSUPPORTED_MEDIA_TYPE
-                message: The server refuses to accept the request because the payload format is in an unsupported format
     CreateSubscriptionUnprocessableEntity422:
       description: Unprocessable Entity
       headers:
