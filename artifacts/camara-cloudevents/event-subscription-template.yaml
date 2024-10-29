@@ -907,12 +907,6 @@ components:
                 status: 403
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
-            GENERIC_403_INVALID_TOKEN_CONTEXT:
-              description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
-              value:
-                status: 403
-                code: INVALID_TOKEN_CONTEXT
-                message: "{{field}} is not consistent with access token."
             GENERIC_403_SUBSCRIPTION_MISMATCH:
               value:
                 status: 403
@@ -999,6 +993,18 @@ components:
                 status: 422
                 code: DEVICE_NOT_APPLICABLE
                 message: The service is not available for the provided device.
+            GENERIC_422_UNNECESSARY_IDENTIFIER:
+              description: An explicit identifier is provided when an API subject has already been identified from the access token
+              value:
+                status: 422
+                code: UNNECESSARY_IDENTIFIER
+                message: The device is already identified by the access
+            GENERIC_422_MISSING_IDENTIFIER:
+              description: An identifier is not included in the request and the API subject cannot be derived from the 3-legged access token
+              value:
+                status: 422
+                code: MISSING_IDENTIFIER
+                message: The device cannot be identified
     Generic429:
       description: Too Many Requests
       headers:
