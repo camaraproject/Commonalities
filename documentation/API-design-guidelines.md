@@ -777,9 +777,21 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       503        |      `UNAVAILABLE`       | Service Unavailable.                                                                                          | Service is not available. Temporary situation usually related to maintenance process in the server side                                  |
 |       504        |        `TIMEOUT`         | Request timeout exceeded.                                                                                     | API Server Timeout                                                                                                                       |
 
-> _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, a `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
+> _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, an `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
 
 > _NOTE 2: A {{SPECIFIC_CODE}}, unless it may have traversal scope (i.e. re-usable among different APIs), SHALL follow this scheme for a specific API: {{API_NAME}}.{{SPECIFIC_CODE}}_
+
+
+**Mandatory Errors** to be **documented in CAMARA API Spec YAML** are the following:
+
+- For event notifications flow, the ones defined in [notification-as-cloud-event.yaml](/artifacts/notification-as-cloud-event.yaml)
+- For event subscriptions APIs, the ones defined in [event-subscription-template.yaml](/artifacts/camara-cloudevents/event-subscription-template.yaml)
+- For the rest of APIs:
+  - Error status 401
+  - Error status 403
+  - Error status 429 TOO_MANY_REQUESTS (For rate limit control)
+
+NOTE: The rest of Error status defined in section 6.1. will be documented depending on specific considerations within a given WG.
 
 ### 6.2 Error Responses - Device Object
 
