@@ -1985,7 +1985,7 @@ When an API requires a User or Resource Owner (the "subject" of the API) to be i
 If an API provider issues 3-legged access tokens for use with the API, the following error may occur :
 - **Both a 3-legged access token and an explicit API subject identifier are provided by the API consumer.**
 
-  Whilst it might be considered harmless to proceed if both identify the same API subject, returning an error only when the two subjects do not match would allow the API consumer to confirm the identity associated with the access token, which they might otherwise not know. Although this functionality is supported by some APIs (e.g. Number Verification), for others it may exceed the scope consented to by the User or Resource Owner.
+  Whilst it might be considered harmless to proceed if both identify the same API subject, returning an error only when the two subjects do not match would allow the API consumer to confirm the identity associated with the access token, which they might otherwise not know. Although this functionality is supported by some APIs (e.g. Number Verification, KYC Match), for others it may exceed the scope consented to by the User or Resource Owner.
 
   In this case, a `422 UNNECESSARY_IDENTIFIER` error code MUST be returned unless the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the 3-legged token.
 
