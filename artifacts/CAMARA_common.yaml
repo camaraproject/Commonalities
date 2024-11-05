@@ -294,7 +294,7 @@ components:
                   code:
                     enum:
                       - NOT_FOUND
-                      - DEVICE_NOT_FOUND
+                      - IDENTIFIER_NOT_FOUND
                       - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_404_NOT_FOUND:
