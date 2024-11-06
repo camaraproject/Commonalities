@@ -923,6 +923,13 @@ And according to the filtering based on string and enums data, being searched fo
 | non equal     | `GET .../?name!=Jonh` |
 | Contains      | `GET .../?name=~Rafa` |
 
+For boolean parameters the filter can be set for True or False value:
+
+| **Operation** | 	**Strings/enums**    |
+|---------------|-----------------------|
+| True          | `GET .../?boolAttr=true`  |
+| False         | `GET .../?boolAttr=false` |
+
 
 **Additional rules**:
 - The operator "`&`" is evaluated as an AND between different attributes.
