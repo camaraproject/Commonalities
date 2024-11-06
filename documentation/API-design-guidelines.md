@@ -1567,6 +1567,28 @@ makes scope name: `device-roaming-subscriptions:org.camaraproject.device-roaming
 The decision on the API-level scopes was made within the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement) and is documented in the design guidelines to ensure the completeness of this document. 
 The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject. 
 
+### 11.7 Resource access restriction 
+
+When API has the functionality of resource creation, query and deletion (POST, GET, DELETE) for given end user the access to these operations is restricted by scope, but also limited to resources created for given user or API Consumer.
+
+The general rules for access restrictions are as follows:
+
+- `POST /resources`:
+  - 3-legged token: Create the resource for the end user identified by the access token,
+  - 2-legged token: Create the resource for the end user identified in the request,
+
+- `GET /resources`:
+  - 3-legged token: Return all resources created by the API Consumer for the end user identified by the access token,
+  - 2-legged token: Return all subscriptions created by the API Consumer,
+
+- `GET /resources/{resourceId}`:
+  - 3-legged token: Return details of `resourceId` if the associated end user matches the end user identified by the access token,
+  - 2-legged token: Return details of `resourceId` if the resource has been created by the same API Consumer given in the access token,
+
+- `DELETE /resources/{resourceId}`:
+  - 3-legged token: Delete `resourceId` if the associated end user matches the end user identified by the access token,
+  - 2-legged token: Delete `resourceId` if the resource has been created by the same API Consumer given in the access token.
+
 
 ## 12. Subscription, Notification & Event
 
