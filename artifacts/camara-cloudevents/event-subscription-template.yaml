@@ -84,10 +84,6 @@ paths:
                   $ref: "#/components/responses/Generic410"
                 "429":
                   $ref: "#/components/responses/Generic429"
-                "500":
-                  $ref: "#/components/responses/Generic500"
-                "503":
-                  $ref: "#/components/responses/Generic503"
               security:
                 - {}
                 - notificationsBearerAuth: []
@@ -119,16 +115,10 @@ paths:
           $ref: "#/components/responses/SubscriptionPermissionDenied403"
         "409":
           $ref: "#/components/responses/Generic409"
-        "415":
-          $ref: "#/components/responses/Generic415"
         "422":
           $ref: "#/components/responses/CreateSubscriptionUnprocessableEntity422"
         "429":
           $ref: "#/components/responses/Generic429"
-        "500":
-          $ref: "#/components/responses/Generic500"
-        "503":
-          $ref: "#/components/responses/Generic503"
     get:
       tags:
         - <apiName> Subscription
@@ -159,10 +149,6 @@ paths:
           $ref: "#/components/responses/Generic401"
         "403":
           $ref: "#/components/responses/Generic403"
-        "500":
-          $ref: "#/components/responses/Generic500"
-        "503":
-          $ref: "#/components/responses/Generic503"
   /subscriptions/{subscriptionId}:
     get:
       tags:
@@ -194,10 +180,6 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/Generic404"
-        "500":
-          $ref: "#/components/responses/Generic500"
-        "503":
-          $ref: "#/components/responses/Generic503"
     delete:
       tags:
         - <apiName> Subscription
@@ -233,10 +215,6 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/Generic404"
-        "500":
-          $ref: "#/components/responses/Generic500"
-        "503":
-          $ref: "#/components/responses/Generic503"
 components:
   securitySchemes:
     openId:
@@ -983,22 +961,6 @@ components:
                 status: 410
                 code: GONE
                 message: Access to the target resource is no longer available.
-    Generic415:
-      description: Unsupported Media Type
-      headers:
-        X-Correlator:
-          $ref: "#/components/headers/x-correlator"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            GENERIC_415_UNSUPPORTED_MEDIA_TYPE:
-              description: Payload format of the request is in an unsupported format by the Server. Should not happen
-              value:
-                status: 415
-                code: UNSUPPORTED_MEDIA_TYPE
-                message: The server refuses to accept the request because the payload format is in an unsupported format
     CreateSubscriptionUnprocessableEntity422:
       description: Unprocessable Entity
       headers:
@@ -1048,38 +1010,6 @@ components:
                 status: 429
                 code: TOO_MANY_REQUESTS
                 message: Either out of resource quota or reaching rate limiting.
-    Generic500:
-      description: Server error
-      headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            GENERIC_500_INTERNAL:
-              description: Problem in Server side. Regular Server Exception
-              value:
-                status: 500
-                code: INTERNAL
-                message: Unknown server error. Typically a server bug.
-    Generic503:
-      description: Service unavailable. Typically the server is down.
-      headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            GENERIC_503_UNAVAILABLE:
-              description: Service is not available. Temporary situation usually related to maintenance process in the server side
-              value:
-                status: 503
-                code: UNAVAILABLE
-                message: Service Unavailable.
     SubscriptionIdRequired:
       description: Problem with the client request
       headers:
