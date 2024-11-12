@@ -456,7 +456,7 @@ components:
                       - FAILED_PRECONDITION
           examples:
             GENERIC_412_FAILED_PRECONDITION:
-              description: Use in notifications flow to allow API Consumer to indicate that its callback is no longer available
+              description: Indication by the API Server that the request cannot be processed in current system state
               value:
                 status: 412
                 code: FAILED_PRECONDITION
