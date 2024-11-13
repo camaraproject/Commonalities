@@ -84,12 +84,12 @@ rules:
     description: |
       This rule ensures consistent and descriptive naming for path parameters in your OpenAPI specification.
       Please use 'resource_id' instead of just 'id' for your path parameters.
-    given: "$..parameters[?(@.in == 'path')]"
+    given: "$.paths[*][*].parameters[?(@.in == 'path')].name"
     then:
       field: name
       function: pattern
       functionOptions:
-        notMatch: \b(id|Id|ID|iD)\b
+        match: "^(?!.*\\b(id|Id|ID|iD)\\b).*$"
     recommended: true  # Set to true/false to enable/disable this rule
 
   camara-security-no-secrets-in-path-or-query-parameters:
