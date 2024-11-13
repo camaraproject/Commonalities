@@ -219,12 +219,19 @@ rules:
     description: |
       Ensure that API definition YAML files with oneOf or anyOf sections include a discriminator object for serialization, deserialization, and validation.
     severity: hint
-    given: "$..[?(@.oneOf || @.anyOf)]"
+    given: "$.components.schemas[*]"
     then:
-      field: discriminator
-      function: truthy
-      description: "Discriminator object is required when using oneOf or anyOf."
+      - field: oneOf
+        function: truthy
+        message: "Schemas with 'oneOf' should include a 'discriminator' for type identification."
+      - field: anyOf
+        function: truthy
+        message: "Schemas with 'anyOf' should include a 'discriminator' for type identification."
+      - field: discriminator
+        function: truthy
+        message: "A 'discriminator' object is required when using 'oneOf' or 'anyOf'."
     recommended: true  # Set to true/false to enable/disable this rule
+
 
   camara-operationid-casing-convention:
     message: Operation Id must be in Camel case "{{error}}"
