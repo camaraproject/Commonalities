@@ -1982,7 +1982,7 @@ When an API requires a User or Resource Owner (the "subject" of the API) to be i
 - If the access token is a 3-legged access token, then it is the `sub` claim of associated the ID token, which in turn may be identfied from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` of the OIDC CIBA flow, where `login_hint` can be either the IP address (and optional port) of a physical device, or the phone number associated with the user's account.
 - If the access token is a 2-legged access token, an explicit API subject identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact.
 
-If an API provider issues 3-legged access tokens for use with the API, the following error may occur :
+If an API provider issues 3-legged access tokens for use with the API, the following error may occur:
 - **Both a 3-legged access token and an explicit API subject identifier are provided by the API consumer.**
 
   Whilst it might be considered harmless to proceed if both identify the same API subject, returning an error only when the two subjects do not match would allow the API consumer to confirm the identity associated with the access token, which they might otherwise not know. Although this functionality is supported by some APIs (e.g. Number Verification, KYC Match), for others it may exceed the scope consented to by the User or Resource Owner.
