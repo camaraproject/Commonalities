@@ -1989,7 +1989,7 @@ If an API provider issues 3-legged access tokens for use with the API, the follo
 
   In this case, a `422 UNNECESSARY_IDENTIFIER` error code MUST be returned unless the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the 3-legged token.
 
-If an API provider issues 2-legged access tokens for use with the API, the following error may occur :
+If an API provider issues 2-legged access tokens for use with the API, the following error may occur:
 - **Neither a 3-legged access token nor an explicit API subject identifier are provided by the API consumer.**
 
   One or other MUST be provided to identify the API subject.
