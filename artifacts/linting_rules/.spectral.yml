@@ -232,7 +232,6 @@ rules:
         message: "A 'discriminator' object is required when using 'oneOf' or 'anyOf'."
     recommended: true  # Set to true/false to enable/disable this rule
 
-
   camara-operationid-casing-convention:
     message: Operation Id must be in Camel case "{{error}}"
     severity: hint
