@@ -1976,32 +1976,32 @@ response:
 204 No Content
 ```
 
-## Appendix A (Normative): `info.description` template for when API subject identification can be from either an access token or explicit identifier
+## Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier
 
-When an API requires a User or Resource Owner (the "subject" of the API) to be identified in order to get access to the subject's data, that subject can be identified in one of two ways:
-- If the access token is a 3-legged access token, then it is the `sub` claim of associated the ID token, which in turn may be identfied from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` of the OIDC CIBA flow, where `login_hint` can be either the IP address (and optional port) of a physical device, or the phone number associated with the user's account.
-- If the access token is a 2-legged access token, an explicit API subject identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact.
+When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
+- If the access token is a 3-legged access token, then the User will already have been associated with that token by the API provider, which in turn may be identfied from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly.
+- If the access token is a 2-legged access token, no User is associated with the token, an hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
 
 If an API provider issues 3-legged access tokens for use with the API, the following error may occur:
-- **Both a 3-legged access token and an explicit API subject identifier are provided by the API consumer.**
+- **Both a 3-legged access token and an explicit User identifier (device or phone number) are provided by the API consumer.**
 
-  Whilst it might be considered harmless to proceed if both identify the same API subject, returning an error only when the two subjects do not match would allow the API consumer to confirm the identity associated with the access token, which they might otherwise not know. Although this functionality is supported by some APIs (e.g. Number Verification, KYC Match), for others it may exceed the scope consented to by the User or Resource Owner.
+  Whilst it might be considered harmless to proceed if both identify the same User, returning an error only when the two do not match would allow the API consumer to confirm the identity of the User associated with the access token, which they might otherwise not know. Although this functionality is supported by some APIs (e.g. Number Verification, KYC Match), for others it may exceed the scope consented to by the User.
 
   In this case, a `422 UNNECESSARY_IDENTIFIER` error code MUST be returned unless the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the 3-legged token.
 
 If an API provider issues 2-legged access tokens for use with the API, the following error may occur:
-- **Neither a 3-legged access token nor an explicit API subject identifier are provided by the API consumer.**
+- **Neither a 3-legged access token nor an explicit User identifier (device or phone number) are provided by the API consumer.**
 
-  One or other MUST be provided to identify the API subject.
+  One or other MUST be provided to identify the User.
 
-  In this case, a `422 MISSING_IDENTIFIER` error code MUST be returned, indicating that the API provider cannot identify the API subject from the provided information.
+  In this case, a `422 MISSING_IDENTIFIER` error code MUST be returned, indicating that the API provider cannot identify the User from the provided information.
 
 The documentation template below is RECOMMENDED to be used as part of the `info.description` API documentation to explain to the API consumer how the pattern works.
 
 This template is applicable to CAMARA APIs which:
-- require an API subject to be identified; and
+- require the User (i.e. resource owner) to be identified; and
 - may have implementations which accept 2-legged access tokens; and
-- whose scope does not allow the API to confirm whether or not the optional API subject identifier when provided matches that of the 3-legged access token
+- do NOT allow the API to confirm whether or not the optional User identifier (`device` or `phoneNumber`) matches that associated with the 3-legged access token
 
 The template SHOULD be customised for each API using it by deleting one of the options where marked by (*)
 ```md
@@ -2009,9 +2009,9 @@ The template SHOULD be customised for each API using it by deleting one of the o
 
 This API requires the API consumer to identify a [ device | phone number ](*) as the subject of the API as follows:
 - When the API is invoked using a 2-legged access token, the subject will be identified from the optional [`device` object | `phoneNumber` field](*), which therefore MUST be provided.
-- When a 3-legged access token is used however, this optional identifer MUST NOT be provided, as the subject will be uniquely identified from the token.
+- When a 3-legged access token is used however, this optional identifer MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-This approach simplifies API usage for API consumers using a 3-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the API consumer authentication process.
+This approach simplifies API usage for API consumers using a 3-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
 ## Error handling:
 
