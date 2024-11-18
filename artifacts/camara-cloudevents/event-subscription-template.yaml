@@ -18,14 +18,12 @@ externalDocs:
   description: Product documentation at CAMARA
   url: https://github.com/camaraproject/
 servers:
-  - url: "{apiRoot}/{apiName}/v0.1"
+  - url: "{apiRoot}/api-name/vx.y"
+  # api-name and version should valued accordingly to the API
     variables:
       apiRoot:
         default: http://localhost:9091
-        description: API root
-      apiName:
-        default: camaraAPI
-        description: apiName will be replaced in WG by its value and not modelled as a variable
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
   - name: <apiName> Subscription
     description: Operations to manage event subscriptions on event-type event
