@@ -928,7 +928,7 @@ And according to the filtering based on string and enums data, being searched fo
 **Additional rules**:
 - The operator "`&`" is evaluated as an AND between different attributes.
 - A Query Param (attribute) can contain one or n values separated by "`,`".
-- For operations on numeric, date or enumerated fields, the parameters with the suffixes `.(gte|gt|lte|lt)$` need to be defined, which should be used as comparators for “greater—equal to, greater than, smaller—equal to, smaller than” respectively. Only the parameters needed for given field should be defined e.g., with `.gte` and `.lte` suffixes only.
+- For operations on numeric, date or enumerated fields, the parameters with the suffixes `.(gte|gt|lte|lt)$` need to be defined, which should be used as comparators for “greater—equal to, greater than, smaller—equal to, smaller than” ly. Only the parameters needed for given field should be defined e.g., with `.gte` and `.lte` suffixes only.
 
 **Examples**:
 - <u>Equals</u>: to search users with the first name "david" and last name "munoz":
@@ -1299,7 +1299,7 @@ servers:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 ```
-If more than one server object instances are listed, each `servers[*].url` property must have the same string for the `api-name` and `api-version` in respective instance.
+If more than one server object instance is listed, the `servers[*].url` property of each instance must have the same string for the `api-name` and `api-version`'.
 
 ### 11.2 Published Routes
 
