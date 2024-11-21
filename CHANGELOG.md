@@ -1,15 +1,32 @@
 # Changelog Commonalities
 
 ## Table of Contents
+- **[r2.1](#r21)**
+- **[v0.4.0](#v040)**
+- **[v0.4.0-rc.2](#v040-rc2)**
+- **[v0.4.0-rc.1](#v040-rc1)**
+- **[v0.4.0-alpha.1](#v040-alpha1)**
+- **[v0.3.0](#v030)**
+- **[v0.2.0](#v020)**
+- **[v0.1.0 - Initial version](#v010---initial-version)**
 
-- [v0.4.0](#v040)
-- [v0.4.0-rc.2](#v040-rc2)
-- [v0.4.0-rc.1](#v040-rc1)
-- [v0.4.0-alpha.1](#v040-alpha1)
-- [v0.3.0](#v030)
-- [v0.2.0](#v020)
-- [v0.1.0 - Initial version](#v010---initial-version)
 
+# r2.1
+## Release Notes
+
+This release contains documents and artifacts of Commonalities version 0.5.0-alpha.1:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r2.1/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r2.1/artifacts)** folder.
+
+**The relevant details of authentication and consent collection are covered by [release 2.1](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
 
 # v0.4.0
 
