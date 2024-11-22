@@ -15,10 +15,9 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
 
     # Error scenarios for management of input parameter device
 
-    # If the access token identifies a device, error 422 UNNECESSARY_DEVICE may be returned instead
     @{{feature_identifier}}_C01.01_device_empty
     Scenario: The device value is an empty object
-        Given the header "Authorization" is set to a valid access which does not identifiy a single device
+        Given the header "Authorization" is set to a valid access which does not identify a single device
         And the request body property "$.device" is set to: {}
         When the HTTP "POST" request is sent
         Then the response status code is 400
@@ -27,10 +26,9 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
         And the response property "$.message" contains a user friendly text
 
 
-    # If the access token identifies a device, error 422 UNNECESSARY_DEVICE may be returned instead
     @{{feature_identifier}}_C01.02_device_identifiers_not_schema_compliant
     Scenario Outline: Some device identifier value does not comply with the schema
-        Given the header "Authorization" is set to a valid access which does not identifiy a single device
+        Given the header "Authorization" is set to a valid access which does not identify a single device
         And the request body property "<device_identifier>" does not comply with the OAS schema at "<oas_spec_schema>"
         When the HTTP "POST" request is sent
         Then the response status code is 400
@@ -41,15 +39,15 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
         Examples:
             | device_identifier          | oas_spec_schema                             |
             | $.device.phoneNumber       | /components/schemas/PhoneNumber             |
-            | $.device.ipv4Address       | /components/schemas/NetworkAccessIdentifier |
-            | $.device.ipv6Address       | /components/schemas/DeviceIpv4Addr          |
-            | $.device.networkIdentifier | /components/schemas/DeviceIpv6Address       |
+            | $.device.ipv4Address       | /components/schemas/DeviceIpv4Addr          |
+            | $.device.ipv6Address       | /components/schemas/DeviceIpv6Address       |
+            | $.device.networkIdentifier | /components/schemas/NetworkAccessIdentifier |
 
   
     # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
     @{{feature_identifier}}_C01.03_device_not_found
     Scenario: Some identifier cannot be matched to a device
-        Given the header "Authorization" is set to a valid access which does not identifiy a single device
+        Given the header "Authorization" is set to a valid access which does not identify a single device
         And the request body property "$.device" is compliant with the schema but does not identify a valid device
         When the HTTP "POST" request is sent
         Then the response status code is 404
@@ -63,15 +61,15 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
         Given the header "Authorization" is set to a valid access token identifying a device
         And  the request body property "$.device" is set to a valid device
         When the HTTP "POST" request is sent
-        Then the response status code is 403
+        Then the response status code is 422
         And the response property "$.status" is 422
         And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
 
 
-    @{{feature_identifier}}_C01.05_unidentifiable_device
+    @{{feature_identifier}}_C01.05_missing_device
     Scenario: Device not included and cannot be deducted from the access token
-        Given the header "Authorization" is set to a valid access which does not identifiy a single device
+        Given the header "Authorization" is set to a valid access which does not identify a single device
         And the request body property "$.device" is not included
         When the HTTP "POST" request is sent
         Then the response status code is 422
@@ -81,7 +79,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
 
 
     # For r1.x APIs, networkAccessIdentifier is never supported
-    @{{feature_identifier}}_C01.06_device_identifiers_unsupported
+    @{{feature_identifier}}_C01.06_unsupported_device
     Scenario: None of the provided device identifiers is supported by the implementation
         Given that some type of device identifiers are not supported by the implementation
         And the request body property "$.device" only includes device identifiers not supported by the implementation
@@ -92,7 +90,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
         And the response property "$.message" contains a user friendly text
 
 
-    # When the service is only offered to certain type of devices or subcriptions, e.g. IoT, , B2C, etc
+    # When the service is only offered to certain type of devices or subscriptions, e.g. IoT, , B2C, etc
     @{{feature_identifier}}_C01.07_device_not_supported
     Scenario: Service not available for the device
         Given that the service is not available for all devices commercialized by the operator
@@ -108,7 +106,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
     # This scenario is under discussion, as it may reveal undesired information or even substitute the Number Verification API functionality
     @{{feature_identifier}}_C01.08_device_identifiers_mismatch
     Scenario: Device identifiers mismatch
-        Given the header "Authorization" is set to a valid access which does not identifiy a single device
+        Given the header "Authorization" is set to a valid access which does not identify a single device
         And at least 2 types of device identifiers are supported by the implementation
         And the request body property "$.device" includes several identifiers, each of them identifying a valid but different device
         When the HTTP "POST" request is sent

@@ -16,10 +16,9 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
     # Error scenarios for management of input parameter phoneNumber
 
-    # If the access token identifies a phone number, error 422 UNNECESSARY_DEVICE may be returned instead
     @{{feature_identifier}}_C02.01_phone_number_not_schema_compliant
     Scenario: Phone number value does not comply with the schema
-        Given the header "Authorization" is set to a valid access which does not identifiy a single phone number
+        Given the header "Authorization" is set to a valid access which does not identify a single phone number
         And the request body property "$.phoneNumber" does not comply with the OAS schema at "/components/schemas/PhoneNumber"
         When the HTTP "POST" request is sent
         Then the response status code is 400
@@ -28,10 +27,9 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
         And the response property "$.message" contains a user friendly text
 
    
-    # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single phone number.
     @{{feature_identifier}}_C02.02_phone_number_not_found
     Scenario: Phone number not found
-        Given the header "Authorization" is set to a valid access which does not identifiy a single phone number
+        Given the header "Authorization" is set to a valid access which does not identify a single phone number
         And the request body property "$.phoneNumber" is compliant with the schema but does not identify a valid phone number
         When the HTTP "POST" request is sent
         Then the response status code is 404
@@ -45,15 +43,15 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
         Given the header "Authorization" is set to a valid access token identifying a phone number
         And  the request body property "$.phoneNumber" is set to a valid phone number
         When the HTTP "POST" request is sent
-        Then the response status code is 403
+        Then the response status code is 422
         And the response property "$.status" is 422
         And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
 
 
-    @{{feature_identifier}}_C02.04_unidentifiable_device
+    @{{feature_identifier}}_C02.04_missing_phone_number
     Scenario: Phone number not included and cannot be deducted from the access token
-        Given the header "Authorization" is set to a valid access which does not identifiy a single phone number
+        Given the header "Authorization" is set to a valid access which does not identify a single phone number
         And the request body property "$.phoneNumber" is not included
         When the HTTP "POST" request is sent
         Then the response status code is 422
@@ -62,7 +60,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
         And the response property "$.message" contains a user friendly text
 
 
-    # When the service is only offered to certain type of subcriptions, e.g. IoT, , B2C, etc
+    # When the service is only offered to certain type of subscriptions, e.g. IoT, , B2C, etc
     @{{feature_identifier}}_C02.05_phone_number_not_supported
     Scenario: Service not available for the phone number
         Given that the service is not available for all phone numbers commercialized by the operator
