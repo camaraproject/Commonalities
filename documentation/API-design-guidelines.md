@@ -1573,7 +1573,7 @@ The decision on the API-level scopes was made within the [Identity and Consent M
 The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject. 
 
 
-### 11.7 API access restriction (Based on token & client Id)
+### 11.7 Resource access restriction 
 
 In some CAMARA APIs there are functions to create resource (via POST) and then later query them via id and/or list (with GET) or delete them (via DELETE). For example we have sessions, payments, subscriptions, etc..
 
