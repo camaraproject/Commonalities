@@ -1979,7 +1979,7 @@ response:
 ## Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier
 
 When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
-- If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identfied from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly.
+- If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly.
 - If the access token is a Two-Legged Access Token, no User is associated with the token, an hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
 
 If an API provider issues Thee-Legged Access Tokens for use with the API, the following error may occur:
@@ -2009,7 +2009,7 @@ The template SHOULD be customised for each API using it by deleting one of the o
 
 This API requires the API consumer to identify a [ device | phone number ](*) as the subject of the API as follows:
 - When the API is invoked using a two-legged access token, the subject will be identified from the optional [`device` object | `phoneNumber` field](*), which therefore MUST be provided.
-- When a three-legged access token is used however, this optional identifer MUST NOT be provided, as the subject will be uniquely identified from the access token.
+- When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
 This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
