@@ -1748,7 +1748,7 @@ Remark: This action will trigger a subscription-ends event with terminationReaso
 
 **Note** on combined usage of initialEvent and subscriptionMaxEvents: 
 Unless explicitly decided otherwise by the API Sub Project, if an event is triggered following initialEvent set to `true`, this event will be counted towards subscriptionMaxEvents (if provided).
-It is recommended to provide this clarification in all subscriptions API featuring subscriptionMaxEvents and initialEvent.
+It is recommended to provide this clarification in all subscription APIs featuring subscriptionMaxEvents and initialEvent.
 
 **Subscription status value table**:
 
