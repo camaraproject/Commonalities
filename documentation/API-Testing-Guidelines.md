@@ -80,7 +80,7 @@ For the explicit subscriptions model:
 
 * Test plan must be aligned with API specification regarding the coverage of HTTP statuses in the responses.
   - All errors explicitly documented in the API spec must be covered by one or more dedicated error scenarios.
-  - On the contrary, HTTP Statuses which are not explicitly documented in the API specification should not be covered in the test plan. If any of the non-mandatory "status" at Commonalities level is relevant in the context of a given API and deserves to have a specific test, it must be documented as well in the API specification.
+  - On the contrary, HTTP Statuses which are not explicitly documented in the API specification should not be covered in the test plan. If any of the non-mandatory "status" in API Design Guidelines is relevant in the context of a given API and deserves to have a specific test, it needs to be documented in the API specification as well.
   - In particular operations that expect a `device` object allowing one or more identifiers to be provided, must include scenarios to test the error cases defined, aligned with the device error management section of the API design guidelines. 
 
 * It must be validated that the HTTP status code and response property `code` are exactly those specified in the API spec.
