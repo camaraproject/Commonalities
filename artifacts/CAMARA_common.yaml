@@ -168,7 +168,7 @@ components:
               minimum: 1
 
     Polygon:
-      description: Polygonal area. The Polygon should be a simple polygon, i.e. should not intersection itself.
+      description: Polygonal area. The Polygon should be a simple polygon, i.e. should not intersect itself.
       allOf:
         - $ref: "#/components/schemas/Area"
         - type: object
