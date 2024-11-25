@@ -928,7 +928,7 @@ And according to the filtering based on string and enums data, being searched fo
 **Additional rules**:
 - The operator "`&`" is evaluated as an AND between different attributes.
 - A Query Param (attribute) can contain one or n values separated by "`,`".
-- For operations on numeric, date or enumerated fields, the parameters with the suffixes `.(gte|gt|lte|lt)$` need to be defined, which should be used as comparators for “greater—equal to, greater than, smaller—equal to, smaller than” ly. Only the parameters needed for given field should be defined e.g., with `.gte` and `.lte` suffixes only.
+- For operations on numeric, date or enumerated fields, the parameters with the suffixes `.(gte|gt|lte|lt)$` need to be defined, which should be used as comparators for “greater—equal to, greater than, smaller—equal to, smaller than” respectively. Only the parameters needed for given field should be defined e.g., with `.gte` and `.lte` suffixes only.
 
 **Examples**:
 - <u>Equals</u>: to search users with the first name "david" and last name "munoz":
