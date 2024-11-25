@@ -66,7 +66,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
           - [Examples](#examples)
         - [APIs which deal with explicit subscriptions](#apis-which-deal-with-explicit-subscriptions)
         - [API-level scopes (sometimes referred to as wildcard scopes in CAMARA)](#api-level-scopes-sometimes-referred-to-as-wildcard-scopes-in-camara)
-    - [11.7 API access restriction](#117-api-access-restriction)
+    - [11.7 Resource access restriction](#117-resource-access-restriction)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
