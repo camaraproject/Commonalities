@@ -917,6 +917,12 @@ Filtering consists of restricting the number of resources queried by specifying 
 Next, it is specified how it should be used according to the filtering based on the type of data being searched for: a number or a date and the type of operation.
 
 Note: Services may not support all attributes for filtering.  In case a query includes an attribute for which filtering is not supported, it may be ignored by the service.
+
+#### Security Considerations
+As filtering may reveal sensitive information, privacy and security constraints have to be considered when defining query parameters, e.g. it should not be possible to filter using personal information (such as name, phone number or IP address).
+
+
+#### Filtering operations
  
 | **Operation**     | 	Numbers                     | 	Dates                                        |
 |-------------------|------------------------------|-----------------------------------------------|
@@ -929,28 +935,29 @@ Note: Services may not support all attributes for filtering.  In case a query in
 
 And according to the filtering based on string and enums data, being searched for: 
 
-| **Operation** | 	**Strings/enums**    |
-|---------------|-----------------------|
-| equal         | `GET .../?name=Juan`  |
-| non equal     | `GET .../?name!=Jonh` |
-| Contains      | `GET .../?name=~Rafa` |
 
+| **Operation** |	**Strings/enums** |
+| ----- | ----- |
+| equal | `GET .../?type=mobile` |
+| non equal | `GET .../?type!=mobile` |
+| Contains | `GET .../?type=~str` |
 
 **Additional rules**:
 - The operator "`&`" is evaluated as an AND between different attributes.
 - A Query Param (attribute) can contain one or n values separated by "`,`".
 - For operations on numeric, date or enumerated fields, the parameters with the suffixes `.(gte|gt|lte|lt)$` need to be defined, which should be used as comparators for “greater—equal to, greater than, smaller—equal to, smaller than” respectively. Only the parameters needed for given field should be defined e.g., with `.gte` and `.lte` suffixes only.
 
+
 **Examples**:
-- <u>Equals</u>: to search users with the first name "david" and last name "munoz":
-  - `GET /users?name=david&surname=munoz`
-  - `GET /users?name=David,Noelia`
+- <u>Equals</u>: to search devices with a particular operating system and version or type:
+  - `GET /device?os=ios&version=17.0.1`
+  - `GET /device?type=apple,android`
     - Search for several values separating them by "`,`".
 - <u>Inclusion</u>: if we already have a filter that searches for "equal" and we want to provide it with the possibility of searching for "inclusion", we must include the character "~"
-  - `GET /users?name=dav`
-    - Search for the exact name "dav"
-  - `GET /users?name=~dav`
-    - Look for names that include "dav"
+  - `GET /device?version=17.0.1`
+    - Search for the exact version "17.0.1"
+  - `GET /device?version=~17.0`
+    - Look for version strings that include "17.0"
 - <u>Greater than / less than</u>: new attributes need to be created with the suffixes `.(gte|gt|lte|lt)$` and included in `get` operation :
 ```yaml
 paths:
