@@ -10,6 +10,10 @@ info:
   
 paths: {}
 components:
+  securitySchemes:
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
   headers:
     x-correlator:
       description: Correlation id for the different services
