@@ -89,7 +89,8 @@ This document captures guidelines for the API design in CAMARA project. These gu
 | **Term**       | Description                                                                                                                                                                                                                                                                                                                                         |
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
 | **API**        | Application Programming Interface. It is a rule & specification group (code) that applications follow to communicate between them, used as interface among programs developed with different technologies.                                                                                                                                          |
-| **Body**       | HTTP Message body (If exists) is used to carry the entity data associated with the request or response.                                                                                                                                                                                                                                             |
+|**api-name**    | `api-name` is a kebab-case string used to create unique names or values of objects and parameters related to given API. For example, for Device Location Verification API, api-name is `location-verification`.|
+| **Body**       | HTTP Message body (If exists) is used to carry the entity data associated with the request or response.                                                                                                    |
 | **Camel Case** | It is a kind of define the fields’ compound name or phrases without whitespaces among words. It uses a capital letter at the beginning of each word. There are two different uses:<li>Upper Camel Case: When the first letter of each word is capital.</li><li>Lower Camel Case: Same to that Upper one, but with the first word in lowercase.</li> |
 | **Header**     | HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by a colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.                                                               |
 | **HTTP**       | Hypertext Transfer Protocol (HTTP) is a communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.                                                                                                                                                                                                   |
@@ -1240,7 +1241,7 @@ API documentation usually consists of:
 - Reference information to inform customers of every detail of your API.
 
 Below considerations should be checked when an API is documented:
-- The API functionalities must be implemented following the specifications of the [Open API version 3.0.3](https://spec.openapis.org/oas/v3.0.3) using the .yaml or .json file extension.
+- The API functionalities must be implemented following the specifications of the [Open API version 3.0.3](https://spec.openapis.org/oas/v3.0.3) using `api-name` as the filename and the `.yaml` or `.json` file extension.
 - The API specification structure should have the following parts:
    -	General information ([Section 11.1](#111-general-information))
    -  Published Routes ([Section 11.2](#112-published-routes))
@@ -1317,6 +1318,7 @@ servers:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 ```
+If more than one server object instance is listed, the `servers[*].url` property of each instance must have the same string for the `api-name` and `api-version`'.
 
 ### 11.2 Published Routes
 
