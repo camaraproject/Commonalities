@@ -13,7 +13,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [2.2 API First](#22-api-first)
     - [2.3 Interface standardization. Standardization fora.](#23-interface-standardization-standardization-fora)
     - [2.4 Information Representation Standard](#24-information-representation-standard)
-  - [2.5 Reduce telco-specific terminology in API definitions](#25-reduce-telco-specific-terminology-in-api-definitions)
+    - [2.5 Reduce telco-specific terminology in API definitions](#25-reduce-telco-specific-terminology-in-api-definitions)
   - [3. API Definition](#3-api-definition)
     - [3.1 API REST](#31-api-rest)
       - [POST or GET for transferring sensitive or complex data](#post-or-get-for-transferring-sensitive-or-complex-data)
@@ -567,7 +567,7 @@ In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH versio
 2. The MINOR version when functionality is added that is backwards compatible
 3. The PATCH version when backward compatible bugs are fixed
 
-For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the CAMARA wiki. 
+For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) in the CAMARA wiki. 
 
 It is recommended to avoid breaking backward compatibility unless strictly necessary: new versions should be backwards compatible with previous versions. More information on how to avoid breaking changes can be found below.
 
@@ -623,7 +623,7 @@ Precedence examples:
 * 0.1.0 < 0.2.0-alpha.1 < 0.2.0-alpha.2 < 0.2.0-rc.1 < 0.2.0-rc.2 < 0.2.0 (initial public API version)
 * 1.0.0 < 1.1.0-alpha.1 < 1.1.0-alpha.2 < 1.1.0-rc.1 < 1.1.0-rc.2 < 1.1.0 (stable public API version)
 
-For more information, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the Release Management project Wiki.
+For more information, please see [API versioning](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) in the Release Management project wiki.
 
 ### 5.4 Backward and forward compatibility
 
@@ -1462,11 +1462,11 @@ In general, all APIs must be secured to ensure who has access to what and for wh
 Camara uses OIDC and CIBA for authentication and consent collection and to determine whether the user has,
 e.g. opted out of some API access.
 
-The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose is defined by W3C Privacy Vocabulary in the [purpose section](https://w3c.github.io/dpv/dpv/#vocab-purposes).
+The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose values are defined by W3C Data Privacy Vocabulary as indicated in the [Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose-as-a-scope).
 
 #### OpenAPI security schemes definition
 
-[Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object)express security in OpenAPI. 
+[Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object) express security in OpenAPI. 
 Security can be expressed for the API as a whole or for each endpoint.
 
 As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all Camara OpenAPI files must include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
