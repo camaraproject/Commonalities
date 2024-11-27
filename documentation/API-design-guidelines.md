@@ -89,7 +89,8 @@ This document captures guidelines for the API design in CAMARA project. These gu
 | **Term**       | Description                                                                                                                                                                                                                                                                                                                                         |
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
 | **API**        | Application Programming Interface. It is a rule & specification group (code) that applications follow to communicate between them, used as interface among programs developed with different technologies.                                                                                                                                          |
-| **Body**       | HTTP Message body (If exists) is used to carry the entity data associated with the request or response.                                                                                                                                                                                                                                             |
+|**api-name**    | `api-name` is a kebab-case string used to create unique names or values of objects and parameters related to given API. For example, for Device Location Verification API, api-name is `location-verification`.|
+| **Body**       | HTTP Message body (If exists) is used to carry the entity data associated with the request or response.                                                                                                    |
 | **Camel Case** | It is a kind of define the fields’ compound name or phrases without whitespaces among words. It uses a capital letter at the beginning of each word. There are two different uses:<li>Upper Camel Case: When the first letter of each word is capital.</li><li>Lower Camel Case: Same to that Upper one, but with the first word in lowercase.</li> |
 | **Header**     | HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by a colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.                                                               |
 | **HTTP**       | Hypertext Transfer Protocol (HTTP) is a communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.                                                                                                                                                                                                   |
@@ -701,6 +702,8 @@ An error representation must not be different from the representation of any res
 All these aforementioned fields are mandatory in Error Responses.
 `status` and `code` fields have normative nature, so as their use has to be standardized (see [Section 6.1](#61-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
 
+Fields `status` and `code` values are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/CAMARA_common.yaml).
+
 A JSON error structure is proposed below: 
 
 ```json
@@ -790,7 +793,7 @@ The Following table compiles the guidelines to be adopted:
 | **Case #** | **Description**                                                            | **Error status** |         **Error code**         | **Message example**                                      |
 |:----------:|:---------------------------------------------------------------------------|:----------------:|:------------------------------:|:---------------------------------------------------------|
 |     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.            |
-|     1      | None of the provided device identifiers is supported by the implementation |       422        | UNSUPPORTED_DEVICE_IDENTIFIERS | phoneNumber is required.                                 |
+|     1      | None of the provided device identifiers is supported by the implementation |       422        |     UNSUPPORTED_IDENTIFIER     | The identifier provided is not supported.                                 |
 |     2      | Some identifier cannot be matched to a device                              |       404        |        DEVICE_NOT_FOUND        | Device identifier not found.                             |  
 |     3      | Device identifiers mismatch                                                |       422        |  DEVICE_IDENTIFIERS_MISMATCH   | Provided device identifiers are not consistent.          |
 |     4      | Invalid access token context                                               |       403        |     INVALID_TOKEN_CONTEXT      | Device identifiers are not consistent with access token. |
@@ -814,7 +817,17 @@ headers:
 content:
   application/json:
     schema:
-      $ref: "#/components/schemas/ErrorInfo"
+      allOf:
+        - $ref: "#/components/schemas/ErrorInfo"
+        - type: object
+          properties:
+            status:
+              enum:
+                - <status>
+            code:
+              enum:
+                - <code1>
+                - <code2>
     examples:
       {{case_1}}:
         $ref: ""#/components/examples/{{case_1}}"
@@ -905,6 +918,12 @@ Filtering consists of restricting the number of resources queried by specifying 
 Next, it is specified how it should be used according to the filtering based on the type of data being searched for: a number or a date and the type of operation.
 
 Note: Services may not support all attributes for filtering.  In case a query includes an attribute for which filtering is not supported, it may be ignored by the service.
+
+#### Security Considerations
+As filtering may reveal sensitive information, privacy and security constraints have to be considered when defining query parameters, e.g. it should not be possible to filter using personal information (such as name, phone number or IP address).
+
+
+#### Filtering operations
  
 | **Operation**     | 	Numbers                     | 	Dates                                        |
 |-------------------|------------------------------|-----------------------------------------------|
@@ -917,11 +936,6 @@ Note: Services may not support all attributes for filtering.  In case a query in
 
 And according to the filtering based on string and enums data, being searched for: 
 
-| **Operation** | 	**Strings/enums**    |
-|---------------|-----------------------|
-| equal         | `GET .../?name=Juan`  |
-| non equal     | `GET .../?name!=Jonh` |
-| Contains      | `GET .../?name=~Rafa` |
 
 For boolean parameters the filter can be set for True or False value:
 
@@ -931,21 +945,23 @@ For boolean parameters the filter can be set for True or False value:
 | False         | `GET .../?boolAttr=false` |
 
 
+
 **Additional rules**:
 - The operator "`&`" is evaluated as an AND between different attributes.
 - A Query Param (attribute) can contain one or n values separated by "`,`".
 - For operations on numeric, date or enumerated fields, the parameters with the suffixes `.(gte|gt|lte|lt)$` need to be defined, which should be used as comparators for “greater—equal to, greater than, smaller—equal to, smaller than” respectively. Only the parameters needed for given field should be defined e.g., with `.gte` and `.lte` suffixes only.
 
+
 **Examples**:
-- <u>Equals</u>: to search users with the first name "david" and last name "munoz":
-  - `GET /users?name=david&surname=munoz`
-  - `GET /users?name=David,Noelia`
+- <u>Equals</u>: to search devices with a particular operating system and version or type:
+  - `GET /device?os=ios&version=17.0.1`
+  - `GET /device?type=apple,android`
     - Search for several values separating them by "`,`".
 - <u>Inclusion</u>: if we already have a filter that searches for "equal" and we want to provide it with the possibility of searching for "inclusion", we must include the character "~"
-  - `GET /users?name=dav`
-    - Search for the exact name "dav"
-  - `GET /users?name=~dav`
-    - Look for names that include "dav"
+  - `GET /device?version=17.0.1`
+    - Search for the exact version "17.0.1"
+  - `GET /device?version=~17.0`
+    - Look for version strings that include "17.0"
 - <u>Greater than / less than</u>: new attributes need to be created with the suffixes `.(gte|gt|lte|lt)$` and included in `get` operation :
 ```yaml
 paths:
@@ -1228,7 +1244,7 @@ API documentation usually consists of:
 - Reference information to inform customers of every detail of your API.
 
 Below considerations should be checked when an API is documented:
-- The API functionalities must be implemented following the specifications of the [Open API version 3.0.3](https://spec.openapis.org/oas/v3.0.3) using the .yaml or .json file extension.
+- The API functionalities must be implemented following the specifications of the [Open API version 3.0.3](https://spec.openapis.org/oas/v3.0.3) using `api-name` as the filename and the `.yaml` or `.json` file extension.
 - The API specification structure should have the following parts:
    -	General information ([Section 11.1](#111-general-information))
    -  Published Routes ([Section 11.2](#112-published-routes))
@@ -1305,6 +1321,7 @@ servers:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 ```
+If more than one server object instance is listed, the `servers[*].url` property of each instance must have the same string for the `api-name` and `api-version`'.
 
 ### 11.2 Published Routes
 
