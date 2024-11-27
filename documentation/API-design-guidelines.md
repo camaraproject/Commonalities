@@ -925,7 +925,7 @@ And according to the filtering based on string and enums data, being searched fo
 
 For boolean parameters the filter can be set for True or False value:
 
-| **Operation** | 	**Strings/enums**    |
+| **Operation** | 	**Booleans**    |
 |---------------|-----------------------|
 | True          | `GET .../?boolAttr=true`  |
 | False         | `GET .../?boolAttr=false` |
