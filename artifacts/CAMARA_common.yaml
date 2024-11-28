@@ -5,11 +5,15 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.5.0
-  x-camara-commonalities: 0.4.0
+  version: wip
+  x-camara-commonalities: wip
   
 paths: {}
 components:
+  securitySchemes:
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
   headers:
     x-correlator:
       description: Correlation id for the different services
@@ -127,7 +131,133 @@ components:
       format: ipv6
       example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
 
+    Area:
+      description: Base schema for all areas
+      type: object
+      properties:
+        areaType:
+          $ref: "#/components/schemas/AreaType"
+      required:
+        - areaType
+      discriminator:
+        propertyName: areaType
+        mapping:
+          CIRCLE: "#/components/schemas/Circle"
+          POLYGON: "#/components/schemas/Polygon"
+
+    AreaType:
+      type: string
+      description: |
+        Type of this area.
+        CIRCLE - The area is defined as a circle.
+        POLYGON - The area is defined as a polygon.
+      enum:
+        - CIRCLE
+        - POLYGON
+
+    Circle:
+      description: Circular area
+      allOf:
+        - $ref: "#/components/schemas/Area"
+        - type: object
+          required:
+            - center
+            - radius
+          properties:
+            center:
+              $ref: "#/components/schemas/Point"
+            radius:
+              type: number
+              description: Distance from the center in meters
+              minimum: 1
+
+    Polygon:
+      description: Polygonal area. The Polygon should be a simple polygon, i.e. should not intersect itself.
+      allOf:
+        - $ref: "#/components/schemas/Area"
+        - type: object
+          required:
+            - boundary
+          properties:
+            boundary:
+              $ref: "#/components/schemas/PointList"
+
+    PointList:
+      description: List of points defining a polygon
+      type: array
+      items:
+        $ref: "#/components/schemas/Point"
+      minItems: 3
+      maxItems: 15
+
+    Point:
+      type: object
+      description: Coordinates (latitude, longitude) defining a location in a map
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          $ref: "#/components/schemas/Latitude"
+        longitude:
+          $ref: "#/components/schemas/Longitude"
+      example:
+        latitude: 50.735851
+        longitude: 7.10066
+
+    Latitude:
+      description: Latitude component of a location
+      type: number
+      format: double
+      minimum: -90
+      maximum: 90
+
+    Longitude:
+      description: Longitude component of location
+      type: number
+      format: double
+      minimum: -180
+      maximum: 180
+
   responses:
+#######################################################
+#######################################################
+# ERROR RESPONSE SCHEMA TEMPLATE
+#   - Objective: Make normative error `status` and `code` values
+#   - Schema Template rationale:
+#     - The `allOf` in content.application/json.schema allows a combination of both the generic ErrorInfo schema and the specific schema for this error response,
+#       which validates that `status` and `code` have only the specified values.
+#       This `allOf` is used without discriminator because it does not imply any hierarchy between the models, just 2 schemas that must be independently validated.
+#######################################################
+#    ErrorResponseSchema:
+#      ...
+#      content:
+#        application/json:
+#          schema:
+#            allOf:
+#              - $ref: '#/components/schemas/ErrorInfo'
+#              - type: object
+#                properties:
+#                  status:
+#                    enum:
+#                      - <status>
+#                  code:
+#                    enum:
+#                      - <code1>
+#                      - <code2>
+#          examples:
+#            ExampleKey1:
+#              value:
+#                status: <status>
+#                code: <code1>
+#                message: <message1>
+#            ExampleKey2:
+#              value:
+#                status: <status>
+#                code: <code2>
+#                message: <message2>
+#######################################################
+#######################################################
     Generic400:
       description: Bad Request
       headers:
@@ -136,7 +266,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+                      - OUT_OF_RANGE
+                      - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               description: Invalid Argument. Generic Syntax Exception
@@ -164,7 +305,17 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 401
+                  code:
+                    enum:
+                      - UNAUTHENTICATED
+                      - AUTHENTICATION_REQUIRED
           examples:
             GENERIC_401_UNAUTHENTICATED:
               description: Request cannot be authenticated
@@ -186,7 +337,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 403
+                  code:
+                    enum:
+                      - PERMISSION_DENIED
+                      - INVALID_TOKEN_CONTEXT
+                      - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_403_PERMISSION_DENIED:
               description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
@@ -214,7 +376,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 404
+                  code:
+                    enum:
+                      - NOT_FOUND
+                      - IDENTIFIER_NOT_FOUND
+                      - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_404_NOT_FOUND:
               description: Resource is not found
@@ -222,11 +395,11 @@ components:
                 status: 404
                 code: NOT_FOUND
                 message: The specified resource is not found.
-            GENERIC_404_DEVICE_NOT_FOUND:
+            GENERIC_404_IDENTIFIER_NOT_FOUND:
               description: Device identifier not found
               value:
                 status: 404
-                code: DEVICE_NOT_FOUND
+                code: IDENTIFIER_NOT_FOUND
                 message: Device identifier not found.
             GENERIC_404_{{SPECIFIC_CODE}}:
               description: Specific situation to highlight the resource/concept not found
@@ -242,7 +415,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 405
+                  code:
+                    enum:
+                      - METHOD_NOT_ALLOWED
           examples:
             GENERIC_405_METHOD_NOT_ALLOWED:
               description: Invalid HTTP verb used with a given endpoint
@@ -258,7 +440,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 406
+                  code:
+                    enum:
+                      - NOT_ACCEPTABLE
           examples:
             GENERIC_406_NOT_ACCEPTABLE:
               description: API Server does not accept the media type (`Accept-*` header) indicated by API client
@@ -274,7 +465,19 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 409
+                  code:
+                    enum:
+                      - ABORTED
+                      - ALREADY_EXISTS
+                      - CONFLICT
+                      - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_409_ABORTED:
               description: Concurreny of processes of the same nature/scope
@@ -308,7 +511,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 410
+                  code:
+                    enum:
+                      - GONE
           examples:
             GENERIC_410_GONE:
               description: Use in notifications flow to allow API Consumer to indicate that its callback is no longer available
@@ -324,10 +536,19 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 412
+                  code:
+                    enum:
+                      - FAILED_PRECONDITION
           examples:
             GENERIC_412_FAILED_PRECONDITION:
-              description: Use in notifications flow to allow API Consumer to indicate that its callback is no longer available
+              description: Indication by the API Server that the request cannot be processed in current system state
               value:
                 status: 412
                 code: FAILED_PRECONDITION
@@ -340,7 +561,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 415
+                  code:
+                    enum:
+                      - UNSUPPORTED_MEDIA_TYPE
           examples:
             GENERIC_415_UNSUPPORTED_MEDIA_TYPE:
               description: Payload format of the request is in an unsupported format by the Server. Should not happen
@@ -356,26 +586,52 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 422
+                  code:
+                    enum:
+                      - IDENTIFIER_MISMATCH
+                      - SERVICE_NOT_APPLICABLE
+                      - MISSING_IDENTIFIER
+                      - UNSUPPORTED_IDENTIFIER
+                      - UNNECESSARY_IDENTIFIER
+                      - "{{SPECIFIC_CODE}}"
           examples:
-            GENERIC_422_DEVICE_IDENTIFIERS_MISMATCH:
-              description: Inconsistency between device identifiers not pointing to the same device
+            GENERIC_422_IDENTIFIER_MISMATCH:
+              description: Inconsistency between identifiers not pointing to the same device
               value:
                 status: 422
-                code: DEVICE_IDENTIFIERS_MISMATCH
-                message: Provided device identifiers are not consistent.
-            GENERIC_422_DEVICE_NOT_APPLICABLE:
-              description: Service is not available for the provided device
+                code: IDENTIFIER_MISMATCH
+                message: Provided identifiers are not consistent.
+            GENERIC_422_SERVICE_NOT_APPLICABLE:
+              description: Service is not available for the provided identifier
               value:
                 status: 422
-                code: DEVICE_NOT_APPLICABLE
-                message: The service is not available for the provided device.
-            GENERIC_422_UNIDENTIFIABLE_DEVICE:
-              description: The device identifier is not included in the request and the device information cannot be derived from the 3-legged access token
+                code: SERVICE_NOT_APPLICABLE
+                message: The service is not available for the provided identifier.
+            GENERIC_422_MISSING_IDENTIFIER:
+              description: The identifier is not included in the request and the identifier information cannot be derived from the 3-legged access token
               value:
                 status: 422
-                code: UNIDENTIFIABLE_DEVICE
+                code: MISSING_IDENTIFIER
                 message: The device cannot be identified.
+            GENERIC_422_UNSUPPORTED_IDENTIFIER:
+              description: None of the provided identifiers is supported by the implementation
+              value:
+                status: 422
+                code: UNSUPPORTED_IDENTIFIER
+                message: The identifier provided is not supported.
+            GENERIC_422_UNNECESSARY_IDENTIFIER:
+              description: An explicit identifier is provided when an API subject has already been identified from the access token
+              value:
+                status: 422
+                code: UNNECESSARY_IDENTIFIER
+                message: The device is already identified by the access token.
             GENERIC_422_{{SPECIFIC_CODE}}:
               description: Any semantic condition associated to business logic, specifically related to a field or data structure
               value:
@@ -390,7 +646,17 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 429
+                  code:
+                    enum:
+                      - QUOTA_EXCEEDED
+                      - TOO_MANY_REQUESTS
           examples:
             GENERIC_429_QUOTA_EXCEEDED:
               description: Request is rejected due to exceeding a business quota limit
@@ -412,7 +678,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 500
+                  code:
+                    enum:
+                      - INTERNAL
           examples:
             GENERIC_500_INTERNAL:
               description: Problem in Server side. Regular Server Exception
@@ -428,7 +703,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 501
+                  code:
+                    enum:
+                      - NOT_IMPLEMENTED
           examples:
             GENERIC_501_NOT_IMPLEMENTED:
               description: Service not implemented. The use of this code should be avoided as far as possible to get the objective to reach aligned implementations
@@ -444,7 +728,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 502
+                  code:
+                    enum:
+                      - BAD_GATEWAY
           examples:
             GENERIC_502_BAD_GATEWAY:
               description: Internal routing problem in the Server side that blocks to manage the service properly
@@ -460,7 +753,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 503
+                  code:
+                    enum:
+                      - SERVICE_UNAVAILABLE
           examples:
             GENERIC_503_UNAVAILABLE:
               description: Service is not available. Temporary situation usually related to maintenance process in the server side
@@ -476,7 +778,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 504
+                  code:
+                    enum:
+                      - TIMEOUT
           examples:
             GENERIC_504_TIMEOUT:
               description: API Server Timeout
