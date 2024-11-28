@@ -941,12 +941,18 @@ As filtering may reveal sensitive information, privacy and security constraints 
 
 And according to the filtering based on string and enums data, being searched for: 
 
-
 | **Operation** |	**Strings/enums** |
 | ----- | ----- |
 | equal | `GET .../?type=mobile` |
 | non equal | `GET .../?type!=mobile` |
 | Contains | `GET .../?type=~str` |
+
+For boolean parameters the filter can be set for True or False value:
+
+| **Operation** | 	**Booleans**    |
+|---------------|-----------------------|
+| True          | `GET .../?boolAttr=true`  |
+| False         | `GET .../?boolAttr=false` |
 
 **Additional rules**:
 - The operator "`&`" is evaluated as an AND between different attributes.
