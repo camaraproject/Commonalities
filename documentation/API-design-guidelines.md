@@ -13,7 +13,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [2.2 API First](#22-api-first)
     - [2.3 Interface standardization. Standardization fora.](#23-interface-standardization-standardization-fora)
     - [2.4 Information Representation Standard](#24-information-representation-standard)
-  - [2.5 Reduce telco-specific terminology in API definitions](#25-reduce-telco-specific-terminology-in-api-definitions)
+    - [2.5 Reduce telco-specific terminology in API definitions](#25-reduce-telco-specific-terminology-in-api-definitions)
   - [3. API Definition](#3-api-definition)
     - [3.1 API REST](#31-api-rest)
       - [POST or GET for transferring sensitive or complex data](#post-or-get-for-transferring-sensitive-or-complex-data)
@@ -66,16 +66,21 @@ This document captures guidelines for the API design in CAMARA project. These gu
           - [Examples](#examples)
         - [APIs which deal with explicit subscriptions](#apis-which-deal-with-explicit-subscriptions)
         - [API-level scopes (sometimes referred to as wildcard scopes in CAMARA)](#api-level-scopes-sometimes-referred-to-as-wildcard-scopes-in-camara)
+    - [11.7 Resource access restriction](#117-resource-access-restriction)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
         - [Instance-based (implicit) subscription example](#instance-based-implicit-subscription-example)
       - [Resource-based (explicit) subscription](#resource-based-explicit-subscription)
+        - [Operations](#operations)
+        - [Rules for subscriptions data minimization](#rules-for-subscriptions-data-minimization)
+        - [Subscriptions data model](#subscriptions-data-model)
         - [Error definition for resource-based (explicit) subscription](#error-definition-for-resource-based-explicit-subscription)
         - [Termination for resource-based (explicit) subscription](#termination-for-resource-based-explicit-subscription)
         - [Resource-based (explicit) example](#resource-based-explicit-example)
     - [12.2 Event notification](#122-event-notification)
       - [Event notification definition](#event-notification-definition)
+      - [subscription-ends event](#subscription-ends-event)
       - [Error definition for event notification](#error-definition-for-event-notification)
       - [Correlation Management](#correlation-management)
       - [Security Considerations](#security-considerations)
@@ -552,23 +557,23 @@ API versions use a numbering scheme in the format: `x.y.z`
 
 ### 5.1 API version (OAS info object)
 
-The API version is defined in the `version` field (in the `info` object) of the OAS definition file of an API. 
+The API version is defined in the `version` field (in the `info` object) of the OAS definition file of an API. 
 
 ```yaml
 info:
   title: Number Verification
   description: text describing the API
-  version: 2.2.0  
+  version: 2.2.0  
   #...
 ```
 
-In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH version number, increments as follows:
+In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH version number, increments as follows:
 
-1. The MAJOR version when an incompatible / breaking API change is introduced
-2. The MINOR version when functionality is added that is backwards compatible
-3. The PATCH version when backward compatible bugs are fixed
+1. The MAJOR version when an incompatible / breaking API change is introduced
+2. The MINOR version when functionality is added that is backwards compatible
+3. The PATCH version when backward compatible bugs are fixed
 
-For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the CAMARA wiki. 
+For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the CAMARA wiki. 
 
 It is recommended to avoid breaking backward compatibility unless strictly necessary: new versions should be backwards compatible with previous versions. More information on how to avoid breaking changes can be found below.
 
@@ -580,7 +585,7 @@ The API version in the `url` field only includes the "x" (MAJOR version) number 
 
 ```yaml
 servers:
-    url: {apiRoot}/qod/v2
+    url: {apiRoot}/qod/v2
 ```
 
 ---
@@ -591,7 +596,7 @@ IMPORTANT: CAMARA public APIs with x=0 (`v0.x.y`) MUST use both the MAJOR and th
 
 ```yaml
 servers:
-    url: {apiRoot}/number-verification/v0.3
+    url: {apiRoot}/number-verification/v0.3
 ```
 
 This allows for both test and commercial usage of initial API versions as they are evolving rapidly, e.g. `/qod/v0.10alpha1`, `/qod/v0.10rc1`, or `/qod/v0.10`. However, it should be acknowledged that any initial API version may change.
@@ -605,7 +610,7 @@ Overall, an API can have any of the following versions:
 * work-in-progress (`wip`) API versions used during the development of an API before the first pre-release or in between pre-releases. Such API versions cannot be released and are not usable by API consumers.
 * alpha (`x.y.z-alpha.m`) API versions (with extensions) for CAMARA internal API rapid development purposes
 * release-candidate (`x.y.z-rc.n`) API versions (with extensions) for CAMARA internal API release bug fixing purposes
-* public (`x.y.z`) API versions for usage in commercial contexts. These API versions only have API version number x.y.z (semver 2.0), no extension. Public APIs can have one of two maturity states (used in release management): 
+* public (`x.y.z`) API versions for usage in commercial contexts. These API versions only have API version number x.y.z (semver 2.0), no extension. Public APIs can have one of two maturity states (used in release management): 
   * initial - indicating that the API is still not fully stable (x=0)
   * stable - indicate that the API has reached a certain level of maturity (x>0)
 
@@ -615,7 +620,7 @@ The following table gives the values of the API version (Info object) and the AP
 |-------------------|:-------------:|:--------------------------------:|:-------------------------------:|:---------------------------:|
 | work-in-progress  |      wip      |               vwip               |              vwip               |             No              |
 | alpha             | x.y.z-alpha.m |            v0.yalpham            |            vxalpham             | Yes (internal pre-release)  |
-| release-candidate |   x.y.z-rc.n  |             v0.yrcn              |              vxrcn              | Yes (internal pre-release)  |
+| release-candidate |   x.y.z-rc.n  |             v0.yrcn              |              vxrcn              | Yes (internal pre-release)  |
 | public            |     x.y.z     |               v0.y               |               vx                |             Yes             |
 
 Precedence examples:
@@ -667,7 +672,7 @@ Compatibility management:
 To ensure this compatibility, the following guidelines must be applied.
 
 **As API provider**:
-- Never change an endpoint name; instead, add a new one and mark the original one for deprecation in a MINOR change and remove it in a later MAJOR change (see semver FAQ entry: https://semver.org/#how-should-i-handle-deprecating-functionality)
+- Never change an endpoint name; instead, add a new one and mark the original one for deprecation in a MINOR change and remove it in a later MAJOR change (see semver FAQ entry: https://semver.org/#how-should-i-handle-deprecating-functionality)
 - If possible, do the same for attributes
 - New fields should always be added as optional.
 - Postel's Law: “<em>Be conservative in what you do, be liberal in what you accept from others</em>”. When you have input fields that need to be removed, mark them as unused, so they can be ignored. 
@@ -1589,6 +1594,22 @@ The decision on the API-level scopes was made within the [Identity and Consent M
 The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject. 
 
 
+### 11.7 Resource access restriction 
+
+In some CAMARA APIs there are functions to create resource (via POST) and then later query them via id and/or list (with GET) or delete them (via DELETE). For example we have sessions, payments, subscriptions, etc..
+
+For the GET and DELETE operations we must restrict the resource(s) targeted depending on the information provided in the request. Basically we consider 2 filters:
+* API client (aka ClientId)
+* access token
+
+| Operation |  3-legged access token is used | 2-legged access token is used |
+|-----------|--------------------------------|-------------------------------|
+| GET/{id} | - The resource queried must have been created for the end user associated with the access token. <br> - The resource queried must have been created by the same API client given in the access token. | - The resource queried must have been created by the same API client given in the access token. |
+| GET/ | - Return all resource(s) created by the API consumer that are associated with both the end user identified by the access token and the same API client given in the access token. | - Return all resource(s) created by the same API client given in the access token. |
+| DELETE/{id} | - The resource to be deleted must have been created for the end user associated with the access token. <br> - The resource to be deleted must have been created by the same API client given in the access token. | - The resource to be deleted must have been created by the same API client given in the access token. |
+
+
+
 ## 12. Subscription, Notification & Event
 
 To provide event-based interaction, CAMARA API could provide capabilities for subscription & notification management.
@@ -1666,6 +1687,7 @@ CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** a
 
 To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
+##### Operations
 Four operations must be defined:
 
 | operation | path                              | description                                                                                                                                                                                            |
@@ -1693,18 +1715,27 @@ The rationale for using this alternate pattern should be explicitly provided
 (e.g. the notification source for each of the supported events may be completely different,
 in which case, separating the implementations is beneficial). 
 
+##### Rules for subscriptions data minimization 
+
+These rules apply for subscription with device identifier
+- If 3-legged access token is used, the POST and GET responses must not provide any device identifier.
+- If 2-legged access token is used, the presence of a device identifier in the response is mandatory and should be the same identifier type than the one provided in the request.
+
+Application of data minimization design must be considered by the API Sub Project for event structure definition.
+
+##### Subscriptions data model
 The following table provides `/subscriptions` attributes
 
 | name           | type               | attribute description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | cardinality                  |
 |----------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------| 
 | protocol       | string             | Identifier of a delivery protocol. **Only** `HTTP` **is allowed for now**.                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Mandatory                    |
-| sink           | string             | https callback address where the notification must be POST-ed                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | mandatory                    |
-| sinkCredential | object             | Sink credential provides authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. To protect the notification endpoint providing sinkCredential is RECOMMENDED.                                                                                                                                                                                                                                                                      | optional                     |
+| sink           | string             | The address to which events shall be delivered, using the HTTP protocol.                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | mandatory                    |
+| sinkCredential | object             | Sink credential provides authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. To protect the notification endpoint providing sinkCredential is RECOMMENDED. <br> The sinkCredential must **not** be present in `POST` and `GET` responses.                                                                                                                                                                                                                                                                    | optional                     |
 | types          | string             | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required by API project to provide an enum for this attribute. `type` must follow the format: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter `v` and the major version like  ``org.camaraproject.device-roaming-subscriptions.v1.roaming-status`` - Note: An array of types could be passed **but as of now only one value MUST passed**. Use of multiple value will be open later at API level. | mandatory                    |
 | config         | object             | Implementation-specific configuration parameters needed by the subscription manager for acquiring events. In CAMARA we have predefined attributes like ``subscriptionExpireTime``, ``subscriptionMaxEvents`` or ``initialEvent``. See detail below.                                                                                                                                                                                                                                                                                      | mandatory                    |
 | id             | string             | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server                                                                                                                                                                                                                                                                                                                                                                                                            | mandatory in server response |
 | startsAt       | string - date-time | Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints                                                                                                                                                                                                                                                                                                                                                       | optional                     |
-| expiresAt      | string - date-time | Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided (optionally) by API server.                                                                                                                                                                                                                                                                                                                                                                                     | optional                     |
+| expiresAt      | string - date-time | Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided (optionally) by API server. This attribute must be provided by the server if subscriptionExpireTime is provided in the request and server is not able to handle it.                                                                                                                                                                                                                                                                                                                                                                                 | optional                     |
 | status         | string             | Current status of the subscription - Management of Subscription state engine is not mandatory for now. Note: not all statuses may be considered to be implemented. See below status table.                                                                                                                                                                                                                                                                                                                                               | optional                     |
 
 
@@ -1736,7 +1767,11 @@ Remark: This action will trigger a subscription-ends event with terminationReaso
 | initialEvent           | boolean            | Set to true by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request. Example: Consumer request Roaming event. If consumer sets initialEvent to true and device is in roaming situation, an event is triggered. Up to API project decision to keep it. | optional    |
 
 
-Subscription status value table:
+**Note** on combined usage of initialEvent and subscriptionMaxEvents: 
+Unless explicitly decided otherwise by the API Sub Project, if an event is triggered following initialEvent set to `true`, this event will be counted towards subscriptionMaxEvents (if provided).
+It is recommended to provide this clarification in all subscription APIs featuring subscriptionMaxEvents and initialEvent.
+
+**Subscription status value table**:
 
 Managing subscription is a draft feature, and it is not mandatory for now. An API project could decide to use/not use it. A list of status is provided for global consistency.
 
@@ -1775,6 +1810,7 @@ It could be useful to provide a mechanism to inform subscriber for all cases. In
 
 _Termination rules regarding subscriptionExpireTime & subscriptionMaxEvents usage_
 * When client side providing a `subscriptionExpireTime` and/or `subscriptionMaxEvents` service side has to terminate the subscription without expecting a `DELETE` operation.
+* CAMARA does not impose limitations for `subscriptionExpireTime` or `subscriptionMaxEvents` but API providers may enforce limitations and must document them accordingly.
 * If both `subscriptionExpireTime` and `subscriptionMaxEvents` are provided, the subscription will end when the first one is reached.
 * When none `subscriptionExpireTime` and `subscriptionMaxEvents` are not provided, client side has to trigger a `DELETE` operation to terminate it.
 * It is perfectly valid for client side to trigger a DELETE operation before `subscriptionExpireTime` and/or `subscriptionMaxEvents` reached. 
@@ -1895,7 +1931,11 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 
 Note: For operational and troubleshooting purposes it is relevant to accommodate use of `x-correlator` header attribute. API listener implementations have to be ready to support and receive this data.
 
-Specific event notification type "subscription-ends" is defined to inform listener about subscription termination. It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notification prematurely. For this specific event, the `data` must feature `terminationReason` attribute.
+#### subscription-ends event
+Specific event notification type "subscription-ends" is defined to inform listener about subscription termination.
+
+It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notifications prematurely, or if the subscription request is managed asynchronously by the server and it is not able to provide the service. For this specific event, the `data` must feature `terminationReason` attribute. An enumeration of `terminationReason` is provided in event-subscription-template.yaml (see in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory ``event-subscription-template.yaml``). 
+
 Note: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request a `subscriptionMaxEvents` to 2, later, received second notification, then a third notification will be sent for "subscription-ends")
 
 #### Error definition for event notification
