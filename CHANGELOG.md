@@ -21,12 +21,26 @@ This release contains documents and artifacts of Commonalities version 0.5.0-alp
 **The relevant details of authentication and consent collection are covered by [release 2.1](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
 
 ### Added
+* Common 'area' data-type added to CAMARA_common.yaml by @tlohmar in https://github.com/camaraproject/Commonalities/pull/315
+* Security and Privacy Considerations for Filtering in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/331
+* Security scheme added to CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/335
+* Add VERSION.yaml file by @rartych in https://github.com/camaraproject/Commonalities/pull/339
+* Filtering for boolean in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/336
 
 ### Changed
+* Normalization of error status and code allowed values by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/316
+* Guidelines for subscription and event notification in API Design Guideliness 0.5.0 by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/313
+  - a
+* Update error codes and `info.description` template for device / phone number identifiers by @eric-murray in https://github.com/camaraproject/Commonalities/pull/324
 
 ### Fixed
+* Clarification on api-name, filenames and servers object by @rartych in https://github.com/camaraproject/Commonalities/pull/333
 
 ### Removed
+N/A
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r0.4.0...r2.1
+
 
 # v0.4.0
 
