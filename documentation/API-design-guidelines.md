@@ -86,7 +86,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
       - [Security Considerations](#security-considerations)
       - [Abuse Protection](#abuse-protection)
       - [Notification examples](#notification-examples)
-  - [Appendix A: `info.description` template for `device` identification from access token](#appendix-a-infodescription-template-for-device-identification-from-access-token)
+  - [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
 
 
 ## Common Vocabulary and Acronyms
@@ -801,9 +801,9 @@ The Following table compiles the guidelines to be adopted:
 |     1      | None of the provided device identifiers is supported by the implementation |       422        |     UNSUPPORTED_IDENTIFIER     | The identifier provided is not supported.                                 |
 |     2      | Some identifier cannot be matched to a device                              |       404        |        DEVICE_NOT_FOUND        | Device identifier not found.                             |  
 |     3      | Device identifiers mismatch                                                |       422        |  DEVICE_IDENTIFIERS_MISMATCH   | Provided device identifiers are not consistent.          |
-|     4      | Invalid access token context                                               |       403        |     INVALID_TOKEN_CONTEXT      | Device identifiers are not consistent with access token. |
+|     4      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        | UNNECESSARY_IDENTIFIER  | The device is already identified by the access token. |
 |     5      | Service not applicable to the device                                       |       422        |     DEVICE_NOT_APPLICABLE      | The service is not available for the provided device.    |
-|     6      | The device identifier is not included in the request and the device information cannot be derived from the 3-legged access token |       422        |     UNIDENTIFIABLE_DEVICE      | The device cannot be identified. |
+|     6      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422        |     MISSING_IDENTIFIER      | The device cannot be identified. |
 
 
 
@@ -2037,40 +2037,46 @@ response:
 204 No Content
 ```
 
-## Appendix A: `info.description` template for `device` identification from access token
+## Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier
 
-The documentation template below is recommended to be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
+When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
+- If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly given that the `sub` will not be a globally unique identifier nor contain PII as per the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#id-token-sub-claim) requirements.
+- If the access token is a Two-Legged Access Token, no User is associated with the token, an hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
 
-Note: With the current 3-legged authorization flows used by CAMARA, only a single end user can be associated with the access token. For the OIDC authorization code flow, only a single device can call the `/authorize` endpoint and get the code. And for CIBA, `login_hint` is currently limited to a single phone number or IP address (which can optionally include a port).
+If an API provider issues Thee-Legged Access Tokens for use with the API, the following error may occur:
+- **Both a Three-Legged Access Token and an explicit User identifier (device or phone number) are provided by the API consumer.**
 
+  Whilst it might be considered harmless to proceed if both identify the same User, returning an error only when the two do not match would allow the API consumer to confirm the identity of the User associated with the access token, which they might otherwise not know. Although this functionality is supported by some APIs (e.g. Number Verification, KYC Match), for others it may exceed the scope consented to by the User.
+
+  In this case, a `422 UNNECESSARY_IDENTIFIER` error code MUST be returned unless the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.
+
+If an API provider issues Two-Legged Access Tokens for use with the API, the following error may occur:
+- **Neither a Three-legged Access Token nor an explicit User identifier (device or phone number) are provided by the API consumer.**
+
+  One or other MUST be provided to identify the User.
+
+  In this case, a `422 MISSING_IDENTIFIER` error code MUST be returned, indicating that the API provider cannot identify the User from the provided information.
+
+The documentation template below is RECOMMENDED to be used as part of the `info.description` API documentation to explain to the API consumer how the pattern works.
+
+This template is applicable to CAMARA APIs which:
+- require the User (i.e. Resource Owner) to be identified; and
+- may have implementations which accept Two-Legged Access Tokens; and
+- do NOT allow the API to confirm whether or not the optional User identifier (`device` or `phoneNumber`) matches that associated with the Three-Legged Access Token
+
+The template SHOULD be customised for each API using it by deleting one of the options where marked by (*)
 ```md
-# Identifying a device from the access token
+# Identifying the [ device | phone number ](*) from the access token
 
-This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token, and the device can be uniquely identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API.
+This API requires the API consumer to identify a [ device | phone number ](*) as the subject of the API as follows:
+- When the API is invoked using a two-legged access token, the subject will be identified from the optional [`device` object | `phoneNumber` field](*), which therefore MUST be provided.
+- When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-## Handling of device information:
+This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
-### Optional device object for 3-legged tokens:
+## Error handling:
 
-- When using a 3-legged access token, the device associated with the access token must be considered as the device for the API request. This means that the device object is not required in the request, and if included it must identify the same device, therefore **it is recommended NOT to include it in these scenarios** to simplify the API usage and avoid additional validations.
+- If the subject cannot be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is not included in the request, then the server will return an error with the `422 MISSING_IDENTIFIER` error code.
 
-### Validation mechanism:
-
-- The server will extract the device identification from the access token, if available.
-- If the API request additionally includes a `device` object when using a 3-legged access token, the API will validate that the device identifier provided matches the one associated with the access token.
-- If there is a mismatch, the API will respond with a 403 - INVALID_TOKEN_CONTEXT error, indicating that the device information in the request does not match the token.
-
-### Error handling for unidentifiable devices:
-
-- If the `device` object is not included in the request and the device information cannot be derived from the 3-legged access token, the server will return a 422 `UNIDENTIFIABLE_DEVICE` error.
-
-### Restrictions for tokens without an associated authenticated identifier:
-
-- For scenarios which do not have a single device identifier associated to the token during the authentication flow, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
+- If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
-
-By following these guidelines, API consumers can use the authenticated device identifier associated with 3-legged access tokens, simplifying implementation and validation. This mechanism ensures that device identification is handled efficiently and securely, and appropriately accommodates different token types.
-
-Depending on the functionality provided by the CAMARA API, some API subprojects may still define other specific identifiers that differs from the common `device` object definition. Not all APIs necessarily have to refer to a device, e.g. Carrier Billing API only defines a phone number as a way to identify the mobile account to be billed, Know Your Costumer only defines a phone number as a way to identify the associated account data or Home Devices QoD API defines public IP v4 address as a way to identify the user home network. 
-
-Therefore, the mechanism described in this template is not applicable to all APIs, but could be used as way to make `device` object more interoperable and usable for API consumers.
