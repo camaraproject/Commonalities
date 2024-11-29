@@ -791,7 +791,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
   - Error status 403
   - Error status 429 TOO_MANY_REQUESTS (For rate limit control)
 
-NOTE: The rest of Error status defined in section 6.1. will be documented depending on specific considerations within a given WG.
+NOTE: The remaining Error statuses defined in section 6.1 will be documented based on specific considerations for the given API.
 
 ### 6.2 Error Responses - Device Object/Phone Number
 
