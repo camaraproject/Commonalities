@@ -26,6 +26,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0-alp
 * Security scheme added to CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/335
 * VERSION.yaml file added to indicate Commonlities versionby @rartych in https://github.com/camaraproject/Commonalities/pull/339
 * Filtering for boolean guideline and examples in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/336
+* Guidelines on the coverage of error codes in API-Testing-Guidelines by @jlurien in https://github.com/camaraproject/Commonalities/pull/343
 
 ### Changed
 * Normalization of error status and code allowed values using `enum` by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/316
@@ -36,6 +37,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0-alp
   - added section 11.7 Resource access restriction relevant to subscriptions
   - added clarification on `expiresAt` attribute for subscription
 * Updated error codes and changed `info.description` template for device / phone number identifiers in Appendix A in API Design Guideliness by @eric-murray in https://github.com/camaraproject/Commonalities/pull/324
+* 
 
 ### Fixed
 * Clarification on api-name, filenames and servers object by @rartych in https://github.com/camaraproject/Commonalities/pull/333
