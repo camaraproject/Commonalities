@@ -28,7 +28,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0-alp
 * Filtering for boolean guideline and examples in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/336
 
 ### Changed
-* Normalization of error status and code allowed values by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/316
+* Normalization of error status and code allowed values using `enum` by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/316
 * Guidelines for subscription and event notification in API Design Guideliness 0.5.0 by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/313 main changes:
   - updated `terminationReason` in event notification type "subscription-ends"
   - updated description of `sink` and `sinkCredential` attributes for subscription
