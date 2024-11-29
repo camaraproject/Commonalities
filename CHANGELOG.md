@@ -24,17 +24,22 @@ This release contains documents and artifacts of Commonalities version 0.5.0-alp
 * Common 'area' data-type added to CAMARA_common.yaml by @tlohmar in https://github.com/camaraproject/Commonalities/pull/315
 * Security and Privacy Considerations for Filtering in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/331
 * Security scheme added to CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/335
-* Add VERSION.yaml file by @rartych in https://github.com/camaraproject/Commonalities/pull/339
-* Filtering for boolean in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/336
+* VERSION.yaml file added to indicate Commonlities versionby @rartych in https://github.com/camaraproject/Commonalities/pull/339
+* Filtering for boolean guideline and examples in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/336
 
 ### Changed
 * Normalization of error status and code allowed values by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/316
-* Guidelines for subscription and event notification in API Design Guideliness 0.5.0 by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/313
-  - a
-* Update error codes and `info.description` template for device / phone number identifiers by @eric-murray in https://github.com/camaraproject/Commonalities/pull/324
+* Guidelines for subscription and event notification in API Design Guideliness 0.5.0 by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/313 main changes:
+  - updated `terminationReason` in event notification type "subscription-ends"
+  - updated description of `sink` and `sinkCredential` attributes for subscription
+  - added rules for subscriptions with device identifier attribute
+  - added section 11.7 Resource access restriction relevant to subscriptions
+  - added clarification on `expiresAt` attribute for subscription
+* Updated error codes and changed `info.description` template for device / phone number identifiers in Appendix A in API Design Guideliness by @eric-murray in https://github.com/camaraproject/Commonalities/pull/324
 
 ### Fixed
 * Clarification on api-name, filenames and servers object by @rartych in https://github.com/camaraproject/Commonalities/pull/333
+* Removed broken link to DPV document and updated broken links to CAMARA wiki by @rartych in https://github.com/camaraproject/Commonalities/pull/347
 
 ### Removed
 N/A
