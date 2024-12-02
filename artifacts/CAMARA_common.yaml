@@ -396,7 +396,7 @@ components:
                 code: NOT_FOUND
                 message: The specified resource is not found.
             GENERIC_404_IDENTIFIER_NOT_FOUND:
-              description: Device identifier not found
+              description: Some identifier cannot be matched to a device
               value:
                 status: 404
                 code: IDENTIFIER_NOT_FOUND
