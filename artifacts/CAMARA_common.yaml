@@ -396,7 +396,7 @@ components:
                 code: NOT_FOUND
                 message: The specified resource is not found.
             GENERIC_404_IDENTIFIER_NOT_FOUND:
-              description: Device identifier not found
+              description: Some identifier cannot be matched to a device
               value:
                 status: 404
                 code: IDENTIFIER_NOT_FOUND
@@ -609,13 +609,13 @@ components:
                 code: IDENTIFIER_MISMATCH
                 message: Provided identifiers are not consistent.
             GENERIC_422_SERVICE_NOT_APPLICABLE:
-              description: Service is not available for the provided identifier
+              description: Service not applicable for the provided identifier
               value:
                 status: 422
                 code: SERVICE_NOT_APPLICABLE
                 message: The service is not available for the provided identifier.
             GENERIC_422_MISSING_IDENTIFIER:
-              description: The identifier is not included in the request and the identifier information cannot be derived from the 3-legged access token
+              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token
               value:
                 status: 422
                 code: MISSING_IDENTIFIER
@@ -627,7 +627,7 @@ components:
                 code: UNSUPPORTED_IDENTIFIER
                 message: The identifier provided is not supported.
             GENERIC_422_UNNECESSARY_IDENTIFIER:
-              description: An explicit identifier is provided when an API subject has already been identified from the access token
+              description: An explicit identifier is provided when a device or phone number has already been identified from the access token
               value:
                 status: 422
                 code: UNNECESSARY_IDENTIFIER

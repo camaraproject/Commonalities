@@ -759,18 +759,20 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 | **Error status** |        **Error code**         | **Message example**                                                        | **Scope/description**                                                                                                                                                        |
 |:----------------:|:-----------------------------:|----------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|       401        |       `UNAUTHENTICATED`       | Request not authenticated due to missing, invalid, or expired credentials. | Request cannot be authenticated                                                                                                                                              |
-|       401        |   `AUTHENTICATION_REQUIRED`   | New authentication is required.                                            | New authentication is needed, authentication is no longer valid                                                                                                              |
+|       401        |       `UNAUTHENTICATED`       | Request not authenticated due to missing, invalid, or expired credentials. | Request cannot be authenticated                                                                                                                       |
+|       401        |   `AUTHENTICATION_REQUIRED`   | New authentication is required.                                            | New authentication is needed, authentication is no longer valid                                                                                                   |
 |       403        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API (e.g QoD session cannot be created for a set of users) |
-|       404        |          `NOT_FOUND`          | The specified resource is not found.                                       | Resource is not found                                                                                                                                                        |
-|       404        |      `DEVICE_NOT_FOUND`       | Device identifier not found.                                               | Device identifier not found                                                                                                                                                  |
-|       404        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Specific situation to highlight the resource/concept not found (e.g. use in device)                                                                                          |
-|       422        | `DEVICE_IDENTIFIERS_MISMATCH` | Provided device identifiers are not consistent.                            | Inconsistency between device identifiers not pointing to the same device                                                                                                     |
-|       422        |    `DEVICE_NOT_APPLICABLE`    | The service is not available for the provided device.                      | Service is not available for the provided device                                                                                                                             |
-|       422        |    `UNIDENTIFIABLE_DEVICE`    | The device cannot be identified.                                          | The device identifier is not included in the request and the device information cannot be derived from the 3-legged access token                                              |
-|       422        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Any semantic condition associated to business logic, specifically related to a field or data structure                                                                       |
-|       429        |       `QUOTA_EXCEEDED`        | Either out of resource quota or reaching rate limiting.                    | Request is rejected due to exceeding a business quota limit                                                                                                                  |
-|       429        |      `TOO_MANY_REQUESTS`      | Either out of resource quota or reaching rate limiting.                    | API Server request limit is overpassed                                                                                                                                       |
+|       404        |          `NOT_FOUND`          | The specified resource is not found.                                       | Resource is not found                                                                                                                               |
+|       404        |     `IDENTIFIER_NOT_FOUND`    | Device identifier not found.                                               | Some identifier cannot be matched to a device                                                                                                                              |
+|       404        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Specific situation to highlight the resource/concept not found (e.g. use in device)                                                                                     |
+|       422        |    `UNSUPPORTED_IDENTIFIER`   | The identifier provided is not supported.                                  | None of the provided identifiers is supported by the implementation                                                                                                     |  
+|       422        |     `IDENTIFIER_MISMATCH`     | Provided identifiers are not consistent.                                   | Inconsistency between identifiers not pointing to the same device                                                                                                         |
+|       422        |    `UNNECESSARY_IDENTIFIER`   | The device is already identified by the access token.                      | An explicit identifier is provided when a device or phone number has already been identified from the access token                                                            |
+|       422        |    `SERVICE_NOT_APPLICABLE`   | The service is not available for the provided identifier.                  | Service not applicable for the provided identifier                                                                                                                          |
+|       422        |      `MISSING_IDENTIFIER`     | The device cannot be identified.                                           | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token                              |
+|       422        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Any semantic condition associated to business logic, specifically related to a field or data structure                                                                   |
+|       429        |       `QUOTA_EXCEEDED`        | Either out of resource quota or reaching rate limiting.                    | Request is rejected due to exceeding a business quota limit                                                                                                                |
+|       429        |      `TOO_MANY_REQUESTS`      | Either out of resource quota or reaching rate limiting.                    | API Server request limit is overpassed                                                                                                                          |
 
 <font size="3"><span style="color: blue"> Server Exceptions </span></font>
 
@@ -787,25 +789,37 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       503        |      `UNAVAILABLE`       | Service Unavailable.                                                                                          | Service is not available. Temporary situation usually related to maintenance process in the server side                                  |
 |       504        |        `TIMEOUT`         | Request timeout exceeded.                                                                                     | API Server Timeout                                                                                                                       |
 
-> _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, a `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
+> _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, an `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
 
 > _NOTE 2: A {{SPECIFIC_CODE}}, unless it may have traversal scope (i.e. re-usable among different APIs), SHALL follow this scheme for a specific API: {{API_NAME}}.{{SPECIFIC_CODE}}_
 
-### 6.2 Error Responses - Device Object
 
-This section is focused in the guidelines about error responses around the concept of `device` object.
+**Mandatory Errors** to be **documented in CAMARA API Spec YAML** are the following:
+
+- For event subscriptions APIs, the ones defined in [12.1 Subscription](#error-definition-for-resource-based-explicit-subscription)
+- For event notifications flow, the ones defined in [12.2 Event notification](#error-definition-for-event-notification)
+- For the rest of APIs:
+  - Error status 401
+  - Error status 403
+  - Error status 429 TOO_MANY_REQUESTS (For rate limit control)
+
+NOTE: The remaining Error statuses defined in section 6.1 will be documented based on specific considerations for the given API.
+
+### 6.2 Error Responses - Device Object/Phone Number
+
+This section is focused in the guidelines about error responses around the concept of `device` object or `phoneNumber` field.
 
 The Following table compiles the guidelines to be adopted:
 
 | **Case #** | **Description**                                                            | **Error status** |         **Error code**         | **Message example**                                      |
 |:----------:|:---------------------------------------------------------------------------|:----------------:|:------------------------------:|:---------------------------------------------------------|
 |     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.            |
-|     1      | None of the provided device identifiers is supported by the implementation |       422        |     UNSUPPORTED_IDENTIFIER     | The identifier provided is not supported.                                 |
-|     2      | Some identifier cannot be matched to a device                              |       404        |        DEVICE_NOT_FOUND        | Device identifier not found.                             |  
-|     3      | Device identifiers mismatch                                                |       422        |  DEVICE_IDENTIFIERS_MISMATCH   | Provided device identifiers are not consistent.          |
-|     4      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        | UNNECESSARY_IDENTIFIER  | The device is already identified by the access token. |
-|     5      | Service not applicable to the device                                       |       422        |     DEVICE_NOT_APPLICABLE      | The service is not available for the provided device.    |
-|     6      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422        |     MISSING_IDENTIFIER      | The device cannot be identified. |
+|     1      | None of the provided identifiers is supported by the implementation |       422        |     UNSUPPORTED_IDENTIFIER     | The identifier provided is not supported.                                 |
+|     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | Device identifier not found.                             |  
+|     3      | Inconsistency between identifiers not pointing to the same device |       422        |       IDENTIFIER_MISMATCH      | Provided identifiers are not consistent.          |
+|     4      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        |     UNNECESSARY_IDENTIFIER      | The device is already identified by the access token. |
+|     5      | Service not applicable for the provided identifier                         |       422        |     SERVICE_NOT_APPLICABLE     | The service is not available for the provided identifier. |
+|     6      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
 
 
 
@@ -1797,10 +1811,10 @@ Managing subscription is a draft feature, and it is not mandatory for now. An AP
 Error definition described in this guideline applies for subscriptions.
 
 The Following Error codes must be present:
-* for `POST`: 400, 401, 403, 409, 415, 429, 500, 503
-* for `GET`: 400, 401, 403, 500, 503
-* for `GET .../{subscriptionId}`: 400, 401, 403, 404, 500, 503
-* for `DELETE`: 400, 401, 403, 404, 500, 503
+* for `POST`: 400, 401, 403, 409, 429
+* for `GET`: 400, 401, 403
+* for `GET .../{subscriptionId}`: 400, 401, 403, 404
+* for `DELETE`: 400, 401, 403, 404
 
 Please see in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory ``event-subscription-template.yaml`` for more information and error examples. 
 
