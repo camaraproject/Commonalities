@@ -1965,7 +1965,7 @@ Note: The "subscription-ends" notification is not counted in the `subscriptionMa
 Error definitions are described in this guideline applies for event notification.
 
 The Following Error codes must be present:
-* for `POST`: 400, 401, 403, 500, 503
+* for `POST`: 400, 401, 403, 410, 429
 
 #### Correlation Management
 To manage correlation between the subscription management and the event notification (as these are two distinct operations):
