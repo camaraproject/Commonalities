@@ -37,7 +37,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0-alp
   - added section 11.7 Resource access restriction relevant to subscriptions
   - added clarification on `expiresAt` attribute for subscription
 * Updated error codes and changed `info.description` template for device / phone number identifiers in Appendix A in API Design Guideliness by @eric-murray in https://github.com/camaraproject/Commonalities/pull/324
-* 
+* Guidelines regarding mandatory error `status` and alignment of error codes related to identifiers in API Design Guideliness by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/329
 
 ### Fixed
 * Clarification on api-name, filenames and servers object by @rartych in https://github.com/camaraproject/Commonalities/pull/333
