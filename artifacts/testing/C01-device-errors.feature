@@ -3,15 +3,16 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
     Common error scenarios for POST operations with device as input either in the request
     body or implied from the access.
 
-    Artifact parameters (to be replaced by values according to the API operation):
-    
-    - {{feature_identifier}} 
+    NOTES: 
+    * This is not a complete feature but a collection of scenarios that can be applied  with minor
+    modifications to test plans. Test plans would have to copy and adapt the scenarios as part of
+    their own feature files, along with other scenarios
 
-    This is not a complete feature but a collection of scenarios that can be applied
-    with minor modifications to test plans.
-
-    These scenarios assume that other properties not explicitly mentioned in the scenario
+    * These scenarios assume that other properties not explicitly mentioned in the scenario
     are set by default to a valid value. This can be specified in the feature Background.
+    
+    * {{feature_identifier}} has to be substituted to the value corresponding to the feature file where
+    these scenarios are included.
 
     # Error scenarios for management of input parameter device
 
