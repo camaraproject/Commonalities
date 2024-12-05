@@ -4,7 +4,8 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     body or implied from the access
     
     NOTES: 
-    * This is not a complete feature but a collection of scenarios that can be applied  with minor
+    * This is not a complete feature but a collection of scenarios that can be applied with minor
+
     modifications to test plans. Test plans would have to copy and adapt the scenarios as part of
     their own feature files, along with other scenarios
 
