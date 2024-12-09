@@ -1956,9 +1956,21 @@ Note: For operational and troubleshooting purposes it is relevant to accommodate
 #### subscription-ends event
 Specific event notification type "subscription-ends" is defined to inform listener about subscription termination.
 
-It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notifications prematurely, or if the subscription request is managed asynchronously by the server and it is not able to provide the service. For this specific event, the `data` must feature `terminationReason` attribute. An enumeration of `terminationReason` is provided in event-subscription-template.yaml (see in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory ``event-subscription-template.yaml``). 
+It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notifications prematurely, or if the subscription request is managed asynchronously by the server and it is not able to provide the service. For this specific event, the `data` must feature `terminationReason` attribute. 
 
-Note: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request a `subscriptionMaxEvents` to 2, later, received second notification, then a third notification will be sent for "subscription-ends")
+Following table list value for `terminationReason` attribut:
+
+| enum value | termination reason |
+| -----------|--------------------|
+| NETWORK_TERMINATED | API server stopped sending notification|
+| SUBSCRIPTION_EXPIRED | Subscription expire time (optionally set by the requester) has been reached|
+| MAX_EVENTS_REACHED | Maximum number of events (optionally set by the requester) has been reached|
+| ACCESS_TOKEN_EXPIRED | Access Token sinkCredential (optionally set by the requester) expiration time has been reached|
+| SUBSCRIPTION_DELETED | Subscription was deleted by the requester|
+
+Note1:This enumeration is also defined in event-subscription-template.yaml (see in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory ``event-subscription-template.yaml``). 
+
+Note2: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request a `subscriptionMaxEvents` to 2, later, received second notification, then a third notification will be sent for "subscription-ends")
 
 #### Error definition for event notification
 
