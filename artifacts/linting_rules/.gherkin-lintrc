@@ -8,10 +8,10 @@
   "indentation" : [
     "on", {
       "Feature": 0,
-      "Background": 0,
+      "Background": 2,
       "Scenario": 2,
       "Step": 2,
-      "Examples": 4,
+      "Examples": 6,
       "example": 4,
       "given": 4,
       "when": 4,
