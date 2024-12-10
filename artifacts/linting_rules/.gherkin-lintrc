@@ -47,7 +47,7 @@
     "^@.*$"                                   
   ]
  }],
-  "file-name": ["on", {"style": "kebab-case"}],
+  "file-name": ["off", {"style": "kebab-case"}],
   "max-scenarios-per-file": ["on", {"maxScenarios": 50, "countOutlineExamples": true}],
   "no-restricted-patterns": ["on", {
     "Global": [
