@@ -1970,7 +1970,7 @@ The following table lists values for `terminationReason` attribute:
 
 Note1:This enumeration is also defined in event-subscription-template.yaml (see in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory ``event-subscription-template.yaml``). 
 
-Note2: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request a `subscriptionMaxEvents` to 2, later, received second notification, then a third notification will be sent for "subscription-ends")
+Note2: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, and later, received 2 notifications, then a third notification will be sent for "subscription-ends").
 
 #### Error definition for event notification
 
