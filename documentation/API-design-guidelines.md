@@ -1958,7 +1958,7 @@ Specific event notification type "subscription-ends" is defined to inform listen
 
 It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notifications prematurely, or if the subscription request is managed asynchronously by the server and it is not able to provide the service. For this specific event, the `data` must feature `terminationReason` attribute. 
 
-Following table list value for `terminationReason` attribut:
+The following table lists values for `terminationReason` attribute:
 
 | enum value | termination reason |
 | -----------|--------------------|
