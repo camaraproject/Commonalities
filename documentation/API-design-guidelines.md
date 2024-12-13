@@ -1965,7 +1965,7 @@ The following table lists values for `terminationReason` attribute:
 | NETWORK_TERMINATED | API server stopped sending notification |
 | SUBSCRIPTION_EXPIRED | Subscription expire time (optionally set by the requester) has been reached |
 | MAX_EVENTS_REACHED | Maximum number of events (optionally set by the requester) has been reached |
-| ACCESS_TOKEN_EXPIRED | Access Token sinkCredential (optionally set by the requester) expiration time has been reached|
+| ACCESS_TOKEN_EXPIRED | Access Token sinkCredential (optionally set by the requester) expiration time has been reached |
 | SUBSCRIPTION_DELETED | Subscription was deleted by the requester|
 
 Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory). 
