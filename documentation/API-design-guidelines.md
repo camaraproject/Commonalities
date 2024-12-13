@@ -1968,7 +1968,7 @@ The following table lists values for `terminationReason` attribute:
 | ACCESS_TOKEN_EXPIRED | Access Token sinkCredential (optionally set by the requester) expiration time has been reached|
 | SUBSCRIPTION_DELETED | Subscription was deleted by the requester|
 
-Note1:This enumeration is also defined in event-subscription-template.yaml (see in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory ``event-subscription-template.yaml``). 
+Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory). 
 
 Note2: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, and later, received 2 notifications, then a third notification will be sent for "subscription-ends").
 
