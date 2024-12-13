@@ -93,7 +93,7 @@ rules:
     recommended: true  # Set to true/false to enable/disable this rule
 
   camara-security-no-secrets-in-path-or-query-parameters:
-    message: "Sensitive data found in path: {{error}} Consider avoiding the use of Sesentive data "
+    message: "Sensitive data found in path: {{error}} Consider avoiding the use of sensitive data "
     severity: warn
     description: |
       This rule checks for sensitive data ('MSISDN' and 'IMSI') in API paths and suggests avoiding their use.
