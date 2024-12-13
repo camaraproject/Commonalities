@@ -1961,7 +1961,7 @@ It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been
 The following table lists values for `terminationReason` attribute:
 
 | enum value | termination reason |
-| -----------|--------------------|
+| -----------|-------------------- |
 | NETWORK_TERMINATED | API server stopped sending notification |
 | SUBSCRIPTION_EXPIRED | Subscription expire time (optionally set by the requester) has been reached|
 | MAX_EVENTS_REACHED | Maximum number of events (optionally set by the requester) has been reached|
