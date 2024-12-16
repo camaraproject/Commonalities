@@ -768,7 +768,7 @@ components:
               description: Service is not available. Temporary situation usually related to maintenance process in the server side
               value:
                 status: 503
-                code: UNAVAILABLE
+                code: SERVICE_UNAVAILABLE
                 message: Service Unavailable.
     Generic504:
       description: Gateway Timeout
