@@ -33,7 +33,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [5.4 Backward and forward compatibility](#54-backward-and-forward-compatibility)
   - [6. Error Responses](#6-error-responses)
     - [6.1 Standardized use of CAMARA error responses](#61-standardized-use-of-camara-error-responses)
-    - [6.2 Error Responses - Device Object](#62-error-responses---device-object)
+    - [6.2 Error Responses - Device Object / Phone Number](#62-error-responses---device-objectphone-number)
       - [Templates](#templates)
         - [Response template](#response-template)
         - [Examples template](#examples-template)
