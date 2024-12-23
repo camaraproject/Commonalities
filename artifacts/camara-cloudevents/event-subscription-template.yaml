@@ -381,7 +381,7 @@ components:
             accessTokenExpiresUtc:
               type: string
               format: date-time
-              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired.
+              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired. In the case of ACCESS_TOKEN_EXPIRED termination reason, implementation should notified client before the expiration date.
             accessTokenType:
               description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
               type: string
