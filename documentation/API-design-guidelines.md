@@ -13,7 +13,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [2.2 API First](#22-api-first)
     - [2.3 Interface standardization. Standardization fora.](#23-interface-standardization-standardization-fora)
     - [2.4 Information Representation Standard](#24-information-representation-standard)
-  - [2.5 Reduce telco-specific terminology in API definitions](#25-reduce-telco-specific-terminology-in-api-definitions)
+    - [2.5 Reduce telco-specific terminology in API definitions](#25-reduce-telco-specific-terminology-in-api-definitions)
   - [3. API Definition](#3-api-definition)
     - [3.1 API REST](#31-api-rest)
       - [POST or GET for transferring sensitive or complex data](#post-or-get-for-transferring-sensitive-or-complex-data)
@@ -33,7 +33,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
     - [5.4 Backward and forward compatibility](#54-backward-and-forward-compatibility)
   - [6. Error Responses](#6-error-responses)
     - [6.1 Standardized use of CAMARA error responses](#61-standardized-use-of-camara-error-responses)
-    - [6.2 Error Responses - Device Object](#62-error-responses---device-object)
+    - [6.2 Error Responses - Device Object / Phone Number](#62-error-responses---device-objectphone-number)
       - [Templates](#templates)
         - [Response template](#response-template)
         - [Examples template](#examples-template)
@@ -66,22 +66,27 @@ This document captures guidelines for the API design in CAMARA project. These gu
           - [Examples](#examples)
         - [APIs which deal with explicit subscriptions](#apis-which-deal-with-explicit-subscriptions)
         - [API-level scopes (sometimes referred to as wildcard scopes in CAMARA)](#api-level-scopes-sometimes-referred-to-as-wildcard-scopes-in-camara)
+    - [11.7 Resource access restriction](#117-resource-access-restriction)
   - [12. Subscription, Notification \& Event](#12-subscription-notification--event)
     - [12.1 Subscription](#121-subscription)
       - [Instance-based (implicit) subscription](#instance-based-implicit-subscription)
         - [Instance-based (implicit) subscription example](#instance-based-implicit-subscription-example)
       - [Resource-based (explicit) subscription](#resource-based-explicit-subscription)
+        - [Operations](#operations)
+        - [Rules for subscriptions data minimization](#rules-for-subscriptions-data-minimization)
+        - [Subscriptions data model](#subscriptions-data-model)
         - [Error definition for resource-based (explicit) subscription](#error-definition-for-resource-based-explicit-subscription)
         - [Termination for resource-based (explicit) subscription](#termination-for-resource-based-explicit-subscription)
         - [Resource-based (explicit) example](#resource-based-explicit-example)
     - [12.2 Event notification](#122-event-notification)
       - [Event notification definition](#event-notification-definition)
+      - [subscription-ends event](#subscription-ends-event)
       - [Error definition for event notification](#error-definition-for-event-notification)
       - [Correlation Management](#correlation-management)
       - [Security Considerations](#security-considerations)
       - [Abuse Protection](#abuse-protection)
       - [Notification examples](#notification-examples)
-  - [Appendix A: `info.description` template for `device` identification from access token](#appendix-a-infodescription-template-for-device-identification-from-access-token)
+  - [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
 
 
 ## Common Vocabulary and Acronyms
@@ -89,7 +94,8 @@ This document captures guidelines for the API design in CAMARA project. These gu
 | **Term**       | Description                                                                                                                                                                                                                                                                                                                                         |
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
 | **API**        | Application Programming Interface. It is a rule & specification group (code) that applications follow to communicate between them, used as interface among programs developed with different technologies.                                                                                                                                          |
-| **Body**       | HTTP Message body (If exists) is used to carry the entity data associated with the request or response.                                                                                                                                                                                                                                             |
+|**api-name**    | `api-name` is a kebab-case string used to create unique names or values of objects and parameters related to given API. For example, for Device Location Verification API, api-name is `location-verification`.|
+| **Body**       | HTTP Message body (If exists) is used to carry the entity data associated with the request or response.                                                                                                    |
 | **Camel Case** | It is a kind of define the fields’ compound name or phrases without whitespaces among words. It uses a capital letter at the beginning of each word. There are two different uses:<li>Upper Camel Case: When the first letter of each word is capital.</li><li>Lower Camel Case: Same to that Upper one, but with the first word in lowercase.</li> |
 | **Header**     | HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by a colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.                                                               |
 | **HTTP**       | Hypertext Transfer Protocol (HTTP) is a communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.                                                                                                                                                                                                   |
@@ -551,23 +557,25 @@ API versions use a numbering scheme in the format: `x.y.z`
 
 ### 5.1 API version (OAS info object)
 
-The API version is defined in the `version` field (in the `info` object) of the OAS definition file of an API. 
+The API version is defined in the `version` field (in the `info` object) of the OAS definition file of an API. 
 
 ```yaml
 info:
   title: Number Verification
   description: text describing the API
-  version: 2.2.0  
+  version: 2.2.0  
   #...
 ```
 
-In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH version number, increments as follows:
+In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH version number, increments as follows:
 
-1. The MAJOR version when an incompatible / breaking API change is introduced
-2. The MINOR version when functionality is added that is backwards compatible
-3. The PATCH version when backward compatible bugs are fixed
+1. The MAJOR version when an incompatible / breaking API change is introduced
+2. The MINOR version when functionality is added that is backwards compatible
+3. The PATCH version when backward compatible bugs are fixed
 
-For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the CAMARA wiki. 
+
+For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) in the CAMARA wiki. 
+
 
 It is recommended to avoid breaking backward compatibility unless strictly necessary: new versions should be backwards compatible with previous versions. More information on how to avoid breaking changes can be found below.
 
@@ -579,7 +587,7 @@ The API version in the `url` field only includes the "x" (MAJOR version) number 
 
 ```yaml
 servers:
-    url: {apiRoot}/qod/v2
+    url: {apiRoot}/qod/v2
 ```
 
 ---
@@ -590,7 +598,7 @@ IMPORTANT: CAMARA public APIs with x=0 (`v0.x.y`) MUST use both the MAJOR and th
 
 ```yaml
 servers:
-    url: {apiRoot}/number-verification/v0.3
+    url: {apiRoot}/number-verification/v0.3
 ```
 
 This allows for both test and commercial usage of initial API versions as they are evolving rapidly, e.g. `/qod/v0.10alpha1`, `/qod/v0.10rc1`, or `/qod/v0.10`. However, it should be acknowledged that any initial API version may change.
@@ -604,7 +612,7 @@ Overall, an API can have any of the following versions:
 * work-in-progress (`wip`) API versions used during the development of an API before the first pre-release or in between pre-releases. Such API versions cannot be released and are not usable by API consumers.
 * alpha (`x.y.z-alpha.m`) API versions (with extensions) for CAMARA internal API rapid development purposes
 * release-candidate (`x.y.z-rc.n`) API versions (with extensions) for CAMARA internal API release bug fixing purposes
-* public (`x.y.z`) API versions for usage in commercial contexts. These API versions only have API version number x.y.z (semver 2.0), no extension. Public APIs can have one of two maturity states (used in release management): 
+* public (`x.y.z`) API versions for usage in commercial contexts. These API versions only have API version number x.y.z (semver 2.0), no extension. Public APIs can have one of two maturity states (used in release management): 
   * initial - indicating that the API is still not fully stable (x=0)
   * stable - indicate that the API has reached a certain level of maturity (x>0)
 
@@ -614,7 +622,7 @@ The following table gives the values of the API version (Info object) and the AP
 |-------------------|:-------------:|:--------------------------------:|:-------------------------------:|:---------------------------:|
 | work-in-progress  |      wip      |               vwip               |              vwip               |             No              |
 | alpha             | x.y.z-alpha.m |            v0.yalpham            |            vxalpham             | Yes (internal pre-release)  |
-| release-candidate |   x.y.z-rc.n  |             v0.yrcn              |              vxrcn              | Yes (internal pre-release)  |
+| release-candidate |   x.y.z-rc.n  |             v0.yrcn              |              vxrcn              | Yes (internal pre-release)  |
 | public            |     x.y.z     |               v0.y               |               vx                |             Yes             |
 
 Precedence examples:
@@ -623,7 +631,7 @@ Precedence examples:
 * 0.1.0 < 0.2.0-alpha.1 < 0.2.0-alpha.2 < 0.2.0-rc.1 < 0.2.0-rc.2 < 0.2.0 (initial public API version)
 * 1.0.0 < 1.1.0-alpha.1 < 1.1.0-alpha.2 < 1.1.0-rc.1 < 1.1.0-rc.2 < 1.1.0 (stable public API version)
 
-For more information, please see [API versioning](https://wiki.camaraproject.org/x/a4BaAQ) in the Release Management project Wiki.
+For more information, please see [API versioning](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) in the Release Management project wiki.
 
 ### 5.4 Backward and forward compatibility
 
@@ -666,7 +674,7 @@ Compatibility management:
 To ensure this compatibility, the following guidelines must be applied.
 
 **As API provider**:
-- Never change an endpoint name; instead, add a new one and mark the original one for deprecation in a MINOR change and remove it in a later MAJOR change (see semver FAQ entry: https://semver.org/#how-should-i-handle-deprecating-functionality)
+- Never change an endpoint name; instead, add a new one and mark the original one for deprecation in a MINOR change and remove it in a later MAJOR change (see semver FAQ entry: https://semver.org/#how-should-i-handle-deprecating-functionality)
 - If possible, do the same for attributes
 - New fields should always be added as optional.
 - Postel's Law: “<em>Be conservative in what you do, be liberal in what you accept from others</em>”. When you have input fields that need to be removed, mark them as unused, so they can be ignored. 
@@ -700,6 +708,8 @@ An error representation must not be different from the representation of any res
 
 All these aforementioned fields are mandatory in Error Responses.
 `status` and `code` fields have normative nature, so as their use has to be standardized (see [Section 6.1](#61-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
+
+Fields `status` and `code` values are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/CAMARA_common.yaml).
 
 A JSON error structure is proposed below: 
 
@@ -749,18 +759,20 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 | **Error status** |        **Error code**         | **Message example**                                                        | **Scope/description**                                                                                                                                                        |
 |:----------------:|:-----------------------------:|----------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|       401        |       `UNAUTHENTICATED`       | Request not authenticated due to missing, invalid, or expired credentials. | Request cannot be authenticated                                                                                                                                              |
-|       401        |   `AUTHENTICATION_REQUIRED`   | New authentication is required.                                            | New authentication is needed, authentication is no longer valid                                                                                                              |
+|       401        |       `UNAUTHENTICATED`       | Request not authenticated due to missing, invalid, or expired credentials. | Request cannot be authenticated                                                                                                                       |
+|       401        |   `AUTHENTICATION_REQUIRED`   | New authentication is required.                                            | New authentication is needed, authentication is no longer valid                                                                                                   |
 |       403        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API (e.g QoD session cannot be created for a set of users) |
-|       404        |          `NOT_FOUND`          | The specified resource is not found.                                       | Resource is not found                                                                                                                                                        |
-|       404        |      `DEVICE_NOT_FOUND`       | Device identifier not found.                                               | Device identifier not found                                                                                                                                                  |
-|       404        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Specific situation to highlight the resource/concept not found (e.g. use in device)                                                                                          |
-|       422        | `DEVICE_IDENTIFIERS_MISMATCH` | Provided device identifiers are not consistent.                            | Inconsistency between device identifiers not pointing to the same device                                                                                                     |
-|       422        |    `DEVICE_NOT_APPLICABLE`    | The service is not available for the provided device.                      | Service is not available for the provided device                                                                                                                             |
-|       422        |    `UNIDENTIFIABLE_DEVICE`    | The device cannot be identified.                                          | The device identifier is not included in the request and the device information cannot be derived from the 3-legged access token                                              |
-|       422        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Any semantic condition associated to business logic, specifically related to a field or data structure                                                                       |
-|       429        |       `QUOTA_EXCEEDED`        | Either out of resource quota or reaching rate limiting.                    | Request is rejected due to exceeding a business quota limit                                                                                                                  |
-|       429        |      `TOO_MANY_REQUESTS`      | Either out of resource quota or reaching rate limiting.                    | API Server request limit is overpassed                                                                                                                                       |
+|       404        |          `NOT_FOUND`          | The specified resource is not found.                                       | Resource is not found                                                                                                                               |
+|       404        |     `IDENTIFIER_NOT_FOUND`    | Device identifier not found.                                               | Some identifier cannot be matched to a device                                                                                                                              |
+|       404        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Specific situation to highlight the resource/concept not found (e.g. use in device)                                                                                     |
+|       422        |    `UNSUPPORTED_IDENTIFIER`   | The identifier provided is not supported.                                  | None of the provided identifiers is supported by the implementation                                                                                                     |  
+|       422        |     `IDENTIFIER_MISMATCH`     | Provided identifiers are not consistent.                                   | Inconsistency between identifiers not pointing to the same device                                                                                                         |
+|       422        |    `UNNECESSARY_IDENTIFIER`   | The device is already identified by the access token.                      | An explicit identifier is provided when a device or phone number has already been identified from the access token                                                            |
+|       422        |    `SERVICE_NOT_APPLICABLE`   | The service is not available for the provided identifier.                  | Service not applicable for the provided identifier                                                                                                                          |
+|       422        |      `MISSING_IDENTIFIER`     | The device cannot be identified.                                           | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token                              |
+|       422        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Any semantic condition associated to business logic, specifically related to a field or data structure                                                                   |
+|       429        |       `QUOTA_EXCEEDED`        | Either out of resource quota or reaching rate limiting.                    | Request is rejected due to exceeding a business quota limit                                                                                                                |
+|       429        |      `TOO_MANY_REQUESTS`      | Either out of resource quota or reaching rate limiting.                    | API Server request limit is overpassed                                                                                                                          |
 
 <font size="3"><span style="color: blue"> Server Exceptions </span></font>
 
@@ -777,25 +789,37 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       503        |      `UNAVAILABLE`       | Service Unavailable.                                                                                          | Service is not available. Temporary situation usually related to maintenance process in the server side                                  |
 |       504        |        `TIMEOUT`         | Request timeout exceeded.                                                                                     | API Server Timeout                                                                                                                       |
 
-> _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, a `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
+> _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, an `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
 
 > _NOTE 2: A {{SPECIFIC_CODE}}, unless it may have traversal scope (i.e. re-usable among different APIs), SHALL follow this scheme for a specific API: {{API_NAME}}.{{SPECIFIC_CODE}}_
 
-### 6.2 Error Responses - Device Object
 
-This section is focused in the guidelines about error responses around the concept of `device` object.
+**Mandatory Errors** to be **documented in CAMARA API Spec YAML** are the following:
+
+- For event subscriptions APIs, the ones defined in [12.1 Subscription](#error-definition-for-resource-based-explicit-subscription)
+- For event notifications flow, the ones defined in [12.2 Event notification](#error-definition-for-event-notification)
+- For the rest of APIs:
+  - Error status 401
+  - Error status 403
+  - Error status 429 TOO_MANY_REQUESTS (For rate limit control)
+
+NOTE: The remaining Error statuses defined in section 6.1 will be documented based on specific considerations for the given API.
+
+### 6.2 Error Responses - Device Object/Phone Number
+
+This section is focused in the guidelines about error responses around the concept of `device` object or `phoneNumber` field.
 
 The Following table compiles the guidelines to be adopted:
 
 | **Case #** | **Description**                                                            | **Error status** |         **Error code**         | **Message example**                                      |
 |:----------:|:---------------------------------------------------------------------------|:----------------:|:------------------------------:|:---------------------------------------------------------|
 |     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.            |
-|     1      | None of the provided device identifiers is supported by the implementation |       422        | UNSUPPORTED_DEVICE_IDENTIFIERS | phoneNumber is required.                                 |
-|     2      | Some identifier cannot be matched to a device                              |       404        |        DEVICE_NOT_FOUND        | Device identifier not found.                             |  
-|     3      | Device identifiers mismatch                                                |       422        |  DEVICE_IDENTIFIERS_MISMATCH   | Provided device identifiers are not consistent.          |
-|     4      | Invalid access token context                                               |       403        |     INVALID_TOKEN_CONTEXT      | Device identifiers are not consistent with access token. |
-|     5      | Service not applicable to the device                                       |       422        |     DEVICE_NOT_APPLICABLE      | The service is not available for the provided device.    |
-|     6      | The device identifier is not included in the request and the device information cannot be derived from the 3-legged access token |       422        |     UNIDENTIFIABLE_DEVICE      | The device cannot be identified. |
+|     1      | None of the provided identifiers is supported by the implementation |       422        |     UNSUPPORTED_IDENTIFIER     | The identifier provided is not supported.                                 |
+|     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | Device identifier not found.                             |  
+|     3      | Inconsistency between identifiers not pointing to the same device |       422        |       IDENTIFIER_MISMATCH      | Provided identifiers are not consistent.          |
+|     4      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        |     UNNECESSARY_IDENTIFIER      | The device is already identified by the access token. |
+|     5      | Service not applicable for the provided identifier                         |       422        |     SERVICE_NOT_APPLICABLE     | The service is not available for the provided identifier. |
+|     6      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
 
 
 
@@ -814,7 +838,17 @@ headers:
 content:
   application/json:
     schema:
-      $ref: "#/components/schemas/ErrorInfo"
+      allOf:
+        - $ref: "#/components/schemas/ErrorInfo"
+        - type: object
+          properties:
+            status:
+              enum:
+                - <status>
+            code:
+              enum:
+                - <code1>
+                - <code2>
     examples:
       {{case_1}}:
         $ref: ""#/components/examples/{{case_1}}"
@@ -905,6 +939,12 @@ Filtering consists of restricting the number of resources queried by specifying 
 Next, it is specified how it should be used according to the filtering based on the type of data being searched for: a number or a date and the type of operation.
 
 Note: Services may not support all attributes for filtering.  In case a query includes an attribute for which filtering is not supported, it may be ignored by the service.
+
+#### Security Considerations
+As filtering may reveal sensitive information, privacy and security constraints have to be considered when defining query parameters, e.g. it should not be possible to filter using personal information (such as name, phone number or IP address).
+
+
+#### Filtering operations
  
 | **Operation**     | 	Numbers                     | 	Dates                                        |
 |-------------------|------------------------------|-----------------------------------------------|
@@ -917,28 +957,35 @@ Note: Services may not support all attributes for filtering.  In case a query in
 
 And according to the filtering based on string and enums data, being searched for: 
 
-| **Operation** | 	**Strings/enums**    |
-|---------------|-----------------------|
-| equal         | `GET .../?name=Juan`  |
-| non equal     | `GET .../?name!=Jonh` |
-| Contains      | `GET .../?name=~Rafa` |
+| **Operation** |	**Strings/enums** |
+| ----- | ----- |
+| equal | `GET .../?type=mobile` |
+| non equal | `GET .../?type!=mobile` |
+| Contains | `GET .../?type=~str` |
 
+For boolean parameters the filter can be set for True or False value:
+
+| **Operation** | 	**Booleans**    |
+|---------------|-----------------------|
+| True          | `GET .../?boolAttr=true`  |
+| False         | `GET .../?boolAttr=false` |
 
 **Additional rules**:
 - The operator "`&`" is evaluated as an AND between different attributes.
 - A Query Param (attribute) can contain one or n values separated by "`,`".
 - For operations on numeric, date or enumerated fields, the parameters with the suffixes `.(gte|gt|lte|lt)$` need to be defined, which should be used as comparators for “greater—equal to, greater than, smaller—equal to, smaller than” respectively. Only the parameters needed for given field should be defined e.g., with `.gte` and `.lte` suffixes only.
 
+
 **Examples**:
-- <u>Equals</u>: to search users with the first name "david" and last name "munoz":
-  - `GET /users?name=david&surname=munoz`
-  - `GET /users?name=David,Noelia`
+- <u>Equals</u>: to search devices with a particular operating system and version or type:
+  - `GET /device?os=ios&version=17.0.1`
+  - `GET /device?type=apple,android`
     - Search for several values separating them by "`,`".
 - <u>Inclusion</u>: if we already have a filter that searches for "equal" and we want to provide it with the possibility of searching for "inclusion", we must include the character "~"
-  - `GET /users?name=dav`
-    - Search for the exact name "dav"
-  - `GET /users?name=~dav`
-    - Look for names that include "dav"
+  - `GET /device?version=17.0.1`
+    - Search for the exact version "17.0.1"
+  - `GET /device?version=~17.0`
+    - Look for version strings that include "17.0"
 - <u>Greater than / less than</u>: new attributes need to be created with the suffixes `.(gte|gt|lte|lt)$` and included in `get` operation :
 ```yaml
 paths:
@@ -1221,7 +1268,7 @@ API documentation usually consists of:
 - Reference information to inform customers of every detail of your API.
 
 Below considerations should be checked when an API is documented:
-- The API functionalities must be implemented following the specifications of the [Open API version 3.0.3](https://spec.openapis.org/oas/v3.0.3) using the .yaml or .json file extension.
+- The API functionalities must be implemented following the specifications of the [Open API version 3.0.3](https://spec.openapis.org/oas/v3.0.3) using `api-name` as the filename and the `.yaml` or `.json` file extension.
 - The API specification structure should have the following parts:
    -	General information ([Section 11.1](#111-general-information))
    -  Published Routes ([Section 11.2](#112-published-routes))
@@ -1298,6 +1345,7 @@ servers:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 ```
+If more than one server object instance is listed, the `servers[*].url` property of each instance must have the same string for the `api-name` and `api-version`'.
 
 ### 11.2 Published Routes
 
@@ -1337,14 +1385,15 @@ This part describes the list of possible messages returned by the API. It also i
 This part captures a detailed description of all the data structures used in the API specification. For each of these data, the specification must contain:
 - Name of the data object, used to reference it in other sections.
 - Data type (String, Integer, Object…).
-- If the format of a string is date-time following sentence must be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)`
+- If the data type is string it is recommended to use appropriate modifier property `format` and/or `pattern` whenever possible. The [OpenAPI Initiative Formats Registry](https://spec.openapis.org/registry/format/) contains the list of formats used in OpenAPI specifications.
+  - If the format of a string is `date-time`, the following sentence must be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)`
 - If the data type is an object, list of required properties.
 - List of properties within the object data, including:
    - Property name
    - Property description
    - Property type (String, Integer, Object …)
    - Other properties by type:
-      - String ones: min and max longitude
+      - String ones: min and max length
       - Integer ones: Format (int32, int64…), min value.
 
 
@@ -1462,11 +1511,11 @@ In general, all APIs must be secured to ensure who has access to what and for wh
 Camara uses OIDC and CIBA for authentication and consent collection and to determine whether the user has,
 e.g. opted out of some API access.
 
-The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose is defined by W3C Privacy Vocabulary in the [purpose section](https://w3c.github.io/dpv/dpv/#vocab-purposes).
+The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose values are defined by W3C Data Privacy Vocabulary as indicated in the [Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose-as-a-scope).
 
 #### OpenAPI security schemes definition
 
-[Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object)express security in OpenAPI. 
+[Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object) express security in OpenAPI. 
 Security can be expressed for the API as a whole or for each endpoint.
 
 As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all Camara OpenAPI files must include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
@@ -1568,6 +1617,22 @@ The decision on the API-level scopes was made within the [Identity and Consent M
 The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject. 
 
 
+### 11.7 Resource access restriction 
+
+In some CAMARA APIs there are functions to create resource (via POST) and then later query them via id and/or list (with GET) or delete them (via DELETE). For example we have sessions, payments, subscriptions, etc..
+
+For the GET and DELETE operations we must restrict the resource(s) targeted depending on the information provided in the request. Basically we consider 2 filters:
+* API client (aka ClientId)
+* access token
+
+| Operation |  3-legged access token is used | 2-legged access token is used |
+|-----------|--------------------------------|-------------------------------|
+| GET/{id} | - The resource queried must have been created for the end user associated with the access token. <br> - The resource queried must have been created by the same API client given in the access token. | - The resource queried must have been created by the same API client given in the access token. |
+| GET/ | - Return all resource(s) created by the API consumer that are associated with both the end user identified by the access token and the same API client given in the access token. | - Return all resource(s) created by the same API client given in the access token. |
+| DELETE/{id} | - The resource to be deleted must have been created for the end user associated with the access token. <br> - The resource to be deleted must have been created by the same API client given in the access token. | - The resource to be deleted must have been created by the same API client given in the access token. |
+
+
+
 ## 12. Subscription, Notification & Event
 
 To provide event-based interaction, CAMARA API could provide capabilities for subscription & notification management.
@@ -1645,6 +1710,7 @@ CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** a
 
 To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
+##### Operations
 Four operations must be defined:
 
 | operation | path                              | description                                                                                                                                                                                            |
@@ -1672,18 +1738,27 @@ The rationale for using this alternate pattern should be explicitly provided
 (e.g. the notification source for each of the supported events may be completely different,
 in which case, separating the implementations is beneficial). 
 
+##### Rules for subscriptions data minimization 
+
+These rules apply for subscription with device identifier
+- If 3-legged access token is used, the POST and GET responses must not provide any device identifier.
+- If 2-legged access token is used, the presence of a device identifier in the response is mandatory and should be the same identifier type than the one provided in the request.
+
+Application of data minimization design must be considered by the API Sub Project for event structure definition.
+
+##### Subscriptions data model
 The following table provides `/subscriptions` attributes
 
 | name           | type               | attribute description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | cardinality                  |
 |----------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------| 
 | protocol       | string             | Identifier of a delivery protocol. **Only** `HTTP` **is allowed for now**.                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Mandatory                    |
-| sink           | string             | https callback address where the notification must be POST-ed                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | mandatory                    |
-| sinkCredential | object             | Sink credential provides authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. To protect the notification endpoint providing sinkCredential is RECOMMENDED.                                                                                                                                                                                                                                                                      | optional                     |
+| sink           | string             | The address to which events shall be delivered, using the HTTP protocol.                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | mandatory                    |
+| sinkCredential | object             | Sink credential provides authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. To protect the notification endpoint providing sinkCredential is RECOMMENDED. <br> The sinkCredential must **not** be present in `POST` and `GET` responses.                                                                                                                                                                                                                                                                    | optional                     |
 | types          | string             | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required by API project to provide an enum for this attribute. `type` must follow the format: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter `v` and the major version like  ``org.camaraproject.device-roaming-subscriptions.v1.roaming-status`` - Note: An array of types could be passed **but as of now only one value MUST passed**. Use of multiple value will be open later at API level. | mandatory                    |
 | config         | object             | Implementation-specific configuration parameters needed by the subscription manager for acquiring events. In CAMARA we have predefined attributes like ``subscriptionExpireTime``, ``subscriptionMaxEvents`` or ``initialEvent``. See detail below.                                                                                                                                                                                                                                                                                      | mandatory                    |
 | id             | string             | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server                                                                                                                                                                                                                                                                                                                                                                                                            | mandatory in server response |
 | startsAt       | string - date-time | Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints                                                                                                                                                                                                                                                                                                                                                       | optional                     |
-| expiresAt      | string - date-time | Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided (optionally) by API server.                                                                                                                                                                                                                                                                                                                                                                                     | optional                     |
+| expiresAt      | string - date-time | Date when the event subscription will expire. This attribute must not be present in the `POST` request as it is provided (optionally) by API server. This attribute must be provided by the server if subscriptionExpireTime is provided in the request and server is not able to handle it.                                                                                                                                                                                                                                                                                                                                                                                 | optional                     |
 | status         | string             | Current status of the subscription - Management of Subscription state engine is not mandatory for now. Note: not all statuses may be considered to be implemented. See below status table.                                                                                                                                                                                                                                                                                                                                               | optional                     |
 
 
@@ -1715,7 +1790,11 @@ Remark: This action will trigger a subscription-ends event with terminationReaso
 | initialEvent           | boolean            | Set to true by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request. Example: Consumer request Roaming event. If consumer sets initialEvent to true and device is in roaming situation, an event is triggered. Up to API project decision to keep it. | optional    |
 
 
-Subscription status value table:
+**Note** on combined usage of initialEvent and subscriptionMaxEvents: 
+Unless explicitly decided otherwise by the API Sub Project, if an event is triggered following initialEvent set to `true`, this event will be counted towards subscriptionMaxEvents (if provided).
+It is recommended to provide this clarification in all subscription APIs featuring subscriptionMaxEvents and initialEvent.
+
+**Subscription status value table**:
 
 Managing subscription is a draft feature, and it is not mandatory for now. An API project could decide to use/not use it. A list of status is provided for global consistency.
 
@@ -1733,10 +1812,10 @@ Managing subscription is a draft feature, and it is not mandatory for now. An AP
 Error definition described in this guideline applies for subscriptions.
 
 The Following Error codes must be present:
-* for `POST`: 400, 401, 403, 409, 415, 429, 500, 503
-* for `GET`: 400, 401, 403, 500, 503
-* for `GET .../{subscriptionId}`: 400, 401, 403, 404, 500, 503
-* for `DELETE`: 400, 401, 403, 404, 500, 503
+* for `POST`: 400, 401, 403, 409, 429
+* for `GET`: 400, 401, 403
+* for `GET .../{subscriptionId}`: 400, 401, 403, 404
+* for `DELETE`: 400, 401, 403, 404
 
 Please see in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory ``event-subscription-template.yaml`` for more information and error examples. 
 
@@ -1754,6 +1833,7 @@ It could be useful to provide a mechanism to inform subscriber for all cases. In
 
 _Termination rules regarding subscriptionExpireTime & subscriptionMaxEvents usage_
 * When client side providing a `subscriptionExpireTime` and/or `subscriptionMaxEvents` service side has to terminate the subscription without expecting a `DELETE` operation.
+* CAMARA does not impose limitations for `subscriptionExpireTime` or `subscriptionMaxEvents` but API providers may enforce limitations and must document them accordingly.
 * If both `subscriptionExpireTime` and `subscriptionMaxEvents` are provided, the subscription will end when the first one is reached.
 * When none `subscriptionExpireTime` and `subscriptionMaxEvents` are not provided, client side has to trigger a `DELETE` operation to terminate it.
 * It is perfectly valid for client side to trigger a DELETE operation before `subscriptionExpireTime` and/or `subscriptionMaxEvents` reached. 
@@ -1874,15 +1954,31 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 
 Note: For operational and troubleshooting purposes it is relevant to accommodate use of `x-correlator` header attribute. API listener implementations have to be ready to support and receive this data.
 
-Specific event notification type "subscription-ends" is defined to inform listener about subscription termination. It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notification prematurely. For this specific event, the `data` must feature `terminationReason` attribute.
-Note: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request a `subscriptionMaxEvents` to 2, later, received second notification, then a third notification will be sent for "subscription-ends")
+#### subscription-ends event
+Specific event notification type "subscription-ends" is defined to inform listener about subscription termination.
+
+It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notifications prematurely, or if the subscription request is managed asynchronously by the server and it is not able to provide the service. For this specific event, the `data` must feature `terminationReason` attribute. 
+
+The following table lists values for `terminationReason` attribute:
+
+| enum value | termination reason |
+| -----------|-------------------- |
+| NETWORK_TERMINATED | API server stopped sending notification |
+| SUBSCRIPTION_EXPIRED | Subscription expire time (optionally set by the requester) has been reached |
+| MAX_EVENTS_REACHED | Maximum number of events (optionally set by the requester) has been reached |
+| ACCESS_TOKEN_EXPIRED | Access Token sinkCredential (optionally set by the requester) expiration time has been reached |
+| SUBSCRIPTION_DELETED | Subscription was deleted by the requester |
+
+Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory). 
+
+Note2: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, and later, received 2 notifications, then a third notification will be sent for "subscription-ends").
 
 #### Error definition for event notification
 
 Error definitions are described in this guideline applies for event notification.
 
 The Following Error codes must be present:
-* for `POST`: 400, 401, 403, 500, 503
+* for `POST`: 400, 401, 403, 410, 429
 
 #### Correlation Management
 To manage correlation between the subscription management and the event notification (as these are two distinct operations):
@@ -1976,40 +2072,46 @@ response:
 204 No Content
 ```
 
-## Appendix A: `info.description` template for `device` identification from access token
+## Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier
 
-The documentation template below is recommended to be used as part of the API documentation in `info.description` property in the CAMARA API specs which use the `device`object defined in [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact. This template provides guidance on how to handle device information in API requests **when using 3-legged access tokens and the device can be uniquely identified by the token**.
+When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
+- If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly given that the `sub` will not be a globally unique identifier nor contain PII as per the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#id-token-sub-claim) requirements.
+- If the access token is a Two-Legged Access Token, no User is associated with the token, an hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
 
-Note: With the current 3-legged authorization flows used by CAMARA, only a single end user can be associated with the access token. For the OIDC authorization code flow, only a single device can call the `/authorize` endpoint and get the code. And for CIBA, `login_hint` is currently limited to a single phone number or IP address (which can optionally include a port).
+If an API provider issues Three-Legged Access Tokens for use with the API, the following error may occur:
+- **Both a Three-Legged Access Token and an explicit User identifier (device or phone number) are provided by the API consumer.**
 
+  Whilst it might be considered harmless to proceed if both identify the same User, returning an error only when the two do not match would allow the API consumer to confirm the identity of the User associated with the access token, which they might otherwise not know. Although this functionality is supported by some APIs (e.g. Number Verification, KYC Match), for others it may exceed the scope consented to by the User.
+
+  In this case, a `422 UNNECESSARY_IDENTIFIER` error code MUST be returned unless the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.
+
+If an API provider issues Two-Legged Access Tokens for use with the API, the following error may occur:
+- **Neither a Three-legged Access Token nor an explicit User identifier (device or phone number) are provided by the API consumer.**
+
+  One or other MUST be provided to identify the User.
+
+  In this case, a `422 MISSING_IDENTIFIER` error code MUST be returned, indicating that the API provider cannot identify the User from the provided information.
+
+The documentation template below is RECOMMENDED to be used as part of the `info.description` API documentation to explain to the API consumer how the pattern works.
+
+This template is applicable to CAMARA APIs which:
+- require the User (i.e. Resource Owner) to be identified; and
+- may have implementations which accept Two-Legged Access Tokens; and
+- do NOT allow the API to confirm whether or not the optional User identifier (`device` or `phoneNumber`) matches that associated with the Three-Legged Access Token
+
+The template SHOULD be customised for each API using it by deleting one of the options where marked by (*)
 ```md
-# Identifying a device from the access token
+# Identifying the [ device | phone number ](*) from the access token
 
-This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token, and the device can be uniquely identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API.
+This API requires the API consumer to identify a [ device | phone number ](*) as the subject of the API as follows:
+- When the API is invoked using a two-legged access token, the subject will be identified from the optional [`device` object | `phoneNumber` field](*), which therefore MUST be provided.
+- When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-## Handling of device information:
+This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
-### Optional device object for 3-legged tokens:
+## Error handling:
 
-- When using a 3-legged access token, the device associated with the access token must be considered as the device for the API request. This means that the device object is not required in the request, and if included it must identify the same device, therefore **it is recommended NOT to include it in these scenarios** to simplify the API usage and avoid additional validations.
+- If the subject cannot be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is not included in the request, then the server will return an error with the `422 MISSING_IDENTIFIER` error code.
 
-### Validation mechanism:
-
-- The server will extract the device identification from the access token, if available.
-- If the API request additionally includes a `device` object when using a 3-legged access token, the API will validate that the device identifier provided matches the one associated with the access token.
-- If there is a mismatch, the API will respond with a 403 - INVALID_TOKEN_CONTEXT error, indicating that the device information in the request does not match the token.
-
-### Error handling for unidentifiable devices:
-
-- If the `device` object is not included in the request and the device information cannot be derived from the 3-legged access token, the server will return a 422 `UNIDENTIFIABLE_DEVICE` error.
-
-### Restrictions for tokens without an associated authenticated identifier:
-
-- For scenarios which do not have a single device identifier associated to the token during the authentication flow, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
+- If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
-
-By following these guidelines, API consumers can use the authenticated device identifier associated with 3-legged access tokens, simplifying implementation and validation. This mechanism ensures that device identification is handled efficiently and securely, and appropriately accommodates different token types.
-
-Depending on the functionality provided by the CAMARA API, some API subprojects may still define other specific identifiers that differs from the common `device` object definition. Not all APIs necessarily have to refer to a device, e.g. Carrier Billing API only defines a phone number as a way to identify the mobile account to be billed, Know Your Costumer only defines a phone number as a way to identify the associated account data or Home Devices QoD API defines public IP v4 address as a way to identify the user home network. 
-
-Therefore, the mechanism described in this template is not applicable to all APIs, but could be used as way to make `device` object more interoperable and usable for API consumers.
