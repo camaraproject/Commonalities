@@ -21,7 +21,7 @@ This file consolidates all rules:
 2.  Spectral rules with built-in functions
 3.  Spectral rules with custom <a href="/artifacts/linting_rules/lint_function">JavaScript functions</a>
 
-## GitHub Actions Integration
+## GitHub Actions Integration (Spectral)
 
 1. Add **[.spectral.yml](/artifacts/linting_rules/.spectral.yml)** (rules) file to -> root location of repository
 
@@ -34,6 +34,13 @@ This file consolidates all rules:
 
 4. Add <b>[megalinter.yml](/artifacts/linting_rules/.github/workflows/megalinter.yml)</b> to GitHub action workflows  in  `.github/workflows` folder
    which includes the configuration of Megalinter and Spectral for GitHub actions.
+
+## GitHub Actions Integration (Gherkin)
+
+1. Add **[.gherkin-lintrc](https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/.gherkin-lintrc)** (rules) file to -> root location of repository
+
+2. Add <b>[megalinter.yml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/.github/workflows/megalinter.yml)</b> to GitHub action workflows  in  `.github/workflows` folder
+   which includes the configuration of Megalinter and Spectral for GitHub actions.   
 
 ### Manually running linting workflow
 
@@ -74,3 +81,23 @@ Additionally, Megalinter also supports linting of YAML files. To enable this, us
         spectral lint openapi.yaml --verbose --ruleset .spectral.yml
 
     *Replace **'openapi.yaml'** with the path to your OpenAPI specification file.*
+
+## Gherkin Integration for Test Contribution Feature Files for local deployment
+
+To integrate Gherkin linting into the Megalinter setup, follow these steps:
+
+1. Install Gherkin Linter locally:
+
+        npm install -g gherkin-lint
+
+2. Save files locally:
+
+   Save  .gherkin-lintrc file at the root location of your repository with the desired linting rules.
+
+3. Apply Gherkin rules on Test defination feature file loacally:
+
+        gherkin-lint Test.feature
+
+    *Replace **'test.feature'** with the path to your Test defination feature file.*
+   
+
