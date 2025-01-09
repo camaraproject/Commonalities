@@ -32,6 +32,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0-rc.
 * Enum values for `terminationReason` attribute in the guideline document by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/356
 * Created API-cheatsheet.md by @Kevsy in https://github.com/camaraproject/Commonalities/pull/320
 * Added Gherkin linting to Megalinter Workflow by @ravindrapalaskar17 in https://github.com/camaraproject/Commonalities/pull/292
+* ACCESS_TOKEN_EXPIRED termination reason guidance by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/364
 
 
 ### Changed
