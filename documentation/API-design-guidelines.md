@@ -1325,13 +1325,13 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  # CAMARA Commonalities version - x.y.z
-  x-camara-commonalities: 0.4.0
+  # CAMARA Commonalities minor version - x.y
+  x-camara-commonalities: 0.5
 ```
 
 The `termsOfService` and `contact` fields are optional in OpenAPI specification and may be added by API Providers documenting their APIs.
 
-The extension field `x-camara-commonalities` indicates a version of CAMARA Commonalities guidelines that given API specification adheres to.
+The extension field `x-camara-commonalities` indicates a minor version of CAMARA Commonalities guidelines that given API specification adheres to.
 
 
 #### Servers object
