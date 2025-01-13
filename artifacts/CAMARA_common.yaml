@@ -19,6 +19,7 @@ components:
       description: Correlation id for the different services
       schema:
         type: string
+        pattern: ^[a-zA-Z0-9-]{1,55}$
   parameters:
     x-correlator:
       name: x-correlator
@@ -26,6 +27,7 @@ components:
       description: Correlation id for the different services
       schema:
         type: string
+        pattern: ^[a-zA-Z0-9-]{1,55}$
   schemas:
     TimePeriod:
       properties:
