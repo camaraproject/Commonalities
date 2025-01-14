@@ -807,7 +807,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 NOTE:
 The documentation of non-mandatory error statuses defined in section 6.1 depends on the specific considerations and design of the given API.
- - Error statuses 400, 404, 409, 422: These error statuses should be documented based on the API design and the functionality involved. Subproject evaluate the relevance and necessity of including these statuses in API specifications.
+ - Error statuses 400, 404, 409, 422: These error statuses should be documented based on the API design and the functionality involved. Subprojects evaluate the relevance and necessity of including these statuses in API specifications.
  - Error statuses 405, 406, 410, 412, 415, and 5xx: These error statuses are not documented by default in the API specification. However, they should be included if there is a relevant use case that justifies their documentation. 
 
 
