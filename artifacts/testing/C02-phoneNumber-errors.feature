@@ -40,7 +40,8 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
     @{{feature_identifier}}_C02.03_unnecessary_phone_number
     Scenario: Phone number not to be included when can be deducted from the access token
-        Given the header "Authorization" is set to a valid access token token identifying a phone number
+        Given the header "Authorization" is set to a valid access token identifying a phone number
+
         And  the request body property "$.phoneNumber" is set to a valid phone number
         When the HTTP "POST" request is sent
         Then the response status code is 422
