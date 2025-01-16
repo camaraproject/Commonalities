@@ -5,12 +5,11 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     
     NOTES: 
     * This is not a complete feature but a collection of scenarios that can be applied with minor
-
-    modifications to test plans. Test plans would have to copy and adapt the scenarios as part of
-    their own feature files, along with other scenarios
+      modifications to test plans. Test plans would have to copy and adapt the scenarios as part of
+      their own feature files, along with other scenarios.
 
     * These scenarios assume that other properties not explicitly mentioned in the scenario
-    are set by default to a valid value. This can be specified in the feature Background.
+      are set by default to a valid value. This can be specified in the feature Background.
     
     * {{feature_identifier}} has to be substituted to the value corresponding to the feature file where
     these scenarios are included.
@@ -19,7 +18,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
     @{{feature_identifier}}_C02.01_phone_number_not_schema_compliant
     Scenario: Phone number value does not comply with the schema
-        Given the header "Authorization" is set to a valid access which does not identify a single phone number
+        Given the header "Authorization" is set to a valid access token which does not identify a single phone number
         And the request body property "$.phoneNumber" does not comply with the OAS schema at "/components/schemas/PhoneNumber"
         When the HTTP "POST" request is sent
         Then the response status code is 400
@@ -30,7 +29,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
    
     @{{feature_identifier}}_C02.02_phone_number_not_found
     Scenario: Phone number not found
-        Given the header "Authorization" is set to a valid access which does not identify a single phone number
+        Given the header "Authorization" is set to a valid access token which does not identify a single phone number
         And the request body property "$.phoneNumber" is compliant with the schema but does not identify a valid phone number
         When the HTTP "POST" request is sent
         Then the response status code is 404
@@ -40,8 +39,8 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
 
     @{{feature_identifier}}_C02.03_unnecessary_phone_number
-    Scenario: Phone number not to included when can be deducted from the access token
-        Given the header "Authorization" is set to a valid access token identifying a phone number
+    Scenario: Phone number not to be included when can be deducted from the access token
+        Given the header "Authorization" is set to a valid access token token identifying a phone number
         And  the request body property "$.phoneNumber" is set to a valid phone number
         When the HTTP "POST" request is sent
         Then the response status code is 422
@@ -52,7 +51,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
     @{{feature_identifier}}_C02.04_missing_phone_number
     Scenario: Phone number not included and cannot be deducted from the access token
-        Given the header "Authorization" is set to a valid access which does not identify a single phone number
+        Given the header "Authorization" is set to a valid access token which does not identify a single phone number
         And the request body property "$.phoneNumber" is not included
         When the HTTP "POST" request is sent
         Then the response status code is 422
