@@ -1044,9 +1044,9 @@ Then the parameters can be included in the query:
 
 With the aim of standardizing the request observability and traceability process, common headers that provide a follow-up of the E2E processes should be included. The table below captures these headers.
 
-| Name           | Description                                   | Type     | Location         | Required by API Consumer | Required in OAS Definition | 	Example                              | 
-|----------------|-----------------------------------------------|----------|------------------|--------------------------|----------------------------|---------------------------------------|
-| `x-correlator` | 	Service correlator to make E2E observability | 		String | Request/Response | No                       | Yes                        | 	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
+| Name           | Description                                   | Schema          | Location         | Required by API Consumer | Required in OAS Definition | 	Example                              | 
+|----------------|-----------------------------------------------|----------------------|------------------|--------------------------|----------------------------|----------------------------------------|
+| `x-correlator` | 	Service correlator to make E2E observability | `type: string`  `pattern: ^[a-zA-Z0-9-]{1,55}$`     | Request / Response | No                       | Yes                        | 	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
 
 When the API Consumer includes the "x-correlator" header in the request, the API provider must include it in the response with the same value that was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value. Recommendation is to use UUID for values.
 
