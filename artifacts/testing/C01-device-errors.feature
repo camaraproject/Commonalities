@@ -83,6 +83,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
     @{{feature_identifier}}_C01.06_unsupported_device
     Scenario: None of the provided device identifiers is supported by the implementation
         Given that some types of device identifiers are not supported by the implementation
+        And the header "Authorization" is set to a valid access token which does not identify a single device
         And the request body property "$.device" only includes device identifiers not supported by the implementation
         When the HTTP "POST" request is sent
         Then the response status code is 422
