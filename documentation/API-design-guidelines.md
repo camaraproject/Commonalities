@@ -2090,7 +2090,9 @@ If an API provider issues Three-Legged Access Tokens for use with the API, the f
 
   Whilst it might be considered harmless to proceed if both identify the same User, returning an error only when the two do not match would allow the API consumer to confirm the identity of the User associated with the access token, which they might otherwise not know. Although this functionality is supported by some APIs (e.g. Number Verification, KYC Match), for others it may exceed the scope consented to by the User.
 
-  In this case, a `422 UNNECESSARY_IDENTIFIER` error code MUST be returned unless the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.
+  If the API scope DOES NOT allow explicit confirmation as to whether the identifiers match, a `422 UNNECESSARY_IDENTIFIER` error MUST be returned whether the identifiers match or not.
+  
+  If the API scope DOES allow explicit confirmation as to whether the identifiers match, a `403 INVALID_TOKEN_CONTEXT` error MUST be returned if the identifiers do not match and the mismatch is not indicated using some other mechanism (e.g. as an explicit field in the API response body).
 
 If an API provider issues Two-Legged Access Tokens for use with the API, the following error may occur:
 - **Neither a Three-legged Access Token nor an explicit User identifier (device or phone number) are provided by the API consumer.**
