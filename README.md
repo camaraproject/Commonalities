@@ -25,6 +25,7 @@ The `artifacts` directory contains:
 * common data and error formats for CAMARA APIs in [CAMARA_common.yaml](artifacts/CAMARA_common.yaml)
 * notification subscription template: [event-subscription-template.yaml](artifacts/camara-cloudevents/event-subscription-template.yaml)
 * OAS definition of CAMARA Event using CloudEvents: [notification-as-cloud-event.yaml](artifacts/notification-as-cloud-event.yaml)
+* Common artifacts for testing error scenarios for device and phoneNumber: in [artifacts/testing](artifacts/testing) folder 
 
 ### Frequently-accessed output documents
 
@@ -35,6 +36,7 @@ A list of some of the frequently accessed documents that are an output of the wo
  | [API-design-guidelines.md](documentation/API-design-guidelines.md)               | This document captures guidelines for the API design in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative. |
 | [Glossary.md](documentation/Glossary.md)                                         | A glossary of the common terms and their API parameter/field names for use in the APIs                                                                             |
 | [API-Testing-Guidelines.md](documentation/API-Testing-Guidelines.md)             | Guidelines for the API testing in CAMARA project                                                                                                   |
+| [API-cheatsheet.md](documentation/API-cheatsheet.md)                             | CAMARA syntax cheatsheet    |
 
 NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-Checklist, are located within [ReleaseManagement](https://github.com/camaraproject/ReleaseManagement). The versioning of APIs is defined within the [API-design-guidelines.md](documentation/API-design-guidelines.md#5-versioning). 
 
@@ -48,7 +50,7 @@ For changes see [CHANGELOG.md](https://github.com/camaraproject/Commonalities/bl
 
 ## Meetings
 * Meetings are held virtually on the LF Platform: [Meeting Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/91016460698?password=d031b0e3-8d49-49ae-958f-af3213b1e547)
-* Schedule: bi-weekly, Monday, 15:00 UTC CET/CEST (4 PM CET / 5 PM CEST). The date of the next meeting can be found in the previous [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/Fzje).
+* Schedule: bi-weekly, Monday, 15:00 UTC CET/CEST (4 PM CET / 5 PM CEST). The date of the next meeting can be found in the previous [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/2AD7Aw).
 
 
 ## Contributorship and mailing list
