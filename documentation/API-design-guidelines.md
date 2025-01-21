@@ -803,6 +803,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 - For the rest of APIs:
   - Error status 401
   - Error status 403
+  - Error status 501, if and only if an endpoint is optional for implementations
 
 NOTE:
 The documentation of non-mandatory error statuses defined in section 6.1 depends on the specific considerations and design of the given API.
