@@ -668,7 +668,7 @@ components:
                 code: QUOTA_EXCEEDED
                 message: Out of resource quota.
             GENERIC_429_TOO_MANY_REQUESTS:
-              description: Access to the API has been temporarily blocked due to quota or spike arrest limits being reached
+              description: Access to the API has been temporarily blocked due to rate or spike arrest limits being reached
               value:
                 status: 429
                 code: TOO_MANY_REQUESTS
