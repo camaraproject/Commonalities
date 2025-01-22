@@ -2,15 +2,15 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
     Common error scenarios for POST operations with phoneNumber as input either in the request
     body or implied from the access
-    
-    NOTES: 
+
+    NOTES:
     * This is not a complete feature but a collection of scenarios that can be applied with minor
       modifications to test plans. Test plans would have to copy and adapt the scenarios as part of
       their own feature files, along with other scenarios.
 
     * These scenarios assume that other properties not explicitly mentioned in the scenario
       are set by default to a valid value. This can be specified in the feature Background.
-    
+
     * {{feature_identifier}} has to be substituted to the value corresponding to the feature file where
     these scenarios are included.
 
@@ -26,7 +26,6 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
         And the response property "$.code" is "INVALID_ARGUMENT"
         And the response property "$.message" contains a user friendly text
 
-   
     @{{feature_identifier}}_C02.02_phone_number_not_found
     Scenario: Phone number not found
         Given the header "Authorization" is set to a valid access token which does not identify a single phone number
@@ -36,7 +35,6 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
         And the response property "$.status" is 404
         And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
         And the response property "$.message" contains a user friendly text
-
 
     @{{feature_identifier}}_C02.03_unnecessary_phone_number
     Scenario: Phone number not to be included when it can be deduced from the access token
@@ -48,7 +46,6 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
         And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
 
-
     @{{feature_identifier}}_C02.04_missing_phone_number
     Scenario: Phone number not included and cannot be deducted from the access token
         Given the header "Authorization" is set to a valid access token which does not identify a single phone number
@@ -58,7 +55,6 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
         And the response property "$.status" is 422
         And the response property "$.code" is "MISSING_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
-
 
     # When the service is only offered to certain type of subscriptions, e.g. IoT, , B2C, etc
     @{{feature_identifier}}_C02.05_phone_number_not_supported
