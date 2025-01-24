@@ -50,7 +50,7 @@ For changes see [CHANGELOG.md](CHANGELOG.md)
 
 ## Meetings
 * Meetings are held virtually on the LF Platform: [Meeting Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/91016460698?password=d031b0e3-8d49-49ae-958f-af3213b1e547)
-* Schedule: bi-weekly, Monday, 15:00 UTC CET/CEST (4 PM CET / 5 PM CEST). The date of the next meeting can be found in the previous [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/2AD7Aw).
+* Schedule: bi-weekly, Monday, 15:00 UTC  (4 PM CET / 5 PM CEST). The date of the next meeting can be found in the previous [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/2AD7Aw).
 
 
 ## Contributorship and mailing list
