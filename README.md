@@ -46,7 +46,7 @@ NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-
 * Release 0.4.0 of guidelines and assets for CAMARA APIs is available with the [r0.4.0 tag](https://github.com/camaraproject/Commonalities/tree/r0.4.0)
 * Previous releases and pre-releases are available in https://github.com/camaraproject/Commonalities/releases
 
-For changes see [CHANGELOG.md](CHANGELOG.md)
+For changes see [CHANGELOG.md](CHANGELOG.md).
 
 ## Meetings
 * Meetings are held virtually on the LF Platform: [Meeting Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/91016460698?password=d031b0e3-8d49-49ae-958f-af3213b1e547)
