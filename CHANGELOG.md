@@ -46,7 +46,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0-rc.
   - added clarification on `expiresAt` attribute for subscription
 * Updated error codes and changed `info.description` template for device / phone number identifiers in Appendix A in API Design Guideliness by @eric-murray in https://github.com/camaraproject/Commonalities/pull/324 and https://github.com/camaraproject/Commonalities/pull/346
 * Guidelines regarding mandatory error `status` and alignment of error codes related to identifiers in API Design Guidelines by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/329 and https://github.com/camaraproject/Commonalities/pull/351
-* Guidelines on non-mandatory error statuses, 429 made non-madatory and special considerations for 501 by @rartych in https://github.com/camaraproject/Commonalities/pull/374 
+* Guidelines on non-mandatory error statuses, 429 made non-mandatory and special considerations for 501 by @rartych in https://github.com/camaraproject/Commonalities/pull/374 
 * Updated linting rules by @ravindrapalaskar17 in https://github.com/camaraproject/Commonalities/pull/337 and https://github.com/camaraproject/Commonalities/pull/367
 * Updated rules when using POST for sensitive data by @eric-murray in https://github.com/camaraproject/Commonalities/pull/358
 * Changed guidelines on `x-camara-commonalities` extension field by @rartych in https://github.com/camaraproject/Commonalities/pull/375
