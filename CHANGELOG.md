@@ -34,7 +34,6 @@ This release contains documents and artifacts of Commonalities version 0.5.0-rc.
 * Added Gherkin linting to Megalinter Workflow by @ravindrapalaskar17 in https://github.com/camaraproject/Commonalities/pull/292
 * ACCESS_TOKEN_EXPIRED termination reason guidance by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/364
 * String pattern added to x-correlator scheme by @rartych in https://github.com/camaraproject/Commonalities/pull/373 and updated in https://github.com/camaraproject/Commonalities/pull/387
-* 
 
 ### Changed
 * Normalization of error status and code allowed values using `enum` by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/316
