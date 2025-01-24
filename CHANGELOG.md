@@ -33,7 +33,8 @@ This release contains documents and artifacts of Commonalities version 0.5.0-rc.
 * Created API-cheatsheet.md by @Kevsy in https://github.com/camaraproject/Commonalities/pull/320
 * Added Gherkin linting to Megalinter Workflow by @ravindrapalaskar17 in https://github.com/camaraproject/Commonalities/pull/292
 * ACCESS_TOKEN_EXPIRED termination reason guidance by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/364
-* String pattern added to x-correlator scheme by @rartych in https://github.com/camaraproject/Commonalities/pull/373 and https://github.com/camaraproject/Commonalities/pull/387
+* String pattern added to x-correlator scheme by @rartych in https://github.com/camaraproject/Commonalities/pull/373 and updated in https://github.com/camaraproject/Commonalities/pull/387
+* 
 
 ### Changed
 * Normalization of error status and code allowed values using `enum` by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/316
@@ -45,6 +46,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0-rc.
   - added clarification on `expiresAt` attribute for subscription
 * Updated error codes and changed `info.description` template for device / phone number identifiers in Appendix A in API Design Guideliness by @eric-murray in https://github.com/camaraproject/Commonalities/pull/324 and https://github.com/camaraproject/Commonalities/pull/346
 * Guidelines regarding mandatory error `status` and alignment of error codes related to identifiers in API Design Guidelines by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/329 and https://github.com/camaraproject/Commonalities/pull/351
+* Guidelines on non-mandatory error statuses, 429 made non-madatory and special considerations for 501 by @rartych in https://github.com/camaraproject/Commonalities/pull/374 
 * Updated linting rules by @ravindrapalaskar17 in https://github.com/camaraproject/Commonalities/pull/337 and https://github.com/camaraproject/Commonalities/pull/367
 * Updated rules when using POST for sensitive data by @eric-murray in https://github.com/camaraproject/Commonalities/pull/358
 * Changed guidelines on `x-camara-commonalities` extension field by @rartych in https://github.com/camaraproject/Commonalities/pull/375
@@ -55,6 +57,8 @@ This release contains documents and artifacts of Commonalities version 0.5.0-rc.
 * Corrected CAMARA_common.yaml Generic503 error code to UNAVAILABLE, to match API design guidelines by @eric-murray in https://github.com/camaraproject/Commonalities/pull/359
 * Subscriptions and Notifications artifacts errors aligned with enum values by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/361
 * Note on support for networkAccessIdentifier in CAMARA_common.yaml by @jlurien in https://github.com/camaraproject/Commonalities/pull/379
+* Improved 403 INVALID_TOKEN_CONTEXT scope/description by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/377
+* Updated message field and description for Error 429 by @rartych in https://github.com/camaraproject/Commonalities/pull/390
   
 ### Removed
 N/A
