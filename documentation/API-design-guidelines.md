@@ -751,7 +751,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       400        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific Syntax Exception regarding a field that is relevant in the context of the API (e.g. format of an amount)               |
 |       400        |     `OUT_OF_RANGE`      | Client specified an invalid range.                                  | Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested |
 |       403        |   `PERMISSION_DENIED`   | Client does not have sufficient permissions to perform this action. | OAuth2 token access does not have the required scope or when the user fails operational security                                |
-|       403        | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token.                    | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token                            |
+|       403        | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token.                    | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token. This error should be used only when the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.                             |
 |       409        |        `ABORTED`        | Concurrency conflict.                                               | Concurrency of processes of the same nature/scope                                                                               |
 |       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                                                           |
 |       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource                                                                                             |
@@ -773,8 +773,8 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       422        |    `SERVICE_NOT_APPLICABLE`   | The service is not available for the provided identifier.                  | Service not applicable for the provided identifier                                                                                                                          |
 |       422        |      `MISSING_IDENTIFIER`     | The device cannot be identified.                                           | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token                              |
 |       422        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Any semantic condition associated to business logic, specifically related to a field or data structure                                                                   |
-|       429        |       `QUOTA_EXCEEDED`        | Either out of resource quota or reaching rate limiting.                    | Request is rejected due to exceeding a business quota limit                                                                                                                |
-|       429        |      `TOO_MANY_REQUESTS`      | Either out of resource quota or reaching rate limiting.                    | API Server request limit is overpassed                                                                                                                          |
+|       429        |       `QUOTA_EXCEEDED`        | Out of resource quota.                                                     | Request is rejected due to exceeding a business quota limit                                                                                                                |
+|       429        |      `TOO_MANY_REQUESTS`      | Rate limit reached.                                                        | Access to the API has been temporarily blocked due to rate or spike arrest limits being reached                                                                                                                    |
 
 <font size="3"><span style="color: blue"> Server Exceptions </span></font>
 
@@ -803,9 +803,15 @@ In the following, we elaborate on the existing client errors. In particular, we 
 - For the rest of APIs:
   - Error status 401
   - Error status 403
-  - Error status 429 TOO_MANY_REQUESTS (For rate limit control)
 
-NOTE: The remaining Error statuses defined in section 6.1 will be documented based on specific considerations for the given API.
+NOTE:
+The documentation of non-mandatory error statuses defined in section 6.1 depends on the specific considerations and design of the given API.
+ - Error statuses 400, 404, 409, 422, 429: These error statuses should be documented based on the API design and the functionality involved. Subprojects evaluate the relevance and necessity of including these statuses in API specifications.
+ - Error statuses 405, 406, 410, 412, 415, and 5xx: These error statuses are not documented by default in the API specification. However, they should be included if there is a relevant use case that justifies their documentation.
+   - Special Consideration for error 501 NOT IMPLEMENTED to indicate optional endpoint:
+     - The use of optional endpoints is discouraged in order to have aligned implementations
+     - Only for exceptions where an optional endpoint can not be avoided and defining it in separate, atomic API is not possible - error status 501 should be documented as a valid response
+
 
 ### 6.2 Error Responses - Device Object/Phone Number
 
@@ -1046,9 +1052,9 @@ With the aim of standardizing the request observability and traceability process
 
 | Name           | Description                                   | Schema          | Location         | Required by API Consumer | Required in OAS Definition | 	Example                              | 
 |----------------|-----------------------------------------------|----------------------|------------------|--------------------------|----------------------------|----------------------------------------|
-| `x-correlator` | 	Service correlator to make E2E observability | `type: string`  `pattern: ^[a-zA-Z0-9-]{1,55}$`     | Request / Response | No                       | Yes                        | 	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
+| `x-correlator` | 	Service correlator to make E2E observability | `type: string`  `pattern: ^[a-zA-Z0-9-]{0,55}$`     | Request / Response | No                       | Yes                        | 	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
 
-When the API Consumer includes the "x-correlator" header in the request, the API provider must include it in the response with the same value that was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value. Recommendation is to use UUID for values.
+When the API Consumer includes non-empty "x-correlator" header in the request, the API Provider must include it in the response with the same value that was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value. Recommendation is to use UUID for values.
 
 
 In notification scenarios (i.e., POST request sent towards the listener indicated by `sink` address),
@@ -2090,7 +2096,9 @@ If an API provider issues Three-Legged Access Tokens for use with the API, the f
 
   Whilst it might be considered harmless to proceed if both identify the same User, returning an error only when the two do not match would allow the API consumer to confirm the identity of the User associated with the access token, which they might otherwise not know. Although this functionality is supported by some APIs (e.g. Number Verification, KYC Match), for others it may exceed the scope consented to by the User.
 
-  In this case, a `422 UNNECESSARY_IDENTIFIER` error code MUST be returned unless the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.
+  If the API scope DOES NOT allow explicit confirmation as to whether the identifiers match, a `422 UNNECESSARY_IDENTIFIER` error MUST be returned whether the identifiers match or not.
+  
+  If the API scope DOES allow explicit confirmation as to whether the identifiers match, a `403 INVALID_TOKEN_CONTEXT` error MUST be returned if the identifiers do not match and the mismatch is not indicated using some other mechanism (e.g. as an explicit field in the API response body).
 
 If an API provider issues Two-Legged Access Tokens for use with the API, the following error may occur:
 - **Neither a Three-legged Access Token nor an explicit User identifier (device or phone number) are provided by the API consumer.**
