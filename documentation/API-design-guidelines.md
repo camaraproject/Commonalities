@@ -803,9 +803,15 @@ In the following, we elaborate on the existing client errors. In particular, we 
 - For the rest of APIs:
   - Error status 401
   - Error status 403
-  - Error status 429 TOO_MANY_REQUESTS (For rate limit control)
 
-NOTE: The remaining Error statuses defined in section 6.1 will be documented based on specific considerations for the given API.
+NOTE:
+The documentation of non-mandatory error statuses defined in section 6.1 depends on the specific considerations and design of the given API.
+ - Error statuses 400, 404, 409, 422, 429: These error statuses should be documented based on the API design and the functionality involved. Subprojects evaluate the relevance and necessity of including these statuses in API specifications.
+ - Error statuses 405, 406, 410, 412, 415, and 5xx: These error statuses are not documented by default in the API specification. However, they should be included if there is a relevant use case that justifies their documentation.
+   - Special Consideration for error 501 NOT IMPLEMENTED to indicate optional endpoint:
+     - The use of optional endpoints is discouraged in order to have aligned implementations
+     - Only for exceptions where an optional endpoint can not be avoided and defining it in separate, atomic API is not possible - error status 501 should be documented as a valid response
+
 
 ### 6.2 Error Responses - Device Object/Phone Number
 
