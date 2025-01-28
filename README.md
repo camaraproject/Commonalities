@@ -14,7 +14,6 @@ Repository to describe and document common guidelines and assets for CAMARA APIs
 * All deliverables are mandatory for all CAMARA Sub Projects 
 * Describe, develop, document and test the deliverables
 * Started: October 2021
-* Location: virtually
 
 ## Documents for CAMARA Sub Projects
 
@@ -43,7 +42,7 @@ NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-
 
 ## Status and released versions
 * Release Candidate of version 0.5.0 of guidelines and assets for CAMARA APIs is available with the [r2.2 tag](https://github.com/camaraproject/Commonalities/tree/r2.2)
-* Release 0.4.0 of guidelines and assets for CAMARA APIs is available with the [r0.4.0 tag](https://github.com/camaraproject/Commonalities/tree/r0.4.0)
+* Release 0.4.0 of guidelines and assets for Fall24 CAMARA APIs is available with the [r0.4.0 tag](https://github.com/camaraproject/Commonalities/tree/r0.4.0)
 * Previous releases and pre-releases are available in https://github.com/camaraproject/Commonalities/releases
 
 For changes see [CHANGELOG.md](CHANGELOG.md).
