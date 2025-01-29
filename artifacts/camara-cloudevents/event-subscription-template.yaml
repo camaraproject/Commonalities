@@ -467,8 +467,6 @@ components:
           format: url
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
-        sinkCredential:
-          $ref: '#/components/schemas/SinkCredential'
         types:
           description: |
             Camara Event types eligible to be delivered by this subscription.
