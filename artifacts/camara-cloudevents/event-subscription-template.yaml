@@ -11,7 +11,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.2.0-alpha.1
+  version: 0.2.0-rc.1
   x-camara-commonalities: 0.5
   
 externalDocs:
@@ -19,7 +19,7 @@ externalDocs:
   url: https://github.com/camaraproject/
 servers:
   - url: "{apiRoot}/api-name/vx.y"
-  # api-name and version should valued accordingly to the API
+  # api-name and version should be valued accordingly to the CAMARA API versioning guidelines, e.g. for a version x.y.z, put v0.y for x=0 or just vx for x>0 in the url.
     variables:
       apiRoot:
         default: http://localhost:9091

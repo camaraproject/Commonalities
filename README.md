@@ -14,7 +14,6 @@ Repository to describe and document common guidelines and assets for CAMARA APIs
 * All deliverables are mandatory for all CAMARA Sub Projects 
 * Describe, develop, document and test the deliverables
 * Started: October 2021
-* Location: virtually
 
 ## Documents for CAMARA Sub Projects
 
@@ -25,6 +24,7 @@ The `artifacts` directory contains:
 * common data and error formats for CAMARA APIs in [CAMARA_common.yaml](artifacts/CAMARA_common.yaml)
 * notification subscription template: [event-subscription-template.yaml](artifacts/camara-cloudevents/event-subscription-template.yaml)
 * OAS definition of CAMARA Event using CloudEvents: [notification-as-cloud-event.yaml](artifacts/notification-as-cloud-event.yaml)
+* Common artifacts for testing error scenarios for device and phoneNumber: in [artifacts/testing](artifacts/testing) folder 
 
 ### Frequently-accessed output documents
 
@@ -35,20 +35,21 @@ A list of some of the frequently accessed documents that are an output of the wo
  | [API-design-guidelines.md](documentation/API-design-guidelines.md)               | This document captures guidelines for the API design in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative. |
 | [Glossary.md](documentation/Glossary.md)                                         | A glossary of the common terms and their API parameter/field names for use in the APIs                                                                             |
 | [API-Testing-Guidelines.md](documentation/API-Testing-Guidelines.md)             | Guidelines for the API testing in CAMARA project                                                                                                   |
+| [API-cheatsheet.md](documentation/API-cheatsheet.md)                             | CAMARA syntax cheatsheet    |
 
 NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-Checklist, are located within [ReleaseManagement](https://github.com/camaraproject/ReleaseManagement). The versioning of APIs is defined within the [API-design-guidelines.md](documentation/API-design-guidelines.md#5-versioning). 
 
 
 ## Status and released versions
-* Alpha release of version 0.5.0 of guidelines and assets for CAMARA APIs is available with the [r2.1 tag](https://github.com/camaraproject/Commonalities/tree/r2.1)
-* Release 0.4.0 of guidelines and assets for CAMARA APIs is available with the [r0.4.0 tag](https://github.com/camaraproject/Commonalities/tree/r0.4.0)
+* Release Candidate of version 0.5.0 of guidelines and assets for CAMARA APIs is available with the [r2.2 tag](https://github.com/camaraproject/Commonalities/tree/r2.2)
+* Release 0.4.0 of guidelines and assets for Fall24 CAMARA APIs is available with the [r0.4.0 tag](https://github.com/camaraproject/Commonalities/tree/r0.4.0)
 * Previous releases and pre-releases are available in https://github.com/camaraproject/Commonalities/releases
 
-For changes see [CHANGELOG.md](https://github.com/camaraproject/Commonalities/blob/main/CHANGELOG.md)
+For changes see [CHANGELOG.md](CHANGELOG.md).
 
 ## Meetings
 * Meetings are held virtually on the LF Platform: [Meeting Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/91016460698?password=d031b0e3-8d49-49ae-958f-af3213b1e547)
-* Schedule: bi-weekly, Monday, 4 PM CET/CEST (3 PM BST, 15:00 UTC). The date of the next meeting can be found in the previous [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/Fzje).
+* Schedule: bi-weekly, Monday, 15:00 UTC  (4 PM CET / 5 PM CEST). The date of the next meeting can be found in the previous [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/2AD7Aw).
 
 
 ## Contributorship and mailing list
