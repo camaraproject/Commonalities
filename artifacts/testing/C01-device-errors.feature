@@ -54,7 +54,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
         And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
         And the response property "$.message" contains a user friendly text
 
-    @{{feature_identifier}}_C02.04_unnecessary_device
+    @{{feature_identifier}}_C01.04_unnecessary_device
     Scenario: Device not to be included when it can be deduced from the access token
         Given the header "Authorization" is set to a valid access token identifying a device
         And the request body property "$.device" is set to a valid device
