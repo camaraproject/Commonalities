@@ -16,7 +16,8 @@ info:
   
 externalDocs:
   description: Product documentation at CAMARA
-  url: https://github.com/camaraproject/
+  url: https://github.com/camaraproject/{apiRepository}
+  # {apiRepository} MUST be replaced by the CAMARA Subproject Repository name where the API design based on this template is hosted.
 servers:
   - url: "{apiRoot}/api-name/vx.y"
   # api-name and version should be valued accordingly to the CAMARA API versioning guidelines, e.g. for a version x.y.z, put v0.y for x=0 or just vx for x>0 in the url.
@@ -525,7 +526,7 @@ components:
 
     SubscriptionId:
       type: string
-      description: The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#122-event-notification).
+      description: The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, this concept SHALL be referred as `subscriptionId` as per [Commonalities Event Notification Model](/documentation/API-design-guidelines.md#122-event-notification).
       example: qs15-h556-rt89-1298
 
     CloudEvent:
