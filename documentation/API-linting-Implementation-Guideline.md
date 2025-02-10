@@ -37,9 +37,9 @@ This file consolidates all rules:
 
 ## GitHub Actions Integration (Gherkin)
 
-1. Add **[.gherkin-lintrc](https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/.gherkin-lintrc)** (rules) file to -> root location of repository
+1. Add **[.gherkin-lintrc](/artifacts/linting_rules/.gherkin-lintrc)** (rules) file to -> root location of repository
 
-2. Add <b>[megalinter.yml](https://github.com/camaraproject/Commonalities/blob/main/artifacts/linting_rules/.github/workflows/megalinter.yml)</b> to GitHub action workflows  in  `.github/workflows` folder
+2. Add <b>[megalinter.yml](/artifacts/linting_rules/.github/workflows/megalinter.yml)</b> to GitHub action workflows  in  `.github/workflows` folder
    which includes the configuration of Megalinter and Spectral for GitHub actions.   
 
 ### Manually running linting workflow
@@ -100,4 +100,3 @@ To integrate Gherkin linting into the Megalinter setup, follow these steps:
 
     *Replace **'test.feature'** with the path to your Test defination feature file.*
    
-

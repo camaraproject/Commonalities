@@ -32,7 +32,7 @@ Rules applying to OpenAPI v2.0, v3.0, and most likely v3.1 - details are describ
 |------------------------------------|--------------------------------------------------------------------------------------|-------------|------------|-------------------|-----------------|
 | contact-properties                 | contact object is full of the most useful properties: `name`, `url`, and `email`     | No          | No         | Warning           | Warning         |
 | duplicated-entry-in-enum           | Each value of an `enum` must be different from one another                           | Yes         | Yes        | Warning           | Warning         |
-| info-contact                       | Info object should contain `contact` object                                          | Yes         | Yes        | Warning           | Warning         |
+| info-contact                       | Info object should contain `contact` object                                          | No          | No         | Warning           | Warning         |
 | info-description                   | Info object should contain `description` object                                      | Yes         | Yes        | Warning           | Warning         | 
 | info-license                       | Info object should contain `license` object                                          | Yes         | Yes        | Warning           | Warning         |
 | license-url                        | link to the full text of licence                                                     | Yes         | Yes        | Warning           | Warning         |
@@ -156,7 +156,7 @@ Info object must include the following information: API Version in the format: X
 _Spectral rule_: [camara-info−version-format](/artifacts/linting_rules/.spectral.yml)
 
 *Severity*: `warn` <br>
-❕ Note: Currently the format like  `version: 0.10.0-wip` is used in the API development branch
+❕ Note: Currently the format like may include "wip", "x.y.z-alpha.n" or "x.y;z-rc;n" while the API is not yet publicly released.
 
 
 
