@@ -156,7 +156,7 @@ Info object must include the following information: API Version in the format: X
 _Spectral rule_: [camara-info−version-format](/artifacts/linting_rules/.spectral.yml)
 
 *Severity*: `warn` <br>
-❕ Note: Currently the format like may include "wip", "x.y.z-alpha.n" or "x.y;z-rc;n" while the API is not yet publicly released.
+❕ Note: The version format may follow "wip", "x.y.z-alpha.n", or "x.y.z-rc.n" for unreleased or pre-release versions.
 
 
 
