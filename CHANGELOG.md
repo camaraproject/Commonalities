@@ -19,7 +19,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0:
 * Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r2.3/documentation)** folder.
 * Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r2.3/artifacts)** folder.
 
-**The relevant details of authentication and consent collection are covered by [release 2.3](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+**The relevant details of authentication and consent collection are covered by [release 2.3](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Management Working Group documents.**
 
 ### Added
 * Common 'area' data-type added to CAMARA_common.yaml by @tlohmar in https://github.com/camaraproject/Commonalities/pull/315
