@@ -52,6 +52,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0:
 * Updated rules when using POST for sensitive data by @eric-murray in https://github.com/camaraproject/Commonalities/pull/358
 * Changed guidelines on `x-camara-commonalities` extension field by @rartych in https://github.com/camaraproject/Commonalities/pull/375
 * Added note and changed descriptions for date-time formats in subscriptions by @dfischer-tech in https://github.com/camaraproject/Commonalities/pull/404
+* Sink format corrected and improved description of protocol and sink properties in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/414 and @tlohmar in https://github.com/camaraproject/Commonalities/pull/418
 
 ### Fixed
 * Clarification on api-name, filenames and servers object by @rartych in https://github.com/camaraproject/Commonalities/pull/333
@@ -64,6 +65,8 @@ This release contains documents and artifacts of Commonalities version 0.5.0:
 * Updated linting rules documentation by @ravindrapalaskar17 in https://github.com/camaraproject/Commonalities/pull/413
 * Updated Userstory-template.md by @rartych in https://github.com/camaraproject/Commonalities/pull/412
 * Error 429 aligned for event-subscription-template.yaml and notification-as-cloud-event.yaml by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/407 and https://github.com/camaraproject/Commonalities/pull/408
+* Updated event example in notification-as-cloud-event.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/415
+
   
 ### Removed
 * Removed sinkCredential from Subscription schema in event-subscription-template.yaml by @eric-murray in https://github.com/camaraproject/Commonalities/pull/400
