@@ -1668,8 +1668,7 @@ Providing this capability is optional for any CAMARA API depending on UC require
 If this capability is present in CAMARA API, the following attributes **must** be used in the POST request :
 
 | attribute name | type   | attribute description                                                                                                                                                                                                                                                                                       | cardinality |
-|----------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------| 
-                                     | mandatory   |
+|----------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
 | sink           | string | https callback address where the notification must be POST-ed, `format: uri` should be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).  The [security considerations](#notifications-security-considerations) should be followed.                | mandatory   |
 | sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. It is RECOMMENDED for subscription consumer to provide credential to protect notification endpoint. | optional    |
 
