@@ -2,18 +2,62 @@
 
 # CAMARA API Design Guide
 
+- [CAMARA API Design Guide](#camara-api-design-guide)
+  - [Introduction](#introduction)
+    - [Conventions](#conventions)
+    - [Common Vocabulary and Acronyms](#common-vocabulary-and-acronyms)
+  - [Versioning](#versioning)
+    - [API Version (OAS Info Object)](#api-version-oas-info-object)
+    - [API Version in URL (OAS Servers Object)](#api-version-in-url-oas-servers-object)
+    - [API Versions throughout the Release Process](#api-versions-throughout-the-release-process)
+    - [Backward and Forward Compatibility](#backward-and-forward-compatibility)
+  - [Error Responses](#error-responses)
+    - [Standardized use of CAMARA error responses](#standardized-use-of-camara-error-responses)
+      - [Syntax Exceptions](#syntax-exceptions)
+      - [Service Exceptions](#service-exceptions)
+      - [Server Exceptions](#server-exceptions)
+    - [Error Responses - Device Object/Phone Number](#error-responses---device-objectphone-number)
+  - [Data](#data)
+    - [Common Data Types](#common-data-types)
+    - [Data Definitions](#data-definitions)
+      - [Usage of Discriminator](#usage-of-discriminator)
+  - [Polymorphism](#polymorphism)
+  - [Pagination, Sorting, and Filtering](#pagination-sorting-and-filtering)
+    - [Pagination](#pagination)
+    - [Sorting](#sorting)
+    - [Filtering](#filtering)
+      - [Filtering Security Considerations](#filtering-security-considerations)
+      - [Filtering Operations](#filtering-operations)
+  - [Security](#security)
+    - [Security Definition](#security-definition)
+    - [Expressing Security Requirements](#expressing-security-requirements)
+    - [Mandatory template for `info.description` in CAMARA API specs](#mandatory-template-for-infodescription-in-camara-api-specs)
+    - [Scope Naming](#scope-naming)
+      - [APIs without Explicit Subscriptions](#apis-without-explicit-subscriptions)
+        - [Examples](#examples)
+      - [API-level Scopes](#api-level-scopes)
+  - [OAS Sections](#oas-sections)
+    - [OpenAPI Version](#openapi-version)
+    - [Info Object](#info-object)
+      - [Title](#title)
+      - [License](#license)
+      - [Extension Field](#extension-field)
+    - [Servers Object](#servers-object)
+      - [API-Name](#api-name)
+      - [API-Version](#api-version)
+    - [Paths](#paths)
+    - [Components](#components)
+  - [Schemas](#schemas)
+      - [Headers](#headers)
+      - [Security Schemes](#security-schemes)
+    - [External Documentation](#external-documentation)
+  - [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
+  - [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier-1)
+- [Identifying the Device or Phone Number from the Access Token](#identifying-the-device-or-phone-number-from-the-access-token)
+  - [Error Handling](#error-handling)
+
+
 This document outlines the guidelines for API design in the CAMARA project. These guidelines apply to every API developed under the CAMARA initiative.
-
-
-## Table of Contents
-### 1. Introduction
-### 2. Key Features
-### 3. Technical Requirements
-### 4. Installation
-### 5. Configuration
-### 6. Usage
-### 7. Troubleshooting
-### 8. Conclusion
 
 
 ## Introduction
