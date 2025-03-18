@@ -780,6 +780,34 @@ The name `openId` must be same as defined in the components.securitySchemes sect
 
 The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) must be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specs.
 
+### POST or GET for transferring sensitive or complex data
+
+Using the GET operation to pass sensitive data potentially embeds this information in the URL
+if contained in query or path parameters.
+For example, this information can remain in browser history, could be visible to anyone who can read the URL,
+or could be logged by elements along the route such as gateways and load balancers.
+This increases the risk that the sensitive data may be acquired by unauthorised third parties.
+Using HTTPS does not solve this vulnerability,
+as the TLS termination points are not necessarily the same as the API endpoints themselves.
+
+The classification of data tagged as sensitive should be assessed for each API project, but might include the following examples:
+-  phone number (MSISDN) must be cautiously handled as it is not solely about the number itself, but also knowing something about what transactions are being processed for that customer
+-  localisation information (such as latitude & longitude) associated with a device identifier as it allows the device, and hence customer, location to be known
+-  physical device identifiers, such as IP addresses, MAC addresses or IMEI
+
+In such cases, it is recommended to use one of the following methods to transfer the sensitive data:
+- When using `GET`, transfer the data using headers, which are not routinely logged or cached
+- Use `POST` instead of `GET`, with the sensitive data being embedded in the request body which, again, is not routinely logged or cached 
+
+When the `POST` method is used:
+- the resource in the path MUST be a verb (e.g. `retrieve-location` and not `location`) to differentiate from an actual resource creation
+- the request body itself MUST be a JSON object and MUST be required, even if all properties are optional
+
+It is also fine to use POST instead of GET:
+- to bypass technical limitations, such as URL character limits (if longer than 4k characters) or passing complex objects in the request
+- for operations where the response should not be kept cached, such as anti-fraud verifications or data that can change asynchronously (such as status information)
+
+
 ###  Scope naming
 
 #### APIs which do not deal with explicit subscriptions
@@ -980,6 +1008,25 @@ No special restrictions or changes specified in CAMARA.
 
 
 #### Headers
+
+##### Content-Type Header
+
+The character set supported must only be UTF-8. The [JSON Data Interchange Format (RFC 8259)](https://datatracker.ietf.org/doc/html/rfc8259#section-8.1) states the following
+
+```
+JSON text exchanged between systems that are not part of a closed
+ecosystem MUST be encoded using UTF-8 [RFC3629].
+
+Previous specifications of JSON have not required the use of UTF-8
+when transmitting JSON text.  However, the vast majority of JSON-
+based software implementations have chosen to use the UTF-8 encoding,
+to the extent that it is the only encoding that achieves
+interoperability.
+```
+
+Implementers may include the UTF-8 character set in the Content-Type header value, for example, "application/json; charset=utf-8". However, the preferred format is to specify only the MIME type, such as "application/json". Regardless, the interpretation of the MIME type as UTF-8 is mandatory, even when only "application/json" is provided.
+
+##### X-correlator Header
 
 With the aim of standardizing the request observability and traceability process, common headers that provide a follow-up of the E2E processes should be included. The table below captures these headers.
 
