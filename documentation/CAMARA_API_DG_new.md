@@ -828,8 +828,25 @@ The scopes will always be those defined in the API Specs YAML files. Thus, a sco
 
 ## OAS Sections
 
+### Reserved words
+To avoid issues with implementation using Open API generators reserved words must not be used in the following parts of an API specification:
+    - Path and operation names
+    - Path or query parameter names
+    - Request and response body property names
+    - Security schemes
+    - Component names
+    - OperationIds
+A reserved word is one whose usage is reserved by any of the following Open API generators:
+    - [Python Flask](https://openapi-generator.tech/docs/generators/python-flask/#reserved-words)
+    - [OpenAPI Generator (Java)](https://openapi-generator.tech/docs/generators/java/#reserved-words)
+    - [OpenAPI Generator (Go)](https://openapi-generator.tech/docs/generators/go/#reserved-words)
+    - [OpenAPI Generator (Kotlin)](https://openapi-generator.tech/docs/generators/kotlin/#reserved-words)
+    - [OpenAPI Generator (Swift5)](https://openapi-generator.tech/docs/generators/swift5#reserved-words)
+
+
+
 ### OpenAPI Version
-APIs shall use the OAS version 3.0.3.
+The API functionalities must be implemented following the specifications of the [Open API version 3.0.3](https://spec.openapis.org/oas/v3.0.3) using `api-name` as the filename and the `.yaml` or `.json` file extension.
 
 ### Info Object
 
