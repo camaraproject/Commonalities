@@ -65,7 +65,7 @@ This document captures guidelines for the API design in CAMARA project. These gu
 ## Table of Contents
 
 ## Introduction
-Camara uses OpenAPI Specification (OAS) to describe its APIs. The below guidelines specify the restrictions or conventions to be followed within the OAS yaml by all Camara APIs (referred below simply as APIs).
+CAMARA uses OpenAPI Specification (OAS) to describe its APIs. The below guidelines specify the restrictions or conventions to be followed within the OAS yaml by all CAMARA APIs (referred below simply as APIs).
 
 ### Conventions
 The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.
@@ -505,7 +505,7 @@ When it's possible, use Object Name as a key in the mapping section. This will s
 
 ##### Polymorphism
 
-To help usage of a Camara object from strongly typed languages, prefer to use inheritance than polymorphism ... Despite this, if you have to use it apply the following rules:
+To help usage of a CAMARA object from strongly typed languages, prefer to use inheritance than polymorphism ... Despite this, if you have to use it apply the following rules:
 
     - objects containing oneOf or anyOf section MUST include a discriminator defined by a propertyName
     - objects involved in oneOf / anyOf section MUST include the property designed by propetyName
@@ -734,7 +734,7 @@ Passwords should never be sent in API bodies,
 Usernames, passwords, session tokens, and API keys should not appear in the URL, as this can be captured in web server logs, making them easily exploitable. For example, this URL (```https://api.domain.com/user-management/users/{id}/someAction?apiKey=abcd123456789```) exposes the API key. Therefore, never use this kind of security.
 
 5. **Authentication and authorization must be considered**
-   Camara uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md).
+   CAMARA uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md).
 
 6. **Add request time flags should be considered**. 
 Along with other request parameters, a request timestamp can be added as a custom HTTP header in API requests.
@@ -752,7 +752,7 @@ Along with other request parameters, a request timestamp can be added as a custo
 ### Security definition
 
 In general, all APIs must be secured to ensure who has access to what and for what purpose.
-Camara uses OIDC and CIBA for authentication and consent collection and to determine whether the user has,
+CAMARA uses OIDC and CIBA for authentication and consent collection and to determine whether the user has,
 e.g. opted out of some API access.
 
 The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose values are defined by W3C Data Privacy Vocabulary as indicated in the [Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose-as-a-scope).
@@ -896,7 +896,7 @@ info:
 Title describes the API shortly. The title shall not include the term "API" in it.
 
 #### Description
-No special restrictions specified in Camara.
+No special restrictions specified in CAMARA.
 
 #### Version
 APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
@@ -959,7 +959,7 @@ For the below example, the API-name would be location-verification.
 API-Version shall be same as the [Version](#version) in the info object.
 
 ### Paths
-No special restrictions or changes specified in Camara.
+No special restrictions or changes specified in CAMARA.
 
 
 ### Tags
@@ -1003,7 +1003,7 @@ NOTE: HTTP headers are case-insensitive. The use of the naming `x-correlator` is
 [Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object) express security in OpenAPI. 
 Security can be expressed for the API as a whole or for each endpoint.
 
-As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all Camara OpenAPI files must include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
+As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all CAMARA OpenAPI files must include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
 
 ```yaml
 components:
