@@ -1,5 +1,3 @@
-<!-- Generated template with placeholders for chunks -->
-
 # API design guidelines
 
 This document captures guidelines for the API design in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative.
@@ -613,7 +611,7 @@ API documentation usually consists of:
 - Reference information to inform customers of every detail of your API.
 
 Below considerations should be checked when an API is documented:
-- The API functionalities must be implemented following the specifications of the [Open API version 3.0.3](https://spec.openapis.org/oas/v3.0.3) using `api-name` as the filename and the `.yaml` or `.json` file extension.
+- 
 - The API specification structure should have the following parts:
    -	General information ([Section 11.1](#111-general-information))
    -  Published Routes ([Section 11.2](#112-published-routes))
@@ -621,20 +619,7 @@ Below considerations should be checked when an API is documented:
    -  Response Structure ([Section 11.4](#114-response-structure))
    -  Data Definitions ([Section 11.5](#115-data-definitions))
    -  Security Schemes ([Section 11.6](#116-security-definition))
-- To avoid issues with implementation using Open API generators:
-  - Reserved words must not be used in the following parts of an API specification:
-    - Path and operation names
-    - Path or query parameter names
-    - Request and response body property names
-    - Security schemes
-    - Component names
-    - OperationIds
-  - A reserved word is one whose usage is reserved by any of the following Open API generators:
-    - [Python Flask](https://openapi-generator.tech/docs/generators/python-flask/#reserved-words)
-    - [OpenAPI Generator (Java)](https://openapi-generator.tech/docs/generators/java/#reserved-words)
-    - [OpenAPI Generator (Go)](https://openapi-generator.tech/docs/generators/go/#reserved-words)
-    - [OpenAPI Generator (Kotlin)](https://openapi-generator.tech/docs/generators/kotlin/#reserved-words)
-    - [OpenAPI Generator (Swift5)](https://openapi-generator.tech/docs/generators/swift5#reserved-words)
+
 
 ### 11.1 General Information
 
