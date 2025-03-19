@@ -1,4 +1,8 @@
 # CAMARA API Design Guide
+
+This document captures guidelines for the API design in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative.
+
+## Table of Contents
 - [CAMARA API Design Guide](#camara-api-design-guide)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
@@ -63,10 +67,6 @@
       - [Security schemes](#security-schemes)
     - [External Documentation](#external-documentation)
   - [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
-
-This document captures guidelines for the API design in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative.
-
-## Table of Contents
 
 ## Introduction
 CAMARA uses OpenAPI Specification (OAS) to describe its APIs. The below guidelines specify the restrictions or conventions to be followed within the OAS yaml by all CAMARA APIs (referred below simply as APIs).
