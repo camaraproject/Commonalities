@@ -243,19 +243,9 @@ Multiple path params can be entered if there is a logical path of mutually depen
    - ```/users/{userId}/{documentId}```
    - ```/users/13225365/647658```
   <br></br>
-2. The attribute must be identifying itself, it is not enough with "`{id}`"
-   - ```/users/{id}```
-  <br></br>
 
-   Reason is that if this resource is "extended" in the future and includes other identifiers, we would not know which of the entities the "`{id}`" parameter refers to. For example:
-   - Incorrect: ```/users/{id}/documents/{documentId}```
-   - Correct: ```/users/{userId}/documents/{documentId}```
-<br></br>
-3. It is recommended that the identifier have a similar morphology on all endpoints. For example, “`xxxxId`”, where xxx is the name of the entity, it references:
-   - ```/users/{userId}```
-   - ```/accounts/{accountId}```
-   - ```/vehicles/{vehicleId}```
-   - ```/users/{userId}/vehicles/{vehicleId}```
+
+
 <br></br>
 4. Care must be taken not to create ambiguities in the URIs when defining paths. For example, if the "user" entity can be identified by two unique identifiers, and we will create two URIs. 
    - ```/users/{userId}```
@@ -346,7 +336,7 @@ As seen, the full URL consist of:
 
 URIs should be designed according to the following considerations:
 
-- URI with lowercase and hyphens. URIs must be "human-readable" to facilitate identification of the offered resources. Lowercase words and hyphenation (kebab-case) help achieve this best practice. For example: `/customer-segments`
+- URI with lowercase and hyphens. 
 - URIs must contain the exposed resource.
 - Verb use is not allowed.
 - URIs must contain the "major version" of the API. 
@@ -357,24 +347,12 @@ URIs should be designed according to the following considerations:
   - Short URIs use is recommended for relevant entities. Failure to define a clear hierarchical model will lead to inconsistencies in publishing interfaces through the API and will make it difficult to consume.   
 - Avoiding usage of the package type nomenclature (e.g.,"com.mycompany.api...") in the API URI, because it makes it difficult for the developer or consumer to use the API.
 - URIs are defined per entity based on CRUD operations. Generally, we should only have one operation verb per functional entity (`GET`, `PUT`, `POST`, `PATCH`, `DELETE`).
-- The URI at the business entity level will always be a plural noun.
-- OperationIds are defined in lowerCamelCase: For example: `helloWorld`
+- 
+- 
 - Objects are defined in CamelCase inside the property field. For example: `Greetings`, `ExampleObject`.
 
 <font size="3"><span style="color: blue"> Hierachy </span></font>
 
-Hierarchy could be introduced with the concepts of entity and sub-entity:
-- **Entity**: it is understood as enough relevant business objects to be identified as a product. An API defines a single entity.
-- **Sub-entity**: it is understood as a business object that by itself has no business relevance. It is an object hierarchically related to an entity.
-
-To make the hierarchy, the following aspects must be applied:
-- Two levels of hierarchy should not exceed and should not be more than eight resources (6–8).
-- A resource has multiple operations identified by HTTP Verbs.
-- Resources defined through URIs establish a hierarchical relationship with each other:
-  - `/<entity>`<br>
-   `/<entity>/{<entityId>}`<br>
-   `/<entity>/{<entityId>}/<subEntity>`<br>
-   `/<entity>/{<entityId>}/<subEntity>/{<subEntityId>}`
 
 ### 4.2 Input/Output Resource Definition
 
@@ -501,11 +479,7 @@ Scopes should be represented as below for APIs that offer explicit event subscri
 
 For e.g., device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create
 
-To correctly define the scopes, when creating them, the following recommendations should be taken:
-- **Appropriate granularity**. Scopes should be granular enough to match the types of resources and permissions you want to grant.
-- **Use a common nomenclature for all resources**.  Scopes must be descriptive names and that there is no conflict between the different resources.
-- **Use the kebab-case nomenclature** to define API names, resources, and scope permissions.
-- **Use ":" a separator** between API name, protected resources, event-types and grant-levels for consistency.
+
 
 See section [11.6 Security Definition](#116-security-definition) for detailed guidelines on how to define scopes and other security-related properties in an OpenAPI file.
 
@@ -582,13 +556,7 @@ Below considerations should be checked when an API is documented:
 
 ### 11.1 General Information
 
-This part must include the following information:
-- API title with public name.
-- A concise overview outlining the primary functions of the API.
-- API Version in the format defined in [Chapter 5. Versioning](#5-versioning)
-- Licence information (name, website…)
-- API server and base URL
-- Global `tags` object if tags are used for API operations
+
 
 
 
@@ -598,22 +566,10 @@ This part must include the following information:
 
 This part must contain the list of published functions, with the following description:
 - URI functionality.
-- HTTP Methods. For each one, the following shall be included:
-   - Functionality summary.
-   - Functionality method description.
-   - Optionally `tags` object for each API operation - Title Case is the recommended style for tag names.
-   - Request param list, making reference to "Request params" part.
-   - Supported responses list, describing success and errors cases.
-   - Allowed content type (“application/json”, “text/xml”…)
+
 
 ### 11.3 Request Parameters
 
-This part contains a list of expected payload requests, if any. This description should have the following items:
-- Parameter name, used to reference it in other sections
-- Parameter description
-- Parameter place (header, route…)
-- Type (basic types like strings, integers, complex objects, ...)
-- Required field or optional flag
 
 ### 11.4 Response Structure
 
@@ -633,19 +589,7 @@ This part describes the list of possible messages returned by the API. It also i
 
 
 
-### 11.7 Resource access restriction 
 
-In some CAMARA APIs there are functions to create resource (via POST) and then later query them via id and/or list (with GET) or delete them (via DELETE). For example we have sessions, payments, subscriptions, etc..
-
-For the GET and DELETE operations we must restrict the resource(s) targeted depending on the information provided in the request. Basically we consider 2 filters:
-* API client (aka ClientId)
-* access token
-
-| Operation |  3-legged access token is used | 2-legged access token is used |
-|-----------|--------------------------------|-------------------------------|
-| GET/{id} | - The resource queried must have been created for the end user associated with the access token. <br> - The resource queried must have been created by the same API client given in the access token. | - The resource queried must have been created by the same API client given in the access token. |
-| GET/ | - Return all resource(s) created by the API consumer that are associated with both the end user identified by the access token and the same API client given in the access token. | - Return all resource(s) created by the same API client given in the access token. |
-| DELETE/{id} | - The resource to be deleted must have been created for the end user associated with the access token. <br> - The resource to be deleted must have been created by the same API client given in the access token. | - The resource to be deleted must have been created by the same API client given in the access token. |
 
 
 
