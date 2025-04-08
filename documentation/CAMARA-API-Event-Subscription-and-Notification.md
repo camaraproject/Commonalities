@@ -17,7 +17,7 @@ For general API design guidelines, please refer to CAMARA API Design Guide.
     - [3.4. Correlation Management](#34-correlation-management)
     - [3.5. Notification examples](#35-notification-examples)
 - [4. Security](#4-security)
-    - [4.1. Scope names APIs which deal with explicit subscriptions](#41-scope-names-apis-which-deal-with-explicit-subscriptions)
+    - [4.1. Scope naming](#41-scope-naming)
     - [4.2. Abuse Protection](#42-abuse-protection)
     - [4.3. Notifications Security Considerations](#43-notifications-security-considerations)
 
@@ -451,9 +451,9 @@ response:
 
 ## 4. Security
 
-### 4.1. Scope names APIs which deal with explicit subscriptions
+### 4.1. Scope naming
 
-Regarding scope naming for APIs, which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format, and this is described below:
+Regarding scope naming for APIs, which deal with explicit subscriptions, the guidelines propose some changes as compared to [generic rules](/documentation/CAMARA%20API%20Design%20Guide.md#scope-naming), and this is described below:
 
 Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete, for example:
 
