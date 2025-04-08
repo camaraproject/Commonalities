@@ -248,7 +248,7 @@ The essential requirements to consider would be:
 - Customization of the generated error based on the error content returned by the final core service should be contemplated.
 - Latency should be minimized in its management.
 
-> _NOTE: When standardized AuthN/AuthZ flows are used, please refer to [10.2 Security Implementation](#102-security-implementation) and [11.6 Security Definition](#116-security-definition), the format and content of Error Response for those procedures SHALL follow the guidelines of those standards.
+NOTE: When standardized AuthN/AuthZ flows are used, please refer to [6.2. Security definition](#62-security-definition), the format and content of Error Response for those procedures SHALL follow the guidelines of those standards.
 
 ### 3.1. Standardized use of CAMARA error responses
 
@@ -320,7 +320,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
   - Error status 403
 
 NOTE:
-The documentation of non-mandatory error statuses defined in section 6.1 depends on the specific considerations and design of the given API.
+The documentation of non-mandatory error statuses defined in section 3.1 depends on the specific considerations and design of the given API.
  - Error statuses 400, 404, 409, 422, 429: These error statuses should be documented based on the API design and the functionality involved. Subprojects evaluate the relevance and necessity of including these statuses in API specifications.
  - Error statuses 405, 406, 410, 412, 415, and 5xx: These error statuses are not documented by default in the API specification. However, they should be included if there is a relevant use case that justifies their documentation.
    - Special Consideration for error 501 NOT IMPLEMENTED to indicate optional endpoint:
@@ -592,25 +592,6 @@ info:
   x-camara-commonalities: 0.5
 ```
 
-The `termsOfService` and `contact` fields are optional in OpenAPI specification and may be added by API Providers documenting their APIs.
-
-The extension field `x-camara-commonalities` indicates a minor version of CAMARA Commonalities guidelines that given API specification adheres to.
-
-
-An example of the info object is shown below:
-```
-info:
-  title: Number Verification
-  description: |
-    This API allows to verify that the provided mobile phone number is the one used in the device. It
-    verifies that the user is using a device with the same mobile phone number as it is declared.
-  version: 1.0.1
-  license:
-    name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0.html
-  x-camara-commonalities: 0.4.0
-  
-```
 #### 5.3.1. Title
 Title describes the API shortly. The title shall not include the term "API" in it.
 
@@ -621,10 +602,10 @@ No special restrictions specified in CAMARA.
 APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
 
 #### 5.3.4. Terms of service
-Terms of service shall not be included. API providers may add this content when documenting their APIs.
+`termsOfService` shall not be included. API providers may add this content when documenting their APIs.
 
 #### 5.3.5. Contact information
-Contact information shall not be included. API providers may add this content when documenting their APIs.
+`contact` information shall not be included. API providers may add this content when documenting their APIs.
 
 #### 5.3.6. License
 The license object shall include the following fields:
@@ -635,7 +616,7 @@ license
 ```
 
 #### 5.3.7. Extension field
-The API shall specify the commonalities release number they are compliant to, by including the x-camara-commonalities extension field.
+The API shall specify the Commonalities minor release number they are compliant to, by including the `x-camara-commonalities` extension field.
 
 ### 5.4. ExternalDocs object
 
@@ -671,13 +652,10 @@ For the below example, the API-name would be `location-verification`.
 
 #### 5.5.2. api-version
 
-`api-version` shall be same as the `version` field in the `info` object.
+`api-version` shall be same as the `version` field in the `info` object and follow the rules defined in [7.2. API version in URL (OAS servers object)](#72-api-version-in-url-oas-servers-object).
 
 ### 5.6. Tags
 Global `tags` object must be defined if tags are used for API operations.
-
-
-
 
 ### 5.7. Paths and Operations
 
