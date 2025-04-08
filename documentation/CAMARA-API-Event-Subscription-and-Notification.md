@@ -1,17 +1,41 @@
-## 12. Subscription, Notification & Event
+# CAMARA API Event Subscription and Notification Guide
 
-To provide event-based interaction, CAMARA API could provide capabilities for subscription & notification management.
-A subscription allows an API consumer to request event notification reception at a given URL (callback address) for a specific context.
-A notification is the publication at the listener address about an occurred event.
-Managed event types are explicitly defined in CAMARA API OAS.
+This document outlines specifics guidelines for API design within the CAMARA project, applicable to all APIs that provide capabilities for event subscription and notification management.
 
-### 12.1 Subscription
+For general API design guidelines, please refer to CAMARA API Design Guide.
+
+<!-- TOC tocDepth:2..3 chapterDepth:2..6 -->
+
+- [1. Introduction](#1-introduction)
+- [2. Event Subscription](#2-event-subscription)
+    - [2.1. Instance-based (implicit) subscription](#21-instance-based-implicit-subscription)
+    - [2.2. Resource-based (explicit) subscription](#22-resource-based-explicit-subscription)
+- [3. Event Notification](#3-event-notification)
+    - [3.1. Event notification definition](#31-event-notification-definition)
+    - [3.2. `subscription-ends` event](#32-subscription-ends-event)
+    - [3.3. Error definition for event notification](#33-error-definition-for-event-notification)
+    - [3.4. Correlation Management](#34-correlation-management)
+    - [3.5. Notification examples](#35-notification-examples)
+- [4. Security](#4-security)
+    - [4.1. Scope names APIs which deal with explicit subscriptions](#41-scope-names-apis-which-deal-with-explicit-subscriptions)
+    - [4.2. Abuse Protection](#42-abuse-protection)
+    - [4.3. Notifications Security Considerations](#43-notifications-security-considerations)
+
+<!-- /TOC -->
+
+## 1. Introduction
+
+To provide event-based interaction, the CAMARA API could offer capabilities for subscription and notification management. 
+A subscription allows an API consumer to request the reception of event notifications at a given URL (callback address) for a specific context. 
+A notification is the publication at the listener address regarding an occurred event. Managed event types are explicitly defined in the CAMARA OpenAPI Specification (OAS) documents.
+
+## 2. Event Subscription
 
 We distinguish two types of subscriptions:
 - Instance-based subscription (implicit creation)
 - Resource-based subscription (explicit creation)
 
-#### Instance-based (implicit) subscription
+### 2.1. Instance-based (implicit) subscription
 
 An instance-based subscription is a subscription indirectly created, additionally to another resource creation.
 For example, for a Payment request (in Carrier Billing API), in the `POST/payments`,
@@ -40,7 +64,7 @@ Several types of `sinkCredential` could be available in the future, but for now 
 | accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory   |
 | accessTokenType      | string           | Type of access token - MUST be set to `Bearer` for now                         | mandatory   |
 
-##### Instance-based (implicit) subscription example
+#### 2.1.1. Instance-based (implicit) subscription example
 
 Illustration with bearer access token (Resource instance representation):
 
@@ -56,7 +80,7 @@ Illustration with bearer access token (Resource instance representation):
 }
 ```
 
-#### Resource-based (explicit) subscription
+### 2.2. Resource-based (explicit) subscription
 
 A resource-based subscription is an event subscription managed as a resource. This subscription is explicit. An API endpoint is provided to request subscription creation.  As this event subscription is managed as an API resource, it is identified and operations to search, retrieve and delete it must be provided.
 
@@ -71,7 +95,7 @@ CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** a
 
 To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
-##### Operations
+#### 2.2.1. Event Subscription Management Operations
 
 Four operations must be defined:
 
@@ -100,7 +124,7 @@ The rationale for using this alternate pattern should be explicitly provided
 (e.g. the notification source for each of the supported events may be completely different,
 in which case, separating the implementations is beneficial). 
 
-##### Rules for subscriptions data minimization 
+#### 2.2.2. Rules for subscriptions data minimization
 
 These rules apply for subscription with device identifier
 - If 3-legged access token is used, the POST and GET responses must not provide any device identifier.
@@ -108,7 +132,7 @@ These rules apply for subscription with device identifier
 
 Application of data minimization design must be considered by the API Sub Project for event structure definition.
 
-##### Subscriptions data model
+#### 2.2.3. Subscriptions data model
 
 The following table provides `/subscriptions` attributes
 
@@ -165,7 +189,7 @@ Managing subscription is a draft feature, and it is not mandatory for now. An AP
 | EXPIRED              | Subscription is ended (no longer active). This status applies when subscription is ended due to max event reached, expire time reached or access token indicated for notification security (i.e. sinkCredential) expiration time reached.                             |
 | DELETED              | Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its meta-information is kept).                                                                     |
 
-##### Error definition for resource-based (explicit) subscription
+#### 2.2.4. Error definition for resource-based (explicit) subscription
 
 Error definition described in this guideline applies for subscriptions.
 
@@ -177,7 +201,7 @@ The Following Error codes must be present:
 
 Please see in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory ``event-subscription-template.yaml`` for more information and error examples. 
 
-##### Termination for resource-based (explicit) subscription
+#### 2.2.5. Termination for resource-based (explicit) subscription
 
 4 scenarios of subscription termination are possible (business conditions may apply):
 
@@ -195,7 +219,7 @@ _Termination rules regarding subscriptionExpireTime & subscriptionMaxEvents usag
 * When none `subscriptionExpireTime` and `subscriptionMaxEvents` are not provided, client side has to trigger a `DELETE` operation to terminate it.
 * It is perfectly valid for client side to trigger a DELETE operation before `subscriptionExpireTime` and/or `subscriptionMaxEvents` reached. 
 
-##### Resource-based (explicit) example
+#### 2.2.6. Resource-based (explicit) example
 
 In this example, we illustrate a request for a device roaming status event subscription.
 Requester did not provide an expected expiration time for the subscription
@@ -270,9 +294,9 @@ the two requests should be handled independently & autonomously.
 Depending on server implementation, it is acceptable 
 when the event occurs that one or two notifications are sent to listener.
 
-### 12.2 Event notification
+## 3. Event Notification
 
-#### Event notification definition
+### 3.1. Event notification definition
 
 The API server uses the event notification endpoint to notify the API consumer that an event occurred.
 
@@ -311,7 +335,7 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 
 Note: For operational and troubleshooting purposes it is relevant to accommodate use of `x-correlator` header attribute. API listener implementations have to be ready to support and receive this data.
 
-#### subscription-ends event
+### 3.2. `subscription-ends` event
 
 Specific event notification type "subscription-ends" is defined to inform listener about subscription termination.
 
@@ -336,53 +360,22 @@ Note3: In the case of ACCESS_TOKEN_EXPIRED termination reason sending the notifi
 - For explicit subscription, implementation should send ACCESS_TOKEN_EXPIRED termination event just before the token expiration date (the 'just before' value is at the hands of each implementation). The following sentence must be added for the `accessTokenExpiresUtc` attribute documentation: An absolute (UTC) timestamp at which the token shall be considered expired. In the case of an ACCESS_TOKEN_EXPIRED termination reason, implementation should notify the client before the expiration date."
 - For implicit subscription following sentence must be added for the `accessTokenExpiresUtc` attribute documentation: "An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur after the expiration of the requested _resource_, allowing the client to be notified of any changes during the _resource_'s existence. If the token expires while the _resource_ is still active, the client will stop receiving notifications.". The _resource_ word must be replaced by the entity managed by the subscription (session, payment, etc.).
 
-#### Error definition for event notification
+### 3.3. Error definition for event notification
 
 Error definitions are described in this guideline applies for event notification.
 
 The Following Error codes must be present:
 * for `POST`: 400, 401, 403, 410, 429
 
-#### Correlation Management
+### 3.4. Correlation Management
 
 To manage correlation between the subscription management and the event notification (as these are two distinct operations):
 - use `subscriptionId` attribute (in `data` structure in the body) - this identifier is provided in event subscription and could be valued in each event notification. 
 
 Note: There is no normative enforcement to use any of these patterns, and they could be used on agreement between API consumer & providers.
 
-#### Notifications Security Considerations
 
-As notifications may carry sensitive information, privacy and security have to be considered. 
-
-CloudEvents specification only provide some limited privacy and security guidance there: https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md#privacy-and-security
-
-This document restricts the allowed values of `protocol` to `HTTP`. CloudEvents allows many protocols which each have their own security measures. 
-This Security Considerations need to be reconsidered if other protocols than `HTTP` are allowed.
-Camara Notifications MUST use HTTPS. The value of `sink` MUST be an URL with url-scheme `https`. 
-The implementation of the Notification Sender MUST follow [10.2 Security Implementation](#102-security-implementation).
-
-This document restricts the `credendentialType` to `ACCESSTOKEN`. Neither `PLAIN`nor `REFRESHTOKEN` are allowed. 
-This Security Considerations need to be reconsidered if other `credentialsType` values are allowed.
-
-CloudEvent Security and Privacy considerations RECOMMEND protecting event **data** through signature and encryption. The value of the `data` field of the notifications SHOULD be signed and encrypted.
-As Camara Notifications are JSON, Camara RECOMMENDS that the Camara Notification is signed and then encrypted using [JSON Web Signature (JWS)](https://datatracker.ietf.org/doc/html/rfc7515) and [JSON Web Encryption (JWE)](https://datatracker.ietf.org/doc/html/rfc7516). 
-The API Consumer and event producer have to agree which keys to use for signing and encryption e.g. at onboarding time or at subscription time.
-
-It is RECOMMENDED that the API consumer inspects all the fields of the notification, especially `source` and `type`. It is RECOMMENDED that if the notification event data is signed, that then the `source` and the signature key are associated.
-
-API Consumers SHOULD validate the schema of the notification event data that is defined by the API subproject. It is RECOMMENDED that additional fields are ignored. Reliance on additional fields is an interoperability issue. Additional fields can lead to security issues.
-
-#### Abuse Protection
-
-Any system permitting the registration and delivery of notifications to arbitrary HTTP endpoints holds the potential for abuse. This could occur if someone, either intentionally or unintentionally, registers the address of a system unprepared for such requests, or for which the registering party lacks authorization to perform such registration.
-
-To prevent notification-replay attacks the API Consumer SHOULD inspect the notification's `id` and `time` fields. Whether to reject or ignore notifications that have already been received or that are too old is a API Consumer's policy decision.
-
-To protect the sender, CloudEvents specification provides some guidance there: https://github.com/cloudevents/spec/blob/main/cloudevents/http-webhook.md#4-abuse-protection
-
-Event Producers shall choose based on their internal security guidelines to implement measures based on the above guidance to ensure abuse protection. For e.g., An event producer might ask the subscriber to pre-register the notification URL at the time of app onboarding. If this registered notification URL doesn't match later with the notification URL in the request, the event producer can choose to reject the request with the relevant error code.
-
-#### Notification examples
+### 3.5. Notification examples
 
 Example for Roaming status event notification - Request:
 
@@ -456,10 +449,9 @@ response:
 204 No Content
 ```
 
+## 4. Security
 
-### Security Schemes
-
-##### APIs which deal with explicit subscriptions
+### 4.1. Scope names APIs which deal with explicit subscriptions
 
 Regarding scope naming for APIs, which deal with explicit subscriptions, the guidelines propose some changes as compared to the above format, and this is described below:
 
@@ -480,3 +472,36 @@ Scopes should be represented as below for APIs that offer explicit event subscri
 - Grant-level: action on resource: `create`
 
 makes scope name: `device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create`.
+
+
+### 4.2. Abuse Protection
+
+Any system permitting the registration and delivery of notifications to arbitrary HTTP endpoints holds the potential for abuse. This could occur if someone, either intentionally or unintentionally, registers the address of a system unprepared for such requests, or for which the registering party lacks authorization to perform such registration.
+
+To prevent notification-replay attacks the API Consumer SHOULD inspect the notification's `id` and `time` fields. Whether to reject or ignore notifications that have already been received or that are too old is a API Consumer's policy decision.
+
+To protect the sender, CloudEvents specification provides some guidance there: https://github.com/cloudevents/spec/blob/main/cloudevents/http-webhook.md#4-abuse-protection
+
+Event Producers shall choose based on their internal security guidelines to implement measures based on the above guidance to ensure abuse protection. For e.g., An event producer might ask the subscriber to pre-register the notification URL at the time of app onboarding. If this registered notification URL doesn't match later with the notification URL in the request, the event producer can choose to reject the request with the relevant error code.
+
+### 4.3. Notifications Security Considerations
+
+As notifications may carry sensitive information, privacy and security have to be considered. 
+
+CloudEvents specification only provide some limited privacy and security guidance there: https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md#privacy-and-security
+
+This document restricts the allowed values of `protocol` to `HTTP`. CloudEvents allows many protocols which each have their own security measures. 
+This Security Considerations need to be reconsidered if other protocols than `HTTP` are allowed.
+Camara Notifications MUST use HTTPS. The value of `sink` MUST be an URL with url-scheme `https`. 
+The implementation of the Notification Sender MUST follow [10.2 Security Implementation](#102-security-implementation).
+
+This document restricts the `credendentialType` to `ACCESSTOKEN`. Neither `PLAIN`nor `REFRESHTOKEN` are allowed. 
+This Security Considerations need to be reconsidered if other `credentialsType` values are allowed.
+
+CloudEvent Security and Privacy considerations RECOMMEND protecting event **data** through signature and encryption. The value of the `data` field of the notifications SHOULD be signed and encrypted.
+As Camara Notifications are JSON, Camara RECOMMENDS that the Camara Notification is signed and then encrypted using [JSON Web Signature (JWS)](https://datatracker.ietf.org/doc/html/rfc7515) and [JSON Web Encryption (JWE)](https://datatracker.ietf.org/doc/html/rfc7516). 
+The API Consumer and event producer have to agree which keys to use for signing and encryption e.g. at onboarding time or at subscription time.
+
+It is RECOMMENDED that the API consumer inspects all the fields of the notification, especially `source` and `type`. It is RECOMMENDED that if the notification event data is signed, that then the `source` and the signature key are associated.
+
+API Consumers SHOULD validate the schema of the notification event data that is defined by the API subproject. It is RECOMMENDED that additional fields are ignored. Reliance on additional fields is an interoperability issue. Additional fields can lead to security issues.
