@@ -2,7 +2,7 @@
 
 This document outlines specifics guidelines for API design within the CAMARA project, applicable to all APIs that provide capabilities for event subscription and notification management.
 
-For general API design guidelines, please refer to CAMARA API Design Guide.
+For general API design guidelines, please refer to [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md).
 
 <!-- TOC tocDepth:2..3 chapterDepth:2..6 -->
 
