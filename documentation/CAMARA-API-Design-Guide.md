@@ -225,7 +225,7 @@ An error representation must not differ from the representation of any resource.
 - A detailed description in "`message`" - in English language in API specification, it can be changed to other languages in implementation if needed.
 
 All these aforementioned fields are mandatory in Error Responses.
-`status` and `code` fields have normative nature, so as their use has to be standardized (see [Section 6.1](#61-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
+`status` and `code` fields have normative nature, so as their use has to be standardized (see [3.1. Standardized use of CAMARA error responses](#31-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
 
 The values of the `status` and `code` fields are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/CAMARA_common.yaml).
 
@@ -313,9 +313,8 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 **Mandatory Errors** to be **documented in CAMARA API Spec YAML** are the following:
 
-- For event subscriptions APIs, the ones defined in [12.1 Subscription](#error-definition-for-resource-based-explicit-subscription)
-- For event notifications flow, the ones defined in [12.2 Event notification](#error-definition-for-event-notification)
-- For the rest of APIs:
+- For event subscriptions APIs, the ones defined in Event Subscription section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification.md)
+- For event notifications flow, the ones defined in Event Notification section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification.md)
   - Error status 401
   - Error status 403
 
@@ -619,7 +618,14 @@ license
 The API shall specify the Commonalities minor release number they are compliant to, by including the `x-camara-commonalities` extension field.
 
 ### 5.4. ExternalDocs object
+The `externalDocs` object shall have the following content:
 
+```yaml
+externalDocs:
+  description: Product documentation at CAMARA
+  url: https://github.com/camaraproject/{apiRepository}
+  # {apiRepository} MUST be replaced by the CAMARA API Repository name where the API specification is hosted.
+```
 
 
 ### 5.5. Servers object
@@ -723,7 +729,7 @@ All properties within the object must have a description.
 
 #### 5.7.5. Request bodies
 
-'GET' and 'DELETE' HTTP methods must not accept a 'requestBody' attribute.
+`GET` and `DELETE` HTTP methods must not accept a 'requestBody' attribute.
 
 
 #### 5.7.6. Responses
@@ -746,10 +752,14 @@ UpperCamelCase should be used for response names.
 All properties within the object must have a description.
 
 #### 5.8.3. Parameters
+Parameter names are defined in lowerCamelCase: For example: `sessionId`.
 
+All parameters must have a description.
+All properties within the object must have a description.
 
 #### 5.8.4. Request bodies
-
+UpperCamelCase should be used for request body names.
+All properties within the object must have a description.
 
 #### 5.8.5. Headers
 
