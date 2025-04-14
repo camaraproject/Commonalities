@@ -825,7 +825,8 @@ The following points can serve as a checklist to design the security mechanism o
 
 1. **Simple Management**. 
    Securing only the APIs that need to be secure. Any time the more complex solution is made "unnecessarily", it is also likely to leave a hole. 
-2. **HTTPs must be always used**. 
+2. **HTTPS must always be used**. 
+
    TLS ensures the confidentiality of the transported data and that the server's hostname matches the server's SSL certificate.
    - If HTTP 2 is used to improve performance, you can even send multiple requests over a single connection, this way you will avoid the complete overhead of TCP and SSL on later requests.
 
