@@ -643,7 +643,8 @@ If more than one server object instance is listed, the `servers[*].url` property
 
 `api-name` is what is specified as the base path, prior to the API version, in the `servers[*].url` property.
 
-For the below example, the API-name would be `location-verification`.
+For the below example, the api-name would be `location-verification`.
+
  ```
  /location-verification/v1
 ```
@@ -715,7 +716,8 @@ OperationIds are defined in lowerCamelCase: For example: `helloWorld`.
 
 #### 5.7.4. Parameters
 
-Parameter names are defined in lowerCamelCase: For example: `SessionId`.
+Parameter names are defined in lowerCamelCase: For example: `sessionId`.
+
 All parameters must have a description.
 All properties within the object must have a description.
 
@@ -741,6 +743,7 @@ All properties within the object must have a description.
 
 #### 5.8.2. Responses
 UpperCamelCase should be used for response names.
+All properties within the object must have a description.
 
 #### 5.8.3. Parameters
 
