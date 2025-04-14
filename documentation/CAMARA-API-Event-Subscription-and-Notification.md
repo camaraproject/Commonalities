@@ -453,7 +453,7 @@ response:
 
 ### 4.1. Scope naming
 
-Regarding scope naming for APIs, which deal with explicit subscriptions, the guidelines propose some changes as compared to [generic rules](/documentation/CAMARA%20API%20Design%20Guide.md#scope-naming), and this is described below:
+Regarding scope naming for APIs, which deal with explicit subscriptions, the guidelines propose some changes as compared to [generic rules](/documentation/CAMARA-API-Design-Guide.md#66-scope-naming), and this is described below:
 
 Scopes should be represented as below for APIs that offer explicit event subscriptions with action read and delete, for example:
 
