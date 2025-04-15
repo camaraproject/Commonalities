@@ -45,7 +45,7 @@ This document outlines guidelines for API design within the CAMARA project, appl
 <!-- /TOC -->
 
 ## 1. Introduction
-CAMARA use the OpenAPI Specification (OAS) to describe their APIs. The following guidelines outline the restrictions and conventions to be followed within the OAS files by all CAMARA APIs.
+CAMARA uses the OpenAPI Specification (OAS) to describe its APIs. The following guidelines outline the restrictions and conventions to be followed within the OAS files by all CAMARA APIs.
 
 ### 1.1. Conventions
 The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.
@@ -105,7 +105,7 @@ This part captures a detailed description of all the data structures used in the
       - String ones: min and max length
       - Integer ones: Format (int32, int64…), min value.
 
-In this part, the error response structure must also be defined following the guidelines in [Chapter 6. Error Responses](#6-error-responses).
+In this part, the error response structure must also be defined following the guidelines in [3. Error Responses](#3-error-responses).
 
 #### 2.2.1. Usage of discriminator
 
