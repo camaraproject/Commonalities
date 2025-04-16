@@ -651,7 +651,7 @@ If more than one server object instance is listed, the `servers[*].url` property
 
 For the below example, the api-name would be `location-verification`.
 
- ```
+```
  /location-verification/v1
 ```
 `api-name` is a kebab-case string used to create unique names or values of objects and parameters related to given API.
@@ -660,6 +660,12 @@ For the below example, the api-name would be `location-verification`.
 #### 5.5.2. api-version
 
 `api-version` shall be same as the `version` field in the `info` object and follow the rules defined in [7.2. API version in URL (OAS servers object)](#72-api-version-in-url-oas-servers-object).
+
+For the below example, the api-version would be `v1`.
+
+```
+ /location-verification/v1
+```
 
 ### 5.6. Tags
 Global `tags` object must be defined if tags are used for API operations.
