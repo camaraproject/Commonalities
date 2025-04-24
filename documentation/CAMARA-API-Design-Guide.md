@@ -568,14 +568,16 @@ The API functionalities must be implemented following the specifications of the 
 
 ### 5.3. Info Object
 
-The `info` object shall have the following content:
+The `info` object must contain the properties described below.
+
+Example `info` object along with brief explanations for each of the mandatory fields:
 
 ```yaml
 info:
   # title without "API" in it, e.g. "Number Verification"
   title: Number Verification
   # description explaining the API, part of the API documentation 
-  # text explaining how to fill the "Authorization and authentication" - see section 11.6
+  # including mandatory texts  "Authorization and authentication"
   description: |
     This API allows to verify that the provided mobile phone number is the one used in the device. It
     verifies that the user is using a device with the same mobile phone number as it is declared.
@@ -592,13 +594,22 @@ info:
 ```
 
 #### 5.3.1. Title
-Title describes the API shortly. The title shall not include the term "API" in it.
+`title` field describes the API shortly. The title shall not include the term "API" in it.
 
 #### 5.3.2. Description
-No special restrictions specified in CAMARA.
+`description`field: There are no special restrictions specified in CAMARA for the documentation explaining API.
+[CommonMark syntax](https://spec.commonmark.org/) may be used for rich text representation.
+Images hosted in Github API repository can be embedded in the description, for example:
 
+```markdown
+![API Diagram](https://raw.githubusercontent.com/camaraproject/{apiRepository}/main/documentation/API_documentation/resources/diagram.png)
+```
+
+Some sections are required, as defined in [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api-specs)
+ or [Appendix A](appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
+ 
 #### 5.3.3. Version
-APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
+`version` field: APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
 
 #### 5.3.4. Terms of service
 `termsOfService` shall not be included. API providers may add this content when documenting their APIs.
@@ -607,7 +618,7 @@ APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wi
 `contact` information shall not be included. API providers may add this content when documenting their APIs.
 
 #### 5.3.6. License
-The license object shall include the following fields:
+The `license` object shall include the following fields:
 ```
 license
   name: Apache 2.0
@@ -735,12 +746,52 @@ All properties within the object must have a description.
 
 #### 5.7.5. Request bodies
 
+All `requestBody` attributes must have a description. They can follow one of the two structures below:
+
+**Case A:** The request body structure is explicitly detailed. This is typically used when the request body is not reusable across different operations.
+
+```yaml
+requestBody:
+  description: <description>
+  content:
+    application/json:
+      schema:
+        $ref: "#/components/schemas/<schema-name>"
+  required: true
+```
+
+**Case B:** The request body structure is referenced from a schema in components.requestBodies. This is usually the case when the request body is reusable across different operations.
+
+```yaml
+requestBody:
+  $ref: '#/components/requestBodies/<schema-name>'
+```
+
 `GET` and `DELETE` HTTP methods must not accept a 'requestBody' attribute.
 
 
 #### 5.7.6. Responses
 
-All response objects must have a description.
+All response objects must have a description. They typically include the two parts:
+
+- **Success response codes:** Their structure is explicitly detailed.
+- **Error response codes:** Their structure is referenced to a schema in `components.responses`.
+
+```yaml
+responses:
+  "2xx":
+    description: <description>
+    headers:
+      x-correlator:
+        $ref: "#/components/headers/x-correlator"
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/<schema-name>"
+  "4xx":
+    $ref: "#/components/responses/<schema-name>"
+  "5xx":
+    $ref: "#/components/responses/<schema-name>"
 
 
 
