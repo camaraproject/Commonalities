@@ -5,7 +5,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 0.7.0-alpha.1
   x-camara-commonalities: 0.5
   
 paths: {}
