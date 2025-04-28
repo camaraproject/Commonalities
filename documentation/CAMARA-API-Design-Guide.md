@@ -760,7 +760,7 @@ requestBody:
   required: true
 ```
 
-**Case B:** The request body structure is referenced from a schema in components.requestBodies. This is usually the case when the request body is reusable across different operations.
+**Case B:** The request body structure is referenced from a schema in `components.requestBodies`. This is usually the case when the request body is reusable across different operations.
 
 ```yaml
 requestBody:
@@ -772,7 +772,7 @@ requestBody:
 
 #### 5.7.6. Responses
 
-All response objects must have a description. They typically include the two parts:
+All response objects must have a description. They typically consist of two parts:
 
 - **Success response codes:** Their structure is explicitly detailed.
 - **Error response codes:** Their structure is referenced to a schema in `components.responses`.
