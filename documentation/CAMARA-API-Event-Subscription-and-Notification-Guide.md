@@ -10,6 +10,7 @@ For general API design guidelines, please refer to [CAMARA API Design Guide](/do
 - [2. Event Subscription](#2-event-subscription)
     - [2.1. Instance-based (implicit) subscription](#21-instance-based-implicit-subscription)
     - [2.2. Resource-based (explicit) subscription](#22-resource-based-explicit-subscription)
+    - [2.3. Event type versioning](#23-event-type-versioning)
 - [3. Event Notification](#3-event-notification)
     - [3.1. Event notification definition](#31-event-notification-definition)
     - [3.2. `subscription-ends` event](#32-subscription-ends-event)
@@ -294,6 +295,29 @@ the two requests should be handled independently & autonomously.
 Depending on server implementation, it is acceptable 
 when the event occurs that one or two notifications are sent to listener.
 
+### 2.3. Event type versioning
+
+The CloudEvent specification provides some information on [CloudEvent versioning](https://github.com/cloudevents/spec/blob/main/cloudevents/primer.md#versioning-of-cloudevents), but some additional CAMARA event type versioning guidelines are described in this section. 
+
+A CAMARA event type is a structured name (defined in the section below) that contains a version number. The version in the event type (also referred to as the “event type version” or “event version” for short) has the format `vx` where `x` is a simple version number (0, 1, 2, etc.). There are no major, minor or patch version numbers used in event type versions. Examples of event types are:
+
+- org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on 
+- org.camaraproject.device-roaming-status-subscriptions.v1.roaming-status
+
+Event type versions are independent of the API version they belong to. Stable APIs should use stable event types (i.e. version number > 0), but the API and the event type version numbers do not need to be synchronized. So a "v2" API can still use a "v1" event types if the event structure is unchanged by the MAJOR API release. If the event structure is changed, the version number in the event type must be updated, which is a breaking change for event clients. Hence such a change also results in a MAJOR API version update.
+
+Event type versioning is done according to the following guidelines:
+
+| API version  | Event type version  | Versioning explanation  |
+| ------------ | ------------------- | ----------------------- |
+| v0.y.z  | v0  | For any initial API, its event types versions are always v0 whatever the changes that are being made. Event type structure changes will be indicated through API version changes only. | 
+| v0.y.z → v1.0.0  | v0 → v1 | For the first stable API version, all event type versions must be set to v1 (even if there is no change in the event structure itself). |
+| vx.y.z (x>0) → vx.y+1.0 or vx.y.z+1  | vn (n>0)  | MINOR or PATCH update of an event types structure do not change the event type version, but it will change the API version. Such changes to the event type structure are backward compatible and do not impact event clients. |
+| vx.y.z (x>0) → vx+1.0.0  | vn → vn+1  | Any MAJOR change to the event type structure implies an increase to the next event type version number, and is not backward compatible. It implies also a MAJOR API version change. Multiple versions of an event may exist in parallel. The decision is up to the event producer. |
+| vx.y.z (x>0) → vx.y+1.z  | v1 (new event type) | When a new event type is added to a stable subscription API with version vx.y.z (x>0), then this event type gets the version v1. The introduction of a new event type to an existing API is considered as a MINOR version update of the API, as it shall not impact existing clients. To force clients to take the new event type into account, it would need to be introduced as a MAJOR API version change.  |
+
+An example of event type versioning can be found in the [Wiki](https://lf-camaraproject.atlassian.net/wiki/spaces/CAM/pages/14557919/API+versioning#Version-in-the-event-type).
+
 ## 3. Event Notification
 
 ### 3.1. Event notification definition
@@ -317,7 +341,7 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 |-----------------|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------| 
 | id              | string            | identifier of this event, that must be unique in the source context.                                                                                                                                                                                                                                                                                                                                                                                                                             | mandatory     |
 | source          | string - URI      | identifies the context in which an event happened in the specific Provider Implementation. Often this will include information such as the type of the event source, the organization publishing the event or the process that produced the event. The exact syntax and semantics behind the data encoded in the URI is defined by the event producer.                                                                                                                                           | mandatory     |
-| type            | string            | a value describing the type of event related to the originating occurrence. For consistency across API we mandate following pattern: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter 'v' and the major version like example org.camaraproject.device-roaming-subscriptions.v1.roaming-status                                                                                                                                                        | mandatory     |
+| type            | string            | a value describing the type of event related to the originating occurrence. For consistency across API we mandate following pattern: `org.camaraproject.<api-name>.<event-version>.<event-name>` with the `event-version` with letter 'v' and a simple version number. An example is org.camaraproject.device-roaming-status-subscriptions.v1.roaming-status                                                                                                                                                        | mandatory     |
 | specversion     | string            | version of the specification to which this event conforms - must be "1.0". As design guideline, this field will be modeled as an enum.                                                                                                                                                                                                                                                                                                                                                           | mandatory     |
 | datacontenttype | string            | media-type that describes the event payload encoding, must be `application/json` for CAMARA APIs                                                                                                                                                                                                                                                                                                                                                                                                 | optional      |
 | subject         | string            | describes the subject of the event - Not used in CAMARA notification.                                                                                                                                                                                                                                                                                                                                                                                                                            | optional      |
