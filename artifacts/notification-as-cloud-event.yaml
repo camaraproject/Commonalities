@@ -34,7 +34,8 @@ info:
     # API Functionality
     
     Only one endpoint/operation is provided: `POST /your_webhook_notification_url`
-    This endpoint describes the event notification received on subscription listener side when the event occurred. A detailed description of the event notification is provided in the CAMARA API design guideline document.
+    This endpoint describes the event notification received on subscription listener side when the event occurred. 
+    A detailed description of the event notification is provided in the [CAMARA API Event Subscription and Notification Guide](https://github.com/camaraproject/Commonalities/blob/main/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md#3-event-notification)
 
   termsOfService: http://swagger.io/terms/
   contact:
