@@ -26,12 +26,13 @@ This release contains documents and artifacts of Commonalities version 0.6.0-alp
 * [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md) document by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/442
 
 ### Changed
-N/A
+* Align 401 wording in Notification Cloud Events Artifact by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/449
 
 ### Fixed
 N/A
 
 ### Removed
+* Removed AUTHENTICATION_REQUIRED error code by @eric-murray in https://github.com/camaraproject/Commonalities/pull/429
 * API Design Guidelines document was deprecated by @rartych in https://github.com/camaraproject/Commonalities/pull/441
 
 **Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r2.3...r3.1
