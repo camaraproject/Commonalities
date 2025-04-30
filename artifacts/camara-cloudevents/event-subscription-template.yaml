@@ -2,7 +2,8 @@ openapi: 3.0.3
 info:
   title: Notification Subscription Template
   description: |
-    This file is a template for CAMARA API explicit subscription endpoint and for Notification model. Additional information are provided in API Design Guidelines document.
+    This file is a template for CAMARA API explicit subscription endpoint and for Notification model.
+    Additional information are provided in [CAMARA API Event Subscription and Notification Guide](https://github.com/camaraproject/Commonalities/blob/main/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md).
 
     Note on event name convention: the event type name MUST follow: ``org.camaraproject.<api-name>.<api-version>.<event-name>``
 
