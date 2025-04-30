@@ -27,7 +27,7 @@ This release contains documents and artifacts of Commonalities version 0.6.0-alp
 * Links to CAMARA API Event Subscription and Notification Guide in artifacts by @rartych in https://github.com/camaraproject/Commonalities/pull/453
 
 ### Changed
-* Align 401 wording in Notification Cloud Events Artifact by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/449
+* Aligned Error 401 wording in Notification Cloud Events artifact by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/449
 * Updated `types` property of `Subscription` allowing more than one event type per subscription by @eric-murray in https://github.com/camaraproject/Commonalities/pull/432
   
 ### Fixed
