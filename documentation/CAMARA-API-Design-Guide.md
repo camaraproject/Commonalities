@@ -283,7 +283,6 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       404        |     `IDENTIFIER_NOT_FOUND`    | Device identifier not found.                                               | Some identifier cannot be matched to a device                                                                                                                              |
 |       404        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Specific situation to highlight the resource/concept not found (e.g. use in device)                                                                                     |
 |       422        |    `UNSUPPORTED_IDENTIFIER`   | The identifier provided is not supported.                                  | None of the provided identifiers is supported by the implementation                                                                                                     |  
-|       422        |     `IDENTIFIER_MISMATCH`     | Provided identifiers are not consistent.                                   | Inconsistency between identifiers not pointing to the same device                                                                                                         |
 |       422        |    `UNNECESSARY_IDENTIFIER`   | The device is already identified by the access token.                      | An explicit identifier is provided when a device or phone number has already been identified from the access token                                                            |
 |       422        |    `SERVICE_NOT_APPLICABLE`   | The service is not available for the provided identifier.                  | Service not applicable for the provided identifier                                                                                                                          |
 |       422        |      `MISSING_IDENTIFIER`     | The device cannot be identified.                                           | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token                              |
@@ -336,10 +335,16 @@ The Following table compiles the guidelines to be adopted:
 |     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.            |
 |     1      | None of the provided identifiers is supported by the implementation |       422        |     UNSUPPORTED_IDENTIFIER     | The identifier provided is not supported.                                 |
 |     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | Device identifier not found.                             |  
-|     3      | Inconsistency between identifiers not pointing to the same device |       422        |       IDENTIFIER_MISMATCH      | Provided identifiers are not consistent.          |
-|     4      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        |     UNNECESSARY_IDENTIFIER      | The device is already identified by the access token. |
-|     5      | Service not applicable for the provided identifier                         |       422        |     SERVICE_NOT_APPLICABLE     | The service is not available for the provided identifier. |
-|     6      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
+|     3      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        |     UNNECESSARY_IDENTIFIER      | The device is already identified by the access token. |
+|     4      | Service not applicable for the provided identifier                         |       422        |     SERVICE_NOT_APPLICABLE     | The service is not available for the provided identifier. |
+|     5      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
+
+**NOTE:**  
+The `Device` object defined in [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
+
+Where an API consumer provides more than one device identifier, the API provider should indicate in the response which of these identifiers they are using to fulfil the API, even if the identifiers do not match the same device. A `DeviceResponse` object is defined for this purpose. The API provider MUST NOT respond with an identifier that was not originally provided by the API consumer.
+
+An error MUST NOT be returned when the supplied device identifiers do not match to prevent the API consumer correlating identifiers for a given end user that they may not otherwise know. It is the responsibility of the API consumer to ensure that the identifiers they are using are associated with the same device. If they are unable to do that, only a single identifier should be provided to the API provider.
 
 #### 3.2.1. Templates
 
