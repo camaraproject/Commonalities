@@ -80,6 +80,15 @@ components:
           $ref: "#/components/schemas/DeviceIpv6Address"
       minProperties: 1
 
+    DeviceResponse:
+      description: |
+        A device object to be used in responses to the API consumer. Note that only one device identifier is allowed in the response.
+
+        If the API consumer provides more than one device identifier in their request, the API consumer must return a single identifier which is the one they are using to fulfil the request, even if the identifiers do not match the same device. No error should be returned if the identifiers are otherwise valid to prevent API consumers correlating different identifiers with a given end user.
+        allOf:
+          - $ref: "#/components/schemas/Device"
+          - maxProperties: 1
+
     PhoneNumber:
       description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
       type: string
@@ -591,19 +600,12 @@ components:
                       - 422
                   code:
                     enum:
-                      - IDENTIFIER_MISMATCH
                       - SERVICE_NOT_APPLICABLE
                       - MISSING_IDENTIFIER
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
                       - "{{SPECIFIC_CODE}}"
           examples:
-            GENERIC_422_IDENTIFIER_MISMATCH:
-              description: Inconsistency between identifiers not pointing to the same device
-              value:
-                status: 422
-                code: IDENTIFIER_MISMATCH
-                message: Provided identifiers are not consistent.
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
               value:
