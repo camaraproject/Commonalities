@@ -2,7 +2,8 @@ openapi: 3.0.3
 info:
   title: Notification Subscription Template
   description: |
-    This file is a template for CAMARA API explicit subscription endpoint and for Notification model. Additional information are provided in API Design Guidelines document.
+    This file is a template for CAMARA API explicit subscription endpoint and for Notification model.
+    Additional information are provided in [CAMARA API Event Subscription and Notification Guide](https://github.com/camaraproject/Commonalities/blob/main/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md).
 
     Note on event name convention: the event type name MUST follow: ``org.camaraproject.<api-name>.<api-version>.<event-name>``
 
@@ -284,7 +285,7 @@ components:
         types:
           description: |
             Camara Event types eligible to be delivered by this subscription.
-            Note: for the current Commonalities version (v0.5) only one event type per subscription is allowed, yet in the following releases use of array of event types SHALL be specified without changing this definition.
+            Note: the maximum number of event types per subscription will be decided at API project level
           type: array
           minItems: 1
           maxItems: 1
@@ -485,13 +486,12 @@ components:
         types:
           description: |
             Camara Event types eligible to be delivered by this subscription.
-            Note: for the Commonalities meta-release v0.4 we enforce to have only event type per subscription then for following meta-release use of array MUST be decided
-             at API project level.
+            Note: the maximum number of event types per subscription will be decided at API project level
           type: array
           minItems: 1
           maxItems: 1
           items:
-            type: string
+            $ref: "#/components/schemas/SubscriptionEventType"
         config:
           $ref: '#/components/schemas/Config'
         id:
