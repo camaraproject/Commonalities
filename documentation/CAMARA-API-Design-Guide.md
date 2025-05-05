@@ -792,7 +792,7 @@ responses:
     $ref: "#/components/responses/<schema-name>"
   "5xx":
     $ref: "#/components/responses/<schema-name>"
-
+```
 
 
 ### 5.8. Components
