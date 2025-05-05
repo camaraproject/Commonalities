@@ -13,6 +13,7 @@ This document outlines guidelines for API design within the CAMARA project, appl
 - [3. Error Responses](#3-error-responses)
   - [3.1. Standardized use of CAMARA error responses](#31-standardized-use-of-camara-error-responses)
   - [3.2. Error Responses - Device Object/Phone Number](#32-error-responses---device-objectphone-number)
+  - [3.3. Error Responses - Mandatory template for `info.description` in CAMARA API specs](#33-error-responses---mandatory-template-for-infodescription-in-camara-api-specs)
 - [4. Pagination, Sorting and Filtering](#4-pagination-sorting-and-filtering)
   - [4.1. Pagination](#41-pagination)
   - [4.2. Sorting](#42-sorting)
@@ -390,6 +391,26 @@ components:
         message: {{Message example}}
 ```
 
+### 3.3. Error Responses - Mandatory template for `info.description` in CAMARA API specs
+
+The following template must be used as part of the API documentation in the `info.description` property of the CAMARA API specs to provide a common reference for API Consumers, API Developers and API Providers about not documented error responses in case they are supported by a given API implementation.
+
+```md
+# Additional CAMARA error responses
+
+The list of error codes in this API specification is not exhaustive. Therefore the API specification may not document some non-mandatory error statuses as indicated in `CAMARA API Design Guidelines`.
+
+Please refer to [CAMARA_common.yaml]({link_to_release}/CAMARA_common.yaml) for a complete list of error responses.
+
+As an specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
+```
+
+NOTE: The template MUST be renderized by replacing `{link_to_release}` with the specific value of the Commonalities Release the API specification version is associated to.
+For instance, for an API specification version associated to different Commonalities stages in Spring25 MetaRelease it would have been:
+- API specification version associated to alpha release: `https://github.com/camaraproject/Commonalities/blob/r2.1/artifacts`
+- API specification version associated to release candidate release: `https://github.com/camaraproject/Commonalities/blob/r2.2/artifacts`
+- API specification version associated to public release: `https://github.com/camaraproject/Commonalities/blob/r2.3/artifacts`
+
 
 ## 4. Pagination, Sorting and Filtering
 
@@ -574,7 +595,8 @@ info:
   # title without "API" in it, e.g. "Number Verification"
   title: Number Verification
   # description explaining the API, part of the API documentation 
-  # text explaining how to fill the "Authorization and authentication" - see section 11.6
+  # including mandatory texts "Authorization and authentication"
+  # including mandatory texts "Additional CAMARA error responses"
   description: |
     This API allows to verify that the provided mobile phone number is the one used in the device. It
     verifies that the user is using a device with the same mobile phone number as it is declared.
@@ -594,7 +616,16 @@ info:
 Title describes the API shortly. The title shall not include the term "API" in it.
 
 #### 5.3.2. Description
-No special restrictions specified in CAMARA.
+`description`field: There are no special restrictions specified in CAMARA for the documentation explaining API.
+[CommonMark syntax](https://spec.commonmark.org/) may be used for rich text representation.
+Images hosted in Github API repository can be embedded in the description, for example:
+
+```markdown
+![API Diagram](https://raw.githubusercontent.com/camaraproject/{apiRepository}/main/documentation/API_documentation/resources/diagram.png)
+```
+
+Some sections are required, as defined in [Section 3.3](#33-error-responses---mandatory-template-for-infodescription-in-camara-api-specs), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api-specs)
+ or [Appendix A](appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
 
 #### 5.3.3. Version
 APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
