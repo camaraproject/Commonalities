@@ -822,7 +822,7 @@ All properties within the object must have a description.
 
 Special requirements related to HTTP headers.
 
-##### X-correlator Header
+##### x-correlator Header
 
 With the aim of standardizing the request observability and traceability process, common headers that provide a follow-up of the E2E processes should be included. The table below captures these headers.
 
@@ -830,13 +830,13 @@ With the aim of standardizing the request observability and traceability process
 |----------------|-----------------------------------------------|----------------------|------------------|--------------------------|----------------------------|----------------------------------------|
 | `x-correlator` | 	Service correlator to make E2E observability | `type: string`  `pattern: ^[a-zA-Z0-9-]{0,55}$`     | Request / Response | No                       | Yes                        | 	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
 
-When the API Consumer includes a non-empty x-correlator header in the request, the API Provider must echo this value in the response. If the x-correlator header is not included in the request, it is optional for the API Provider to include it in the response with any valid value. It is recommended to use UUID format for values.
+When the API Consumer includes a non-empty `x-correlator` header in the request, the API Provider must echo this value in the response. If the `x-correlator` header is not included in the request, it is optional for the API Provider to include it in the response with any valid value. It is recommended to use UUID format for values.
 
 In notification scenarios (i.e., POST request sent towards the listener indicated by `sink` address),
-the use of the "x-correlator" is supported for the same aim as well.
-When the API request includes the "x-correlator" header,
+the use of the `x-correlator` is supported for the same aim as well.
+When the API request includes the `x-correlator` header,
 it is recommended for the listener to include it in the response with the same value as was used in the request.
-Otherwise, it is optional to include the "x-correlator" header in the response with any valid value.
+Otherwise, it is optional to include the `x-correlator` header in the response with any valid value.
 
 NOTE: HTTP headers are case-insensitive. The use of the naming `x-correlator` is a guideline to align the format across CAMARA APIs. 
 
