@@ -28,7 +28,7 @@
 | **Suffix: Id vs Identifier**                        | 	Suffix "Id" for unique fields. E.g, ApplicationId (specific code for an Application). Suffix "Identifier" for generic fields, ProductIdentifier (generic variable to identify a family of products)                                                                                                                                                                                                                                                                      | 	e.g. ApplicationId or ProductIdentifier | 	N/A                                                          |
 | **Physical Device Identifier** | This is a unique identifier allocated to the physical device by the manufacturer. For mobile devices, this is the 15-digit International Mobile Equipment Identity (IMEI), which may be appended by the current device software version to create the 16-digit IMEISV. The physical device identifier is distinct from the mobile subscription identifier (IMSI), which is associated with the SIM rather than the device. | imei, imeisv | N/A |
 | **Type Allocation Code** | The first 8 digits of a physical mobile device identifier (IMEI / IMEISV), which uniquely identifies both the manufacturer and model of the device | tac | N/A |
-| **Subscriber Identity Module** | A physical or virtual smart-card incorporated into a physical mobile device to identify the mobile subscription | N/A | SIM |
+| **Subscriber Identity Module** | A physical or virtual smart-card incorporated into a physical mobile device to identify the mobile subscription (IMSI) | N/A | SIM |
 
 
 
