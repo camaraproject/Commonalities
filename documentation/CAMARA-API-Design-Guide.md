@@ -597,7 +597,8 @@ info:
   # description explaining the API, part of the API documentation 
   # including mandatory text "Authorization and authentication"
 
-  # including mandatory texts "Additional CAMARA error responses"
+  # including mandatory text "Additional CAMARA error responses"
+
   description: |
     This API allows to verify that the provided mobile phone number is the one used in the device. It
     verifies that the user is using a device with the same mobile phone number as it is declared.
