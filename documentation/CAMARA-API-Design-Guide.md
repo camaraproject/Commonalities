@@ -618,7 +618,8 @@ info:
 Title describes the API shortly. The title shall not include the term "API" in it.
 
 #### 5.3.2. Description
-`description`field: There are no special restrictions specified in CAMARA for the documentation explaining API.
+`description`field: There are no special restrictions specified in CAMARA for the documentation explaining an API.
+
 [CommonMark syntax](https://spec.commonmark.org/) may be used for rich text representation.
 Images hosted in Github API repository can be embedded in the description, for example:
 
