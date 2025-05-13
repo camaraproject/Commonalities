@@ -304,7 +304,7 @@ For CAMARA subscription APIs, events are defined using the CloudEvents format. C
 - When a CloudEvent's data changes in a backwardly-incompatible way, the value of the type attribute should generally change. The event producer is encouraged to produce both the old event and the new event for some time (potentially forever) in order to avoid disrupting consumers.
 - When a CloudEvent's data changes in a backwardly-compatible way, the value of the type attribute should generally stay the same.
 
-For CAMARA events, its `type` attribute is the base for event versioning as it is defines to contain the event version.
+For CAMARA events, its `type` attribute is the base for event versioning as it contains the event version.
 
 - The format of the `type` attribute value is defined by Commonalities in the `CAMARA-API-Event-Subscription-and-Notification-Guide.md` document as: `org.camaraproject.<api-name>.<event-version>.<event-name>`. 
 - The `<event-version>` has the format `vx`. 
