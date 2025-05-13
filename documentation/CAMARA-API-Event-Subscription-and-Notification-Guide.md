@@ -341,6 +341,20 @@ It is recommended to keep the last 2 major event versions.
 
 An example of versioning of an event throughout its lifecycle can be found in the [Wiki](https://lf-camaraproject.atlassian.net/wiki/spaces/CAM/pages/14557919/API+versioning#Event-versioning).
 
+**Breaking and non-breaking changes for events**
+
+Examples of breaking (non backward-compatible) changes related to events are
+
+- changing the version of an event (this is a breaking change only if the previous version is not kept in parallel)
+- removing an event version or all versions of an event
+- breaking changes to the event structure (follows the same rules as for API response changes, see `CAMARA-API-design-Guide.md`)
+
+Examples of non breaking (backward-compatible) changes related to events are
+
+- adding a new event
+- adding a new version of an event without keeping the previous version in parallel
+- non-breaking changes to the event structure (follows the same rules as for API response changes, see `CAMARA-API-design-Guide.md`)
+
 ## 3. Event Notification
 
 ### 3.1. Event notification definition
