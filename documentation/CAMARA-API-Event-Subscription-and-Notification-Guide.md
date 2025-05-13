@@ -10,7 +10,7 @@ For general API design guidelines, please refer to [CAMARA API Design Guide](/do
 - [2. Event Subscription](#2-event-subscription)
     - [2.1. Instance-based (implicit) subscription](#21-instance-based-implicit-subscription)
     - [2.2. Resource-based (explicit) subscription](#22-resource-based-explicit-subscription)
-    - [2.3. Event type versioning](#23-event-type-versioning)
+    - [2.3. Event versioning](#23-event-versioning)
 - [3. Event Notification](#3-event-notification)
     - [3.1. Event notification definition](#31-event-notification-definition)
     - [3.2. `subscription-ends` event](#32-subscription-ends-event)
@@ -295,28 +295,51 @@ the two requests should be handled independently & autonomously.
 Depending on server implementation, it is acceptable 
 when the event occurs that one or two notifications are sent to listener.
 
-### 2.3. Event type versioning
+### 2.3. Event versioning
 
-The CloudEvent specification provides some information on [CloudEvent versioning](https://github.com/cloudevents/spec/blob/main/cloudevents/primer.md#versioning-of-cloudevents), but some additional CAMARA event type versioning guidelines are described in this section. 
+The CloudEvent specification provides some information on [CloudEvent versioning](https://github.com/cloudevents/spec/blob/main/cloudevents/primer.md#versioning-of-cloudevents), but some additional CAMARA event versioning guidelines are described in this section. 
 
-A CAMARA event type is a structured name (defined in the section below) that contains a version number. The version in the event type (also referred to as the “event type version” or “event version” for short) has the format `vx` where `x` is a simple version number (0, 1, 2, etc.). There are no major, minor or patch version numbers used in event type versions. Examples of event types are:
+For CAMARA subscription APIs, events are defined using the CloudEvents format. CloudEvent versioning is described [here](https://github.com/cloudevents/spec/blob/main/cloudevents/primer.md#versioning-of-cloudevents). It states (quoted):
 
-- org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on 
-- org.camaraproject.device-roaming-status-subscriptions.v1.roaming-status
+- When a CloudEvent's data changes in a backwardly-incompatible way, the value of the type attribute should generally change. The event producer is encouraged to produce both the old event and the new event for some time (potentially forever) in order to avoid disrupting consumers.
+- When a CloudEvent's data changes in a backwardly-compatible way, the value of the type attribute should generally stay the same.
 
-Event type versions are independent of the API version they belong to. Stable APIs should use stable event types (i.e. version number > 0), but the API and the event type version numbers do not need to be synchronized. So a "v2" API can still use a "v1" event types if the event structure is unchanged by the MAJOR API release. If the event structure is changed, the version number in the event type must be updated, which is a breaking change for event clients. Hence such a change also results in a MAJOR API version update.
+For CAMARA events, its `type` attribute is the base for event versioning as it is defines to contain the event version.
 
-Event type versioning is done according to the following guidelines:
+- The format of the `type` attribute value is defined by Commonalities in the `CAMARA-API-Event-Subscription-and-Notification-Guide.md` document as: `org.camaraproject.<api-name>.<event-version>.<event-name>`. 
+- The `<event-version>` has the format `vx`. 
+- `x` is the version number of the event’s structure.
 
-| API version  | Event type version  | Versioning explanation  |
-| ------------ | ------------------- | ----------------------- |
-| v0.y.z  | v0  | For any initial API, its event types versions are always v0 whatever the changes that are being made. Event type structure changes will be indicated through API version changes only. | 
-| v0.y.z → v1.0.0  | v0 → v1 | For the first stable API version, all event type versions must be set to v1 (even if there is no change in the event structure itself). |
-| vx.y.z (x>0) → vx.y+1.0 or vx.y.z+1  | vn (n>0)  | MINOR or PATCH update of an event types structure do not change the event type version, but it will change the API version. Such changes to the event type structure are backward compatible and do not impact event clients. |
-| vx.y.z (x>0) → vx+1.0.0  | vn → vn+1  | Any MAJOR change to the event type structure implies an increase to the next event type version number, and is not backward compatible. It implies also a MAJOR API version change. Multiple versions of an event may exist in parallel. The decision is up to the event producer. |
-| vx.y.z (x>0) → vx.y+1.z  | v1 (new event type) | When a new event type is added to a stable subscription API with version vx.y.z (x>0), then this event type gets the version v1. The introduction of a new event type to an existing API is considered as a MINOR version update of the API, as it shall not impact existing clients. To force clients to take the new event type into account, it would need to be introduced as a MAJOR API version change.  |
+Examples of CAMARA event types (= value of the `type` attribute) are:
 
-An example of event type versioning can be found in the [Wiki](https://lf-camaraproject.atlassian.net/wiki/spaces/CAM/pages/14557919/API+versioning#Version-in-the-event-type).
+- `org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on` 
+- `org.camaraproject.device-roaming-status-subscriptions.v1.roaming-status`
+
+---
+
+The event version is independent of the API version that the event belongs to. 
+
+---
+
+Events are considered to be “first class citizens” just like APIs and have their own versioning throughout their lifecycle. For example,
+
+- The same event version may be supported by different releases of an API.
+- An event client may be subscribed to a given event version from different API providers with different API versions, but expect to receive the same event data.
+
+CAMARA event versioning is done according to the following guidelines:
+
+| Event version  | CAMARA event versioning explanation  |
+| ------------------- | ----------------------- |
+| v0  | For any initial API v0.y.z, its event versions are always v0 whatever the changes that are being made. Event changes will be indicated through API version changes only. | 
+| v0 → v1 | For the first stable API version v1.0.0, all event versions must be set to v1 (even if there is no change in the event structure itself). |
+| vn (n>0)  | A MINOR or PATCH update of an event structure, or the addition of the updated event structure to the same API (i.e. keeping both the old and the updated events) does not change the event version, but it will change the API version from vx.y.z (x>0) to either vx.y+1.0 or vx.y.z+1. Such changes to the event structure are backward compatible and should not impact event clients. Note: the update of an event structure is a non breaking change only if the previous version is kept in parallel. |
+| vn → vn+1  | Any MAJOR change to an event structure is a non-backward compatible change and implies an increase to the next event version number. It implies also a MAJOR API version change vx.y.z (x>0) → vx+1.0.0 .Multiple versions of an event may exist in parallel for the same API version. The decision to keep previous event versions (types) of the event structure is up to the event producer. |
+| v1 (adding a new event) | Introducing a new event to a stable subscription API with version vx.y.z (x>0) implies that this event gets the version v1. The introduction of a new event to an existing API is considered as a MINOR version update of the API vx.y.z (x>0) → vx.y+1.z, as it shall not impact existing event clients. To force clients to take the new event into account, one could introduce it through a MAJOR API version change.   |
+| removing an event or an event version | Removing an event or an event version from a stable subscription API version implies a MAJOR update of the API version vx.y.z (x>0) → vx+1.0.0 |
+
+It is recommended to keep the last 2 major event versions.
+
+An example of versioning of an event throughout its lifecycle can be found in the [Wiki](https://lf-camaraproject.atlassian.net/wiki/spaces/CAM/pages/14557919/API+versioning#Event-versioning).
 
 ## 3. Event Notification
 
