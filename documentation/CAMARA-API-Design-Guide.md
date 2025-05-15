@@ -96,7 +96,8 @@ This part captures a detailed description of all the data structures used in the
 - Data type (String, Integer, Object…).
 - If the data type is string it is recommended to use appropriate modifier property `format` and/or `pattern` whenever possible. The [OpenAPI Initiative Formats Registry](https://spec.openapis.org/registry/format/) contains the list of formats used in OpenAPI specifications.
   - If the format of a string is `date-time`, the following sentence must be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)`
-  - If the format of a string is `duration`, the following sentence must be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#appendix-A) for duration`
+  - If the format of a string is `duration`, the following sentence must be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#appendix-A) for duration` - Note: to avoid known ambiguity issues with duration strings, consider using intervals, which are anchored to a specific start and end date or time.
+
 
 - If the data type is an object, list of required properties.
 - List of properties within the object data, including:
