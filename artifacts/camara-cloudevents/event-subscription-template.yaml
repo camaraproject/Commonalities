@@ -278,6 +278,7 @@ components:
         sink:
           type: string
           format: uri
+          pattern: ^https:\/\/.+$
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
@@ -456,6 +457,8 @@ components:
       enum:
         - org.camaraproject.api-name.v0.event-type1
         - org.camaraproject.api-name.v0.event-type2
+        - org.camaraproject.api-name.v0.subscription-begins
+        - org.camaraproject.api-name.v0.subscription-updates
         - org.camaraproject.api-name.v0.subscription-ends
 
     SubscriptionEventType:
@@ -481,6 +484,7 @@ components:
         sink:
           type: string
           format: uri
+          pattern: ^https:\/\/.+$
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
         types:
@@ -540,6 +544,8 @@ components:
     SubscriptionAsync:
       description: Response for a event-type subscription request managed asynchronously (Creation or Deletion)
       type: object
+      required:
+        - id
       properties:
         id:
           $ref: "#/components/schemas/SubscriptionId"
@@ -585,6 +591,8 @@ components:
         mapping:
           org.camaraproject.api-name.v0.event-type1: "#/components/schemas/EventApiSpecific1"
           org.camaraproject.api-name.v0.event-type2: "#/components/schemas/EventApiSpecific2"
+          org.camaraproject.api-name.v0.subscription-begins: "#/components/schemas/EventSubscriptionBegins"
+          org.camaraproject.api-name.v0.subscription-updates: "#/components/schemas/EventSubscriptionUpdates"
           org.camaraproject.api-name.v0.subscription-ends: "#/components/schemas/EventSubscriptionEnds"
 
     Source:
@@ -620,6 +628,68 @@ components:
       allOf:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
+
+    EventSubscriptionBegins:
+      description: event structure for event subscription begins
+      allOf:
+        - $ref: "#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/SubscriptionBegins"
+
+    SubscriptionBegins:
+      description: Event detail structure for SUBSCRIPTION_BEGINS event
+      type: object
+      required:
+        - initiationReason
+        - subscriptionId
+      properties:
+        initiationReason:
+          $ref: "#/components/schemas/InitiationReason"
+        subscriptionId:
+          $ref: "#/components/schemas/SubscriptionId"
+        initiationDescription:
+          type: string
+
+    InitiationReason:
+      type: string
+      description: |
+        - SUBSCRIPTION_CREATED - Subscription created by API Server
+      enum:
+        - SUBSCRIPTION_CREATED
+
+    EventSubscriptionUpdates:
+      description: event structure for event subscription updates
+      allOf:
+        - $ref: "#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/SubscriptionUpdates"
+
+    SubscriptionUpdates:
+      description: Event detail structure for SUBSCRIPTION_UPDATES event
+      type: object
+      required:
+        - updateReason
+        - subscriptionId
+      properties:
+        updateReason:
+          $ref: "#/components/schemas/UpdateReason"
+        subscriptionId:
+          $ref: "#/components/schemas/SubscriptionId"
+        updateDescription:
+          type: string
+
+    UpdateReason:
+      type: string
+      description: |
+        - SUBSCRIPTION_ACTIVE - API server transitioned susbcription status to `ACTIVE`
+        - SUBSCRIPTION_INACTIVE - API server transitioned susbcription status to `INACTIVE`
+      enum:
+        - SUBSCRIPTION_ACTIVE
+        - SUBSCRIPTION_INACTIVE
 
     EventSubscriptionEnds:
       description: event structure for event subscription ends
@@ -833,6 +903,7 @@ components:
                       - INVALID_PROTOCOL
                       - INVALID_CREDENTIAL
                       - INVALID_TOKEN
+                      - INVALID_SINK
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               description: Invalid Argument. Generic Syntax Exception
@@ -864,6 +935,12 @@ components:
                 status: 400
                 code: INVALID_TOKEN
                 message: Only bearer token is supported
+            GENERIC_400_INVALID_SINK:
+              description: Invalid sink value
+              value:
+                status: 400
+                code: INVALID_SINK
+                message: Only https sink values are supported
     Generic400:
       description: Problem with the client request
       headers:
@@ -988,7 +1065,6 @@ components:
                   code:
                     enum:
                       - PERMISSION_DENIED
-                      - INVALID_TOKEN_CONTEXT
                       - SUBSCRIPTION_MISMATCH
           examples:
             GENERIC_403_PERMISSION_DENIED:
@@ -997,12 +1073,6 @@ components:
                 status: 403
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
-            GENERIC_403_INVALID_TOKEN_CONTEXT:
-              description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
-              value:
-                status: 403
-                code: INVALID_TOKEN_CONTEXT
-                message: "{{field}} is not consistent with access token."
             GENERIC_403_SUBSCRIPTION_MISMATCH:
               description: Inconsistent access token for requested subscription
               value:
