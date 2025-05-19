@@ -402,7 +402,8 @@ The list of error codes in this API specification is not exhaustive. Therefore t
 
 Please refer to [CAMARA_common.yaml]({link_to_release}/CAMARA_common.yaml) for a complete list of error responses.
 
-As an specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
+As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
+
 ```
 
 NOTE: The template MUST be renderized by replacing `{link_to_release}` with the specific value of the Commonalities Release the API specification version is associated to.
