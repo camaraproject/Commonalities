@@ -342,7 +342,8 @@ The Following table compiles the guidelines to be adopted:
 **NOTE:**  
 The `Device` object defined in [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
 
-Where an API consumer provides more than one device identifier, the API provider should indicate in the response which of these identifiers they are using to fulfil the API, even if the identifiers do not match the same device. A `DeviceResponse` object is defined for this purpose. The API provider MUST NOT respond with an identifier that was not originally provided by the API consumer.
+Where an API consumer provides more than one device identifier, the API provider should indicate in the response which of these identifiers they are using to fulfil the API, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. A `DeviceResponse` object is defined for this purpose. The API provider MUST NOT respond with an identifier that was not originally provided by the API consumer.
+
 
 An error MUST NOT be returned when the supplied device identifiers do not match to prevent the API consumer correlating identifiers for a given end user that they may not otherwise know. It is the responsibility of the API consumer to ensure that the identifiers they are using are associated with the same device. If they are unable to do that, only a single identifier should be provided to the API provider.
 
