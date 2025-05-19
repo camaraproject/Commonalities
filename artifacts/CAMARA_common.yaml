@@ -82,7 +82,8 @@ components:
 
     DeviceResponse:
       description: |
-        A device object to be used in responses to the API consumer. Note that only one device identifier is allowed in the response.
+        End-user equipment able to connect to a mobile network the response refers to. Only returned when API consumer inputs `device` param in their request, specially relevant when providing more than one device identifier. Note that only one device identifier is allowed in the response.
+
 
         If the API consumer provides more than one device identifier in their request, the API consumer must return a single identifier which is the one they are using to fulfil the request, even if the identifiers do not match the same device. No error should be returned if the identifiers are otherwise valid to prevent API consumers correlating different identifiers with a given end user.
       allOf:
