@@ -1,4 +1,5 @@
-rel# CAMARA API Design Guide
+# CAMARA API Design Guide
+
 
 This document outlines guidelines for API design within the CAMARA project, applicable to all APIs developed under the initiative.
 
