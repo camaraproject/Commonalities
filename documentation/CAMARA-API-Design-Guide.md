@@ -406,11 +406,10 @@ As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error r
 
 ```
 
-NOTE: The template MUST be renderized by replacing `{link_to_release}` with the specific value of the Commonalities Release the API specification version is associated to.
-For instance, for an API specification version associated to different Commonalities stages in Spring25 MetaRelease it would have been:
-- API specification version associated to alpha release: `https://github.com/camaraproject/Commonalities/blob/r2.1/artifacts`
-- API specification version associated to release candidate release: `https://github.com/camaraproject/Commonalities/blob/r2.2/artifacts`
-- API specification version associated to public release: `https://github.com/camaraproject/Commonalities/blob/r2.3/artifacts`
+NOTE: The template MUST be rendered by replacing `{link_to_release}` with the specific value of the CAMARA Commonalities release the API specification version is compliant to.
+For instance: `https://github.com/camaraproject/Commonalities/blob/r3.1/artifacts`
+
+
 
 
 ## 4. Pagination, Sorting and Filtering
