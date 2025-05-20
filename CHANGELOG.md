@@ -1,6 +1,7 @@
 # Changelog Commonalities
 
 ## Table of Contents
+- **[r3.1](#r31)**
 - **[r2.3](#r23)**
 - **[r2.2](#r22)**
 - **[r2.1](#r21)**
@@ -11,6 +12,32 @@
 - **[v0.3.0](#v030)**
 - **[v0.2.0](#v020)**
 - **[v0.1.0 - Initial version](#v010---initial-version)**
+
+# r3.1
+## Release Notes
+
+This release contains documents and artifacts of Commonalities version 0.6.0-alpha.1:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r3.1/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r3.1/artifacts)** folder.
+**The relevant details of authentication and consent collection are covered by [release 3.1](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
+### Added
+* [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md) document by @rartych in https://github.com/camaraproject/Commonalities/pull/441
+* [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md) document by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/442
+* Links to CAMARA API Event Subscription and Notification Guide in artifacts by @rartych in https://github.com/camaraproject/Commonalities/pull/453
+
+### Changed
+* Aligned Error 401 wording in Notification Cloud Events artifact by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/449
+* Updated `types` property of `Subscription` allowing more than one event type per subscription by @eric-murray in https://github.com/camaraproject/Commonalities/pull/432
+  
+### Fixed
+N/A
+
+### Removed
+* Removed AUTHENTICATION_REQUIRED error code by @eric-murray in https://github.com/camaraproject/Commonalities/pull/429
+* API Design Guidelines document was deprecated by @rartych in https://github.com/camaraproject/Commonalities/pull/441
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r2.3...r3.1
 
 # r2.3
 ## Release Notes
