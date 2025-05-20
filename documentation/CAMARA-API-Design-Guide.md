@@ -1,5 +1,6 @@
 # CAMARA API Design Guide
 
+
 This document outlines guidelines for API design within the CAMARA project, applicable to all APIs developed under the initiative.
 
 <!-- TOC tocDepth:2..3 chapterDepth:2..4 -->
@@ -567,14 +568,16 @@ The API functionalities must be implemented following the specifications of the 
 
 ### 5.3. Info Object
 
-The `info` object shall have the following content:
+The `info` object must contain the properties described below.
+
+Example `info` object along with brief explanations for each of the mandatory fields:
 
 ```yaml
 info:
   # title without "API" in it, e.g. "Number Verification"
   title: Number Verification
   # description explaining the API, part of the API documentation 
-  # text explaining how to fill the "Authorization and authentication" - see section 11.6
+  # including mandatory texts  "Authorization and authentication"
   description: |
     This API allows to verify that the provided mobile phone number is the one used in the device. It
     verifies that the user is using a device with the same mobile phone number as it is declared.
@@ -591,13 +594,22 @@ info:
 ```
 
 #### 5.3.1. Title
-Title describes the API shortly. The title shall not include the term "API" in it.
+`title` field describes the API shortly. The title shall not include the term "API" in it.
 
 #### 5.3.2. Description
-No special restrictions specified in CAMARA.
+`description`field: There are no special restrictions specified in CAMARA for the documentation explaining API.
+[CommonMark syntax](https://spec.commonmark.org/) may be used for rich text representation.
+It is not recommended to link images outside of the Github API repository, since changes to these images may be outside of the control of repository maintainers. Images should be preferably hosted within the API repository within the `documentation/API_documentation/resources` folder.
 
+```markdown
+![API Diagram](https://raw.githubusercontent.com/camaraproject/{apiRepository}/main/documentation/API_documentation/resources/diagram.png)
+```
+
+Some sections are required, as defined in [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api-specs)
+ or [Appendix A](appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
+ 
 #### 5.3.3. Version
-APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
+`version` field: APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
 
 #### 5.3.4. Terms of service
 `termsOfService` shall not be included. API providers may add this content when documenting their APIs.
@@ -606,7 +618,7 @@ APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wi
 `contact` information shall not be included. API providers may add this content when documenting their APIs.
 
 #### 5.3.6. License
-The license object shall include the following fields:
+The `license` object shall include the following fields:
 ```
 license
   name: Apache 2.0
@@ -734,13 +746,53 @@ All properties within the object must have a description.
 
 #### 5.7.5. Request bodies
 
+All `requestBody` attributes must have a description. They can follow one of the two structures below:
+
+**Case A:** The request body structure is explicitly detailed. This is typically used when the request body is not reusable across different operations.
+
+```yaml
+requestBody:
+  description: <description>
+  content:
+    application/json:
+      schema:
+        $ref: "#/components/schemas/<schema-name>"
+  required: true
+```
+
+**Case B:** The request body structure is referenced from a schema in `components.requestBodies`. This is usually the case when the request body is reusable across different operations.
+
+```yaml
+requestBody:
+  $ref: '#/components/requestBodies/<schema-name>'
+```
+
 `GET` and `DELETE` HTTP methods must not accept a 'requestBody' attribute.
 
 
 #### 5.7.6. Responses
 
-All response objects must have a description.
+All response objects must have a description. They typically consist of two parts:
 
+- **Success response codes:** Their structure is explicitly detailed.
+- **Error response codes:** Their structure is referenced to a schema in `components.responses`.
+
+```yaml
+responses:
+  "2xx":
+    description: <description>
+    headers:
+      x-correlator:
+        $ref: "#/components/headers/x-correlator"
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/<schema-name>"
+  "4xx":
+    $ref: "#/components/responses/<schema-name>"
+  "5xx":
+    $ref: "#/components/responses/<schema-name>"
+```
 
 
 ### 5.8. Components
@@ -770,7 +822,7 @@ All properties within the object must have a description.
 
 Special requirements related to HTTP headers.
 
-##### X-correlator Header
+##### x-correlator Header
 
 With the aim of standardizing the request observability and traceability process, common headers that provide a follow-up of the E2E processes should be included. The table below captures these headers.
 
@@ -778,13 +830,13 @@ With the aim of standardizing the request observability and traceability process
 |----------------|-----------------------------------------------|----------------------|------------------|--------------------------|----------------------------|----------------------------------------|
 | `x-correlator` | 	Service correlator to make E2E observability | `type: string`  `pattern: ^[a-zA-Z0-9-]{0,55}$`     | Request / Response | No                       | Yes                        | 	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
 
-When the API Consumer includes non-empty "x-correlator" header in the request, the API Provider must include it in the response with the same value that was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value. Recommendation is to use UUID for values.
+When the API Consumer includes a non-empty `x-correlator` header in the request, the API Provider must echo this value in the response. If the `x-correlator` header is not included in the request, it is optional for the API Provider to include it in the response with any valid value. It is recommended to use UUID format for values.
 
 In notification scenarios (i.e., POST request sent towards the listener indicated by `sink` address),
-the use of the "x-correlator" is supported for the same aim as well.
-When the API request includes the "x-correlator" header,
+the use of the `x-correlator` is supported for the same aim as well.
+When the API request includes the `x-correlator` header,
 it is recommended for the listener to include it in the response with the same value as was used in the request.
-Otherwise, it is optional to include the "x-correlator" header in the response with any valid value.
+Otherwise, it is optional to include the `x-correlator` header in the response with any valid value.
 
 NOTE: HTTP headers are case-insensitive. The use of the naming `x-correlator` is a guideline to align the format across CAMARA APIs. 
 
