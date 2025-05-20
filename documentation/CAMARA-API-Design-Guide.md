@@ -599,7 +599,8 @@ info:
 #### 5.3.2. Description
 `description`field: There are no special restrictions specified in CAMARA for the documentation explaining API.
 [CommonMark syntax](https://spec.commonmark.org/) may be used for rich text representation.
-Images hosted in Github API repository can be embedded in the description, for example:
+It is not recommended to link images outsite of the Github API repository, since changes to these images may be outside of control of repository maintainers. Images should be preferably hosted within the API repository within the `documentation/API_documentation/resources` folder. Images should be included in the release branch. This ensures, that images can be updated with API releases.
+
 
 ```markdown
 ![API Diagram](https://raw.githubusercontent.com/camaraproject/{apiRepository}/main/documentation/API_documentation/resources/diagram.png)
