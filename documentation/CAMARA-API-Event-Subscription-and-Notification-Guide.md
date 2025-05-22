@@ -343,7 +343,7 @@ Specific event notification type "subscription-begins" is defined to inform list
 
 It is used when subscription creation request (POST /subscriptions) is managed asynchronously. For this specific event, the `data` must feature `initiationReason` attribute. 
 
-The following table lists values for `terminationReason` attribute:
+The following table lists values for `initiationReason` attribute:
 
 | enum value | initiation reason |
 | -----------|-------------------- |
@@ -355,13 +355,13 @@ Note2: The "subscription-begins" notification is not counted in the `subscriptio
 
 ### 3.3 `subscription-updates` event
 
-Specific event notification type "subscription-begins" is defined to inform listener about subscription changes.
+Specific event notification type "subscription-updates" is defined to inform listener about subscription changes. For this specific event, the `data` must feature `updateReason` attribute.
 
 It is used when the API Server manages `ACTIVE` and `INACTIVE` status and there are transitions of the subscription between each other.
 
 The following table lists values for `updateReason` attribute:
 
-| enum value | termination reason |
+| enum value | update reason |
 | -----------|-------------------- |
 | SUBSCRIPTION_ACTIVE | API server transitioned susbcription status to `ACTIVE` |
 | SUBSCRIPTION_INACTIVE | API server transitioned susbcription status to `INACTIVE` |
