@@ -100,8 +100,6 @@ This part captures a detailed description of all the data structures used in the
   - If the format of a string is `duration`, the following sentence must be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#appendix-A) for duration`
     - Note: to avoid known ambiguity issues with duration strings, consider using intervals, which are anchored to a specific start and end date or time. Use of a start date or time string field in combination with the duration string field could help to mitigate ambiguity issues.
 
-
-
 - If the data type is an object, list of required properties.
 - List of properties within the object data, including:
    - Property name
