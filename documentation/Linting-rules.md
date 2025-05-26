@@ -369,6 +369,20 @@ _Spectral rule_: [camara-schema-casing-convention](/artifacts/linting_rules/.spe
 
 *Severity*: `warn`
 
+#### Schema type check
+
+`type` attribute is mandatory in property schema definition.
+type - Value MUST be a string in OpenAPI specification.
+String values MUST be one of the primitive types defined by the JSON Schema core specification: 
+array, boolean, integer, number, object, string
+
+`null` - is not supported in OpenAPI 3.0
+
+_Spectral rule_: [camara-schema-type-check](/artifacts/linting_rules/.spectral.yml)
+
+*Severity*: `error`
+
+
 
 ## 4. Summary of proposed CAMARA rules
 
@@ -396,4 +410,6 @@ _Spectral rule_: [camara-schema-casing-convention](/artifacts/linting_rules/.spe
 | camara-parameter-casing-convention                     | Path parameter should follow a specific case convention, with the default being kebab-case | Yes         | Yes        | Error           |
 | camara-schema-casing-convention                        | Schema should follow a specific case convention pascal case (upper camel case)             | Yes         | Yes        | Warning         |
 | camara-enum-casing-convention                          | enum fields contain values that follow a specific case convention: macro (CAPITAL_LETTERS) | tbd         | tbd        | Info            |
-| camara-property-casing-convention                      | Property names should follow a specific case convention, with the default being camel case | tbd         | tbd        | Error           |
+| camara-property-casing-convention                      | Property names should follow a specific case convention, with the default being camel case | Yes         | Yes        | Error           |
+| camara-schema-type-check                               | `type` attribute is mandatory in property schema definition                                | Yes         | Yes        | Error           |
+
