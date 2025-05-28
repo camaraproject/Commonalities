@@ -12,9 +12,9 @@ For general API design guidelines, please refer to [CAMARA API Design Guide](/do
     - [2.2. Resource-based (explicit) subscription](#22-resource-based-explicit-subscription)
 - [3. Event Notification](#3-event-notification)
     - [3.1. Event notification definition](#31-event-notification-definition)
-    - [3.2. `subscription-begins` event](#32-subscription-begins-event)
-    - [3.3. `subscription-updates` event](#33-subscription-updates-event)
-    - [3.4. `subscription-ends` event](#34-subscription-ends-event)
+    - [3.2. `subscription-started` event](#32-subscription-started-event)
+    - [3.3. `subscription-updated` event](#33-subscription-updated-event)
+    - [3.4. `subscription-ended` event](#34-subscription-ended-event)
     - [3.5. Error definition for event notification](#35-error-definition-for-event-notification)
     - [3.6. Correlation Management](#36-correlation-management)
     - [3.7. Notification examples](#37-notification-examples)
@@ -163,7 +163,7 @@ Note about expired accessToken:
 when a notification is sent to the sink endpoint with sinkCredential it could occur a response back from the listener with an error about expired token.
 In this case, the subscription will shift to EXPIRED status.
 (as we do not have as of now capability to allow consumer to modify `subscription`).
-Remark: This action will trigger a subscription-ends event with terminationReason set to "ACCESS_TOKEN_EXPIRED"
+Remark: This action will trigger a subscription-ended event with terminationReason set to "ACCESS_TOKEN_EXPIRED"
 (probably this notification will also get the EXPIRED status answer). 
 
 `config` attributes table:
@@ -337,9 +337,10 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 
 Note: For operational and troubleshooting purposes it is relevant to accommodate use of `x-correlator` header attribute. API listener implementations have to be ready to support and receive this data.
 
-### 3.2. `subscription-begins` event
+### 3.2. `subscription-started` event
 
-Specific event notification type "subscription-begins" is defined to inform listener about subscription initiation.
+Specific event notification type "subscription-started" is defined to inform listener about subscription initiation. 
+It is an optional event. Recommended to be considered for asynchronous subscription creation models.
 
 It is used when subscription creation request (POST /subscriptions) is managed asynchronously. For this specific event, the `data` must feature `initiationReason` attribute. 
 
@@ -353,11 +354,12 @@ Note1: This enumeration is also defined in `event-subscription-template.yaml` (p
 
 Note2: The "subscription-begins" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can  receive 2 notifications, besides the notification sent for "subscription-begins").
 
-### 3.3 `subscription-updates` event
+### 3.3 `subscription-updated` event
 
-Specific event notification type "subscription-updates" is defined to inform listener about subscription changes. For this specific event, the `data` must feature `updateReason` attribute.
+Specific event notification type "subscription-updated" is defined to inform listener about subscription changes. 
+It is an optional event.
 
-It is used when the API Server manages `ACTIVE` and `INACTIVE` status and there are transitions of the subscription between each other.
+It is used when the API Server manages `ACTIVE` and `INACTIVE` status and there are transitions of the subscription between each other. For this specific event, the `data` must feature `updateReason` attribute.
 
 The following table lists values for `updateReason` attribute:
 
@@ -370,9 +372,9 @@ Note1: This enumeration is also defined in `event-subscription-template.yaml` (p
 
 Note2: The "subscription-updates" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can  receive 2 notifications, besides the notifications sent for "subscription-updates").
 
-### 3.4. `subscription-ends` event
+### 3.4. `subscription-ended` event
 
-Specific event notification type "subscription-ends" is defined to inform listener about subscription termination.
+Specific event notification type "subscription-ended" is defined to inform listener about subscription termination.
 
 It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notifications prematurely, or if the subscription request is managed asynchronously by the server and it is not able to provide the service. For this specific event, the `data` must feature `terminationReason` attribute. 
 
@@ -388,7 +390,7 @@ The following table lists values for `terminationReason` attribute:
 
 Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory). 
 
-Note2: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, and later, received 2 notifications, then a third notification will be sent for "subscription-ends").
+Note2: The "subscription-ended" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, and later, received 2 notifications, then a third notification will be sent for "subscription-ended").
 
 Note3: In the case of ACCESS_TOKEN_EXPIRED termination reason sending the notification once the token expired is useless. To avoid this case, following rules are defined :
 
@@ -463,7 +465,7 @@ curl -X 'POST' \
 {
   "id": 123658,
   "source": "https://notificationSendServer12.supertelco.com",
-  "type": "org.camaraproject.api.device-roaming-subscriptions.v1.subscription-ends",
+  "type": "org.camaraproject.api.device-roaming-subscriptions.v1.subscription-ended",
   "specversion": "1.0",
   "datacontenttype": "application/json",
   "data": {

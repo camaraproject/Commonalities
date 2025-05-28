@@ -453,13 +453,15 @@ components:
       description: |
         event-type - Event triggered when an event-type event occurred. Several event-type could be defined.
 
-        subscription-ends: Event triggered when the subscription ends
+        - subscription-started: Event triggered when the subscription starts
+        - subscription-updated: Event triggered when the subscription is updated
+        - subscription-ended: Event triggered when the subscription ends
       enum:
         - org.camaraproject.api-name.v0.event-type1
         - org.camaraproject.api-name.v0.event-type2
-        - org.camaraproject.api-name.v0.subscription-begins
-        - org.camaraproject.api-name.v0.subscription-updates
-        - org.camaraproject.api-name.v0.subscription-ends
+        - org.camaraproject.api-name.v0.subscription-started
+        - org.camaraproject.api-name.v0.subscription-updated
+        - org.camaraproject.api-name.v0.subscription-ended
 
     SubscriptionEventType:
       type: string
@@ -591,9 +593,9 @@ components:
         mapping:
           org.camaraproject.api-name.v0.event-type1: "#/components/schemas/EventApiSpecific1"
           org.camaraproject.api-name.v0.event-type2: "#/components/schemas/EventApiSpecific2"
-          org.camaraproject.api-name.v0.subscription-begins: "#/components/schemas/EventSubscriptionBegins"
-          org.camaraproject.api-name.v0.subscription-updates: "#/components/schemas/EventSubscriptionUpdates"
-          org.camaraproject.api-name.v0.subscription-ends: "#/components/schemas/EventSubscriptionEnds"
+          org.camaraproject.api-name.v0.subscription-started: "#/components/schemas/EventSubscriptionStarted"
+          org.camaraproject.api-name.v0.subscription-updated: "#/components/schemas/EventSubscriptionUpdated"
+          org.camaraproject.api-name.v0.subscription-ended: "#/components/schemas/EventSubscriptionEnded"
 
     Source:
       type: string
@@ -629,17 +631,17 @@ components:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
 
-    EventSubscriptionBegins:
-      description: event structure for event subscription begins
+    EventSubscriptionStarted:
+      description: event structure for event subscription started
       allOf:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
           properties:
             data:
-              $ref: "#/components/schemas/SubscriptionBegins"
+              $ref: "#/components/schemas/SubscriptionStarted"
 
-    SubscriptionBegins:
-      description: Event detail structure for SUBSCRIPTION_BEGINS event
+    SubscriptionStarted:
+      description: Event detail structure for subscription started event
       type: object
       required:
         - initiationReason
@@ -659,17 +661,17 @@ components:
       enum:
         - SUBSCRIPTION_CREATED
 
-    EventSubscriptionUpdates:
-      description: event structure for event subscription updates
+    EventSubscriptionUpdated:
+      description: event structure for event subscription updated
       allOf:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
           properties:
             data:
-              $ref: "#/components/schemas/SubscriptionUpdates"
+              $ref: "#/components/schemas/SubscriptionUpdated"
 
-    SubscriptionUpdates:
-      description: Event detail structure for SUBSCRIPTION_UPDATES event
+    SubscriptionUpdated:
+      description: Event detail structure for subscription updated event
       type: object
       required:
         - updateReason
@@ -691,17 +693,17 @@ components:
         - SUBSCRIPTION_ACTIVE
         - SUBSCRIPTION_INACTIVE
 
-    EventSubscriptionEnds:
-      description: event structure for event subscription ends
+    EventSubscriptionEnded:
+      description: event structure for event subscription ended
       allOf:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
           properties:
             data:
-              $ref: "#/components/schemas/SubscriptionEnds"
+              $ref: "#/components/schemas/SubscriptionEnded"
 
-    SubscriptionEnds:
-      description: Event detail structure for SUBSCRIPTION_ENDS event
+    SubscriptionEnded:
+      description: Event detail structure for subscription ended event
       type: object
       required:
         - terminationReason
