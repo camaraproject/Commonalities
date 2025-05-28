@@ -277,7 +277,8 @@ _Spectral rule_: [camara-response-descriptions](/artifacts/linting_rules/.spectr
 
 *Severity*: `warn`
 
-CAMARA API Design Guide: [5.7.4. Parameters ](CAMARA-API-Design-Guide.md#574-parameters)
+CAMARA API Design Guide: [5.7.4. Parameters](CAMARA-API-Design-Guide.md#574-parameters)
+
 
 All properties within the object must have a description. 
 
@@ -328,7 +329,8 @@ _Spectral rule_: [camara-enum-casing-convention](/artifacts/linting_rules/.spect
 
 #### Operation ID
 
-CAMARA API Design Guide:  [5.7.2. Operations](CAMARA-API-Design-Guide.md#572-operations)
+CAMARA API Design Guide: [5.7.2. Operations](CAMARA-API-Design-Guide.md#572-operations)
+
 
 >   OperationIds are defined in lowerCamelCase: For example: `helloWorld`
 
