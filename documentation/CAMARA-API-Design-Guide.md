@@ -398,17 +398,13 @@ The following template must be used as part of the API documentation in the `inf
 ```md
 # Additional CAMARA error responses
 
-The list of error codes in this API specification is not exhaustive. Therefore the API specification may not document some non-mandatory error statuses as indicated in `CAMARA API Design Guidelines`.
+The list of error codes in this API specification is not exhaustive. Therefore the API specification may not document some non-mandatory error statuses as indicated in `CAMARA API Design Guide`.
 
-Please refer to [CAMARA_common.yaml]({link_to_release}/CAMARA_common.yaml) for a complete list of error responses.
+Please refer to the `CAMARA_common.yaml` of the Commonalities Release associated to this API version for a complete list of error responses. The applicable Commonalities Release can be identified in the `API Readiness Checklist` document associated to this API version.
 
 As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
 
 ```
-
-NOTE: The template MUST be rendered by replacing `{link_to_release}` with the specific value of the CAMARA Commonalities release the API specification version is compliant to.
-For instance: `https://github.com/camaraproject/Commonalities/blob/r3.1/artifacts`
-
 
 
 
