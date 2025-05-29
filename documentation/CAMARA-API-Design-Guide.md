@@ -423,13 +423,17 @@ Petitions examples:
 
 ### 4.2. Sorting
 
+Sorting the result of a query on a resource collection is based on two main parameters:
 
-Sorting the result of a query on a resource collection requires two main parameters:
-Note: Services must accept and use these parameters when sorting is supported.  If a parameter is not supported, the service should return an error message.
 - `orderBy`: it contains the names of the attributes on which the sort is performed, with comma separated if there is more than one criteria.
-- `order`: by default, sorting is done in descending order. 
+  - When sorting is performed only based in one attribute it is allowed to not use and document this query param up to WG decision, clearly indicating within `order` query param on which attribute the sorting is based.
+  - When sorting is perfomed based on several attributes, it is required the use of this query param.
+- `order`: sorting can be done in ascendent or descentent order.
+  - To specify which sort criteria, it is needed to use "asc" or "desc" as query value.
+  - Default value is agreed within the WG, as every API may have their own particularities/use cases.
+  - When sorting is perfomed based on several attributes, `order` logic is performed based on the first attribute indicated within `orderBy` query param.  
 
-If you may want to specify which sort criteria, you need to use "asc" or "desc" as query value.
+NOTE: Services must accept and use these parameters when sorting is supported. If a parameter is not supported, the service should return an error message.
 
 For example, The list of orders is retrieved, sorted by rating, reviews and name with descending criteria.
 
