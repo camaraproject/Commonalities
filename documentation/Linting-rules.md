@@ -277,8 +277,7 @@ _Spectral rule_: [camara-response-descriptions](/artifacts/linting_rules/.spectr
 
 *Severity*: `warn`
 
-CAMARA API Design Guide: [5.7.4. Parameters](CAMARA-API-Design-Guide.md#574-parameters)
-
+CAMARA API Design Guide: [5.8. Components](CAMARA-API-Design-Guide.md#58-components)
 
 All properties within the object must have a description. 
 
