@@ -32,15 +32,17 @@ A list of some of the frequently accessed documents that are an output of the wo
 
 | Document name                                                                                                                             | Purpose                                                                                                                                                            |
 |-------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
- | [API-design-guidelines.md](documentation/API-design-guidelines.md)               | This document captures guidelines for the API design in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative. |
+ | [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md)               | This document captures guidelines for the API design in CAMARA project. These guidelines are applicable to every API to be worked out under the CAMARA initiative. | 
+ | [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md) | This document outlines guidelines applicable to all APIs that provide capabilities for event subscription and notification management. |
 | [Glossary.md](documentation/Glossary.md)                                         | A glossary of the common terms and their API parameter/field names for use in the APIs                                                                             |
 | [API-Testing-Guidelines.md](documentation/API-Testing-Guidelines.md)             | Guidelines for the API testing in CAMARA project                                                                                                   |
 | [API-cheatsheet.md](documentation/API-cheatsheet.md)                             | CAMARA syntax cheatsheet    |
 
-NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-Checklist, are located within [ReleaseManagement](https://github.com/camaraproject/ReleaseManagement). The versioning of APIs is defined within the [API-design-guidelines.md](documentation/API-design-guidelines.md#5-versioning). 
+NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-Checklist, are located within [ReleaseManagement](https://github.com/camaraproject/ReleaseManagement). The versioning of APIs is defined within the [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md#7-versioning). 
 
 
 ## Status and released versions
+* Alpha release of version 0.6.0 of guidelines and assets for Fall 25 CAMARA APIs is available with the [r3.1 tag](https://github.com/camaraproject/Commonalities/tree/r3.1)
 * Release 0.5.0 of guidelines and assets for Spring 25 CAMARA APIs is available with the [r2.3 tag](https://github.com/camaraproject/Commonalities/tree/r2.3)
 * Previous releases and pre-releases are available in https://github.com/camaraproject/Commonalities/releases
 

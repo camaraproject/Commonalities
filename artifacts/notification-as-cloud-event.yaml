@@ -43,7 +43,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 0.3.0-alpha.1
 externalDocs:
   description: Product documentation at CAMARA
   url: https://github.com/camaraproject/Commonalities
@@ -190,6 +190,7 @@ components:
       description: Correlation id for the different services
       schema:
         type: string
+        pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
   parameters:
     x-correlator:
       name: x-correlator
@@ -197,6 +198,7 @@ components:
       description: Correlation id for the different services
       schema:
         type: string
+        pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
 
   responses:
     Generic400:

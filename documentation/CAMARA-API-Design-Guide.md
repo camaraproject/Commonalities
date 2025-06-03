@@ -1,5 +1,6 @@
 # CAMARA API Design Guide
 
+
 This document outlines guidelines for API design within the CAMARA project, applicable to all APIs developed under the initiative.
 
 <!-- TOC tocDepth:2..3 chapterDepth:2..4 -->
@@ -41,7 +42,7 @@ This document outlines guidelines for API design within the CAMARA project, appl
   - [7.3. API versions throughout the release process](#73-api-versions-throughout-the-release-process)
   - [7.4. Backward and forward compatibility](#74-backward-and-forward-compatibility)
 - [8. External Documentation](#8-external-documentation)
-- [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
+- [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
 
 <!-- /TOC -->
 
@@ -284,7 +285,6 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       404        |     `IDENTIFIER_NOT_FOUND`    | Device identifier not found.                                               | Some identifier cannot be matched to a device                                                                                                                              |
 |       404        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Specific situation to highlight the resource/concept not found (e.g. use in device)                                                                                     |
 |       422        |    `UNSUPPORTED_IDENTIFIER`   | The identifier provided is not supported.                                  | None of the provided identifiers is supported by the implementation                                                                                                     |  
-|       422        |     `IDENTIFIER_MISMATCH`     | Provided identifiers are not consistent.                                   | Inconsistency between identifiers not pointing to the same device                                                                                                         |
 |       422        |    `UNNECESSARY_IDENTIFIER`   | The device is already identified by the access token.                      | An explicit identifier is provided when a device or phone number has already been identified from the access token                                                            |
 |       422        |    `SERVICE_NOT_APPLICABLE`   | The service is not available for the provided identifier.                  | Service not applicable for the provided identifier                                                                                                                          |
 |       422        |      `MISSING_IDENTIFIER`     | The device cannot be identified.                                           | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token                              |
@@ -337,10 +337,17 @@ The Following table compiles the guidelines to be adopted:
 |     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.            |
 |     1      | None of the provided identifiers is supported by the implementation |       422        |     UNSUPPORTED_IDENTIFIER     | The identifier provided is not supported.                                 |
 |     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | Device identifier not found.                             |  
-|     3      | Inconsistency between identifiers not pointing to the same device |       422        |       IDENTIFIER_MISMATCH      | Provided identifiers are not consistent.          |
-|     4      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        |     UNNECESSARY_IDENTIFIER      | The device is already identified by the access token. |
-|     5      | Service not applicable for the provided identifier                         |       422        |     SERVICE_NOT_APPLICABLE     | The service is not available for the provided identifier. |
-|     6      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
+|     3      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        |     UNNECESSARY_IDENTIFIER      | The device is already identified by the access token. |
+|     4      | Service not applicable for the provided identifier                         |       422        |     SERVICE_NOT_APPLICABLE     | The service is not available for the provided identifier. |
+|     5      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
+
+**NOTE:**  
+The `Device` object defined in [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
+
+Where an API consumer provides more than one device identifier, the API provider should indicate in the response which of these identifiers they are using to fulfil the API, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. A `DeviceResponse` object is defined for this purpose. The API provider MUST NOT respond with an identifier that was not originally provided by the API consumer.
+
+
+An error MUST NOT be returned when the supplied device identifiers do not match to prevent the API consumer correlating identifiers for a given end user that they may not otherwise know. It is the responsibility of the API consumer to ensure that the identifiers they are using are associated with the same device. If they are unable to do that, only a single identifier should be provided to the API provider.
 
 #### 3.2.1. Templates
 
@@ -440,13 +447,17 @@ Petitions examples:
 
 ### 4.2. Sorting
 
+Sorting the result of a query on a resource collection is based on two main parameters:
 
-Sorting the result of a query on a resource collection requires two main parameters:
-Note: Services must accept and use these parameters when sorting is supported.  If a parameter is not supported, the service should return an error message.
 - `orderBy`: it contains the names of the attributes on which the sort is performed, with comma separated if there is more than one criteria.
-- `order`: by default, sorting is done in descending order. 
+  - When sorting is performed only based in one attribute it is allowed to not use and document this query param up to WG decision, clearly indicating within `order` query param on which attribute the sorting is based.
+  - When sorting is perfomed based on several attributes, it is required the use of this query param.
+- `order`: sorting can be done in ascendent or descentent order.
+  - To specify which sort criteria, it is needed to use "asc" or "desc" as query value.
+  - Default value is agreed within the WG, as every API may have their own particularities/use cases.
+  - When sorting is perfomed based on several attributes, `order` logic is performed based on the first attribute indicated within `orderBy` query param.  
 
-If you may want to specify which sort criteria, you need to use "asc" or "desc" as query value.
+NOTE: Services must accept and use these parameters when sorting is supported. If a parameter is not supported, the service should return an error message.
 
 For example, The list of orders is retrieved, sorted by rating, reviews and name with descending criteria.
 
@@ -584,15 +595,17 @@ The API functionalities must be implemented following the specifications of the 
 
 ### 5.3. Info Object
 
-The `info` object shall have the following content:
+The `info` object must contain the properties described below.
+
+Example `info` object along with brief explanations for each of the mandatory fields:
 
 ```yaml
 info:
   # title without "API" in it, e.g. "Number Verification"
   title: Number Verification
   # description explaining the API, part of the API documentation 
-  # including mandatory text "Authorization and authentication"
-  # including mandatory text "Additional CAMARA error responses"
+  # including mandatory texts "Authorization and authentication"
+  # including mandatory texts "Additional CAMARA error responses"
 
   description: |
     This API allows to verify that the provided mobile phone number is the one used in the device. It
@@ -610,23 +623,22 @@ info:
 ```
 
 #### 5.3.1. Title
-Title describes the API shortly. The title shall not include the term "API" in it.
+`title` field describes the API shortly. The title shall not include the term "API" in it.
 
 #### 5.3.2. Description
-`description`field: There are no special restrictions specified in CAMARA for the documentation explaining an API.
-
+`description`field: There are no special restrictions specified in CAMARA for the documentation explaining API.
 [CommonMark syntax](https://spec.commonmark.org/) may be used for rich text representation.
-Images hosted in Github API repository can be embedded in the description, for example:
+It is not recommended to link images outside of the Github API repository, since changes to these images may be outside of the control of repository maintainers. Images should be preferably hosted within the API repository within the `documentation/API_documentation/resources` folder.
 
 ```markdown
 ![API Diagram](https://raw.githubusercontent.com/camaraproject/{apiRepository}/main/documentation/API_documentation/resources/diagram.png)
 ```
 
 Some sections are required, as defined in [Section 3.3](#33-error-responses---mandatory-template-for-infodescription-in-camara-api-specs), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api-specs)
- or [Appendix A](appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
-
+ or [Appendix A](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
+ 
 #### 5.3.3. Version
-APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
+`version` field: APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
 
 #### 5.3.4. Terms of service
 `termsOfService` shall not be included. API providers may add this content when documenting their APIs.
@@ -635,7 +647,7 @@ APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wi
 `contact` information shall not be included. API providers may add this content when documenting their APIs.
 
 #### 5.3.6. License
-The license object shall include the following fields:
+The `license` object shall include the following fields:
 ```
 license
   name: Apache 2.0
@@ -763,13 +775,53 @@ All properties within the object must have a description.
 
 #### 5.7.5. Request bodies
 
+All `requestBody` attributes must have a description. They can follow one of the two structures below:
+
+**Case A:** The request body structure is explicitly detailed. This is typically used when the request body is not reusable across different operations.
+
+```yaml
+requestBody:
+  description: <description>
+  content:
+    application/json:
+      schema:
+        $ref: "#/components/schemas/<schema-name>"
+  required: true
+```
+
+**Case B:** The request body structure is referenced from a schema in `components.requestBodies`. This is usually the case when the request body is reusable across different operations.
+
+```yaml
+requestBody:
+  $ref: '#/components/requestBodies/<schema-name>'
+```
+
 `GET` and `DELETE` HTTP methods must not accept a 'requestBody' attribute.
 
 
 #### 5.7.6. Responses
 
-All response objects must have a description.
+All response objects must have a description. They typically consist of two parts:
 
+- **Success response codes:** Their structure is explicitly detailed.
+- **Error response codes:** Their structure is referenced to a schema in `components.responses`.
+
+```yaml
+responses:
+  "2xx":
+    description: <description>
+    headers:
+      x-correlator:
+        $ref: "#/components/headers/x-correlator"
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/<schema-name>"
+  "4xx":
+    $ref: "#/components/responses/<schema-name>"
+  "5xx":
+    $ref: "#/components/responses/<schema-name>"
+```
 
 
 ### 5.8. Components
@@ -799,23 +851,25 @@ All properties within the object must have a description.
 
 Special requirements related to HTTP headers.
 
-##### X-correlator Header
+##### x-correlator Header
 
 With the aim of standardizing the request observability and traceability process, common headers that provide a follow-up of the E2E processes should be included. The table below captures these headers.
 
 | Name           | Description                                   | Schema          | Location         | Required by API Consumer | Required in OAS Definition | 	Example                              | 
 |----------------|-----------------------------------------------|----------------------|------------------|--------------------------|----------------------------|----------------------------------------|
-| `x-correlator` | 	Service correlator to make E2E observability | `type: string`  `pattern: ^[a-zA-Z0-9-]{0,55}$`     | Request / Response | No                       | Yes                        | 	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
+| `x-correlator` | 	Service correlator to make E2E observability | `type: string`  `pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$`     | Request / Response | No                       | Yes                        | 	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
 
-When the API Consumer includes non-empty "x-correlator" header in the request, the API Provider must include it in the response with the same value that was used in the request. Otherwise, it is optional to include the "x-correlator" header in the response with any valid value. Recommendation is to use UUID for values.
+When the API Consumer includes a non-empty `x-correlator` header in the request, the API Provider must echo this value in the response. If the `x-correlator` header is not included in the request, it is optional for the API Provider to include it in the response with any valid value. It is recommended to use UUID format for values.
 
 In notification scenarios (i.e., POST request sent towards the listener indicated by `sink` address),
-the use of the "x-correlator" is supported for the same aim as well.
-When the API request includes the "x-correlator" header,
+the use of the `x-correlator` is supported for the same aim as well.
+When the API request includes the `x-correlator` header,
 it is recommended for the listener to include it in the response with the same value as was used in the request.
-Otherwise, it is optional to include the "x-correlator" header in the response with any valid value.
+Otherwise, it is optional to include the `x-correlator` header in the response with any valid value.
 
-NOTE: HTTP headers are case-insensitive. The use of the naming `x-correlator` is a guideline to align the format across CAMARA APIs. 
+When an API client provides an `x-correlator` value not matching the pattern, error `400 - INVALID_ARGUMENT` must be returned.
+
+NOTE: HTTP headers are case-insensitive. The use of the naming `x-correlator` is a guideline to align the format across CAMARA APIs.
 
 ##### Content-Type Header - clarification
 
@@ -857,38 +911,32 @@ The key of the security scheme is arbitrary in OAS, but convention in CAMARA is 
 
 The following points can serve as a checklist to design the security mechanism of the REST APIs.
 
-1. **Simple Management**. 
-   Securing only the APIs that need to be secure. Any time the more complex solution is made "unnecessarily", it is also likely to leave a hole. 
-2. **HTTPS must always be used**. 
+1. **HTTPS must always be used**. 
 
-   TLS ensures the confidentiality of the transported data and that the server's hostname matches the server's SSL certificate.
-   - If HTTP 2 is used to improve performance, you can even send multiple requests over a single connection, this way you will avoid the complete overhead of TCP and SSL on later requests.
+   TLS ensures the confidentiality and integrity of the transported data and provides a way to authenticate the server.
+   - With HTTP/2 or HTTP/3, performance improvements can be achieved due to better optimization and multiplexing of requests.
+   - If HTTP 1.1 is used, usage of _TCP persistent connections_ is recommended to achieve comparable performance.
+  
+2. **Authentication and authorization must be considered**
 
-3. **Using hash password**. 
-Passwords should never be sent in API bodies,
-   but if it is necessary it must be hashed to protect the system
-   (or minimize damage) even if it is compromised in some hacking attempts.
-   There are many hashing algorithms that can be really effective for password security,
-   for example, PBKDF2, bcrypt and scrypt algorithms.
+   CAMARA uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md).\
 
-4. **Information must not be exposed in the URLs**
-Usernames, passwords, session tokens, and API keys should not appear in the URL, as this can be captured in web server logs, making them easily exploitable. For example, this URL (```https://api.domain.com/user-management/users/{id}/someAction?apiKey=abcd123456789```) exposes the API key. Therefore, never use this kind of security.
+3. **Input parameter validation**
 
-5. **Authentication and authorization must be considered**
-   CAMARA uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md).
+  Validate the request parameters as the first step before they reach the application logic.
+Implement strong validation checks and immediately reject the request if validation fails.
+In the API response, provide relevant error message.
+  
+4. **Sensitive information must not be exposed in the URLs**
 
-6. **Add request time flags should be considered**. 
-Along with other request parameters, a request timestamp can be added as a custom HTTP header in API requests.
-   The server will compare the current timestamp with the timestamp of the request
-   and will only accept the request if it is within a reasonable time frame
-   (1–2 minutes maybe).
-   - This will prevent very basic replay attacks from people trying to hack your system without changing this timestamp.
+Usernames, passwords, session tokens, and API keys should not appear in the URL, as this can be captured in web server logs, making them easily exploitable.
+See section [6.5. POST or GET for transferring sensitive or complex data](#65-post-or-get-for-transferring-sensitive-or-complex-data).
 
-7. **Entry params validation**
- Validates the parameters of the request in the first step before it reaches the application logic.
-   Put strong validation checks and reject the request immediately if validation fails.
-   In the API response,
-   send relevant error messages and an example of the correct input format to improve the user experience.
+5. **Hashing passwords**. 
+
+   Passwords should never be transmitted in API bodies; however, if it becomes absolutely necessary, they must be hashed to protect the system and minimize potential damage in the event of a compromise. Utilizing strong hashing algorithms is crucial for password security. Effective options include Argon2, PBKDF2, bcrypt, and scrypt, which are designed to securely hash passwords and withstand various attack vectors.
+
+For further guidance, please refer to the [OWASP API Security Project](https://owasp.org/www-project-api-security/). This resource offers comprehensive insights and best practices for securing APIs against common vulnerabilities and threats.
 
 ### 6.2. Security definition
 
@@ -914,7 +962,7 @@ paths:
             - {scope}
 ```
 
-The name `openId` must be same as defined in the `components.securitySchemes` section.
+The name `openId` must be same as defined in the `components.securitySchemes` section - see [5.8.6. Security schemes](#586-security-schemes).
 
 
 ### 6.4. Mandatory template for `info.description` in CAMARA API specs
@@ -1003,7 +1051,7 @@ The scopes will always be those defined in the API Specs YAML files. Thus, a sco
 In some CAMARA APIs there are functions to create resource (via POST) and then later query them via id and/or list (with GET) or delete them (via DELETE). For example we have sessions, payments, subscriptions, etc..
 
 For the GET and DELETE operations we must restrict the resource(s) targeted depending on the information provided in the request. Basically we consider 2 filters:
-* API client (aka ClientId)
+* API client (`client_id`)
 * access token
 
 | Operation |  3-legged access token is used | 2-legged access token is used |
