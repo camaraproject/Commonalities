@@ -140,8 +140,7 @@ _Spectral rule_: [camara-info−title](/artifacts/linting_rules/.spectral.yml)
 *Severity*: `warn`
 
 CAMARA API Design Guide: 
-[11.1 General Information](API-design-guidelines.md#111-general-information)
-
+[5.3.3. Version](CAMARA-API-Design-Guide.md#533-version)
 
 Info object must include the following information: API Version in the format: X.Y.Z.
 
