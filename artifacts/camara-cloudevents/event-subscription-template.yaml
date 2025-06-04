@@ -1114,7 +1114,7 @@ components:
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
                       - MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED
-                      - 
+                      - MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED
           examples:
             GENERIC_422_IDENTIFIER_MISMATCH:
               description: Inconsistency between identifiers not pointing to the same device
