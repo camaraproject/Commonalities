@@ -20,7 +20,7 @@
 This release contains documents and artifacts of Commonalities version 0.6.0-rc.1:
 * Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r3.1/documentation)** folder.
 * Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r3.1/artifacts)** folder.
-**The relevant details of authentication and consent collection are covered by [release 3.1](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+**The relevant details of authentication and consent collection are covered by [release 3.2](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
 
 ### Added
 * [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md) document by @rartych in https://github.com/camaraproject/Commonalities/pull/441
