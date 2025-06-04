@@ -604,7 +604,8 @@ info:
   # title without "API" in it, e.g. "Number Verification"
   title: Number Verification
   # description explaining the API, part of the API documentation 
-  # including mandatory texts "Authorization and authentication"
+  # including mandatory text for "Authorization and authentication"
+
   # including mandatory texts "Additional CAMARA error responses"
 
   description: |
