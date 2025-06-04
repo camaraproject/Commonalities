@@ -605,7 +605,6 @@ info:
   title: Number Verification
   # description explaining the API, part of the API documentation 
   # including mandatory text for "Authorization and authentication"
-
   # including mandatory text for "Additional CAMARA error responses"
 
 
