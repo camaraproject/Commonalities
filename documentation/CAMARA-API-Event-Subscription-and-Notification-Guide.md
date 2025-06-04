@@ -297,9 +297,9 @@ when the event occurs that one or two notifications are sent to listener.
 
 ### 2.3. Event versioning
 
-The CloudEvent specification provides some information on [CloudEvent versioning](https://github.com/cloudevents/spec/blob/main/cloudevents/primer.md#versioning-of-cloudevents), but some additional CAMARA event versioning guidelines are described in this section. 
+For CAMARA subscription APIs, events are defined using the CloudEvents format. The CloudEvent specification provides some information on [CloudEvent versioning](https://github.com/cloudevents/spec/blob/main/cloudevents/primer.md#versioning-of-cloudevents), but some additional CAMARA event versioning guidelines are described in this section. 
 
-For CAMARA subscription APIs, events are defined using the CloudEvents format. CloudEvent versioning is described [here](https://github.com/cloudevents/spec/blob/main/cloudevents/primer.md#versioning-of-cloudevents). It states (quoted):
+ [CloudEvent versioning](https://github.com/cloudevents/spec/blob/main/cloudevents/primer.md#versioning-of-cloudevents) states the following (quoted):
 
 - When a CloudEvent's data changes in a backwardly-incompatible way, the value of the type attribute should generally change. The event producer is encouraged to produce both the old event and the new event for some time (potentially forever) in order to avoid disrupting consumers.
 - When a CloudEvent's data changes in a backwardly-compatible way, the value of the type attribute should generally stay the same.
@@ -321,39 +321,49 @@ The event version is independent of the API version that the event belongs to.
 
 ---
 
+Example: A `v2` API can still use a `v1` event version if the event structure is unchanged with this MAJOR API version.
+
 Events are considered to be “first class citizens” just like APIs and have their own versioning throughout their lifecycle. For example,
 
-- The same event version may be supported by different releases of an API.
+- The same event version may be supported by different versions of an API.
 - An event client may be subscribed to a given event version from different API providers with different API versions, but expect to receive the same event data.
 
-CAMARA event versioning is done according to the following guidelines:
+CAMARA event versioning extends the CloudEvent versioning as described in the following table:
+
+Note: unless indicated otherwise, the below applies for both explicit and implicit event subscriptions.
 
 | Event version  | CAMARA event versioning explanation  |
 | ------------------- | ----------------------- |
-| v0  | For any initial API v0.y.z, its event versions are always v0 whatever the changes that are being made. Event changes will be indicated through API version changes only. | 
-| v0 → v1 | For the first stable API version v1.0.0, all event versions must be set to v1 (even if there is no change in the event structure itself). |
-| vn (n>0)  | A MINOR or PATCH update of an event structure, or the addition of the updated event structure to the same API (i.e. keeping both the old and the updated events) does not change the event version, but it will change the API version from vx.y.z (x>0) to either vx.y+1.0 or vx.y.z+1. Such changes to the event structure are backward compatible and should not impact event clients. Note: the update of an event structure is a non breaking change only if the previous version is kept in parallel. |
-| vn → vn+1  | Any MAJOR change to an event structure is a non-backward compatible change and implies an increase to the next event version number. It implies also a MAJOR API version change vx.y.z (x>0) → vx+1.0.0 .Multiple versions of an event may exist in parallel for the same API version. The decision to keep previous event versions (types) of the event structure is up to the event producer. |
-| v1 (adding a new event) | Introducing a new event to a stable subscription API with version vx.y.z (x>0) implies that this event gets the version v1. The introduction of a new event to an existing API is considered as a MINOR version update of the API vx.y.z (x>0) → vx.y+1.z, as it shall not impact existing event clients. To force clients to take the new event into account, one could introduce it through a MAJOR API version change.   |
-| removing an event or an event version | Removing an event or an event version from a stable subscription API version implies a MAJOR update of the API version vx.y.z (x>0) → vx+1.0.0 |
+| **v0 .. vn** (new subscription API)  | For an initial API `v0.y.z`, its event versions always start at `v0` and for any change to the event structure the event version shall follow the guidelines below. Stable APIs must use stable events with version number > 0. When publishing a first stable version of an API, any event version with `v0` shall be changed to `v1`, even if there is no change to the event structure. | 
+| **vn (n>0)** (backward compatible update of an event) | A MINOR or PATCH update of an event structure does not change the event version, but does imply a new MINOR or PATCH version of the API. Such changes to the event structure are backward compatible and should not impact event clients. |
+| **vn → vn+1** (non backward compatible update of an event) | Any MAJOR change to an event structure implies the introduction of the next event version `vn+1`. There are two options: for details, please see below this table. |
+| **v1** (adding a new event) | Introducing a new event to a stable subscription API implies that this event gets the version `v1`. The introduction of a new event to an existing API is considered as a MINOR API version update, as it shall not impact existing event clients. To force clients to take the new event into account, one can introduce it through a MAJOR API version change.    |
+| removing an event or an event version | Removing an event or an event version from a stable subscription API implies a MAJOR update of the API version |
 
-It is recommended to keep the last 2 major event versions.
+Any MAJOR change to an event structure implies the introduction of the next event version `vn+1`. There are two options:
 
-An example of versioning of an event throughout its lifecycle can be found in the [Wiki](https://lf-camaraproject.atlassian.net/wiki/spaces/CAM/pages/14557919/API+versioning#Event-versioning).
+- The updated event structure is introduced as an additional event version `vn+1`, resulting in a new MINOR API version. In this case, both the `vn` and `vn+1` event versions are part of the API definition. **It is recommended to keep only the last 2 event versions (`vn+1` and `vn`) in the latest MAJOR API version**.
+- The updated event structure is introduced as a replacement of the previous event version `vn`, resulting in a new MAJOR API version. In this case, the previous `vn` event version is deleted from the API definition, implying a breaking change for the event clients.
+
+Note 1: The deletion of an event version implies always a MAJOR API version change.
+
+Note 2: The decision to keep previous event version(s) is a decision of the API Sub Project team.
+
+Note 3: In case of implicit event subscriptions, only replacement of the previous event version `vn` in the API definition is possible and will imply always a MAJOR API version change.
 
 **Breaking and non-breaking changes for events**
 
 Examples of breaking (non backward-compatible) changes related to events are
 
-- changing the version of an event (this is a breaking change only if the previous version is not kept in parallel)
+- adding a new version of an event without keeping the previous version in parallel
 - removing an event version or all versions of an event
-- breaking changes to the event structure (follows the same rules as for API response changes, see `CAMARA-API-design-Guide.md`)
+- breaking changes to an event structure (follows the same rules as for API response changes, see `CAMARA-API-design-Guide.md`)
 
 Examples of non breaking (backward-compatible) changes related to events are
 
 - adding a new event
-- adding a new version of an event without keeping the previous version in parallel
-- non-breaking changes to the event structure (follows the same rules as for API response changes, see `CAMARA-API-design-Guide.md`)
+- adding a new version of an existing event if the previous event version is kept
+- non-breaking changes to an event structure (follows the same rules as for API response changes, see `CAMARA-API-design-Guide.md`)
 
 ## 3. Event Notification
 
