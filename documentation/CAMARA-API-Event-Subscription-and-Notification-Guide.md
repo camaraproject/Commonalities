@@ -195,7 +195,7 @@ Error definition described in this guideline applies for subscriptions.
 
 The Following Error codes must be present:
 * for `POST`: 400, 401, 403, 409, 429
-  * If use of multiple event types in one subscription is allowed errors 422: MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED and MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED should be defined.
+  * If use of multiple event types in a single subscription is allowed errors 422: MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED and MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED should be defined.
 * for `GET`: 400, 401, 403
 * for `GET .../{subscriptionId}`: 400, 401, 403, 404
 * for `DELETE`: 400, 401, 403, 404
