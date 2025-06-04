@@ -306,7 +306,7 @@ For CAMARA subscription APIs, events are defined using the CloudEvents format. T
 
 For CAMARA events, its `type` attribute is the base for event versioning as it contains the event version.
 
-- The format of the `type` attribute value is defined by Commonalities in the `CAMARA-API-Event-Subscription-and-Notification-Guide.md` document as: `org.camaraproject.<api-name>.<event-version>.<event-name>`. 
+- The format of the `type` attribute value is defined as: `org.camaraproject.<api-name>.<event-version>.<event-name>`. 
 - The `<event-version>` has the format `vx`. 
 - `x` is the version number of the event’s structure.
 
