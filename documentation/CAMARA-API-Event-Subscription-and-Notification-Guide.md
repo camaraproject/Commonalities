@@ -370,7 +370,7 @@ The following table lists values for `updateReason` attribute:
 
 Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory).
 
-Note2: The "subscription-updates" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can  receive 2 notifications, besides the notifications sent for "subscription-updates").
+Note2: The "subscription-updated" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can  receive 2 notifications, besides the notifications sent for "subscription-updates").
 
 ### 3.4. `subscription-ended` event
 
