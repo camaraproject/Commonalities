@@ -352,7 +352,7 @@ The following table lists values for `initiationReason` attribute:
 
 Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory). 
 
-Note2: The "subscription-started" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can  receive 2 notifications, besides the notification sent for "subscription-begins").
+Note2: The "subscription-started" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can receive 2 notifications, besides the notification sent for "subscription-started").
 
 ### 3.3 `subscription-updated` event
 
