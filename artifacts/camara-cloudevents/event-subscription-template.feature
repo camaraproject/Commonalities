@@ -268,7 +268,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 
   @<xxx>_subscriptions_32_get_unknown_<xxx>_subscription_for_a_device
   Scenario:  Get method for <xxx> subscription with subscription-id unknown to the system  
-    Given the path parameter "subscriptionId" is set to the value unknown to system
+    Given the path parameter "subscriptionId" is set to a value not corresponding to any existing subscription
+
     When the request "retrieve<xxx>Subscription" is sent
     Then the response  code is 404
     And the response property "$.status" is 404
