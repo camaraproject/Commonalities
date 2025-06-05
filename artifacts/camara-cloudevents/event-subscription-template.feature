@@ -27,7 +27,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 
 # Note: Depending on the API managed personal data specific scenario update may be require to specify use of 2-legs or 3-legs access token.
 
-  @<xxx>_subscriptions_01_Create_<xxx>_subscription__sync
+  @<xxx>_subscriptions_01_Create_<xxx>_subscription_sync
+
   Scenario:  Create <xxx> subscription (sync creation)
    # Some implementations may only support asynchronous subscription creation
     Given that subscriptions are created synchronously
