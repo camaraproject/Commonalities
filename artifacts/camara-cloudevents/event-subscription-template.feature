@@ -56,7 +56,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     When the request "createSubscription" is sent
     Then the response code is 201 or 202	
     Then event notification "subscription-started" is received on callback-url
-    And notification body complies with the OAS schema at "##/components/schemas/SubscriptionStarted"
+    And notification body complies with the OAS schema at "#/components/schemas/SubscriptionStarted"
+
     And type="org.camaraproject.<xxx>-subscriptions.v0.subscription-started"
     And the response property "$.terminationReason" is "SUBSCRIPTION_CREATED"
 
