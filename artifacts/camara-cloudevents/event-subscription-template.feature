@@ -238,7 +238,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 
   @<xxx>_subscriptions_29_no_authorization_header_for_get_subscription
   Scenario: No Authorization header for get subscription
-    Given header "Authorization" is not set to valid token
+    Given header "Authorization" is not present
+
     And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
     When the request "retrieve<xxx>Subscription" is sent 
     Then the response status code is 401
