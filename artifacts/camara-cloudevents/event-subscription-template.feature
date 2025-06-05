@@ -3,6 +3,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 
   # This feature file is to be used by CAMARA sub projet when an event subscription ressource is provided.
   # We designed as <xxx> the subscription resource prefix.
+  # We designed as <x> the event version.
+
   #
   # If the subscription leverages 'device' object the following indication must be present:
   #    Implementation indications:
