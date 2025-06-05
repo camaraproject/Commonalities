@@ -119,7 +119,9 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     Then event notification "<event-type>" is received on callback-url
     Then event notification "subscription-ended" is received on callback-url
     And notification body complies with the OAS schema at "##/components/schemas/EventSubscriptionEnds"
-    And type="org.camaraproject.<xxx>-subscriptions.v0.subscription-ended"And the response property "$.terminationReason" is "MAX_EVENTS_REACHED"
+    And type="org.camaraproject.<xxx>-subscriptions.v0.subscription-ended"
+    And the response property "$.terminationReason" is "MAX_EVENTS_REACHED"
+
 		
   @<xxx>_subscriptions_10_subscription_delete_event_validation
   Scenario: Receive notification for subscription-ended event on deletion
