@@ -2,7 +2,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
     CAMARA Commonalities: 0.6
 
-    Common error scenarios for POST operations with phoneNumber as input either in the request
+    Common error scenarios for operations with phoneNumber as input either in the request
     body or implied from the access
 
     NOTES:
@@ -22,7 +22,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     Scenario: Phone number value does not comply with the schema
         Given the header "Authorization" is set to a valid access token which does not identify a single phone number
         And the request body property "$.phoneNumber" does not comply with the OAS schema at "/components/schemas/PhoneNumber"
-        When the HTTP "POST" request is sent
+        When the request "{operationId}" is sent
         Then the response status code is 400
         And the response property "$.status" is 400
         And the response property "$.code" is "INVALID_ARGUMENT"
@@ -32,7 +32,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     Scenario: Phone number not found
         Given the header "Authorization" is set to a valid access token which does not identify a single phone number
         And the request body property "$.phoneNumber" is compliant with the schema but does not identify a valid phone number
-        When the HTTP "POST" request is sent
+        When the request "{operationId}" is sent
         Then the response status code is 404
         And the response property "$.status" is 404
         And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
@@ -42,7 +42,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     Scenario: Phone number not to be included when it can be deduced from the access token
         Given the header "Authorization" is set to a valid access token identifying a phone number
         And  the request body property "$.phoneNumber" is set to a valid phone number
-        When the HTTP "POST" request is sent
+        When the request "{operationId}" is sent
         Then the response status code is 422
         And the response property "$.status" is 422
         And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
@@ -52,7 +52,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     Scenario: Phone number not included and cannot be deducted from the access token
         Given the header "Authorization" is set to a valid access token which does not identify a single phone number
         And the request body property "$.phoneNumber" is not included
-        When the HTTP "POST" request is sent
+        When the request "{operationId}" is sent
         Then the response status code is 422
         And the response property "$.status" is 422
         And the response property "$.code" is "MISSING_IDENTIFIER"

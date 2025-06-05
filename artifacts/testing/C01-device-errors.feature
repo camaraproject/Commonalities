@@ -2,7 +2,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
 
     CAMARA Commonalities: 0.6
     
-    Common error scenarios for POST operations with device as input either in the request
+    Common error scenarios for operations with device as input either in the request
     body or implied from the access.
 
     NOTES:
@@ -22,7 +22,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
     Scenario: The device value is an empty object
         Given the header "Authorization" is set to a valid access token which does not identify a single device
         And the request body property "$.device" is set to: {}
-        When the HTTP "POST" request is sent
+        When the request "{operationId}" is sent
         Then the response status code is 400
         And the response property "$.status" is 400
         And the response property "$.code" is "INVALID_ARGUMENT"
@@ -32,7 +32,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
     Scenario Outline: Some device identifier value does not comply with the schema
         Given the header "Authorization" is set to a valid access token which does not identify a single device
         And the request body property "<device_identifier>" does not comply with the OAS schema at "<oas_spec_schema>"
-        When the HTTP "POST" request is sent
+        When the request "{operationId}" is sent
         Then the response status code is 400
         And the response property "$.status" is 400
         And the response property "$.code" is "INVALID_ARGUMENT"
@@ -50,7 +50,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
     Scenario: Some identifier cannot be matched to a device
         Given the header "Authorization" is set to a valid access token which does not identify a single device
         And the request body property "$.device" is compliant with the schema but does not identify a valid device
-        When the HTTP "POST" request is sent
+        When the request "{operationId}" is sent
         Then the response status code is 404
         And the response property "$.status" is 404
         And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
@@ -60,7 +60,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
     Scenario: Device not to be included when it can be deduced from the access token
         Given the header "Authorization" is set to a valid access token identifying a device
         And the request body property "$.device" is set to a valid device
-        When the HTTP "POST" request is sent
+        When the request "{operationId}" is sent
         Then the response status code is 422
         And the response property "$.status" is 422
         And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
@@ -70,7 +70,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
     Scenario: Device not included and cannot be deduced from the access token
         Given the header "Authorization" is set to a valid access token which does not identify a single device
         And the request body property "$.device" is not included
-        When the HTTP "POST" request is sent
+        When the request "{operationId}" is sent
         Then the response status code is 422
         And the response property "$.status" is 422
         And the response property "$.code" is "MISSING_IDENTIFIER"
@@ -81,7 +81,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
         Given that some types of device identifiers are not supported by the implementation
         And the header "Authorization" is set to a valid access token which does not identify a single device
         And the request body property "$.device" only includes device identifiers not supported by the implementation
-        When the HTTP "POST" request is sent
+        When the request "{operationId}" is sent
         Then the response status code is 422
         And the response property "$.status" is 422
         And the response property "$.code" is "UNSUPPORTED_IDENTIFIER"
@@ -92,7 +92,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
     Scenario: Service not available for the device
         Given that the service is not available for all devices commercialized by the operator
         And a valid device, identified by the token or provided in the request body, for which the service is not applicable
-        When the HTTP "POST" request is sent
+        When the request "{operationId}" is sent
         Then the response status code is 422
         And the response property "$.status" is 422
         And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
