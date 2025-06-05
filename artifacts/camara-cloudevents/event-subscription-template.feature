@@ -205,7 +205,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 
   @<xxx>_subscriptions_26_no_authorization_header_for_create_subscription
   Scenario: No Authorization header for create subscription
-    Given a valid <xxx> subscription request body and header "Authorization" is not set to 
+    Given a valid <xxx> subscription request body
+    And the request does not include the "Authorization" header
     When the request "createSubscription" is sent 
     Then the response status code is 401
     And the response property "$.status" is 401
