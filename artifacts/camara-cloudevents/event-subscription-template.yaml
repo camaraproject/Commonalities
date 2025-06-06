@@ -5,7 +5,7 @@ info:
     This file is a template for CAMARA API explicit subscription endpoint and for Notification model.
     Additional information are provided in [CAMARA API Event Subscription and Notification Guide](https://github.com/camaraproject/Commonalities/blob/main/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md).
 
-    Note on event name convention: the event type name MUST follow: ``org.camaraproject.<api-name>.<api-version>.<event-name>``
+    Note on event name convention: the event type name MUST follow: ``org.camaraproject.<api-name>.<event-version>.<event-name>``
 
     Note on ``security`` - ``openId`` scope: The value in this yaml `api-name:event-type1:grant-level` must be replaced accordingly to the format defined in the guideline document.
 
