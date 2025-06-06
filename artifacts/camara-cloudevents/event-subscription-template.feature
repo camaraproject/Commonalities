@@ -16,7 +16,10 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   # References to OAS spec schemas refer to schemas specifies in <xxx>-subscriptions.yaml
   # References to schemas starting with the # symbol are JSON Pointers from the root of the OAS document: <xxx>-subscriptions.yaml, Schema names are aligned with the event-subscription-template.yaml artifact.
   #
-  # IMPORTANT: This file must be completed with test cases specific to the subscription type managed by the API.
+  # IMPORTANT: 
+  # 1/ This file must be completed with test cases specific to the subscription type managed by the API.
+  # 2/ Specific Subscription error scenarios when Device object is used must be added. These scenarios are available in CAMARA Github.   ################
+  #    source: Commonalities/artifacts/testing
 
   Background: Common <xxx> Subscriptions setup
     Given the resource "{apiroot}/<xxx>-subscriptions/vwip/" as <xxx> base-url
@@ -348,46 +351,6 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.status" is 404
     And the response property "$.code" is "NOT_FOUND"
     And the response property "$.message" contains a user friendly text
-
-########Specific Subscription error scenarios when Device object is  used ################
-### These scenarios must be present if the device object is used in the subscription  ####
-
-  @<xxx>_subscriptions_41_create_with_service_not_applicable
-  Scenario: Create subscription for a device not supported by the service
-    Given the request body includes a device identifier not applicable for this service
-    When the HTTP "POST" request is sent
-    Then the response status code is 422
-    And the response property "$.status" is 422
-    And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
-    And the response property "$.message" contains a user friendly text
-
-  @<xxx>_subscriptions_42_create_with_unnecessary_identifier
-  Scenario: Create subscription with an unnecessary identifier
-    Given the request body explicitly includes a device identifier when it is not required as deductible from the access token
-    When the HTTP "POST" request is sent
-    Then the response status code is 422
-    And the response property "$.status" is 422
-    And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
-    And the response property "$.message" contains a user friendly text
-
-  @<xxx>_subscriptions_43_create_with_unsupported_identifier
-  Scenario: Create subscription with an unsupported identifier
-    Given the request body includes an identifier type not supported by the implementation
-    When the HTTP "POST" request is sent
-    Then the response status code is 422
-    And the response property "$.status" is 422
-    And the response property "$.code" is "UNSUPPORTED_IDENTIFIER"
-    And the response property "$.message" contains a user friendly text
-
-  @<xxx>_subscriptions_44_missing_device
-  Scenario: Device not included and cannot be deduced from the access token
-    Given the header "Authorization" is set to a valid access token which does not identify a single device
-    And the request body property "$.device" is not included
-    When the HTTP "POST" request is sent
-    Then the response status code is 422
-    And the response property "$.status" is 422
-    And the response property "$.code" is "MISSING_IDENTIFIER"
-    And the response property "$.message" contains a user-friendly text
 
 ########Specific Subscription error scenario if multi-event is not permitted ################ 
 
