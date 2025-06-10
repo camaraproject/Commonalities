@@ -13,10 +13,12 @@ For general API design guidelines, please refer to [CAMARA API Design Guide](/do
     - [2.3. Event versioning](#23-event-versioning)
 - [3. Event Notification](#3-event-notification)
     - [3.1. Event notification definition](#31-event-notification-definition)
-    - [3.2. `subscription-ends` event](#32-subscription-ends-event)
-    - [3.3. Error definition for event notification](#33-error-definition-for-event-notification)
-    - [3.4. Correlation Management](#34-correlation-management)
-    - [3.5. Notification examples](#35-notification-examples)
+    - [3.2. `subscription-started` event](#32-subscription-started-event)
+    - [3.3. `subscription-updated` event](#33-subscription-updated-event)
+    - [3.4. `subscription-ended` event](#34-subscription-ended-event)
+    - [3.5. Error definition for event notification](#35-error-definition-for-event-notification)
+    - [3.6. Correlation Management](#36-correlation-management)
+    - [3.7. Notification examples](#37-notification-examples)
 - [4. Security](#4-security)
     - [4.1. Scope naming](#41-scope-naming)
     - [4.2. Abuse Protection](#42-abuse-protection)
@@ -162,7 +164,7 @@ Note about expired accessToken:
 when a notification is sent to the sink endpoint with sinkCredential it could occur a response back from the listener with an error about expired token.
 In this case, the subscription will shift to EXPIRED status.
 (as we do not have as of now capability to allow consumer to modify `subscription`).
-Remark: This action will trigger a subscription-ends event with terminationReason set to "ACCESS_TOKEN_EXPIRED"
+Remark: This action will trigger a subscription-ended event with terminationReason set to "ACCESS_TOKEN_EXPIRED"
 (probably this notification will also get the EXPIRED status answer). 
 
 `config` attributes table:
@@ -406,9 +408,44 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 
 Note: For operational and troubleshooting purposes it is relevant to accommodate use of `x-correlator` header attribute. API listener implementations have to be ready to support and receive this data.
 
-### 3.2. `subscription-ends` event
+### 3.2. `subscription-started` event
 
-Specific event notification type "subscription-ends" is defined to inform listener about subscription termination.
+Specific event notification type "subscription-started" is defined to inform listener about subscription initiation. 
+It is an optional event. Recommended to be considered for asynchronous subscription creation models.
+
+It is used when subscription creation request (POST /subscriptions) is managed asynchronously. For this specific event, the `data` must feature `initiationReason` attribute. 
+
+The following table lists values for `initiationReason` attribute:
+
+| enum value | initiation reason |
+| -----------|-------------------- |
+| SUBSCRIPTION_CREATED | Subscription created by API Server |
+
+Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory). 
+
+Note2: The "subscription-started" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can receive 2 notifications, besides the notification sent for "subscription-started").
+
+### 3.3 `subscription-updated` event
+
+Specific event notification type "subscription-updated" is defined to inform listener about subscription changes. 
+It is an optional event.
+
+It is used when the API Server manages `ACTIVE` and `INACTIVE` status and there are transitions of the subscription between each other. For this specific event, the `data` must feature `updateReason` attribute.
+
+The following table lists values for `updateReason` attribute:
+
+| enum value | update reason |
+| -----------|-------------------- |
+| SUBSCRIPTION_ACTIVE | API server transitioned susbcription status to `ACTIVE` |
+| SUBSCRIPTION_INACTIVE | API server transitioned susbcription status to `INACTIVE` |
+
+Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory).
+
+Note2: The "subscription-updated" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can receive 2 notifications, besides the notifications sent for "subscription-updated").
+
+### 3.4. `subscription-ended` event
+
+Specific event notification type "subscription-ended" is defined to inform listener about subscription termination.
 
 It is used when the `subscriptionExpireTime` or `subscriptionMaxEvents` has been reached, or, if the API server has to stop sending notifications prematurely, or if the subscription request is managed asynchronously by the server and it is not able to provide the service. For this specific event, the `data` must feature `terminationReason` attribute. 
 
@@ -424,29 +461,28 @@ The following table lists values for `terminationReason` attribute:
 
 Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory). 
 
-Note2: The "subscription-ends" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, and later, received 2 notifications, then a third notification will be sent for "subscription-ends").
+Note2: The "subscription-ended" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, and later, received 2 notifications, then a third notification will be sent for "subscription-ended").
 
 Note3: In the case of ACCESS_TOKEN_EXPIRED termination reason sending the notification once the token expired is useless. To avoid this case, following rules are defined :
 
 - For explicit subscription, implementation should send ACCESS_TOKEN_EXPIRED termination event just before the token expiration date (the 'just before' value is at the hands of each implementation). The following sentence must be added for the `accessTokenExpiresUtc` attribute documentation: An absolute (UTC) timestamp at which the token shall be considered expired. In the case of an ACCESS_TOKEN_EXPIRED termination reason, implementation should notify the client before the expiration date."
 - For implicit subscription following sentence must be added for the `accessTokenExpiresUtc` attribute documentation: "An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur after the expiration of the requested _resource_, allowing the client to be notified of any changes during the _resource_'s existence. If the token expires while the _resource_ is still active, the client will stop receiving notifications.". The _resource_ word must be replaced by the entity managed by the subscription (session, payment, etc.).
 
-### 3.3. Error definition for event notification
+### 3.5. Error definition for event notification
 
 Error definitions are described in this guideline applies for event notification.
 
 The Following Error codes must be present:
 * for `POST`: 400, 401, 403, 410, 429
 
-### 3.4. Correlation Management
+### 3.6. Correlation Management
 
 To manage correlation between the subscription management and the event notification (as these are two distinct operations):
 - use `subscriptionId` attribute (in `data` structure in the body) - this identifier is provided in event subscription and could be valued in each event notification. 
 
 Note: There is no normative enforcement to use any of these patterns, and they could be used on agreement between API consumer & providers.
 
-
-### 3.5. Notification examples
+### 3.7. Notification examples
 
 Example for Roaming status event notification - Request:
 
@@ -500,7 +536,7 @@ curl -X 'POST' \
 {
   "id": 123658,
   "source": "https://notificationSendServer12.supertelco.com",
-  "type": "org.camaraproject.api.device-roaming-subscriptions.v1.subscription-ends",
+  "type": "org.camaraproject.api.device-roaming-subscriptions.v1.subscription-ended",
   "specversion": "1.0",
   "datacontenttype": "application/json",
   "data": {
