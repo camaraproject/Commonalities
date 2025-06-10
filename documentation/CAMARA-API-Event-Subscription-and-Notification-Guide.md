@@ -10,6 +10,7 @@ For general API design guidelines, please refer to [CAMARA API Design Guide](/do
 - [2. Event Subscription](#2-event-subscription)
     - [2.1. Instance-based (implicit) subscription](#21-instance-based-implicit-subscription)
     - [2.2. Resource-based (explicit) subscription](#22-resource-based-explicit-subscription)
+    - [2.3. Event versioning](#23-event-versioning)
 - [3. Event Notification](#3-event-notification)
     - [3.1. Event notification definition](#31-event-notification-definition)
     - [3.2. `subscription-ends` event](#32-subscription-ends-event)
@@ -141,7 +142,7 @@ The following table provides `/subscriptions` attributes
 | protocol       | string             | Identifier of a delivery protocol for the event notifications. The values follow the definitions of the [CloudEvent specification](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md#protocol). **Only** `HTTP` **is allowed for now**.                                                                                                                                                                                                                                                                                | mandatory                    |
 | sink           | string             | The URL, to which event notifications shall be sent - `format: uri` should be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986). The URI-scheme shall be set according to the definition of the `protocol` value, e.g. the URI-scheme is `https` when `HTTP`is the value of the `protocol` property. The [security considerations](43#notifications-security-considerations) should be followed.                                                                                   | mandatory                    |
 | sinkCredential | object             | Sink credential provides authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. To protect the notification endpoint providing sinkCredential is RECOMMENDED. <br> The sinkCredential must **not** be present in `POST` and `GET` responses.                                                                                                                                                                                                                                                                    | optional                     |
-| types          | SubscriptionEventType | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required by API project to provide an enum for this attribute. `type` must follow the format: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter `v` and the major version like  ``org.camaraproject.device-roaming-subscriptions.v1.roaming-status`` - Note: An array of types could be passed **but as of now only one value MUST passed**. Use of multiple value will be open later at API level. | mandatory                    |
+| types          | SubscriptionEventType | Type of event subscribed. This attribute **must** be present in the `POST` request. It is required by API project to provide an enum for this attribute. The event type must follow the format: `org.camaraproject.<api-name>.<event-version>.<event-name>` - see chapter [2.3. Event versioning](#23-event-versioning) - Note: An array of types could be passed **but as of now only one value MUST be passed**. Use of multiple value will be open later at API level. | mandatory                    |
 | config         | object             | Implementation-specific configuration parameters needed by the subscription manager for acquiring events. In CAMARA we have predefined attributes like ``subscriptionExpireTime``, ``subscriptionMaxEvents`` or ``initialEvent``. See detail below.                                                                                                                                                                                                                                                                                      | mandatory                    |
 | id             | string             | Identifier of the event subscription - This attribute must not be present in the POST request as it is provided by API server                                                                                                                                                                                                                                                                                                                                                                                                            | mandatory in server response |
 | startsAt       | string - date-time | Date when the event subscription will begin/began. This attribute must not be present in the `POST` request as it is provided by API server. It must be present in `GET` endpoints                                                                                                                                                                                                                                                                                                                                                       | optional                     |
@@ -294,6 +295,76 @@ the two requests should be handled independently & autonomously.
 Depending on server implementation, it is acceptable 
 when the event occurs that one or two notifications are sent to listener.
 
+### 2.3. Event versioning
+
+For CAMARA subscription APIs, events are defined using the CloudEvents format. The CloudEvent specification provides some information on [CloudEvent versioning](https://github.com/cloudevents/spec/blob/main/cloudevents/primer.md#versioning-of-cloudevents), but some additional CAMARA event versioning guidelines are described in this section. 
+
+ [CloudEvent versioning](https://github.com/cloudevents/spec/blob/main/cloudevents/primer.md#versioning-of-cloudevents) states the following (quoted):
+
+- When a CloudEvent's data changes in a backwardly-incompatible way, the value of the type attribute should generally change. The event producer is encouraged to produce both the old event and the new event for some time (potentially forever) in order to avoid disrupting consumers.
+- When a CloudEvent's data changes in a backwardly-compatible way, the value of the type attribute should generally stay the same.
+
+For CAMARA events, its `type` attribute is the base for event versioning as it contains the event version.
+
+- The format of the `type` attribute value is defined as: `org.camaraproject.<api-name>.<event-version>.<event-name>`. 
+- The `<event-version>` has the format `vx`. 
+- `x` is the version number of the event’s structure.
+
+Examples of CAMARA event types (= value of the `type` attribute) are:
+
+- `org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on` 
+- `org.camaraproject.device-roaming-status-subscriptions.v1.roaming-status`
+
+---
+
+The event version is independent of the API version that the event belongs to. 
+
+---
+
+Example: A `v2` API can still use a `v1` event version if the event structure is unchanged with this MAJOR API version.
+
+Events are considered to be “first class citizens” just like APIs and have their own versioning throughout their lifecycle. For example,
+
+- The same event version may be supported by different versions of an API.
+- An event client may be subscribed to a given event version from different API providers with different API versions, but expect to receive the same event data.
+
+CAMARA event versioning extends the CloudEvent versioning as described in the following table:
+
+Note: unless indicated otherwise, the below applies for both explicit and implicit event subscriptions.
+
+| Event version  | CAMARA event versioning explanation  |
+| ------------------- | ----------------------- |
+| **v0 .. vn** (new subscription API)  | For an initial API `v0.y.z`, its event versions always start at `v0` and for any change to the event structure the event version shall follow the guidelines below. Stable APIs must use stable events with version number > 0. When publishing a first stable version of an API, any event version with `v0` shall be changed to `v1`, even if there is no change to the event structure. | 
+| **vn (n>0)** (backward compatible update of an event) | A MINOR or PATCH update of an event structure does not change the event version, but does imply a new MINOR or PATCH version of the API. Such changes to the event structure are backward compatible and should not impact event clients. |
+| **vn → vn+1** (non backward compatible update of an event) | Any MAJOR change to an event structure implies the introduction of the next event version `vn+1`. There are two options: for details, please see below this table. |
+| **v1** (adding a new event) | Introducing a new event to a stable subscription API implies that this event gets the version `v1`. The introduction of a new event to an existing API is considered as a MINOR API version update, as it shall not impact existing event clients. To force clients to take the new event into account, one can introduce it through a MAJOR API version change.    |
+| removing an event or an event version | Removing an event or an event version from a stable subscription API implies a MAJOR update of the API version |
+
+Any MAJOR change to an event structure implies the introduction of the next event version `vn+1`. There are two options:
+
+- The updated event structure is introduced as an additional event version `vn+1`, resulting in a new MINOR API version. In this case, both the `vn` and `vn+1` event versions are part of the API definition. **It is recommended to keep only the last 2 event versions (`vn+1` and `vn`) in the latest MAJOR API version**.
+- The updated event structure is introduced as a replacement of the previous event version `vn`, resulting in a new MAJOR API version. In this case, the previous `vn` event version is deleted from the API definition, implying a breaking change for the event clients.
+
+Note 1: The deletion of an event version implies always a MAJOR API version change.
+
+Note 2: The decision to keep previous event version(s) is a decision of the API Sub Project team.
+
+Note 3: In case of implicit event subscriptions, only replacement of the previous event version `vn` in the API definition is possible and will imply always a MAJOR API version change.
+
+**Breaking and non-breaking changes for events**
+
+Examples of breaking (non backward-compatible) changes related to events are
+
+- adding a new version of an event without keeping the previous version in parallel
+- removing an event version or all versions of an event
+- breaking changes to an event structure (follows the same rules as for API response changes, see `CAMARA-API-design-Guide.md`)
+
+Examples of non breaking (backward-compatible) changes related to events are
+
+- adding a new event
+- adding a new version of an existing event if the previous event version is kept
+- non-breaking changes to an event structure (follows the same rules as for API response changes, see `CAMARA-API-design-Guide.md`)
+
 ## 3. Event Notification
 
 ### 3.1. Event notification definition
@@ -317,7 +388,7 @@ For consistency across CAMARA APIs, the uniform CloudEvents model must be used w
 |-----------------|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------| 
 | id              | string            | identifier of this event, that must be unique in the source context.                                                                                                                                                                                                                                                                                                                                                                                                                             | mandatory     |
 | source          | string - URI      | identifies the context in which an event happened in the specific Provider Implementation. Often this will include information such as the type of the event source, the organization publishing the event or the process that produced the event. The exact syntax and semantics behind the data encoded in the URI is defined by the event producer.                                                                                                                                           | mandatory     |
-| type            | string            | a value describing the type of event related to the originating occurrence. For consistency across API we mandate following pattern: `org.camaraproject.<api-name>.<api-version>.<event-name>` with the `api-version` with letter 'v' and the major version like example org.camaraproject.device-roaming-subscriptions.v1.roaming-status                                                                                                                                                        | mandatory     |
+| type            | string            | a value describing the type of event related to the originating occurrence. For consistency across API we mandate following pattern: `org.camaraproject.<api-name>.<event-version>.<event-name>` with the `event-version` with letter 'v' and a simple version number - see chapter [2.3. Event versioning](#23-event-versioning). An example is org.camaraproject.device-roaming-status-subscriptions.v1.roaming-status                                                                                                                                                        | mandatory     |
 | specversion     | string            | version of the specification to which this event conforms - must be "1.0". As design guideline, this field will be modeled as an enum.                                                                                                                                                                                                                                                                                                                                                           | mandatory     |
 | datacontenttype | string            | media-type that describes the event payload encoding, must be `application/json` for CAMARA APIs                                                                                                                                                                                                                                                                                                                                                                                                 | optional      |
 | subject         | string            | describes the subject of the event - Not used in CAMARA notification.                                                                                                                                                                                                                                                                                                                                                                                                                            | optional      |
