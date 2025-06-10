@@ -90,8 +90,6 @@ _Spectral rule_: [camara-language-spelling](/artifacts/linting_rules/.spectral.y
 
 ### Reduce telco-specific terminology in API definitions
 
-API Design Guidelines: [2.5 Reduce telco-specific terminology in API definitions](API-design-guidelines.md#25-reduce-telco-specific-terminology-in-api-definitions)
-
 Consider and account for how the API can be fulfilled on a range of network types.
 Avoid terms/types specific to a given telco domain - terms should be inclusive beyond mobile network. 
 
@@ -110,15 +108,13 @@ _Spectral rule_: [camara-language-avoid-telco](/artifacts/linting_rules/.spectra
 *Severity*: `hint`
 
 
-
-
 ## 3. API Definition
 
 
 ### Openapi property
 
-API Design Guidelines: 
-[11. Definition in OpenAPI](API-design-guidelines.md#11-definition-in-openapi)
+CAMARA API Design Guide: 
+[5.2. OpenAPI Version](CAMARA-API-Design-Guide.md#52-openapi-version)
 
 The API functionalities must be implemented following the specifications of the **Open API version 3.0.3** 
 
@@ -134,24 +130,19 @@ _Spectral rule_: [camara-oas-version](/artifacts/linting_rules/.spectral.yml)
 
 ### Info object
 
-API Design Guidelines: 
-[11.1 General Information](API-design-guidelines.md#111-general-information)
-
+CAMARA API Design Guide: 
+[5.3. Info Object](CAMARA-API-Design-Guide.md#53-info-object)
 
 Info object must include the following information: API title with public name.
-
 
 _Spectral rule_: [camara-info−title](/artifacts/linting_rules/.spectral.yml)
 
 *Severity*: `warn`
 
-
-API Design Guidelines: 
-[11.1 General Information](API-design-guidelines.md#111-general-information)
-
+CAMARA API Design Guide: 
+[5.3.3. Version](CAMARA-API-Design-Guide.md#533-version)
 
 Info object must include the following information: API Version in the format: X.Y.Z.
-
 
 _Spectral rule_: [camara-info−version-format](/artifacts/linting_rules/.spectral.yml)
 
@@ -159,13 +150,12 @@ _Spectral rule_: [camara-info−version-format](/artifacts/linting_rules/.spectr
 ❕ Note: The version format may follow "wip", "x.y.z-alpha.n", or "x.y.z-rc.n" for unreleased or pre-release versions.
 
 
-
 ### Path parameters
 
-API Design Guidelines: 
-[3.4 Path Parameters Use](API-design-guidelines.md#34-path-parameters-use)
+CAMARA API Design Guide: 
+[5.7.1. Paths](CAMARA-API-Design-Guide.md#571-paths)
 
-Point 2 The attribute must be identifying itself, it is not enough with "{id}"
+The attribute must be identifying itself, it is not enough with "{id}"
 
 `/users/{id}`
 
@@ -177,7 +167,7 @@ _Spectral rule_: [camara-path-param-id](/artifacts/linting_rules/.spectral.yml)
 
 *Severity*: `warn`
 
-Point 3 The identifier should have a similar morphology on all endpoints. For example, “*xxxxId*”, where *xxx* is the name of the entity it references
+The identifier should have a similar morphology on all endpoints. For example, “*xxxxId*”, where *xxx* is the name of the entity it references
 
 | 👍  &nbsp; Recommended                 |
 |----------------------------------------|
@@ -191,7 +181,11 @@ _Spectral rule_: [camara-path-param-id-morphology](/artifacts/linting_rules/.spe
 *Severity*: `warn`
 
 
-### Sensitive data 
+### Sensitive data
+
+CAMARA API Design Guide: 
+[6.5. POST or GET for transferring sensitive or complex data](CAMARA-API-Design-Guide.md#65-post-or-get-for-transferring-sensitive-or-complex-data) 
+
 Sensitive data (msisdn/imsi) cannot be a path or query parameter.
 <br>❕ Note: Needs to list down if we have other sensitive parameters other than MSISDN/IMSI - cf.  *monite-security-no-secrets-in-path-or-query-parameters*
 
@@ -202,16 +196,17 @@ _Spectral rule_: [camara-security-no-secrets-in-path-or-query-parameters](/artif
 
 ### HTTP verbs
 
-API Design Guidelines: 
-[3.1 API REST](API-design-guidelines.md#31-api-rest)
+CAMARA API Design Guide: 
+[5.7.2. Operations](CAMARA-API-Design-Guide.md#572-operations)
 
-Valid methods are: GET, PUT, POST, DELETE, PATCH, OPTIONS
+A resource has multiple operations identified by HTTP Verbs: GET, PUT, POST, PATCH, DELETE.
 
 _Spectral rule_: [camara-http-methods](/artifacts/linting_rules/.spectral.yml)
 
 *Severity*: `error`
 
-
+CAMARA API Design Guide: 
+[5.7.5. Request bodies](CAMARA-API-Design-Guide.md#575-request-bodies)
 
 'GET' and 'DELETE' http methods MUST NOT accept a 'requestBody' attribute 
 <br>❕ Note: https://github.com/team-monite/api-style-guide/blob/main/spectral/monite.section8-requests.yaml
@@ -223,8 +218,8 @@ _Spectral rule_: [camara-get-no-request-body](/artifacts/linting_rules/.spectral
 
 ### Reserved words
 
-API Design Guidelines: 
-[11. Definition in OpenAPI](API-design-guidelines.md#11-definition-in-openapi)
+CAMARA API Design Guide: 
+[5.1. Reserved words](CAMARA-API-Design-Guide.md#51-reserved-words)
 
 To avoid issues with implementation using Open API generators:
 
@@ -235,7 +230,6 @@ To avoid issues with implementation using Open API generators:
       - Security schemes
       - Component names
       - OperationIds
-
 
 A reserved word is one whose usage is reserved by any of the following Open API generators:
 - [Python Flask](https://openapi-generator.tech/docs/generators/python-flask/#reserved-words)
@@ -258,7 +252,7 @@ _Spectral rule_: [camara-resource-reserved-words](/artifacts/linting_rules/.spec
  
 ### Descriptions
 
-API Design Guidelines: [11.2 Published routes](API-design-guidelines.md#112-published-routes)
+CAMARA API Design Guide: [5.7.2. Operations](CAMARA-API-Design-Guide.md#572-operations)
 
 Functionality methods must have a description.
 
@@ -266,7 +260,7 @@ _Spectral rule_: [camara-routes-descriptions](/artifacts/linting_rules/.spectral
 
 *Severity*: `warn`
 
-API Design Guidelines: [11.3 Request Parameters](API-design-guidelines.md#113-request-parameters)
+CAMARA API Design Guide: [5.7.4. Parameters](CAMARA-API-Design-Guide.md#574-parameters)
 
 All parameters must have a description. 
 
@@ -274,7 +268,7 @@ _Spectral rule_: [camara-parameters-descriptions](/artifacts/linting_rules/.spec
 
 *Severity*: `warn`
 
-API Design Guidelines: [11.4 Response Structure](API-design-guidelines.md#114-response-structure)
+CAMARA API Design Guide: [5.7.6. Responses](CAMARA-API-Design-Guide.md#576-responses) 
 
 All response objects must have a description. 
 
@@ -282,7 +276,7 @@ _Spectral rule_: [camara-response-descriptions](/artifacts/linting_rules/.spectr
 
 *Severity*: `warn`
 
-API Design Guidelines: [11.5 Data Definitions](API-design-guidelines.md#115-data-definitions)
+CAMARA API Design Guide: [5.8. Components](CAMARA-API-Design-Guide.md#58-components)
 
 All properties within the object must have a description. 
 
@@ -290,7 +284,7 @@ _Spectral rule_: [camara-properties-descriptions](/artifacts/linting_rules/.spec
 
 *Severity*: `warn`
 
-API Design Guidelines: [11.2 Published Routes](API-design-guidelines.md#112-published-routes)
+CAMARA API Design Guide: [5.7.2. Operations](CAMARA-API-Design-Guide.md#572-operations)
 Summary must be defined on each operation, describing with a short summary what the operation does.  
 _Spectral rule_: [camara-operation-summary](/artifacts/linting_rules/.spectral.yml)
 
@@ -298,8 +292,7 @@ _Spectral rule_: [camara-operation-summary](/artifacts/linting_rules/.spectral.y
 
 ### Usage of discriminator
 
-API Design Guidelines: 
-[11.5.1 Usage of discriminator](API-design-guidelines.md#1151-usage-of-discriminator)
+CAMARA API Design Guide: [2.2.1. Usage of discriminator](CAMARA-API-Design-Guide.md#221-usage-of-discriminator)
 
 When request bodies or response payloads may be one of a number of different schemas (containing `oneOf` or `anyOf` section), a `discriminator` object can be used to aid in serialization, deserialization, and validation. 
 
@@ -323,7 +316,7 @@ Spectral core functions: [casing](https://docs.stoplight.io/docs/spectral/cb95cf
 
 #### Enum
 
-API Design Guidelines: **No clear requirement**
+CAMARA API Design Guide: **No clear requirement**
 
 ❓ This rule verifies that `enum` fields contain values that follow a specific case convention: `macro`.
 
@@ -332,11 +325,11 @@ _Spectral rule_: [camara-enum-casing-convention](/artifacts/linting_rules/.spect
 *Severity*: `info`
 
 
-
 #### Operation ID
 
-API Design Guidelines: 
-[4.1 URL Definition](API-design-guidelines.md#41-url-definition)
+CAMARA API Design Guide: [5.7.2. Operations](CAMARA-API-Design-Guide.md#572-operations)
+
+
 >   OperationIds are defined in lowerCamelCase: For example: `helloWorld`
 
 Operation ids should follow a specific case convention: `camel` case.
@@ -347,7 +340,7 @@ _Spectral rule_: [camara-operationid-casing-convention](/artifacts/linting_rules
 
 #### Path parameters / Query parameters
 
-API Design Guidelines: [4.1 URL Definition](API-design-guidelines.md#41-url-definition)
+CAMARA API Design Guide: [5.7.1. Paths](CAMARA-API-Design-Guide.md#571-paths)
 > URI with lowercase and hyphens. URIs must be "human-readable" to facilitate identification of the offered resources. Lowercase words and hyphenation (kebab-case) help achieve this best practice. For example: `/customer-segments`
 
 Path parameter should follow a specific case convention, with the default being `kebab` case.
@@ -357,10 +350,6 @@ _Spectral rule_: [camara-parameter-casing-convention](/artifacts/linting_rules/.
 *Severity*: `error`
 
 #### Property names
-
-API Design Guidelines: [4.1 URL Definition](API-design-guidelines.md#41-url-definition)
-
-> Objects are defined in CamelCase inside the property field. For example: Greetings, ExampleObject.
 
 ❓ **Should it be lowerCamelCase in DG?**
 
@@ -372,14 +361,28 @@ _Spectral rule_: [camara-property-casing-convention](/artifacts/linting_rules/.s
 
 #### Schema names
 
-API Design Guidelines: **No clear requirement**
+CAMARA API Design Guide: [5.8.1. Schemas](CAMARA-API-Design-Guide.md#581-schemas)
 
-Schema names (the keys in `components -> schemas`) should follow the "upper camel case" convention - `pascal`
-
+UpperCamelCase should be used for schema names - convention - `pascal`
 
 _Spectral rule_: [camara-schema-casing-convention](/artifacts/linting_rules/.spectral.yml)
 
 *Severity*: `warn`
+
+#### Schema type check
+
+`type` attribute is mandatory in property schema definition.
+type - Value MUST be a string in OpenAPI specification.
+String values MUST be one of the primitive types defined by the JSON Schema core specification: 
+array, boolean, integer, number, object, string
+
+`null` - is not supported in OpenAPI 3.0
+
+_Spectral rule_: [camara-schema-type-check](/artifacts/linting_rules/.spectral.yml)
+
+*Severity*: `error`
+
+
 
 ## 4. Summary of proposed CAMARA rules
 
@@ -407,4 +410,6 @@ _Spectral rule_: [camara-schema-casing-convention](/artifacts/linting_rules/.spe
 | camara-parameter-casing-convention                     | Path parameter should follow a specific case convention, with the default being kebab-case | Yes         | Yes        | Error           |
 | camara-schema-casing-convention                        | Schema should follow a specific case convention pascal case (upper camel case)             | Yes         | Yes        | Warning         |
 | camara-enum-casing-convention                          | enum fields contain values that follow a specific case convention: macro (CAPITAL_LETTERS) | tbd         | tbd        | Info            |
-| camara-property-casing-convention                      | Property names should follow a specific case convention, with the default being camel case | tbd         | tbd        | Error           |
+| camara-property-casing-convention                      | Property names should follow a specific case convention, with the default being camel case | Yes         | Yes        | Error           |
+| camara-schema-type-check                               | `type` attribute is mandatory in property schema definition                                | Yes         | Yes        | Error           |
+
