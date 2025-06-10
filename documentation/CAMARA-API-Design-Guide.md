@@ -14,6 +14,7 @@ This document outlines guidelines for API design within the CAMARA project, appl
 - [3. Error Responses](#3-error-responses)
   - [3.1. Standardized use of CAMARA error responses](#31-standardized-use-of-camara-error-responses)
   - [3.2. Error Responses - Device Object/Phone Number](#32-error-responses---device-objectphone-number)
+  - [3.3. Error Responses - Mandatory template for `info.description` in CAMARA API specs](#33-error-responses---mandatory-template-for-infodescription-in-camara-api-specs)
 - [4. Pagination, Sorting and Filtering](#4-pagination-sorting-and-filtering)
   - [4.1. Pagination](#41-pagination)
   - [4.2. Sorting](#42-sorting)
@@ -401,6 +402,22 @@ components:
         message: {{Message example}}
 ```
 
+### 3.3. Error Responses - Mandatory template for `info.description` in CAMARA API specs
+
+The following template must be used as part of the API documentation in the `info.description` property of the CAMARA API specs to provide a common reference for API Consumers, API Developers and API Providers about not documented error responses in case they are supported by a given API implementation.
+
+```md
+# Additional CAMARA error responses
+
+The list of error codes in this API specification is not exhaustive. Therefore the API specification may not document some non-mandatory error statuses as indicated in `CAMARA API Design Guide`.
+
+Please refer to the `CAMARA_common.yaml` of the Commonalities Release associated to this API version for a complete list of error responses. The applicable Commonalities Release can be identified in the `API Readiness Checklist` document associated to this API version.
+
+As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
+
+```
+
+
 
 ## 4. Pagination, Sorting and Filtering
 
@@ -591,7 +608,10 @@ info:
   # title without "API" in it, e.g. "Number Verification"
   title: Number Verification
   # description explaining the API, part of the API documentation 
-  # including mandatory texts  "Authorization and authentication"
+  # including mandatory text for "Authorization and authentication"
+  # including mandatory text for "Additional CAMARA error responses"
+
+
   description: |
     This API allows to verify that the provided mobile phone number is the one used in the device. It
     verifies that the user is using a device with the same mobile phone number as it is declared.
@@ -619,8 +639,8 @@ It is not recommended to link images outside of the Github API repository, since
 ![API Diagram](https://raw.githubusercontent.com/camaraproject/{apiRepository}/main/documentation/API_documentation/resources/diagram.png)
 ```
 
-Some sections are required, as defined in [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api-specs)
- or [Appendix A](appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
+Some sections are required, as defined in [Section 3.3](#33-error-responses---mandatory-template-for-infodescription-in-camara-api-specs), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api-specs)
+ or [Appendix A](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
  
 #### 5.3.3. Version
 `version` field: APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
