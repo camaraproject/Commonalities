@@ -28,15 +28,19 @@ This release contains documents and artifacts of Commonalities version 0.6.0-rc.
 * Links to CAMARA API Event Subscription and Notification Guide in artifacts by @rartych in https://github.com/camaraproject/Commonalities/pull/453
 * Updated Glossary with Terminology from Device Identifier API by @eric-murray in https://github.com/camaraproject/Commonalities/pull/454
 * Text description for duration format fields by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/459
+* Event versioning section added to Guide document by @tanjadegroot in https://github.com/camaraproject/Commonalities/pull/475
+* Not Documented Error Responses info.description section by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/457
+* Enhancements Subscription/Notification Architecture for Fall25 by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/464
 
 ### Changed
 * Aligned Error 401 wording in Notification Cloud Events artifact by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/449
 * Updated `types` property of `Subscription` allowing more than one event type per subscription by @eric-murray in https://github.com/camaraproject/Commonalities/pull/432
 * Request response definitions and other clarifications in chapter 5 of API Design Guide by @rartych in https://github.com/camaraproject/Commonalities/pull/450
-* X-Correlator Format changed by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/463
+* X-Correlator format changed by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/463
 * Updated Security chapter in CAMARA-API-Design-Guide.md by @rartych in https://github.com/camaraproject/Commonalities/pull/467
 * Sorting Logic Enhancements in CAMARA-API-Design-Guide.md by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/471
 * Linting rules definition updated by @rartych in https://github.com/camaraproject/Commonalities/pull/466
+* Updated .gherkin-lintrc by @rartych in https://github.com/camaraproject/Commonalities/pull/472
   
 ### Fixed
 N/A
@@ -45,6 +49,7 @@ N/A
 * Removed AUTHENTICATION_REQUIRED error code by @eric-murray in https://github.com/camaraproject/Commonalities/pull/429
 * API Design Guidelines document was deprecated by @rartych in https://github.com/camaraproject/Commonalities/pull/441
 * Removed IDENTIFIER_MISMATCH error and introduced DeviceResponse object by @eric-murray in https://github.com/camaraproject/Commonalities/pull/455
+* Removed IDENTIFIER_MISMATCH from testing artifacts by @jlurien in https://github.com/camaraproject/Commonalities/pull/479
 
 **Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r2.3...r3.2
 
