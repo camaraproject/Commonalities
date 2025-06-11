@@ -41,7 +41,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     Then the response code is 201
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
-    And the response body complies with the OAS schema at "/components/schemas/Subscription"
+    And the response body complies with the OAS schema at "#/components/schemas/Subscription"
 
   @<xxx>_subscriptions_02_Create_<xxx>_subscription_async
   Scenario:  Create <xxx> subscription (async creation)
@@ -80,7 +80,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     Then the response code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
-    And the response body has an array of items and each item complies with the OAS schema at "/components/schemas/Subscription"
+    And the response body has an array of items and each item complies with the OAS schema at "#/components/schemas/Subscription"
 
   @<xxx>_subscriptions_06_Operation_to_retrieve_subscription_based_on_an_existing_subscription-id
   Scenario: Get a subscription based on existing subscription-id.
@@ -89,7 +89,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     Then the response code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
-    And the response body complies with the OAS schema at "/components/schemas/Subscription"
+    And the response body complies with the OAS schema at "#/components/schemas/Subscription"
 
   @<xxx>_subscriptions_07_Operation_to_delete_subscription_based_on_an_existing_subscription-id
   Scenario: Delete a subscription based on existing subscription-id.
@@ -98,7 +98,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     Then the response code is 202 or 204
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And if the response property $.status is 204 then the response body is not available
-    And if the response property $.status is 202 then the response body complies with the OAS schema at "/components/schemas/SubscriptionAsync"	
+    And if the response property $.status is 202 then the response body complies with the OAS schema at "#/components/schemas/SubscriptionAsync"	
 	
   @<xxx>_subscriptions_08_subscription_ends_on_expiry
   Scenario: Receive notification for subscription-ended event on expiry
@@ -174,19 +174,19 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     
   @<xxx>_subscription_23_invalid_protocol
   Scenario: Subscription creation with invalid protocol
-    Given a valid <xxx> subscription request body 
-    When the request "create<xxx>Subscription" is sent
+    Given a valid <xxx> subscription request body
     And the request property "$.protocol" is not set to "HTTP"
+    When the request "create<xxx>Subscription" is sent
     Then the response property "$.status" is 400
     And the response property "$.code" is "INVALID_PROTOCOL"
     And the response property "$.message" contains a user friendly text
 
   @<xxx>_subscription_24_invalid_credential
   Scenario: Subscription creation with invalid credential
-    Given a valid <xxx> subscription request body 
-    When the request "create<xxx>Subscription" is sent
+    Given a valid <xxx> subscription request body
     And the request property "$.protocol" is set to "HTTP"
-    And the request property "$.sinkCredential.credentialType" is not set to "ACCESSTOKEN"
+    And the request property "$.sinkCredential.credentialType" is not set to "ACCESSTOKEN"    
+    When the request "create<xxx>Subscription" is sent
     Then the response property "$.status" is 400
     And the response property "$.code" is "INVALID_CREDENTIAL"
     And the response property "$.message" contains a user friendly text
@@ -194,12 +194,12 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   @<xxx>_subscription_25_invalid_token
   Scenario: Subscription creation with invalid token
     Given a valid <xxx> subscription request body
-    When the request "create<xxx>Subscription" is sent
-    And  the request property "$.protocol" is set to "HTTP"
+    And the request property "$.protocol" is set to "HTTP"
     And the request property "$.sinkCredential.credentialType" is set to "ACCESSTOKEN"
     And the request property "$.sinkCredential.accessTokenType" is not set to "bearer"
     And the request property "$.sinkCredential.accessToken" is valued with a valid value
-    And the request property "$.sinkCredential.accessTokenExpiresUtc" is valued with a valid value
+    And the request property "$.sinkCredential.accessTokenExpiresUtc" is valued with a valid value    
+    When the request "create<xxx>Subscription" is sent
     Then the response property "$.status" is 400
     And the response property "$.code" is "INVALID_TOKEN"
     And the response property "$.message" contains a user friendly text
@@ -235,10 +235,10 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 
   @<xxx>_subscription_33_invalid_url
   Scenario: Subscription creation with invalid url
-    Given a valid <xxx> subscription request body 
-    When the request "create<xxx>Subscription" is sent
+    Given a valid <xxx> subscription request body
     And the request property "$.protocol" is set to "HTTP"
-    And the request property "$.sink" is set to "azerty"
+    And the request property "$.sink" is set to "azerty"    
+    When the request "create<xxx>Subscription" is sent
     Then the response property "$.status" is 400
     And the response property "$.code" is "INVALID_SINK"
     And the response property "$.message" contains a user friendly text
@@ -258,6 +258,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   @<xxx>_subscriptions_30_expired_access_token_for_get_subscription
   Scenario: Expired access token for get subscription
     Given the header "Authorization" is set to expired token
+    And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
     When the request "retrieve<xxx>Subscription" is sent
     Then the response status code is 401
     And the response property "$.status" is 401
@@ -267,6 +268,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   @<xxx>_subscriptions_31_invalid_access_token_for_get_subscription
   Scenario: Invalid access token for get subscription
     Given the header "Authorization" set to an invalid access token
+    And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
     When the request "retrieve<xxx>Subscription" is sent
     Then the response status code is 401
     And the response property "$.status" is 401
@@ -316,6 +318,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   @<xxx>_subscriptions_33_no_authorization_header_for_delete_subscription
   Scenario: No Authorization header for delete subscription
     Given header "Authorization" is set without a token
+    And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
     When the request "delete<xxx>Subscription" is sent 
     Then the response status code is 401
     And the response property "$.status" is 401
@@ -325,6 +328,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   @<xxx>_subscriptions_34_expired_access_token_for_delete_subscription
   Scenario: Expired access token for delete subscription
     Given header "Authorization" is set with an expired token
+    And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
     When the request "delete<xxx>Subscription" is sent
     Then the response status code is 401
     And the response property "$.status" is 401
@@ -334,6 +338,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   @<xxx>_subscriptions_35_invalid_access_token_for_delete_subscription
   Scenario: Invalid access token for delete subscription
     Given header "Authorization" set to an invalid access token
+    And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
     When the request "delete<xxx>Subscription" is sent
     Then the response status code is 401
     And the response header "Content-Type" is "application/json"
