@@ -148,7 +148,6 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   Scenario:  Create <xxx> subscription with invalid parameter
     Given the request body is not compliant with the schema "/components/schemas/SubscriptionRequest"
     When the request "create<xxx>Subscription" is sent 
-
     Then the response code is 400
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
