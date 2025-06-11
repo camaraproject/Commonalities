@@ -157,7 +157,6 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   Scenario: Expiry time in past
     Given a valid <xxx> subscription request body 
     And request body property "$.config.subscriptionExpireTime" in the past
-
     When the request "create<xxx>Subscription" is sent 
     Then the response code is 400
     And the response property "$.status" is 400
