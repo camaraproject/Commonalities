@@ -144,7 +144,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     When the request "create<xxx>Subscription" is sent
     Then the response code is 201 or 202	
     And an event notification of the subscribed type is received on callback-url
-    And notification body complies with the OAS schema at "#/components/schemas/Subscription"
+    And notification body complies with the OAS schema at "#/components/schemas/CloudEvent"
+
 
 ########################### Error response scenarios ############################################
 ########################### Subscription creation scenarios #####################################
