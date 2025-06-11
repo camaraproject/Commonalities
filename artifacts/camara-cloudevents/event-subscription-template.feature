@@ -344,7 +344,6 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   @<xxx>_subscriptions_36_delete_invalid_<xxx>_subscription
   Scenario:  Delete <xxx> subscription with subscription-id unknown to the system
     Given the path parameter "subscriptionId" is set to a value not corresponding to any existing subscription
-
     When the request "delete<xxx>Subscription" is sent
     Then the response code is 404
     And the response property "$.status" is 404
