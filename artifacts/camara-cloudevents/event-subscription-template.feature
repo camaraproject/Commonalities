@@ -107,7 +107,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 
     When the subscription is expired
     Then the event notification "subscription-ended" is received on callback-url
-    And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnds"
+    And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnded"
+
     And type="org.camaraproject.<xxx>-subscriptions.v<x>.subscription-ended"
     And the response property "$.terminationReason" is "SUBSCRIPTION_EXPIRED"
     
