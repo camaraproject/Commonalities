@@ -128,7 +128,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     When the request "delete<xxx>Subscription" is sent
     Then the response code is 202 or 204
     And event notification "subscription-ended" is received on callback-url
-    And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnds"
+    And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnded"
+
     And type="org.camaraproject.<xxx>-subscriptions.v<x>.subscription-ended"
     And the response property "$.terminationReason" is "SUBSCRIPTION_DELETED"
 
