@@ -24,7 +24,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   Background: Common <xxx> Subscriptions setup
     Given the resource "{apiroot}/<xxx>-subscriptions/vwip/" as <xxx> base-url
     And the header "Authorization" is set to a valid access token
-    And the header "x-correlator" follows the pattern ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+    And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
+
 
 ############################ Happy Path Scenarios #############################################
 
