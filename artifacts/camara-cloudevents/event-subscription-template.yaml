@@ -1185,6 +1185,7 @@ components:
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
                       - MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED
+                      - MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED
           examples:
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
@@ -1216,6 +1217,12 @@ components:
                 status: 422
                 code: MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED
                 message: Multi event types subscription not managed
+            GENERIC_422_MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED:
+              description: Combination of multiple event types is temporarily not supported
+              value:
+                status: 422
+                code: MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED
+                message: The requested combination of event types is temporarily not supported.
     Generic429:
       description: Too Many Requests
       headers:
