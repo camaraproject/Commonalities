@@ -104,7 +104,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 	
   @<xxx>_subscriptions_08_subscription_ends_on_expiry
   Scenario: Receive notification for subscription-ended event on expiry
-    Given an existing <xxx> subscription with some value for the property "expiresAt"  in the near future
+    Given an existing <xxx> subscription with some value for the property "expiresAt" in the near future
+
     When the subscription is expired
     Then the event notification "subscription-ended" is received on callback-url
     And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnds"
