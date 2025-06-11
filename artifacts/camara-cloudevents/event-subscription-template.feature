@@ -99,7 +99,8 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And if the response property "$.status" is 204 then the response body is not available
 
-    And if the response property $.status is 202 then the response body complies with the OAS schema at "#/components/schemas/SubscriptionAsync"	
+    And if the response property "$.status" is 202 then the response body complies with the OAS schema at "#/components/schemas/SubscriptionAsync"	
+
 	
   @<xxx>_subscriptions_08_subscription_ends_on_expiry
   Scenario: Receive notification for subscription-ended event on expiry
