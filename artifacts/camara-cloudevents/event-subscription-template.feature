@@ -26,7 +26,6 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
 
-
 ############################ Happy Path Scenarios #############################################
 
 # Note: Depending on the API managed personal data specific scenario update may be require to specify use of 2-legs or 3-legs access token.
@@ -97,18 +96,14 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     Then the response code is 202 or 204
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And if the response property "$.status" is 204 then the response body is not available
-
     And if the response property "$.status" is 202 then the response body complies with the OAS schema at "#/components/schemas/SubscriptionAsync"	
 
-	
   @<xxx>_subscriptions_08_subscription_ends_on_expiry
   Scenario: Receive notification for subscription-ended event on expiry
     Given an existing <xxx> subscription with some value for the property "expiresAt" in the near future
-
     When the subscription is expired
     Then the event notification "subscription-ended" is received on callback-url
     And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnded"
-
     And type="org.camaraproject.<xxx>-subscriptions.v<x>.subscription-ended"
     And the response property "$.terminationReason" is "SUBSCRIPTION_EXPIRED"
     
@@ -119,7 +114,6 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     Then event notification "<event-type>" is received on callback-url
     Then event notification "subscription-ended" is received on callback-url
     And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnded"
-
     And type="org.camaraproject.<xxx>-subscriptions.v<x>.subscription-ended"
     And the response property "$.terminationReason" is "MAX_EVENTS_REACHED"
 		
@@ -130,7 +124,6 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     Then the response code is 202 or 204
     And event notification "subscription-ended" is received on callback-url
     And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnded"
-
     And type="org.camaraproject.<xxx>-subscriptions.v<x>.subscription-ended"
     And the response property "$.terminationReason" is "SUBSCRIPTION_DELETED"
 
@@ -144,7 +137,6 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     Then the response code is 201 or 202	
     And an event notification of the subscribed type is received on callback-url
     And notification body complies with the OAS schema at "#/components/schemas/CloudEvent"
-
 
 ########################### Error response scenarios ############################################
 ########################### Subscription creation scenarios #####################################
