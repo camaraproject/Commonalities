@@ -31,10 +31,11 @@ This release contains documents and artifacts of Commonalities version 0.6.0-rc.
 * Event versioning section added to Guide document by @tanjadegroot in https://github.com/camaraproject/Commonalities/pull/475
 * Not Documented Error Responses info.description section by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/457
 * Enhancements Subscription/Notification Architecture for Fall25 by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/464
+* Gherkin Feature: x-correlator format checking step since Fall25 by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/480
 
 ### Changed
 * Aligned Error 401 wording in Notification Cloud Events artifact by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/449
-* Updated `types` property of `Subscription` allowing more than one event type per subscription by @eric-murray in https://github.com/camaraproject/Commonalities/pull/432
+* Updated `types` property of `Subscription` allowing more than one event type per subscription by @eric-murray in https://github.com/camaraproject/Commonalities/pull/432 and clarification on using multiple event types by @rartych in https://github.com/camaraproject/Commonalities/pull/477
 * Request response definitions and other clarifications in chapter 5 of API Design Guide by @rartych in https://github.com/camaraproject/Commonalities/pull/450
 * X-Correlator format changed by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/463
 * Updated Security chapter in CAMARA-API-Design-Guide.md by @rartych in https://github.com/camaraproject/Commonalities/pull/467
