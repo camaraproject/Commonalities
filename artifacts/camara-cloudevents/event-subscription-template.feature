@@ -201,36 +201,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.code" is "INVALID_TOKEN"
     And the response property "$.message" contains a user friendly text
 
-  @<xxx>_subscriptions_26_no_authorization_header_for_create_subscription
-  Scenario: No Authorization header for create subscription
-    Given a valid <xxx> subscription request body
-    And the request does not include the "Authorization" header
-    When the request "create<xxx>Subscription" is sent 
-    Then the response status code is 401
-    And the response property "$.status" is 401
-    And the response property "$.code" is "UNAUTHENTICATED"
-    And the response property "$.message" contains a user friendly text
-
-  @<xxx>_subscriptions_27_expired_access_token_for_create_subscription
-  Scenario: Expired access token for create subscription
-    Given a valid <xxx> subscription request body and header "Authorization" is expired
-    When the request "create<xxx>Subscription" is sent
-    Then the response status code is 401
-    And the response property "$.status" is 401
-    And the response property "$.code" is "UNAUTHENTICATED"
-    And the response property "$.message" contains a user friendly text
-
-  @<xxx>_subscriptions_28_invalid_access_token_for_create_subscription
-  Scenario: Invalid access token for create subscription
-    Given a valid <xxx> subscription request body 
-    And header "Authorization" set to an invalid access token
-    When the request "create<xxx>Subscription" is sent
-    Then the response status code is 401
-    And the response property "$.status" is 401
-    And the response property "$.code" is "UNAUTHENTICATED"
-    And the response property "$.message" contains a user friendly text
-
-  @<xxx>_subscription_33_invalid_url
+  @<xxx>_subscription_26_invalid_url
   Scenario: Subscription creation with invalid url
     Given a valid <xxx> subscription request body
     And the request property "$.protocol" is set to "HTTP"
@@ -240,9 +211,38 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.code" is "INVALID_SINK"
     And the response property "$.message" contains a user friendly text
 
+  @<xxx>_subscriptions_27_no_authorization_header_for_create_subscription
+  Scenario: No Authorization header for create subscription
+    Given a valid <xxx> subscription request body
+    And the request does not include the "Authorization" header
+    When the request "create<xxx>Subscription" is sent 
+    Then the response status code is 401
+    And the response property "$.status" is 401
+    And the response property "$.code" is "UNAUTHENTICATED"
+    And the response property "$.message" contains a user friendly text
+
+  @<xxx>_subscriptions_28_expired_access_token_for_create_subscription
+  Scenario: Expired access token for create subscription
+    Given a valid <xxx> subscription request body and header "Authorization" is expired
+    When the request "create<xxx>Subscription" is sent
+    Then the response status code is 401
+    And the response property "$.status" is 401
+    And the response property "$.code" is "UNAUTHENTICATED"
+    And the response property "$.message" contains a user friendly text
+
+  @<xxx>_subscriptions_29_invalid_access_token_for_create_subscription
+  Scenario: Invalid access token for create subscription
+    Given a valid <xxx> subscription request body 
+    And header "Authorization" set to an invalid access token
+    When the request "create<xxx>Subscription" is sent
+    Then the response status code is 401
+    And the response property "$.status" is 401
+    And the response property "$.code" is "UNAUTHENTICATED"
+    And the response property "$.message" contains a user friendly text
+
 ########################### Subscription retrieval scenarios #####################################
 
-  @<xxx>_subscriptions_29_no_authorization_header_for_get_subscription
+  @<xxx>_subscriptions_30_no_authorization_header_for_get_subscription
   Scenario: No Authorization header for get subscription
     Given header "Authorization" is not present
     And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
@@ -252,7 +252,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
 
-  @<xxx>_subscriptions_30_expired_access_token_for_get_subscription
+  @<xxx>_subscriptions_31_expired_access_token_for_get_subscription
   Scenario: Expired access token for get subscription
     Given the header "Authorization" is set to expired token
     And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
@@ -262,7 +262,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
     
-  @<xxx>_subscriptions_31_invalid_access_token_for_get_subscription
+  @<xxx>_subscriptions_32_invalid_access_token_for_get_subscription
   Scenario: Invalid access token for get subscription
     Given the header "Authorization" set to an invalid access token
     And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
@@ -272,7 +272,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
 
-  @<xxx>_subscriptions_32_get_unknown_<xxx>_subscription_for_a_device
+  @<xxx>_subscriptions_33_get_unknown_<xxx>_subscription_for_a_device
   Scenario:  Get method for <xxx> subscription with subscription-id unknown to the system  
     Given the path parameter "subscriptionId" is set to a value not corresponding to any existing subscription
     When the request "retrieve<xxx>Subscription" is sent
@@ -283,7 +283,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 
 ########################### Subscription list retrieval scenarios #####################################
 
-  @<xxx>_subscriptions_60_no_authorization_header_for_list_subscription
+  @<xxx>_subscriptions_40_no_authorization_header_for_list_subscription
   Scenario: No Authorization header for list subscription
     Given header "Authorization" is not present
     When the request "retrieve<xxx>SubscriptionList" is sent 
@@ -292,7 +292,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
 
-  @<xxx>_subscriptions_61_expired_access_token_for_list_subscription
+  @<xxx>_subscriptions_41_expired_access_token_for_list_subscription
   Scenario: Expired access token for list subscription
     Given the header "Authorization" is set to expired token
     When the request "retrieve<xxx>SubscriptionList" is sent
@@ -301,7 +301,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
     
-  @<xxx>_subscriptions_62_invalid_access_token_for_list_subscription
+  @<xxx>_subscriptions_42_invalid_access_token_for_list_subscription
   Scenario: Invalid access token for list subscription
     Given the header "Authorization" set to an invalid access token
     When the request "retrieve<xxx>SubscriptionList" is sent
@@ -312,7 +312,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 
 ########################### Subscription deletion scenarios #####################################
 
-  @<xxx>_subscriptions_33_no_authorization_header_for_delete_subscription
+  @<xxx>_subscriptions_50_no_authorization_header_for_delete_subscription
   Scenario: No Authorization header for delete subscription
     Given header "Authorization" is set without a token
     And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
@@ -322,7 +322,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
 
-  @<xxx>_subscriptions_34_expired_access_token_for_delete_subscription
+  @<xxx>_subscriptions_51_expired_access_token_for_delete_subscription
   Scenario: Expired access token for delete subscription
     Given header "Authorization" is set with an expired token
     And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
@@ -332,7 +332,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
 
-  @<xxx>_subscriptions_35_invalid_access_token_for_delete_subscription
+  @<xxx>_subscriptions_52_invalid_access_token_for_delete_subscription
   Scenario: Invalid access token for delete subscription
     Given header "Authorization" set to an invalid access token
     And path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
@@ -343,7 +343,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
 
-  @<xxx>_subscriptions_36_delete_invalid_<xxx>_subscription
+  @<xxx>_subscriptions_53_delete_invalid_<xxx>_subscription
   Scenario:  Delete <xxx> subscription with subscription-id unknown to the system
     Given the path parameter "subscriptionId" is set to a value not corresponding to any existing subscription
     When the request "delete<xxx>Subscription" is sent
