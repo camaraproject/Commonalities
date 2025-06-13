@@ -1,24 +1,27 @@
 @<xxx> 
 Feature: Camara Template Subscriptions API, v{version here} - Operations on subscriptions
 
-  # This feature file is to be used by CAMARA sub projet when an event subscription ressource is provided.
-  # We designed as <xxx> the subscription resource prefix.
-  # We designed as <x> the event version. 
+  # This feature file is to be used by CAMARA subproject when an event subscription ressource is provided.
+
+  # We use <xxx> as the subscription resource prefix.
+
+  # We use <x> as the event version. 
+
   #
-  # If the subscription leverages 'device' object the following indication must be present:
+  # If the subscription leverages the 'device' object the following indication must be present:
   #    Implementation indications:
-  #      * List of device identifier types which are not supported, among: phoneNumber, networkAccessIdentifier, ipv4Address, ipv6Address
+  #      * List of device identifier types which are not supported, such as: phoneNumber, networkAccessIdentifier, ipv4Address, ipv6Address
   #
   # Testing assets:
   #        A sink-url identified as "callbackUrl", which receives notifications
   #        + Add here the specific testing asset(s) required to test the API
   #
-  # References to OAS spec schemas refer to schemas specifies in <xxx>-subscriptions.yaml
+  # References to OAS spec schemas refer to schemas specified in <xxx>-subscriptions.yaml
   # References to schemas starting with the # symbol are JSON Pointers from the root of the OAS document: <xxx>-subscriptions.yaml, Schema names are aligned with the event-subscription-template.yaml artifact.
   #
   # IMPORTANT: 
-  # 1/ This file must be completed with test cases specific to the subscription type managed by the API.
-  # 2/ Specific Subscription error scenarios when Device object is used must be added. These scenarios are available in CAMARA Github.   ################
+  # 1/ This file must be completed with the test cases specific to the subscription type managed by the API.
+  # 2/ Specific Subscription error scenarios when the Device object is used must be added. These scenarios are available in CAMARA Github.   ################
   #    source: Commonalities/artifacts/testing
 
   Background: Common <xxx> Subscriptions setup
@@ -31,7 +34,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 # Note: Depending on the API managed personal data specific scenario update may be require to specify use of 2-legs or 3-legs access token.
 
   @<xxx>_subscriptions_01_Create_<xxx>_subscription_sync
-  Scenario:  Create <xxx> subscription (sync creation)
+  Scenario: Create <xxx> subscription (sync creation)
    # Some implementations may only support asynchronous subscription creation
     Given that subscriptions are created synchronously
     And a valid subscription request body 
