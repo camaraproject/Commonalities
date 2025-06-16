@@ -361,7 +361,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   Scenario: Multi event subscription not supported
     Given the API provider only allows one event to be subscribed per subscription request
     And a valid subscription request body
-    And the request body property "$.types" is set to an array of 2 valid items
+    And the request body property "$.types" is set to an array with 2 valid items
     When the request "create<xxx>Subscription" is sent
     Then the response code is 422
     And the response property "$.status" is 422
