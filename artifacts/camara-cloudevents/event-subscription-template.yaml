@@ -5,7 +5,7 @@ info:
     This file is a template for CAMARA API explicit subscription endpoint and for Notification model.
     Additional information are provided in [CAMARA API Event Subscription and Notification Guide](https://github.com/camaraproject/Commonalities/blob/main/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md).
 
-    Note on event name convention: the event type name MUST follow: ``org.camaraproject.<api-name>.<api-version>.<event-name>``
+    Note on event name convention: the event type name MUST follow: ``org.camaraproject.<api-name>.<event-version>.<event-name>``
 
     Note on ``security`` - ``openId`` scope: The value in this yaml `api-name:event-type1:grant-level` must be replaced accordingly to the format defined in the guideline document.
 
@@ -237,15 +237,12 @@ components:
       in: header
       description: Correlation id for the different services
       schema:
-        type: string
-        pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
-        example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+        $ref: "#/components/schemas/XCorrelator"
   headers:
     x-correlator:
       description: Correlation id for the different services
       schema:
-        type: string
-        pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+        $ref: "#/components/schemas/XCorrelator"
   schemas:
     ErrorInfo:
       type: object
@@ -264,6 +261,11 @@ components:
           type: string
           description: Detailed error description
 
+    XCorrelator:
+      type: string
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+
     SubscriptionRequest:
       description: The request for creating a event-type event subscription
       type: object
@@ -278,6 +280,7 @@ components:
         sink:
           type: string
           format: uri
+          pattern: ^https:\/\/.+$
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
@@ -452,11 +455,15 @@ components:
       description: |
         event-type - Event triggered when an event-type event occurred. Several event-type could be defined.
 
-        subscription-ends: Event triggered when the subscription ends
+        - subscription-started: Event triggered when the subscription starts
+        - subscription-updated: Event triggered when the subscription is updated
+        - subscription-ended: Event triggered when the subscription ends
       enum:
         - org.camaraproject.api-name.v0.event-type1
         - org.camaraproject.api-name.v0.event-type2
-        - org.camaraproject.api-name.v0.subscription-ends
+        - org.camaraproject.api-name.v0.subscription-started
+        - org.camaraproject.api-name.v0.subscription-updated
+        - org.camaraproject.api-name.v0.subscription-ended
 
     SubscriptionEventType:
       type: string
@@ -481,6 +488,7 @@ components:
         sink:
           type: string
           format: uri
+          pattern: ^https:\/\/.+$
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
         types:
@@ -540,6 +548,8 @@ components:
     SubscriptionAsync:
       description: Response for a event-type subscription request managed asynchronously (Creation or Deletion)
       type: object
+      required:
+        - id
       properties:
         id:
           $ref: "#/components/schemas/SubscriptionId"
@@ -585,7 +595,9 @@ components:
         mapping:
           org.camaraproject.api-name.v0.event-type1: "#/components/schemas/EventApiSpecific1"
           org.camaraproject.api-name.v0.event-type2: "#/components/schemas/EventApiSpecific2"
-          org.camaraproject.api-name.v0.subscription-ends: "#/components/schemas/EventSubscriptionEnds"
+          org.camaraproject.api-name.v0.subscription-started: "#/components/schemas/EventSubscriptionStarted"
+          org.camaraproject.api-name.v0.subscription-updated: "#/components/schemas/EventSubscriptionUpdated"
+          org.camaraproject.api-name.v0.subscription-ended: "#/components/schemas/EventSubscriptionEnded"
 
     Source:
       type: string
@@ -621,17 +633,79 @@ components:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
 
-    EventSubscriptionEnds:
-      description: event structure for event subscription ends
+    EventSubscriptionStarted:
+      description: event structure for event subscription started
       allOf:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
           properties:
             data:
-              $ref: "#/components/schemas/SubscriptionEnds"
+              $ref: "#/components/schemas/SubscriptionStarted"
 
-    SubscriptionEnds:
-      description: Event detail structure for SUBSCRIPTION_ENDS event
+    SubscriptionStarted:
+      description: Event detail structure for subscription started event
+      type: object
+      required:
+        - initiationReason
+        - subscriptionId
+      properties:
+        initiationReason:
+          $ref: "#/components/schemas/InitiationReason"
+        subscriptionId:
+          $ref: "#/components/schemas/SubscriptionId"
+        initiationDescription:
+          type: string
+
+    InitiationReason:
+      type: string
+      description: |
+        - SUBSCRIPTION_CREATED - Subscription created by API Server
+      enum:
+        - SUBSCRIPTION_CREATED
+
+    EventSubscriptionUpdated:
+      description: event structure for event subscription updated
+      allOf:
+        - $ref: "#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/SubscriptionUpdated"
+
+    SubscriptionUpdated:
+      description: Event detail structure for subscription updated event
+      type: object
+      required:
+        - updateReason
+        - subscriptionId
+      properties:
+        updateReason:
+          $ref: "#/components/schemas/UpdateReason"
+        subscriptionId:
+          $ref: "#/components/schemas/SubscriptionId"
+        updateDescription:
+          type: string
+
+    UpdateReason:
+      type: string
+      description: |
+        - SUBSCRIPTION_ACTIVE - API server transitioned susbcription status to `ACTIVE`
+        - SUBSCRIPTION_INACTIVE - API server transitioned susbcription status to `INACTIVE`
+      enum:
+        - SUBSCRIPTION_ACTIVE
+        - SUBSCRIPTION_INACTIVE
+
+    EventSubscriptionEnded:
+      description: event structure for event subscription ended
+      allOf:
+        - $ref: "#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/SubscriptionEnded"
+
+    SubscriptionEnded:
+      description: Event detail structure for subscription ended event
       type: object
       required:
         - terminationReason
@@ -833,6 +907,7 @@ components:
                       - INVALID_PROTOCOL
                       - INVALID_CREDENTIAL
                       - INVALID_TOKEN
+                      - INVALID_SINK
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               description: Invalid Argument. Generic Syntax Exception
@@ -864,6 +939,12 @@ components:
                 status: 400
                 code: INVALID_TOKEN
                 message: Only bearer token is supported
+            GENERIC_400_INVALID_SINK:
+              description: Invalid sink value
+              value:
+                status: 400
+                code: INVALID_SINK
+                message: sink not valid for the specified protocol
     Generic400:
       description: Problem with the client request
       headers:
@@ -988,7 +1069,6 @@ components:
                   code:
                     enum:
                       - PERMISSION_DENIED
-                      - INVALID_TOKEN_CONTEXT
                       - SUBSCRIPTION_MISMATCH
           examples:
             GENERIC_403_PERMISSION_DENIED:
@@ -997,12 +1077,6 @@ components:
                 status: 403
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
-            GENERIC_403_INVALID_TOKEN_CONTEXT:
-              description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
-              value:
-                status: 403
-                code: INVALID_TOKEN_CONTEXT
-                message: "{{field}} is not consistent with access token."
             GENERIC_403_SUBSCRIPTION_MISMATCH:
               description: Inconsistent access token for requested subscription
               value:
@@ -1108,19 +1182,13 @@ components:
                       - 422
                   code:
                     enum:
-                      - IDENTIFIER_MISMATCH
                       - SERVICE_NOT_APPLICABLE
                       - MISSING_IDENTIFIER
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
                       - MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED
+                      - MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED
           examples:
-            GENERIC_422_IDENTIFIER_MISMATCH:
-              description: Inconsistency between identifiers not pointing to the same device
-              value:
-                status: 422
-                code: IDENTIFIER_MISMATCH
-                message: Provided identifiers are not consistent.
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
               value:
@@ -1151,6 +1219,12 @@ components:
                 status: 422
                 code: MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED
                 message: Multi event types subscription not managed
+            GENERIC_422_MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED:
+              description: Combination of multiple event types is temporarily not supported
+              value:
+                status: 422
+                code: MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED
+                message: The requested combination of event types is temporarily not supported.
     Generic429:
       description: Too Many Requests
       headers:
