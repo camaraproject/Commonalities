@@ -14,6 +14,47 @@
 - **[v0.2.0](#v020)**
 - **[v0.1.0 - Initial version](#v010---initial-version)**
 
+# r3.2
+## Release Notes
+
+This release contains documents and artifacts of Commonalities version 0.6.0-rc.1:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r3.2/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r3.2/artifacts)** folder.
+**The relevant details of authentication and consent collection are covered by [release 3.2](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
+### Added
+* [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md) document by @rartych in https://github.com/camaraproject/Commonalities/pull/441
+* [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md) document by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/442
+* Links to CAMARA API Event Subscription and Notification Guide in artifacts by @rartych in https://github.com/camaraproject/Commonalities/pull/453
+* Updated Glossary with Terminology from Device Identifier API by @eric-murray in https://github.com/camaraproject/Commonalities/pull/454
+* Text description for duration format fields by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/459
+* Event versioning section added to Guide document by @tanjadegroot in https://github.com/camaraproject/Commonalities/pull/475
+* Not Documented Error Responses info.description section by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/457
+* Enhancements Subscription/Notification Architecture (`sink` string pattern, special events update)  by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/464
+* X-Correlator schema in CAMARA_common.yaml and format checking step in testing template by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/480
+* Added event-notification feature file template by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/470
+
+### Changed
+* Aligned Error 401 wording in Notification Cloud Events artifact by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/449
+* Updated `types` property of `Subscription` allowing more than one event type per subscription by @eric-murray in https://github.com/camaraproject/Commonalities/pull/432 and clarification on using multiple event types by @rartych in https://github.com/camaraproject/Commonalities/pull/477
+* Request response definitions and other clarifications in chapter 5 of API Design Guide by @rartych in https://github.com/camaraproject/Commonalities/pull/450
+* X-Correlator format changed by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/463
+* Updated Security chapter in CAMARA-API-Design-Guide.md by @rartych in https://github.com/camaraproject/Commonalities/pull/467
+* Sorting Logic in CAMARA-API-Design-Guide.md by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/471
+* Linting rules definition for OpenAPI specfications updated by @rartych in https://github.com/camaraproject/Commonalities/pull/466
+* Updated linting rules for test definitions in .gherkin-lintrc by @rartych in https://github.com/camaraproject/Commonalities/pull/472
+  
+### Fixed
+N/A
+
+### Removed
+* Removed AUTHENTICATION_REQUIRED error code by @eric-murray in https://github.com/camaraproject/Commonalities/pull/429
+* API Design Guidelines document was deprecated by @rartych in https://github.com/camaraproject/Commonalities/pull/441
+* Removed IDENTIFIER_MISMATCH error and introduced DeviceResponse object by @eric-murray in https://github.com/camaraproject/Commonalities/pull/455
+* Removed IDENTIFIER_MISMATCH from testing artifacts by @jlurien in https://github.com/camaraproject/Commonalities/pull/479
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r2.3...r3.2
+
 # r3.1
 ## Release Notes
 
