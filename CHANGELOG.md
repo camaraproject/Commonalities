@@ -1,6 +1,7 @@
 # Changelog Commonalities
 
 ## Table of Contents
+- **[r3.2](#r32)**
 - **[r3.1](#r31)**
 - **[r2.3](#r23)**
 - **[r2.2](#r22)**
