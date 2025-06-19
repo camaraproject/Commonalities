@@ -31,7 +31,7 @@ This release contains documents and artifacts of Commonalities version 0.6.0-rc.
 * Event versioning section added to Guide document by @tanjadegroot in https://github.com/camaraproject/Commonalities/pull/475
 * Not Documented Error Responses info.description section by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/457
 * Enhancements Subscription/Notification Architecture (`sink` string pattern, special events update)  by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/464
-* X-Correlator schema in CAMARA_common.yaml and format checking step in testing template by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/480
+* XCorrelator schema in CAMARA_common.yaml and format checking step in testing template by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/480
 * Added event-notification feature file template by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/470
 
 ### Changed
