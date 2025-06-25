@@ -319,6 +319,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 - For event subscriptions APIs, the ones defined in Event Subscription section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification.md)
 - For event notifications flow, the ones defined in Event Notification section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification.md)
+- For the rest of APIs: 
   - Error status 401
   - Error status 403
 
