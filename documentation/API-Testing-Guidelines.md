@@ -127,6 +127,24 @@ For the Feature description, API name and version must be included. When the fea
 Feature: CAMARA Device location verification API, v0.2.0 - Operation verifyLocation
 ```
 
+#### Feature Context
+
+Every feature will include a context after the `Feature` tag to provide relevant information about the implementation and execution of the tests.
+
+For the feature context, the following template should be used:
+
+```
+  # Input to be provided by the implementation to the tester
+  #
+  # Implementation indications:
+  # * 
+  #
+  # Testing assets:
+  # * 
+  #
+  # References to OAS spec schemas refer to schemas specifies in {apiname}.yaml, version {version}
+```
+
 ### Environment variables
 
 Commonly, some values to fill the request bodies will not be known in advance and cannot be specified as part of the feature file, as they will be specific for the test environment, and they will have to be provided by the implementation to the tester as a separate set of environment or configuration variables.
