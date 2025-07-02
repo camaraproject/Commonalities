@@ -129,7 +129,9 @@ Feature: CAMARA Device location verification API, v0.2.0 - Operation verifyLocat
 
 #### Feature Context
 
-Every feature will include a context after the `Feature` tag to provide relevant information about the implementation and execution of the tests.
+Every feature may include a context after the `Feature` tag to provide relevant information about the implementation and execution of the tests.
+
+This feature context is RECOMMENDED unless it does not provide additional value (e.g. all the info could have been given in the Background section for a certain API)
 
 For the feature context, the following template should be used:
 
@@ -142,7 +144,25 @@ For the feature context, the following template should be used:
   # Testing assets:
   # * 
   #
-  # References to OAS spec schemas refer to schemas specifies in {apiname}.yaml, version {version}
+  # References to OAS spec schemas refer to schemas specifies in {apiname}.yaml
+```
+
+An example for this feature context is depicted below:
+
+```
+    # Input to be provided by the implementation to the tester
+    #
+    # Implementation indications:
+    # * apiRoot: API root of the server URL
+    # * List of device identifier types which are not supported, among: phoneNumber, ipv4Address, ipv6Address.
+    #   For this version, CAMARA does not allow the use of networkAccessIdentifier, so it is considered by default as not supported.
+    # * List of application server IP formats which are not supported, among ipv4 and ipv6.
+    #
+    # Testing assets:
+    # * A device object applicable for Quality On Demand service.
+    # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
+    #
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
 ```
 
 ### Environment variables
