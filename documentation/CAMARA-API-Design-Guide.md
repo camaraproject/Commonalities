@@ -481,7 +481,7 @@ Note: Services may not support all attributes for filtering.  In case a query in
 
 As filtering may reveal sensitive information, privacy and security constraints have to be considered when defining query parameters, e.g. it should not be possible to filter using personal information (such as name, phone number or IP address).
 
-#### 4.3.2. Filtering operations
+#### 4.3.2. Filtering Operations
 
 | **Operation**     | 	Numbers                     | 	Dates                                        |
 |-------------------|------------------------------|-----------------------------------------------|
@@ -846,7 +846,7 @@ Parameter names are defined in lowerCamelCase: For example: `sessionId`.
 All parameters must have a description.
 All properties within the object must have a description.
 
-#### 5.8.4. Request bodies
+#### 5.8.4. Request Bodies
 UpperCamelCase should be used for request body names.
 All properties within the object must have a description.
 
@@ -891,7 +891,7 @@ interoperability.
 
 Implementers may include the UTF-8 character set in the Content-Type header value, for example, "`application/json; charset=utf-8`". However, the preferred format is to specify only the MIME type, such as "`application/json`". Regardless, the interpretation of the MIME type as UTF-8 is mandatory, even when only "`application/json`" is provided.
 
-#### 5.8.6. Security schemes
+#### 5.8.6. Security Schemes
 
 [Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object) express security in OpenAPI.
 Security can be expressed for the API as a whole or for each endpoint.
@@ -1043,10 +1043,10 @@ where
 | qod                   | /qos-profiles | GET    | `qod:qos-profiles:read`                           |
 
 
-#### 6.6.2. API-level Scopes (sometimes referred to as wildcard scopes in CAMARA)
+#### 6.6.2. API-level Scopes (Sometimes Referred to as Wildcard Scopes in CAMARA)
 
 The decision on the API-level scopes was made within the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement) and is documented in the design guidelines to ensure the completeness of this document.
-The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject.
+The scopes will always be those defined in the API specification YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API specification YAML file and agreed in the corresponding API Subproject.
 
 ### 6.7. Resource Access Restriction
 
