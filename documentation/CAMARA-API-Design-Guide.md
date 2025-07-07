@@ -14,7 +14,7 @@ This document outlines guidelines for API design within the CAMARA project, appl
 - [3. Error Responses](#3-error-responses)
     - [3.1. Standardized Use of CAMARA Error Responses](#31-standardized-use-of-camara-error-responses)
     - [3.2. Error Responses - Device Object/Phone Number](#32-error-responses---device-objectphone-number)
-    - [3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API Specs](#33-error-responses---mandatory-template-for-infodescription-in-camara-api-specs)
+    - [3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API](#33-error-responses---mandatory-template-for-infodescription-in-camara-api)
 - [4. Pagination, Sorting and Filtering](#4-pagination-sorting-and-filtering)
     - [4.1. Pagination](#41-pagination)
     - [4.2. Sorting](#42-sorting)
@@ -32,7 +32,7 @@ This document outlines guidelines for API design within the CAMARA project, appl
     - [6.1. Good Practices for Securing REST APIs](#61-good-practices-for-securing-rest-apis)
     - [6.2. Security Definition](#62-security-definition)
     - [6.3. Expressing Security Requirements](#63-expressing-security-requirements)
-    - [6.4. Mandatory Template for `info.description` in CAMARA API Specs](#64-mandatory-template-for-infodescription-in-camara-api-specs)
+    - [6.4. Mandatory Template for `info.description` in CAMARA API](#64-mandatory-template-for-infodescription-in-camara-api)
     - [6.5. POST or GET for Transferring Sensitive or Complex Data](#65-post-or-get-for-transferring-sensitive-or-complex-data)
     - [6.6. Scope Naming](#66-scope-naming)
     - [6.7. Resource Access Restriction](#67-resource-access-restriction)
@@ -403,9 +403,9 @@ components:
         message: {{Message example}}
 ```
 
-### 3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API Specs
+### 3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API
 
-The following template must be used as part of the API documentation in the `info.description` property of the CAMARA API specs to provide a common reference for API Consumers, API Developers and API Providers about not documented error responses in case they are supported by a given API implementation.
+The following template must be used as part of the API documentation in the `info.description` property of the CAMARA API specification to provide a common reference for API Consumers, API Developers and API Providers about not documented error responses in case they are supported by a given API implementation.
 
 ```md
 # Additional CAMARA error responses
@@ -639,7 +639,7 @@ It is not recommended to link images outside of the Github API repository, since
 ![API Diagram](https://raw.githubusercontent.com/camaraproject/{apiRepository}/main/documentation/API_documentation/resources/diagram.png)
 ```
 
-Some sections are required, as defined in [Section 3.3](#33-error-responses---mandatory-template-for-infodescription-in-camara-api-specs), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api-specs)
+Some sections are required, as defined in [Section 3.3](#33-error-responses---mandatory-template-for-infodescription-in-camara-api), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api)
  or [Appendix A](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
 
 #### 5.3.3. Version
@@ -968,9 +968,9 @@ paths:
 The name `openId` must be same as defined in the `components.securitySchemes` section - see [5.8.6. Security schemes](#586-security-schemes).
 
 
-### 6.4. Mandatory Template for `info.description` in CAMARA API Specs
+### 6.4. Mandatory Template for `info.description` in CAMARA API
 
-The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) must be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specs.
+The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) must be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specification.
 
 ### 6.5. POST or GET for Transferring Sensitive or Complex Data
 
