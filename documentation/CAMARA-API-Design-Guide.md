@@ -35,10 +35,10 @@ This document outlines guidelines for API design within the CAMARA project, appl
     - [6.4. Mandatory Template for `info.description` in CAMARA API Specs](#64-mandatory-template-for-infodescription-in-camara-api-specs)
     - [6.5. POST or GET for Transferring Sensitive or Complex Data](#65-post-or-get-for-transferring-sensitive-or-complex-data)
     - [6.6. Scope Naming](#66-scope-naming)
-    - [6.7. Resource access restriction](#67-resource-access-restriction)
+    - [6.7. Resource Access Restriction](#67-resource-access-restriction)
 - [7. Versioning](#7-versioning)
     - [7.1. API Version (OAS `info` Object)](#71-api-version-oas-info-object)
-    - [7.2. API version in URL (OAS servers object)](#72-api-version-in-url-oas-servers-object)
+    - [7.2. API Version in URL (OAS `servers` Object)](#72-api-version-in-url-oas-servers-object)
     - [7.3. API Versions Throughout the Release Process](#73-api-versions-throughout-the-release-process)
     - [7.4. Backward and Forward Compatibility](#74-backward-and-forward-compatibility)
 - [8. External Documentation](#8-external-documentation)
@@ -1048,7 +1048,7 @@ where
 The decision on the API-level scopes was made within the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement) and is documented in the design guidelines to ensure the completeness of this document.
 The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject.
 
-### 6.7. Resource access restriction
+### 6.7. Resource Access Restriction
 
 In some CAMARA APIs there are functions to create resource (via POST) and then later query them via id and/or list (with GET) or delete them (via DELETE). For example we have sessions, payments, subscriptions, etc..
 
@@ -1095,7 +1095,7 @@ For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versi
 
 It is recommended to avoid breaking backward compatibility unless strictly necessary: new versions should be backwards compatible with previous versions. More information on how to avoid breaking changes can be found below.
 
-### 7.2. API version in URL (OAS servers object)
+### 7.2. API Version in URL (OAS `servers` Object)
 
 The OAS file also defines the API version used in the URL of the API (in the `servers` object).
 
