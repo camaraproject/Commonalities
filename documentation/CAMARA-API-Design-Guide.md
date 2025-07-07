@@ -5,44 +5,80 @@ This document outlines guidelines for API design within the CAMARA project, appl
 
 <!-- TOC tocDepth:2..3 chapterDepth:2..4 -->
 
-- [1. Introduction](#1-introduction)
-  - [1.1. Conventions](#11-conventions)
-  - [1.2. Common Vocabulary and Acronyms](#12-common-vocabulary-and-acronyms)
-- [2. Data](#2-data)
-  - [2.1. Common Data Types](#21-common-data-types)
-  - [2.2. Data Definitions](#22-data-definitions)
-- [3. Error Responses](#3-error-responses)
-  - [3.1. Standardized use of CAMARA error responses](#31-standardized-use-of-camara-error-responses)
-  - [3.2. Error Responses - Device Object/Phone Number](#32-error-responses---device-objectphone-number)
-  - [3.3. Error Responses - Mandatory template for `info.description` in CAMARA API specs](#33-error-responses---mandatory-template-for-infodescription-in-camara-api-specs)
-- [4. Pagination, Sorting and Filtering](#4-pagination-sorting-and-filtering)
-  - [4.1. Pagination](#41-pagination)
-  - [4.2. Sorting](#42-sorting)
-  - [4.3. Filtering](#43-filtering)
-- [5. OpenAPI Sections](#5-openapi-sections)
-  - [5.1. Reserved words](#51-reserved-words)
-  - [5.2. OpenAPI Version](#52-openapi-version)
-  - [5.3. Info Object](#53-info-object)
-  - [5.4. ExternalDocs object](#54-externaldocs-object)
-  - [5.5. Servers object](#55-servers-object)
-  - [5.6. Tags](#56-tags)
-  - [5.7. Paths and Operations](#57-paths-and-operations)
-  - [5.8. Components](#58-components)
-- [6. Security](#6-security)
-  - [6.1. Good practices to secure REST APIs](#61-good-practices-to-secure-rest-apis)
-  - [6.2. Security definition](#62-security-definition)
-  - [6.3. Expressing Security Requirements](#63-expressing-security-requirements)
-  - [6.4. Mandatory template for `info.description` in CAMARA API specs](#64-mandatory-template-for-infodescription-in-camara-api-specs)
-  - [6.5. POST or GET for transferring sensitive or complex data](#65-post-or-get-for-transferring-sensitive-or-complex-data)
-  - [6.6. Scope naming](#66-scope-naming)
-  - [6.7. Resource access restriction](#67-resource-access-restriction)
-- [7. Versioning](#7-versioning)
-  - [7.1. API version (OAS info object)](#71-api-version-oas-info-object)
-  - [7.2. API version in URL (OAS servers object)](#72-api-version-in-url-oas-servers-object)
-  - [7.3. API versions throughout the release process](#73-api-versions-throughout-the-release-process)
-  - [7.4. Backward and forward compatibility](#74-backward-and-forward-compatibility)
-- [8. External Documentation](#8-external-documentation)
-- [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
+- [CAMARA API Design Guide](#camara-api-design-guide)
+  - [1. Introduction](#1-introduction)
+    - [1.1. Conventions](#11-conventions)
+    - [1.2. Common Vocabulary and Acronyms](#12-common-vocabulary-and-acronyms)
+  - [2. Data](#2-data)
+    - [2.1. Common Data Types](#21-common-data-types)
+    - [2.2. Data Definitions](#22-data-definitions)
+      - [2.2.1. Usage of Discriminator](#221-usage-of-discriminator)
+        - [Inheritance](#inheritance)
+        - [Polymorphism](#polymorphism)
+  - [3. Error Responses](#3-error-responses)
+    - [3.1. Standardized Use of CAMARA Error Responses](#31-standardized-use-of-camara-error-responses)
+    - [3.2. Error Responses - Device Object/Phone Number](#32-error-responses---device-objectphone-number)
+      - [3.2.1. Templates](#321-templates)
+        - [Response template](#response-template)
+        - [Examples template](#examples-template)
+    - [3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API Specs](#33-error-responses---mandatory-template-for-infodescription-in-camara-api-specs)
+  - [4. Pagination, Sorting and Filtering](#4-pagination-sorting-and-filtering)
+    - [4.1. Pagination](#41-pagination)
+    - [4.2. Sorting](#42-sorting)
+    - [4.3. Filtering](#43-filtering)
+      - [4.3.1. Filtering Security Considerations](#431-filtering-security-considerations)
+      - [4.3.2. Filtering operations](#432-filtering-operations)
+  - [5. OpenAPI Sections](#5-openapi-sections)
+    - [5.1. Reserved Words](#51-reserved-words)
+    - [5.2. OpenAPI Version](#52-openapi-version)
+    - [5.3. Info Object](#53-info-object)
+      - [5.3.1. Title](#531-title)
+      - [5.3.2. Description](#532-description)
+      - [5.3.3. Version](#533-version)
+      - [5.3.4. Terms of Service](#534-terms-of-service)
+      - [5.3.5. Contact Information](#535-contact-information)
+      - [5.3.6. License](#536-license)
+      - [5.3.7. Extension Field](#537-extension-field)
+    - [5.4. ExternalDocs Object](#54-externaldocs-object)
+    - [5.5. Servers Object](#55-servers-object)
+      - [5.5.1. api-name](#551-api-name)
+      - [5.5.2. api-version](#552-api-version)
+    - [5.6. Tags](#56-tags)
+    - [5.7. Paths and Operations](#57-paths-and-operations)
+      - [5.7.1. Paths](#571-paths)
+        - [Resource hierarchy](#resource-hierarchy)
+      - [5.7.2. Operations](#572-operations)
+      - [5.7.3. Tags](#573-tags)
+      - [5.7.4. Parameters](#574-parameters)
+      - [5.7.5. Request Bodies](#575-request-bodies)
+      - [5.7.6. Responses](#576-responses)
+    - [5.8. Components](#58-components)
+      - [5.8.1. Schemas](#581-schemas)
+      - [5.8.2. Responses](#582-responses)
+      - [5.8.3. Parameters](#583-parameters)
+      - [5.8.4. Request bodies](#584-request-bodies)
+      - [5.8.5. Headers](#585-headers)
+        - [x-correlator Header](#x-correlator-header)
+        - [Content-Type Header - clarification](#content-type-header---clarification)
+      - [5.8.6. Security schemes](#586-security-schemes)
+  - [6. Security](#6-security)
+    - [6.1. Good Practices for Securing REST APIs](#61-good-practices-for-securing-rest-apis)
+    - [6.2. Security Definition](#62-security-definition)
+    - [6.3. Expressing Security Requirements](#63-expressing-security-requirements)
+    - [6.4. Mandatory Template for `info.description` in CAMARA API Specs](#64-mandatory-template-for-infodescription-in-camara-api-specs)
+    - [6.5. POST or GET for Transferring Sensitive or Complex Data](#65-post-or-get-for-transferring-sensitive-or-complex-data)
+    - [6.6. Scope Naming](#66-scope-naming)
+      - [6.6.1. APIs Which Do Not Deal with Explicit Subscriptions](#661-apis-which-do-not-deal-with-explicit-subscriptions)
+        - [Examples](#examples)
+      - [6.6.2. API-level Scopes (sometimes referred to as wildcard scopes in CAMARA)](#662-api-level-scopes-sometimes-referred-to-as-wildcard-scopes-in-camara)
+    - [6.7. Resource access restriction](#67-resource-access-restriction)
+  - [7. Versioning](#7-versioning)
+    - [7.1. API Version (OAS `info` Object)](#71-api-version-oas-info-object)
+    - [7.2. API version in URL (OAS servers object)](#72-api-version-in-url-oas-servers-object)
+    - [7.3. API Versions Throughout the Release Process](#73-api-versions-throughout-the-release-process)
+    - [7.4. Backward and Forward Compatibility](#74-backward-and-forward-compatibility)
+  - [8. External Documentation](#8-external-documentation)
+  - [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
 
 <!-- /TOC -->
 
@@ -55,7 +91,7 @@ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SH
 ### 1.2. Common Vocabulary and Acronyms
 
 | **Term**       | Description                                                                                                                                                                                                                                                                                                                                         |
-|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
+|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **API**        | Application Programming Interface. It is a rule & specification group (code) that applications follow to communicate between them, used as interface among programs developed with different technologies.                                                                                                                                          |
 |**api-name**    | `api-name` is a kebab-case string used to create unique names or values of objects and parameters related to given API. For example, for Device Location Verification API, api-name is `location-verification`.|
 | **Body**       | HTTP Message body (If exists) is used to carry the entity data associated with the request or response.                                                                                                    |
@@ -86,7 +122,7 @@ The aim of this clause is to detail standard data types that will be used over t
 It should be noted
 that this point is open to continuous evolution over time through the addition of possible new data structures.
 To allow for proper management of this ever-evolving list, an external repository has been defined to that end.
-This repository is referenced below. 
+This repository is referenced below.
 
 [Link to Common Data Types documentation repository](../artifacts/CAMARA_common.yaml)
 
@@ -94,11 +130,11 @@ This repository is referenced below.
 ### 2.2. Data Definitions
 
 This part captures a detailed description of all the data structures used in the API specification. For each of these data, the specification must contain:
-- Name of the data object, used to reference it in other sections.
-- Data type (String, Integer, Object…).
+- Name of the data object, used to reference it in other sections
+- Data type (String, Integer, Object, etc.)
 - If the data type is string it is recommended to use the appropriate modifier property `format` and/or `pattern` whenever possible. The [OpenAPI Initiative Formats Registry](https://spec.openapis.org/registry/format/) contains the list of formats used in OpenAPI specifications.
 
-  - If the format of a string is `date-time`, the following sentence must be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)`
+  - If the format of a string is `date-time`, the following sentence must be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)`.
   - If the format of a string is `duration`, the following sentence must be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#appendix-A) for duration`
     - Note: to avoid known ambiguity issues with duration strings, consider using intervals, which are anchored to a specific start and end date or time. Use of a start date or time string field in combination with the duration string field could help to mitigate ambiguity issues.
 
@@ -106,24 +142,24 @@ This part captures a detailed description of all the data structures used in the
 - List of properties within the object data, including:
    - Property name
    - Property description
-   - Property type (String, Integer, Object …)
+   - Property type (String, Integer, Object, etc.)
    - Other properties by type:
       - String ones: min and max length
-      - Integer ones: Format (int32, int64…), min value.
+      - Integer ones: format (int32, int64), range, etc.
 
 In this part, the error response structure must also be defined following the guidelines in [3. Error Responses](#3-error-responses).
 
-#### 2.2.1. Usage of discriminator
+#### 2.2.1. Usage of Discriminator
 
-As mentioned in OpenAPI doc [here](https://spec.openapis.org/oas/v3.0.3#discriminator-object) usage of discriminator may
+As explained in the OpenAPI documentation [here](https://spec.openapis.org/oas/v3.0.3#discriminator-object) usage of discriminator may
 simplify serialization/deserialization process and so reduce resource consumption.
 
 ##### Inheritance
 
-The mappings section is not mandatory in discriminator, by default ClassName are used as values to populate the property. You can use mappings to restrict usage to a subset of subclasses.
-When it's possible, use Object Name as a key in the mapping section. This will simplify the work of providers and consumers who use OpenAPI code generators.
+The `mappings` section is not mandatory in a discriminator, by default Class Name values are used to populate the property. You can use mappings to restrict usage to a subset of subclasses.
+When it's possible, use Object Name as a key in the `mappings` section. This will simplify the work of providers and consumers who use OpenAPI code generators.
 
-``` yaml 
+``` yaml
     IpAddr:
       type: object
       properties:
@@ -132,10 +168,10 @@ When it's possible, use Object Name as a key in the mapping section. This will s
       required:
          - addressType
       discriminator:
-        propertyName: addressType 
-        mappings:                   
+        propertyName: addressType
+        mappings:
             - Ipv4Addr: '#/components/schemas/Ipv4Addr'   <-- use Object Name as mapping key to simplify usage
-            - Ipv6Addr: '#/components/schemas/Ipv6Addr'   
+            - Ipv6Addr: '#/components/schemas/Ipv6Addr'
 
     Ipv4Addr:           <-- Object Name also known as Class Name, used as JsonName by OpenAPI generator
       allOf:            <-- extends IpAddr (no need to define addressType because it's inherited
@@ -164,14 +200,14 @@ When it's possible, use Object Name as a key in the mapping section. This will s
 
 ##### Polymorphism
 
-To help usage of a CAMARA object from strongly typed languages, prefer to use inheritance than polymorphism ... Despite this, if you have to use it apply the following rules:
+To help usage of a CAMARA object from strongly typed languages, prefer to use inheritance than polymorphism. Despite this, if you have to use it apply the following rules:
 
-    - objects containing oneOf or anyOf section MUST include a discriminator defined by a propertyName
-    - objects involved in oneOf / anyOf section MUST include the property designed by propetyName
+    - objects containing `oneOf` or `anyOf` section MUST include a discriminator defined by a `propertyName`
+    - objects involved in `oneOf` / `anyOf` section MUST include the property designed by `propertyName`
 
 The following sample illustrates this usage.
 
-``` yaml 
+``` yaml
     IpAddr:
       oneOf:
         - $ref: '#/components/schemas/Ipv6Addr'
@@ -179,7 +215,7 @@ The following sample illustrates this usage.
       discriminator:
         propertyName: objectType <-- objectType property MUST be present in the objects referenced in oneOf
 
-    Ipv4Addr: <-- object involved in oneOf MUST include the objectype property
+    Ipv4Addr: <-- object involved in oneOf MUST include the objectType property
       type: object
       required:
         - objectType
@@ -192,7 +228,7 @@ The following sample illustrates this usage.
           format: ipv4
         ...
 
-    Ipv6Addr: <-- object involved in oneOf MUST include the objectype property
+    Ipv6Addr: <-- object involved in oneOf MUST include the objectType property
       type: object
       required:
         - objectType
@@ -207,15 +243,15 @@ The following sample illustrates this usage.
 
 ```
 
-When IpAddr is used in a payload, the property objectType MUST be present to indicate which schema to use
+When IpAddr is used in a payload, the property `objectType` MUST be present to indicate the schema to use:
 
 ``` json
-{ 
+{
     "ipAddr": {
         "objectType": "Ipv4Addr",   <-- objectType indicates to use Ipv4Addr to deserialize this IpAddr
         "address": "192.168.1.1",
         ...
-    }    
+    }
 }
 ```
 
@@ -226,9 +262,9 @@ When IpAddr is used in a payload, the property objectType MUST be present to ind
 To ensure interoperability, it is crucial to implement error management that strictly adheres to the error codes defined in the HTTP protocol.
 
 An error representation must not differ from the representation of any resource. A main error message is defined with JSON structure with the following fields:
-- A field "`status`", which can be identified in the response as a standard code from a list of Hypertext Transfer Protocol (HTTP) response status codes.
-- A unique error "`code`", which can be identified and traced for more details. It must be human-readable; therefore, it must not be a numeric code. In turn, to achieve a better location of the error, you can reference the value or field causing it, and include it in the message.
-- A detailed description in "`message`" - in English language in API specification, it can be changed to other languages in implementation if needed.
+- A field `status`, which can be identified in the response as a standard code from a list of Hypertext Transfer Protocol (HTTP) response status codes.
+- A unique error `code`, which can be identified and traced for more details. It must be human-readable; therefore, it must not be a numeric code. In turn, to achieve a better location of the error, you can reference the value or the field causing it, and include it in the message.
+- A detailed description in `message` - in English language in API specification, it can be changed to other languages in implementation if needed.
 
 All these aforementioned fields are mandatory in Error Responses.
 `status` and `code` fields have normative nature, so as their use has to be standardized (see [3.1. Standardized use of CAMARA error responses](#31-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
@@ -241,7 +277,7 @@ An example of JSON error structure is as follows:
 {
    "status": 400,
    "code": "INVALID_ARGUMENT",
-   "message": "A human readable description of what the event represent"
+   "message": "A human-readable description of what the event represent"
 }
 ```
 
@@ -256,14 +292,14 @@ The essential requirements to consider would be:
 
 NOTE: When standardized AuthN/AuthZ flows are used, please refer to [6.2. Security definition](#62-security-definition), the format and content of Error Response for those procedures SHALL follow the guidelines of those standards.
 
-### 3.1. Standardized use of CAMARA error responses
+### 3.1. Standardized Use of CAMARA Error Responses
 
 This section aims to provide a common use of the fields `status` and `code` across CAMARA APIs.
 
 In the following, we elaborate on the existing client errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature:
 - i) syntax exceptions
 - ii) service exceptions
-- iii) server errors 
+- iii) server errors
 
 <font size="3"><span style="color: blue"> Syntax Exceptions </span></font>
 
@@ -288,7 +324,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       404        |          `NOT_FOUND`          | The specified resource is not found.                                       | Resource is not found                                                                                                                               |
 |       404        |     `IDENTIFIER_NOT_FOUND`    | Device identifier not found.                                               | Some identifier cannot be matched to a device                                                                                                                              |
 |       404        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Specific situation to highlight the resource/concept not found (e.g. use in device)                                                                                     |
-|       422        |    `UNSUPPORTED_IDENTIFIER`   | The identifier provided is not supported.                                  | None of the provided identifiers is supported by the implementation                                                                                                     |  
+|       422        |    `UNSUPPORTED_IDENTIFIER`   | The identifier provided is not supported.                                  | None of the provided identifiers is supported by the implementation                                                                                                     |
 |       422        |    `UNNECESSARY_IDENTIFIER`   | The device is already identified by the access token.                      | An explicit identifier is provided when a device or phone number has already been identified from the access token                                                            |
 |       422        |    `SERVICE_NOT_APPLICABLE`   | The service is not available for the provided identifier.                  | Service not applicable for the provided identifier                                                                                                                          |
 |       422        |      `MISSING_IDENTIFIER`     | The device cannot be identified.                                           | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token                              |
@@ -319,7 +355,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 - For event subscriptions APIs, the ones defined in Event Subscription section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification.md)
 - For event notifications flow, the ones defined in Event Notification section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification.md)
-- For the rest of APIs: 
+- For the rest of APIs:
   - Error status 401
   - Error status 403
 
@@ -333,7 +369,7 @@ The documentation of non-mandatory error statuses defined in section 3.1 depends
 
 ### 3.2. Error Responses - Device Object/Phone Number
 
-This section is focused in the guidelines about error responses around the concept of `device` object or `phoneNumber` field.
+This section provides guidelines for error responses related to the `Device` object or `phoneNumber` field.
 
 The Following table compiles the guidelines to be adopted:
 
@@ -341,12 +377,12 @@ The Following table compiles the guidelines to be adopted:
 |:----------:|:---------------------------------------------------------------------------|:----------------:|:------------------------------:|:---------------------------------------------------------|
 |     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.            |
 |     1      | None of the provided identifiers is supported by the implementation |       422        |     UNSUPPORTED_IDENTIFIER     | The identifier provided is not supported.                                 |
-|     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | Device identifier not found.                             |  
+|     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | Device identifier not found.                             |
 |     3      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        |     UNNECESSARY_IDENTIFIER      | The device is already identified by the access token. |
 |     4      | Service not applicable for the provided identifier                         |       422        |     SERVICE_NOT_APPLICABLE     | The service is not available for the provided identifier. |
 |     5      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
 
-**NOTE:**  
+**NOTE:**
 The `Device` object defined in [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
 
 Where an API consumer provides more than one device identifier, the API provider should indicate in the response which of these identifiers they are using to fulfil the API, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. A `DeviceResponse` object is defined for this purpose. The API provider MUST NOT respond with an identifier that was not originally provided by the API consumer.
@@ -364,7 +400,7 @@ Schema is common for all errors.
 ```yaml
 description: |
   The examples section includes the list of subcases for this status error code to be implemented. In each example `status` and `code` are normative for the specific error case. `message` may be adjusted or localized by the implementation.
-headers: 
+headers:
   {{response_headers}}
 content:
   application/json:
@@ -384,7 +420,7 @@ content:
       {{case_1}}:
         $ref: ""#/components/examples/{{case_1}}"
       {{case_2}}:
-        $ref: ""#/components/examples/{{case_2}}"      
+        $ref: ""#/components/examples/{{case_2}}"
 ```
 
 ##### Examples template
@@ -403,7 +439,7 @@ components:
         message: {{Message example}}
 ```
 
-### 3.3. Error Responses - Mandatory template for `info.description` in CAMARA API specs
+### 3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API Specs
 
 The following template must be used as part of the API documentation in the `info.description` property of the CAMARA API specs to provide a common reference for API Consumers, API Developers and API Providers about not documented error responses in case they are supported by a given API implementation.
 
@@ -430,8 +466,7 @@ To alleviate the above-mentioned issues and concerns, Pagination, Sorting and Fi
 Services can answer with a resource or article collections. Sometimes these collections may be a partial set due to performance or security reasons. Elements must be identified and arranged consistently on all pages. Paging can be enabled by default on the server side to mitigate denial of service or similar.
 
 Services must accept and use these query parameters when paging is supported:
-- `perPage`: number of resources requested to be provided in the response 
-
+- `perPage`: number of resources requested to be provided in the response
 - `page`: requested page number to indicate the start of the resources to be provided in the response (considering perPage page size)
 - `seek`: index of last result read, to create the next/previous number of results. This query parameter is used for pagination in systems with more than 1000 records. `seek` parameter offers finer control than `page` and could be used one or another as an alternative. If both are used in combination (not recommended) `seek` would mark the index starting from the page number specified by `page` and `perPage` [index = (page * perPage) + seek].
 
@@ -460,7 +495,7 @@ Sorting the result of a query on a resource collection is based on two main para
 - `order`: sorting can be done in ascendent or descentent order.
   - To specify which sort criteria, it is needed to use "asc" or "desc" as query value.
   - Default value is agreed within the WG, as every API may have their own particularities/use cases.
-  - When sorting is perfomed based on several attributes, `order` logic is performed based on the first attribute indicated within `orderBy` query param.  
+  - When sorting is perfomed based on several attributes, `order` logic is performed based on the first attribute indicated within `orderBy` query param.
 
 NOTE: Services must accept and use these parameters when sorting is supported. If a parameter is not supported, the service should return an error message.
 
@@ -492,7 +527,7 @@ As filtering may reveal sensitive information, privacy and security constraints 
 | smaller or equal	 | `GET .../?amount.lte=807.24` | `GET.../?executionDate.lte=2018-05-30`        |
 | Strictly smaller  | `GET .../?amount.lt=807.24`  | `GET.../?executionDate.lt=2018-05-30`         |
 
-And according to the filtering based on string and enums data, being searched for: 
+And according to the filtering based on string and enums data, being searched for:
 
 | **Operation** |	**Strings/enums** |
 | ----- | ----- |
@@ -527,7 +562,7 @@ For boolean parameters the filter can be set for True or False value:
 ```yaml
 paths:
   /users:
-    get:  
+    get:
       parameters:
         - $ref: "#/components/parameters/StartCreationDate"
         - $ref: "#/components/parameters/AfterCreationDate"
@@ -535,10 +570,10 @@ paths:
         - $ref: "#/components/parameters/BeforeCreationDate"
     #...
 components:
-  parameters: 
+  parameters:
     StartCreationDate:   #<-- component name
       in: query
-      name: creationDate.gte    <-- query attribute for "greater - equal to" comparison 
+      name: creationDate.gte    <-- query attribute for "greater - equal to" comparison
       required: false
       schema:
         format: date-time
@@ -578,7 +613,7 @@ Then the parameters can be included in the query:
 
 ## 5. OpenAPI Sections
 
-### 5.1. Reserved words
+### 5.1. Reserved Words
 To avoid issues with implementation using Open API generators reserved words must not be used in the following parts of an API specification:
 - Path and operation names
 - Path or query parameter names
@@ -596,7 +631,7 @@ A reserved word is one whose usage is reserved by any of the following Open API 
 
 
 ### 5.2. OpenAPI Version
-The API functionalities must be implemented following the specifications of the [Open API version 3.0.3](https://spec.openapis.org/oas/v3.0.3) using `api-name` as the filename and the `.yaml` or `.json` file extension.
+The API functionalities must be implemented following the specifications of the [OpenAPI version 3.0.3](https://spec.openapis.org/oas/v3.0.3) using `api-name` as the filename and the `.yaml` or `.json` file extension.
 
 ### 5.3. Info Object
 
@@ -608,7 +643,7 @@ Example `info` object along with brief explanations for each of the mandatory fi
 info:
   # title without "API" in it, e.g. "Number Verification"
   title: Number Verification
-  # description explaining the API, part of the API documentation 
+  # description explaining the API, part of the API documentation
   # including mandatory text for "Authorization and authentication"
   # including mandatory text for "Additional CAMARA error responses"
 
@@ -642,14 +677,14 @@ It is not recommended to link images outside of the Github API repository, since
 
 Some sections are required, as defined in [Section 3.3](#33-error-responses---mandatory-template-for-infodescription-in-camara-api-specs), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api-specs)
  or [Appendix A](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
- 
+
 #### 5.3.3. Version
 `version` field: APIs shall use the [versioning-format](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) as specified by the release management working group.
 
-#### 5.3.4. Terms of service
+#### 5.3.4. Terms of Service
 `termsOfService` shall not be included. API providers may add this content when documenting their APIs.
 
-#### 5.3.5. Contact information
+#### 5.3.5. Contact Information
 `contact` information shall not be included. API providers may add this content when documenting their APIs.
 
 #### 5.3.6. License
@@ -660,10 +695,10 @@ license
   url: https://www.apache.org/licenses/LICENSE-2.0.html
 ```
 
-#### 5.3.7. Extension field
+#### 5.3.7. Extension Field
 The API shall specify the Commonalities minor release number they are compliant to, by including the `x-camara-commonalities` extension field.
 
-### 5.4. ExternalDocs object
+### 5.4. ExternalDocs Object
 The `externalDocs` object shall have the following content:
 
 ```yaml
@@ -674,13 +709,13 @@ externalDocs:
 ```
 
 
-### 5.5. Servers object
+### 5.5. Servers Object
 
 The `servers` object shall have the following content:
 
 ```yaml
 servers:
-  # apiRoot variable and the fixed base path containing <api-name> and <api-version> as defined below  
+  # apiRoot variable and the fixed base path containing <api-name> and <api-version> as defined below
   - url: {apiRoot}/<api-name>/<api-version>
     variables:
       apiRoot:
@@ -689,7 +724,6 @@ servers:
 ```
 
 If more than one server object instance is listed, the `servers[*].url` property of each instance must have the same string for the `api-name` and `api-version`' in respective instance.
-
 
 #### 5.5.1. api-name
 
@@ -762,10 +796,9 @@ A resource has multiple operations identified by HTTP Verbs: `GET`, `PUT`, `POST
 Summary must be defined on each operation.
 Functionality methods must have a description.
 
-Allowed content type (“application/json”, “text/xml”…) should be defined. 
+Allowed content type (“application/json”, “text/xml") should be defined.
 
 OperationIds are defined in lowerCamelCase: For example: `helloWorld`.
-
 
 #### 5.7.3. Tags
 
@@ -779,7 +812,7 @@ Parameter names are defined in lowerCamelCase: For example: `sessionId`.
 All parameters must have a description.
 All properties within the object must have a description.
 
-#### 5.7.5. Request bodies
+#### 5.7.5. Request Bodies
 
 All `requestBody` attributes must have a description. They can follow one of the two structures below:
 
@@ -861,7 +894,7 @@ Special requirements related to HTTP headers.
 
 With the aim of standardizing the request observability and traceability process, common headers that provide a follow-up of the E2E processes should be included. The table below captures these headers.
 
-| Name           | Description                                   | Schema          | Location         | Required by API Consumer | Required in OAS Definition | 	Example                              | 
+| Name           | Description                                   | Schema          | Location         | Required by API Consumer | Required in OAS Definition | 	Example                              |
 |----------------|-----------------------------------------------|----------------------|------------------|--------------------------|----------------------------|----------------------------------------|
 | `x-correlator` | 	Service correlator to make E2E observability | `type: string`  `pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$`     | Request / Response | No                       | Yes                        | 	b4333c46-49c0-4f62-80d7-f0ef930f1c46 |
 
@@ -896,7 +929,7 @@ Implementers may include the UTF-8 character set in the Content-Type header valu
 
 #### 5.8.6. Security schemes
 
-[Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object) express security in OpenAPI. 
+[Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object) express security in OpenAPI.
 Security can be expressed for the API as a whole or for each endpoint.
 
 As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all CAMARA OpenAPI files must include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
@@ -913,16 +946,16 @@ The key of the security scheme is arbitrary in OAS, but convention in CAMARA is 
 
 ## 6. Security
 
-### 6.1. Good practices to secure REST APIs
+### 6.1. Good Practices for Securing REST APIs
 
 The following points can serve as a checklist to design the security mechanism of the REST APIs.
 
-1. **HTTPS must always be used**. 
+1. **HTTPS must always be used**.
 
    TLS ensures the confidentiality and integrity of the transported data and provides a way to authenticate the server.
    - With HTTP/2 or HTTP/3, performance improvements can be achieved due to better optimization and multiplexing of requests.
    - If HTTP 1.1 is used, usage of _TCP persistent connections_ is recommended to achieve comparable performance.
-  
+
 2. **Authentication and authorization must be considered**
 
    CAMARA uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md).\
@@ -932,19 +965,19 @@ The following points can serve as a checklist to design the security mechanism o
   Validate the request parameters as the first step before they reach the application logic.
 Implement strong validation checks and immediately reject the request if validation fails.
 In the API response, provide relevant error message.
-  
+
 4. **Sensitive information must not be exposed in the URLs**
 
 Usernames, passwords, session tokens, and API keys should not appear in the URL, as this can be captured in web server logs, making them easily exploitable.
 See section [6.5. POST or GET for transferring sensitive or complex data](#65-post-or-get-for-transferring-sensitive-or-complex-data).
 
-5. **Hashing passwords**. 
+5. **Hashing passwords**.
 
    Passwords should never be transmitted in API bodies; however, if it becomes absolutely necessary, they must be hashed to protect the system and minimize potential damage in the event of a compromise. Utilizing strong hashing algorithms is crucial for password security. Effective options include Argon2, PBKDF2, bcrypt, and scrypt, which are designed to securely hash passwords and withstand various attack vectors.
 
 For further guidance, please refer to the [OWASP API Security Project](https://owasp.org/www-project-api-security/). This resource offers comprehensive insights and best practices for securing APIs against common vulnerabilities and threats.
 
-### 6.2. Security definition
+### 6.2. Security Definition
 
 In general, all APIs must be secured to ensure who has access to what and for what purpose.
 CAMARA uses OIDC and CIBA for authentication and consent collection and to determine whether the user has,
@@ -971,11 +1004,11 @@ paths:
 The name `openId` must be same as defined in the `components.securitySchemes` section - see [5.8.6. Security schemes](#586-security-schemes).
 
 
-### 6.4. Mandatory template for `info.description` in CAMARA API specs
+### 6.4. Mandatory Template for `info.description` in CAMARA API Specs
 
 The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) must be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specs.
 
-### 6.5. POST or GET for transferring sensitive or complex data
+### 6.5. POST or GET for Transferring Sensitive or Complex Data
 
 Using the GET operation to pass sensitive data potentially embeds this information in the URL
 if contained in query or path parameters.
@@ -992,7 +1025,7 @@ The classification of data tagged as sensitive should be assessed for each API p
 
 In such cases, it is recommended to use one of the following methods to transfer the sensitive data:
 - When using `GET`, transfer the data using headers, which are not routinely logged or cached
-- Use `POST` instead of `GET`, with the sensitive data being embedded in the request body which, again, is not routinely logged or cached 
+- Use `POST` instead of `GET`, with the sensitive data being embedded in the request body which, again, is not routinely logged or cached
 
 When the `POST` method is used:
 - the resource in the path MUST be a verb (e.g. `retrieve-location` and not `location`) to differentiate from an actual resource creation
@@ -1002,8 +1035,7 @@ It is also fine to use POST instead of GET:
 - to bypass technical limitations, such as URL character limits (if longer than 4k characters) or passing complex objects in the request
 - for operations where the response should not be kept cached, such as anti-fraud verifications or data that can change asynchronously (such as status information)
 
-
-### 6.6. Scope naming
+### 6.6. Scope Naming
 
 To correctly define the scopes, when creating them, the following recommendations should be taken:
 - **Appropriate granularity** - scopes should be granular enough to match the types of resources and permissions you want to grant
@@ -1011,7 +1043,7 @@ To correctly define the scopes, when creating them, the following recommendation
 - **Use the kebab-case nomenclature** to define API names, resources, and scope permissions
 - **Use ":" a separator** between API name, protected resources, event-types and grant-levels for consistency
 
-#### 6.6.1. APIs which do not deal with explicit subscriptions
+#### 6.6.1. APIs Which Do Not Deal with Explicit Subscriptions
 
 Regarding scope naming for APIs, which do not deal with explicit subscriptions, the guidelines are:
 
@@ -1047,10 +1079,10 @@ where
 | qod                   | /qos-profiles | GET    | `qod:qos-profiles:read`                           |
 
 
-#### 6.6.2. API-level scopes (sometimes referred to as wildcard scopes in CAMARA)
+#### 6.6.2. API-level Scopes (sometimes referred to as wildcard scopes in CAMARA)
 
-The decision on the API-level scopes was made within the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement) and is documented in the design guidelines to ensure the completeness of this document. 
-The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject. 
+The decision on the API-level scopes was made within the [Identity and Consent Management Working Group](https://github.com/camaraproject/IdentityAndConsentManagement) and is documented in the design guidelines to ensure the completeness of this document.
+The scopes will always be those defined in the API Specs YAML files. Thus, a scope would only provide access to all endpoints and resources of an API if it is explicitly defined in the API Spec YAML file and agreed in the corresponding API subproject.
 
 ### 6.7. Resource access restriction
 
@@ -1077,15 +1109,15 @@ API versions use a numbering scheme in the format: `x.y.z`
 * Depending on the change type, the corresponding number is incremented.
 * This is defined in the [Semantic Versioning 2.0.0 (semver.org)](https://semver.org/) standard.
 
-### 7.1. API version (OAS info object)
+### 7.1. API Version (OAS `info` Object)
 
-The API version is defined in the `version` field (in the `info` object) of the OAS definition file of an API. 
+The API version is defined in the `version` field (in the `info` object) of the OAS definition file of an API.
 
 ```yaml
 info:
   title: Number Verification
   description: text describing the API
-  version: 2.2.0  
+  version: 2.2.0
   #...
 ```
 
@@ -1095,7 +1127,7 @@ In line with Semantic Versioning 2.0.0, the API with MAJOR.MINOR.PATCH version n
 2. The MINOR version when functionality is added that is backwards compatible
 3. The PATCH version when backward compatible bugs are fixed
 
-For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) in the CAMARA wiki. 
+For more details on MAJOR, MINOR and PATCH versions, and how to evolve API versions, please see [API versioning](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) in the CAMARA wiki.
 
 It is recommended to avoid breaking backward compatibility unless strictly necessary: new versions should be backwards compatible with previous versions. More information on how to avoid breaking changes can be found below.
 
@@ -1123,7 +1155,7 @@ servers:
 
 This allows for both test and commercial usage of initial API versions as they are evolving rapidly, e.g. `/qod/v0.10alpha1`, `/qod/v0.10rc1`, or `/qod/v0.10`. However, it should be acknowledged that any initial API version may change.
 
-### 7.3. API versions throughout the release process
+### 7.3. API Versions Throughout the Release Process
 
 In preparation for its public release, an API will go through various intermediate versions indicated by version extensions: alpha and release-candidate.
 
@@ -1132,11 +1164,11 @@ Overall, an API can have any of the following versions:
 * work-in-progress (`wip`) API versions used during the development of an API before the first pre-release or in between pre-releases. Such API versions cannot be released and are not usable by API consumers.
 * alpha (`x.y.z-alpha.m`) API versions (with extensions) for CAMARA internal API rapid development purposes
 * release-candidate (`x.y.z-rc.n`) API versions (with extensions) for CAMARA internal API release bug fixing purposes
-* public (`x.y.z`) API versions for usage in commercial contexts. These API versions only have API version number x.y.z (semver 2.0), no extension. Public APIs can have one of two maturity states (used in release management): 
+* public (`x.y.z`) API versions for usage in commercial contexts. These API versions only have API version number x.y.z (semver 2.0), no extension. Public APIs can have one of two maturity states (used in release management):
   * initial - indicating that the API is still not fully stable (x=0)
   * stable - indicate that the API has reached a certain level of maturity (x>0)
 
-The following table gives the values of the API version (Info object) and the API version in the URL as used in the different API version types created during the API release process. For public API versions, this information is also dependent on whether it is an initial (x=0) or a stable public API version (x>0). 
+The following table gives the values of the API version (Info object) and the API version in the URL as used in the different API version types created during the API release process. For public API versions, this information is also dependent on whether it is an initial (x=0) or a stable public API version (x>0).
 
 | API version type  |  API version  | initial (x=0) API version in URL | stable (x>0) API version in URL | API version can be released |
 |-------------------|:-------------:|:--------------------------------:|:-------------------------------:|:---------------------------:|
@@ -1153,7 +1185,7 @@ Precedence examples:
 
 For more information, please see [API versioning](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) in the Release Management project wiki.
 
-### 7.4. Backward and forward compatibility
+### 7.4. Backward and Forward Compatibility
 
 Avoid breaking backward compatibility, unless strictly necessary, means that new versions should be compatible with previous versions.
 
@@ -1197,7 +1229,7 @@ To ensure this compatibility, the following guidelines must be applied.
 - Never change an endpoint name; instead, add a new one and mark the original one for deprecation in a MINOR change and remove it in a later MAJOR change (see semver FAQ entry: https://semver.org/#how-should-i-handle-deprecating-functionality)
 - If possible, do the same for attributes
 - New fields should always be added as optional.
-- Postel's Law: “<em>Be conservative in what you do, be liberal in what you accept from others</em>”. When you have input fields that need to be removed, mark them as unused, so they can be ignored. 
+- Postel's Law: “<em>Be conservative in what you do, be liberal in what you accept from others</em>”. When you have input fields that need to be removed, mark them as unused, so they can be ignored.
 - Do not change the field’s semantics.
 - Do not change the field’s order.
 - Do not change the validation rules of the request fields to more restrictive ones.
