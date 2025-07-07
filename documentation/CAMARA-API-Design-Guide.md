@@ -1213,6 +1213,7 @@ Make the information available:
 
 ## 8. External Documentation
 
+- [OpenAPI Version 3.0 Guide](https://swagger.io/docs/specification/v3_0/basic-structure/)
 
 
 ## Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier
