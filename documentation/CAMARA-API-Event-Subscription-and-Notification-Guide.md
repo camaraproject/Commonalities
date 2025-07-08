@@ -14,9 +14,9 @@ For general API design guidelines, please refer to [CAMARA API Design Guide](/do
 - [3. Event Notification](#3-event-notification)
     - [3.1. Event Notification Definition](#31-event-notification-definition)
     - [3.2. `subscription-started` Event](#32-subscription-started-event)
-    - [3.3. 3 `subscription-updated` Event](#33-3-subscription-updated-event)
+    - [3.3. `subscription-updated` Event](#33-subscription-updated-event)
     - [3.4. `subscription-ended` Event](#34-subscription-ended-event)
-    - [3.5. Error Eefinition for Event Notification](#35-error-eefinition-for-event-notification)
+    - [3.5. Error Definition for Event Notification](#35-error-definition-for-event-notification)
     - [3.6. Correlation Management](#36-correlation-management)
     - [3.7. Notification Examples](#37-notification-examples)
 - [4. Security](#4-security)
@@ -223,7 +223,7 @@ _Termination rules regarding subscriptionExpireTime & subscriptionMaxEvents usag
 * When none `subscriptionExpireTime` and `subscriptionMaxEvents` are not provided, client side has to trigger a `DELETE` operation to terminate it.
 * It is perfectly valid for client side to trigger a DELETE operation before `subscriptionExpireTime` and/or `subscriptionMaxEvents` reached.
 
-#### 2.2.6. Resource-based (Explicit) Example
+#### 2.2.6. Resource-based (Explicit) Subscription Example
 
 In this example, we illustrate a request for a device roaming status event subscription.
 Requester did not provide an expected expiration time for the subscription
@@ -426,7 +426,7 @@ Note1: This enumeration is also defined in `event-subscription-template.yaml` (p
 
 Note2: The "subscription-started" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can receive 2 notifications, besides the notification sent for "subscription-started").
 
-### 3.3. 3 `subscription-updated` Event
+### 3.3. `subscription-updated` Event
 
 Specific event notification type "subscription-updated" is defined to inform listener about subscription changes.
 It is an optional event.
@@ -469,7 +469,7 @@ Note3: In the case of ACCESS_TOKEN_EXPIRED termination reason sending the notifi
 - For explicit subscription, implementation should send ACCESS_TOKEN_EXPIRED termination event just before the token expiration date (the 'just before' value is at the hands of each implementation). The following sentence must be added for the `accessTokenExpiresUtc` attribute documentation: An absolute (UTC) timestamp at which the token shall be considered expired. In the case of an ACCESS_TOKEN_EXPIRED termination reason, implementation should notify the client before the expiration date."
 - For implicit subscription following sentence must be added for the `accessTokenExpiresUtc` attribute documentation: "An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur after the expiration of the requested _resource_, allowing the client to be notified of any changes during the _resource_'s existence. If the token expires while the _resource_ is still active, the client will stop receiving notifications.". The _resource_ word must be replaced by the entity managed by the subscription (session, payment, etc.).
 
-### 3.5. Error Eefinition for Event Notification
+### 3.5. Error Definition for Event Notification
 
 Error definitions are described in this guideline applies for event notification.
 

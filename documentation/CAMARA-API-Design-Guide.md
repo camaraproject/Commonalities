@@ -760,7 +760,8 @@ A resource has multiple operations identified by HTTP Verbs: `GET`, `PUT`, `POST
 Summary must be defined on each operation.
 Functionality methods must have a description.
 
-Allowed content type (“application/json”, “text/xml") should be defined.
+Allowed content type ("application/json", "text/xml") should be defined.
+
 
 OperationIds are defined in lowerCamelCase: For example: `helloWorld`.
 
