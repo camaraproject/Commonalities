@@ -144,7 +144,7 @@ For the feature context, the following template should be used:
   # Testing assets:
   # * 
   #
-  # References to OAS spec schemas refer to schemas specifies in {apiname}.yaml
+  # References to OAS spec schemas refer to schemas specified in {apiname}.yaml
 ```
 
 An example for this feature context is depicted below:
@@ -162,7 +162,7 @@ An example for this feature context is depicted below:
     # * A device object applicable for Quality On Demand service.
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
+    # References to OAS spec schemas refer to schemas specified in quality-on-demand.yaml
 ```
 
 ### Environment variables
