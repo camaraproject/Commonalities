@@ -5,6 +5,7 @@
 # - 19.03.2024: Corrected camara-http-methods rule
 # - 03.12.2024: Corrected camara-path-param-id and camara-discriminator-use to handle null values error in example fields
 # - 09.01.2025: Updated info-contact rule
+# - 21.01.2025: Added camara-schema-type-check rule
 
 
 extends: "spectral:oas"
@@ -267,3 +268,14 @@ rules:
       functionOptions:
         match: "^\/([a-z0-9]+(-[a-z0-9]+)*)?(\/[a-z0-9]+(-[a-z0-9]+)*|\/{.+})*$"  # doesn't allow /asasd{asdas}sadas pattern or not closed braces
     recommended: true  # Set to true/false to enable/disable this rule
+
+  camara-schema-type-check:
+    message: "Invalid or missing type in schema definition."
+    severity: error
+    given: "$.components.schemas.*"
+    then:
+      field: type
+      function: pattern
+      functionOptions:
+        match: "^(string|number|integer|boolean|array|object)$"
+    recommended: true
