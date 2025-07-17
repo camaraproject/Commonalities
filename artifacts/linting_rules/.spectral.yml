@@ -5,7 +5,7 @@
 # - 19.03.2024: Corrected camara-http-methods rule
 # - 03.12.2024: Corrected camara-path-param-id and camara-discriminator-use to handle null values error in example fields
 # - 09.01.2025: Updated info-contact rule
-# - 21.01.2025: Added camara-schema-type-check rule
+# - 21.07.2025: Added camara-schema-type-check rule
 
 
 extends: "spectral:oas"
