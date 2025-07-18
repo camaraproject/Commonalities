@@ -127,6 +127,44 @@ For the Feature description, API name and version must be included. When the fea
 Feature: CAMARA Device location verification API, v0.2.0 - Operation verifyLocation
 ```
 
+#### Feature Context
+
+Every feature may include a context after the `Feature` tag to provide relevant information about the implementation and execution of the tests.
+
+This feature context is RECOMMENDED unless it does not provide additional value (e.g. all the info could have been given in the Background section for a certain API)
+
+For the feature context, the following template should be used:
+
+```
+  # Input to be provided by the implementation to the tester
+  #
+  # Implementation indications:
+  # * 
+  #
+  # Testing assets:
+  # * 
+  #
+  # References to OAS spec schemas refer to schemas specified in {apiname}.yaml
+```
+
+An example for this feature context is depicted below:
+
+```
+    # Input to be provided by the implementation to the tester
+    #
+    # Implementation indications:
+    # * apiRoot: API root of the server URL
+    # * List of device identifier types which are not supported, among: phoneNumber, ipv4Address, ipv6Address.
+    #   For this version, CAMARA does not allow the use of networkAccessIdentifier, so it is considered by default as not supported.
+    # * List of application server IP formats which are not supported, among ipv4 and ipv6.
+    #
+    # Testing assets:
+    # * A device object applicable for Quality On Demand service.
+    # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
+    #
+    # References to OAS spec schemas refer to schemas specified in quality-on-demand.yaml
+```
+
 ### Environment variables
 
 Commonly, some values to fill the request bodies will not be known in advance and cannot be specified as part of the feature file, as they will be specific for the test environment, and they will have to be provided by the implementation to the tester as a separate set of environment or configuration variables.

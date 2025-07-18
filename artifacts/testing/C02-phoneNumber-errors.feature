@@ -21,6 +21,10 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     * {path_to_phoneNumber} has to be substituted to the JSON path of the phoneNumber property in the body request, typically 
     "$.phoneNumber" or "$.config.subscriptionDetail.phoneNumber" for Subscription APIs
 
+  # This feature file is to be used by CAMARA subproject when Common error scenarios for operations with phoneNumber as input either in the request body or implied from the access
+  #
+  # References to OAS spec schemas refer to schemas specified in {apiname}.yaml
+
     # Error scenarios for management of input parameter phoneNumber
 
     @{feature_identifier}_C02.01_phone_number_not_schema_compliant

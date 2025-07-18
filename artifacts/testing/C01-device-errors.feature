@@ -21,6 +21,10 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
     * {path_to_device} has to be substituted to the JSON path of the device property in the body request, typically 
     "$.device" or "$.config.subscriptionDetail.device" for Subscription APIs
 
+  # This feature file is to be used by CAMARA subproject when Common error scenarios for operations with device as input either in the request body or implied from the access.
+  #
+  # References to OAS spec schemas refer to schemas specified in {apiname}.yaml
+
     # Error scenarios for management of input parameter device
 
     @{feature_identifier}_C01.01_device_empty
