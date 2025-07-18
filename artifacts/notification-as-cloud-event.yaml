@@ -135,7 +135,7 @@ components:
       type: string
       format: date-time
       description: |
-        Timestamp of when the occurrence happened. Must adhere to RFC 3339. 
+        Timestamp of when the occurrence happened. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
         WARN: This optional field in CloudEvents specification is required in CAMARA APIs implementation.
       example: '2018-04-05T17:31:00Z'
 
