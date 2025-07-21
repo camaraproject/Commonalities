@@ -273,7 +273,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       400        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific Syntax Exception regarding a field that is relevant in the context of the API (e.g. format of an amount)               |
 |       400        |     `OUT_OF_RANGE`      | Client specified an invalid range.                                  | Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested |
 |       403        |   `PERMISSION_DENIED`   | Client does not have sufficient permissions to perform this action. | OAuth2 token access does not have the required scope or when the user fails operational security                                |
-|       403        | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token.                    | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token. This error should be used only when the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.                             |
+|       403        | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token.                    | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token. This error should be used only when the scope of the API allows it to explicitly confirm whether or not the supplied  matches that bound to the Three-Legged Access Token.                             |
 |       409        |        `ABORTED`        | Concurrency conflict.                                               | Concurrency of processes of the same nature/scope                                                                               |
 |       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                                                           |
 |       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource                                                                                             |
@@ -897,7 +897,7 @@ Implementers may include the UTF-8 character set in the Content-Type header valu
 [Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object) express security in OpenAPI.
 Security can be expressed for the API as a whole or for each endpoint.
 
-As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all CAMARA OpenAPI files must include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
+As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md), all CAMARA OpenAPI files must include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
 
 ```yaml
 components:
@@ -923,7 +923,7 @@ The following points can serve as a checklist to design the security mechanism o
 
 2. **Authentication and authorization must be considered**
 
-   CAMARA uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md).\
+   CAMARA uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md).\
 
 3. **Input parameter validation**
 
@@ -948,13 +948,13 @@ In general, all APIs must be secured to ensure who has access to what and for wh
 CAMARA uses OIDC and CIBA for authentication and consent collection and to determine whether the user has,
 e.g. opted out of some API access.
 
-The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose values are defined by W3C Data Privacy Vocabulary as indicated in the [Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose-as-a-scope).
+The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose values are defined by W3C Data Privacy Vocabulary as indicated in the [Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#purpose-as-a-scope).
 
 ### 6.3. Expressing Security Requirements
 
 Security requirements of an API are expressed in OpenAPI through [Security Requirement Objects](https://spec.openapis.org/oas/v3.0.3#security-requirement-object).
 
-The following is an example of how to use the `openId` security scheme defined above as described in [Use of security property](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-security-property):
+The following is an example of how to use the `openId` security scheme defined above as described in [Use of security property](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#use-of-security-property):
 
 ```yaml
 paths:
@@ -971,7 +971,7 @@ The name `openId` must be same as defined in the `components.securitySchemes` se
 
 ### 6.4. Mandatory Template for `info.description` in CAMARA API
 
-The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) must be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specification.
+The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) must be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specification.
 
 ### 6.5. POST or GET for Transferring Sensitive or Complex Data
 
@@ -1219,8 +1219,8 @@ Make the information available:
 
 ## Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier
 
-When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
-- If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly given that the `sub` will not be a globally unique identifier nor contain PII as per the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#id-token-sub-claim) requirements.
+When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
+- If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly given that the `sub` will not be a globally unique identifier nor contain PII as per the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#id-token-sub-claim) requirements.
 - If the access token is a Two-Legged Access Token, no User is associated with the token, and hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
 
 If an API provider issues Three-Legged Access Tokens for use with the API, the following error may occur:
