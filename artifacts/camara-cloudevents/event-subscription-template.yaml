@@ -12,7 +12,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.3.0-rc.1
+  version: 0.3.0
   x-camara-commonalities: 0.6
   
 externalDocs:
