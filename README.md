@@ -42,11 +42,10 @@ NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-
 
 
 ## Status and released versions
-* Release candidate of version 0.6.0 of guidelines and assets for Fall 25 CAMARA APIs is available with the [r3.2 tag](https://github.com/camaraproject/Commonalities/tree/r3.2)
-* Release 0.5.0 of guidelines and assets for Spring 25 CAMARA APIs is available with the [r2.3 tag](https://github.com/camaraproject/Commonalities/tree/r2.3)
+* Release 0.6.0 of guidelines and assets for Fall 25 CAMARA APIs is available with the [r3.3 tag](https://github.com/camaraproject/Commonalities/tree/r3.3)
 * Previous releases and pre-releases are available in https://github.com/camaraproject/Commonalities/releases
 
-For changes see [CHANGELOG.md](CHANGELOG.md).
+For changes see [CHANGELOG.md]([CHANGELOG.md](https://github.com/camaraproject/Commonalities/blob/main/CHANGELOG.md).
 
 ## Meetings
 * Meetings are held virtually on the LF Platform: [Meeting Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/91016460698?password=d031b0e3-8d49-49ae-958f-af3213b1e547)
