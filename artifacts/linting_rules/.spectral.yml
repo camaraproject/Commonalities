@@ -270,7 +270,7 @@ rules:
     recommended: true  # Set to true/false to enable/disable this rule
 
   camara-schema-type-check:
-    message: "Invalid or missing type in schema definition."
+    message: "Invalid type in schema definition."
     severity: error
     given: "$.components.schemas.*"
     then:
