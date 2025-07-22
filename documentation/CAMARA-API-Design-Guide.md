@@ -1122,9 +1122,11 @@ This allows for both test and commercial usage of initial API versions as they a
 
 ### 7.3. API Versions Throughout the Release Process
 
-In preparation for its public release, an API will go through various intermediate versions indicated by version extensions: alpha and release-candidate.
+A given API will go through various intermediate and public versions during its life cycle:
+* intermediate versions are created during API version development, indicated by alpha and release-candidate version extensions 
+* various public versions may be created due to updates to a published API 
 
-Overall, an API can have any of the following versions:
+Overall, during its life cycle, an API can have any of the following versions:
 
 * work-in-progress (`wip`) API versions used during the development of an API before the first pre-release or in between pre-releases. Such API versions cannot be released and are not usable by API consumers.
 * alpha (`x.y.z-alpha.m`) API versions (with extensions) for CAMARA internal API rapid development purposes
@@ -1142,11 +1144,23 @@ The following table gives the values of the API version (Info object) and the AP
 | release-candidate |   x.y.z-rc.n  |             v0.yrcn              |              vxrcn              | Yes (internal pre-release)  |
 | public            |     x.y.z     |               v0.y               |               vx                |             Yes             |
 
-Precedence examples:
+The version in the URL is a shorthand of the API version. However, both v0.y.z-rc.1 and v0.y.z+1-rc.1 would be shortened to v0.yrc1 and, for x>0, both vx.y1.z1.0-rc.2 and vx.y2.z2-rc.2 would be shortened to vxrc2.
 
-* 1.0.0 < 2.0.0 < 2.1.0 < 2.1.1 < 3.0.0.
-* 0.1.0 < 0.2.0-alpha.1 < 0.2.0-alpha.2 < 0.2.0-rc.1 < 0.2.0-rc.2 < 0.2.0 (initial public API version)
-* 1.0.0 < 1.1.0-alpha.1 < 1.1.0-alpha.2 < 1.1.0-rc.1 < 1.1.0-rc.2 < 1.1.0 (stable public API version)
+To avoid such clashes of the version in the URL, both alpha and release-candidate (rc) version extension numbers need to be numbered consecutively across the whole life cycle of an API, including its PATCH releases. 
+
+For example, in the life cycle of a MAJOR version 1 of an API, alpha and rc extension numbers will evolve as follows: 
+
+* v1.0.0-alpha.1 → v1.0.0-alpha.2 → v1.0.0-rc.1 → v1.0.0-rc.2 → v1.0.0 → v1.1.0-alpha.3 → v1.1.0-rc.3 → v1.1.0
+* with in the URL: /v1alpha1 → /v1alpha2 → /v1rc1 → /v1rc2 → /v1 → /v1alpha3 → /v1rc3 → /v1 
+
+A precedence example of API versions throughout the API life cycle is:
+
+* 1.0.0 < 2.0.0 < 2.1.0 < 2.1.1 < 3.0.0 < 3.0.1 (public versions only)
+* 0.1.0 < 0.2.0-alpha.1 < 0.2.0-alpha.2 < 0.2.0-rc.1 < 0.2.0 (initial public version)
+* 0.2.0 < 0.2.1-alpha.3 < 0.2.1-rc.2 < 0.2.1-rc.3 < 0.2.1 (patch (maintenance) update of initial public version)
+* 0.2.1 < 1.0.0-alpha.4 < 1.0.0-rc.4 < 1.0.0 (stable public version)
+* 1.0.0 < 1.1.0-alpha.5 < 1.1.0-alpha.6 < 1.1.0-rc.5 < 1.1.0-rc.6 < 1.1.0 (minor update of stable public version)
+* 1.1.0 < 2.0.0-alpha.1 < 2.0.0-alpha.2 < 2.0.0-rc.1 < 2.0.0-rc.2 < 2.0.0 (major update of stable public version)
 
 For more information, please see [API versioning](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) in the Release Management project wiki.
 
