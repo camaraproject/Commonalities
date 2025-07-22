@@ -1158,9 +1158,10 @@ A precedence example of API versions throughout the API life cycle is:
 * 1.0.0 < 2.0.0 < 2.1.0 < 2.1.1 < 3.0.0 < 3.0.1 (public versions only)
 * 0.1.0 < 0.2.0-alpha.1 < 0.2.0-alpha.2 < 0.2.0-rc.1 < 0.2.0 (initial public version)
 * 0.2.0 < 0.2.1-alpha.3 < 0.2.1-rc.2 < 0.2.1-rc.3 < 0.2.1 (patch (maintenance) update of initial public version)
-* 0.2.1 < 1.0.0-alpha.4 < 1.0.0-rc.4 < 1.0.0 (stable public version)
-* 1.0.0 < 1.1.0-alpha.5 < 1.1.0-alpha.6 < 1.1.0-rc.5 < 1.1.0-rc.6 < 1.1.0 (minor update of stable public version)
-* 1.1.0 < 2.0.0-alpha.1 < 2.0.0-alpha.2 < 2.0.0-rc.1 < 2.0.0-rc.2 < 2.0.0 (major update of stable public version)
+* 0.2.1 < 1.0.0-alpha.1 < 1.0.0-rc.1 < 1.0.0 (stable public version)
+* 1.0.0 < 1.1.0-alpha.2 < 1.1.0-alpha.3 < 1.1.0-rc.2 < 1.1.0-rc.3 < 1.1.0 (minor update of stable public version)
+* 1.1.0 < 1.2.0-alpha.4 < 1.2.0-rc.4 < 1.2.0-rc.5 < 1.2.0 (minor update of stable public version)
+* 1.2.0 < 2.0.0-alpha.1 < 2.0.0-alpha.2 < 2.0.0-rc.1 < 2.0.0-rc.2 < 2.0.0 (major update of stable public version)
 
 For more information, please see [API versioning](https://lf-camaraproject.atlassian.net/wiki/x/3yLe) in the Release Management project wiki.
 
