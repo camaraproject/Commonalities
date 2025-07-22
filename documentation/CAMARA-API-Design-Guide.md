@@ -1146,9 +1146,9 @@ The following table gives the values of the API version (Info object) and the AP
 
 The version in the URL is a shorthand of the API version. However, both v0.y.z-rc.1 and v0.y.z+1-rc.1 would be shortened to v0.yrc1 and, for x>0, both vx.y1.z1.0-rc.2 and vx.y2.z2-rc.2 would be shortened to vxrc2.
 
-To avoid such clashes of the version in the URL, both alpha and release-candidate (rc) version extension numbers need to be numbered consecutively across the whole life cycle of an API, including its PATCH releases. 
+To avoid such clashes of the version in the URL, both alpha and release-candidate (rc) version extension numbers need to be numbered consecutively across the whole life cycle of an API, including its PATCH versions. 
 
-For example, in the life cycle of a MAJOR version 1 of an API, alpha and rc extension numbers will evolve as follows: 
+For example, in the life cycle of a (MAJOR) version 1 of an API, alpha and rc extension numbers will evolve as follows: 
 
 * v1.0.0-alpha.1 → v1.0.0-alpha.2 → v1.0.0-rc.1 → v1.0.0-rc.2 → v1.0.0 → v1.1.0-alpha.3 → v1.1.0-rc.3 → v1.1.0
 * with in the URL: /v1alpha1 → /v1alpha2 → /v1rc1 → /v1rc2 → /v1 → /v1alpha3 → /v1rc3 → /v1 
