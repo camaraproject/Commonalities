@@ -241,7 +241,7 @@ An example of JSON error structure is as follows:
 {
    "status": 400,
    "code": "INVALID_ARGUMENT",
-   "message": "A human-readable description of what the event represent"
+   "message": "A human-readable description of what the event represents"
 }
 ```
 
