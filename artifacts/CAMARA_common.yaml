@@ -52,13 +52,13 @@ components:
       properties:
         message:
           type: string
-          description: A human readable description of what the event represents
+          description: A human-readable description of what the event represents
         status:
           type: integer
           description: HTTP response status code
         code:
           type: string
-          description: A human readable code to describe the error
+          description: A human-readable code to describe the error
     Device:
       description: |
         End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
