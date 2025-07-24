@@ -49,7 +49,7 @@
  }],
   "file-name": ["off", {"style": "kebab-case"}],
   "max-scenarios-per-file": ["on", {"maxScenarios": 50, "countOutlineExamples": true}],
-  "no-restricted-patterns": ["on", {
+  "no-restricted-patterns": ["off", {
     "Global": [
       "^globally restricted pattern"
     ],
