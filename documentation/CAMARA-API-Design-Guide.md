@@ -1151,10 +1151,11 @@ To avoid such clashes of the version in the URL, both alpha and release-candidat
 
 For example, in the life cycle of a (MAJOR) version 1 of an API, alpha and rc extension numbers will evolve as follows: 
 
-* v1.0.0-alpha.1 → v1.0.0-alpha.2 → v1.0.0-rc.1 → v1.0.0-rc.2 → v1.0.0 → v1.1.0-alpha.3 → v1.1.0-rc.3 → v1.1.0
-* with in the URL: /v1alpha1 → /v1alpha2 → /v1rc1 → /v1rc2 → /v1 → /v1alpha3 → /v1rc3 → /v1 
+| API Version | v1.0.0-alpha.1 | v1.0.0-alpha.2 | v1.0.0-rc.1 | v1.0.0-rc.2 | v1.0.0 | v1.1.0-alpha.3 | v1.1.0-rc.3 | v1.1.0
+| :---: | :---: | :---: | :--: | :--: | :--: | :--: | :--: | :--:
+| **in URL**  | /v1alpha1 | /v1alpha2 | /v1rc1 | /v1rc2 | /v1 | /v1alpha3 | /v1rc3 | /v1
 
-A precedence example of API versions throughout the API life cycle is:
+A precedence example of API versions throughout the full API life cycle is:
 
 * 1.0.0 < 2.0.0 < 2.1.0 < 2.1.1 < 3.0.0 < 3.0.1 (public versions only)
 * 0.1.0 < 0.2.0-alpha.1 < 0.2.0-alpha.2 < 0.2.0-rc.1 < 0.2.0 (initial public version)
