@@ -36,11 +36,11 @@ components:
         startDate:
           type: string
           format: date-time
-          description: An instant of time, starting of the TimePeriod.
+          description: An instant of time, starting of the TimePeriod. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
         endDate:
           type: string
           format: date-time
-          description: An instant of time, ending of the TimePeriod. If not included, then the period has no ending date.
+          description: An instant of time, ending of the TimePeriod. If not included, then the period has no ending date. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
       required:
         - startDate
     ErrorInfo:
