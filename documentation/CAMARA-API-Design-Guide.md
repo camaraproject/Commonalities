@@ -1182,7 +1182,8 @@ Backward compatible changes to an API that **DO NOT** affect consumers:
 Breaking changes to an API that **DO** affect consumers:
 
 - Deleting operations or actions on a resource. For example:  POST requests on a resource are no longer accepted.
-- Adding new mandatory input parameters. For example: now, to register a resource, a new `required`field must be sent in the body of the request.
+- Adding new mandatory input parameters. For example: now, to register a resource, a new `required` field must be sent in the body of the request.
+
 - Modifying or removing an endpoint (breaks existing queries)
 - Changing input parameters from optional to mandatory. For example: when creating a Person resource, the age field, which was previously optional, is now mandatory.
 - Modifying or removing a mandatory parameter in existing operations (resource verbs). For example, when consulting a resource, a certain field is no longer returned. Another example: a field that was previously a string is now numeric.
