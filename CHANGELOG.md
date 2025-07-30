@@ -38,6 +38,7 @@ This release contains documents and artifacts of Commonalities version 0.6.0:
 * Added event-notification feature file template by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/470
 * Added Pairwise Pseudonymous Identifier to glossary by @eric-murray in https://github.com/camaraproject/Commonalities/pull/485
 * Recommendation and examples to provide schema context in test definitions by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/492
+* Continuous release numbering guidelines in CAMARA API Design Guide by @tanjadegroot in https://github.com/camaraproject/Commonalities/pull/505
 
 ### Changed
 * Aligned Error 401 wording in Notification Cloud Events artifact by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/449
@@ -48,10 +49,15 @@ This release contains documents and artifacts of Commonalities version 0.6.0:
 * Sorting Logic in CAMARA-API-Design-Guide.md by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/471
 * Linting rules definition for OpenAPI specfications updated by @rartych in https://github.com/camaraproject/Commonalities/pull/466
 * Updated linting rules for test definitions in .gherkin-lintrc by @rartych in https://github.com/camaraproject/Commonalities/pull/472
+* Editorial improvements of Guide documents and keyword capitalization by @rartych in https://github.com/camaraproject/Commonalities/pull/494 and https://github.com/camaraproject/Commonalities/pull/501
+* Linting rules updated by @rartych in https://github.com/camaraproject/Commonalities/pull/502
+* Changed Mandatory Description for date-time string format and updated template files by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/497
+
   
 ### Fixed
 * Missing bullet point for Mandatory Errors restored in CAMARA API Design Guide by @rartych in https://github.com/camaraproject/Commonalities/pull/488
 * Editorial improvements of Guide documents by @rartych in https://github.com/camaraproject/Commonalities/pull/494
+* Clarified that the DeviceResponse schema is not mandatory by @eric-murray in https://github.com/camaraproject/Commonalities/pull/490
 
 ### Removed
 * Removed AUTHENTICATION_REQUIRED error code by @eric-murray in https://github.com/camaraproject/Commonalities/pull/429
