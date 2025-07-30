@@ -50,7 +50,7 @@ This release contains documents and artifacts of Commonalities version 0.6.0:
 * Updated linting rules for test definitions in .gherkin-lintrc by @rartych in https://github.com/camaraproject/Commonalities/pull/472
   
 ### Fixed
-* Missing bullet point for Mandatory Errors restored  in CAMARA API Design Guide by @rartych in https://github.com/camaraproject/Commonalities/pull/488
+* Missing bullet point for Mandatory Errors restored in CAMARA API Design Guide by @rartych in https://github.com/camaraproject/Commonalities/pull/488
 * Editorial improvements of Guide documents by @rartych in https://github.com/camaraproject/Commonalities/pull/494
 
 ### Removed
