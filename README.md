@@ -17,7 +17,7 @@ Repository to describe and document common guidelines and assets for CAMARA APIs
 
 ## Documents for CAMARA Sub Projects
 
-The documents that are relevant for CAMARA API Sub Projects are found in the `documentation` directory (at the top-level). The rest of the sub-directories are primarily for internal working of the Commonalities Working Group.
+The documents that are relevant for CAMARA API Repositories are found in the `documentation` directory (at the top-level). The rest of the sub-directories are primarily for internal working of the Commonalities Working Group.
 
 The `artifacts` directory contains:
 * templates for creating Github issues
@@ -42,7 +42,7 @@ NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-
 
 
 ## Status and released versions
-* Release 0.6.0 of guidelines and assets for Fall 25 CAMARA APIs is available with the [r3.3 tag](https://github.com/camaraproject/Commonalities/tree/r3.3)
+* Version 0.6.0 of guidelines and assets for Fall25 meta-release of CAMARA APIs is available with the [r3.3 tag](https://github.com/camaraproject/Commonalities/tree/r3.3)
 * Previous releases and pre-releases are available in https://github.com/camaraproject/Commonalities/releases
 
 For changes see [CHANGELOG.md]([CHANGELOG.md](https://github.com/camaraproject/Commonalities/blob/main/CHANGELOG.md).
