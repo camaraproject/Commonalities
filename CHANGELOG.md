@@ -15,7 +15,6 @@
 - **[v0.2.0](#v020)**
 - **[v0.1.0 - Initial version](#v010---initial-version)**
 
-
 # r3.3
 ## Release Notes
 
@@ -53,11 +52,11 @@ This release contains documents and artifacts of Commonalities version 0.6.0:
 * Linting rules updated by @rartych in https://github.com/camaraproject/Commonalities/pull/502
 * Changed Mandatory Description for date-time string format and updated template files by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/497
 
-  
 ### Fixed
 * Missing bullet point for Mandatory Errors restored in CAMARA API Design Guide by @rartych in https://github.com/camaraproject/Commonalities/pull/488
 * Editorial improvements of Guide documents by @rartych in https://github.com/camaraproject/Commonalities/pull/494
 * Clarified that the DeviceResponse schema is not mandatory by @eric-murray in https://github.com/camaraproject/Commonalities/pull/490
+* ErrorInfo scheme unification in CAMARA_common.yaml and event-subscription-template.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/506
 
 ### Removed
 * Removed AUTHENTICATION_REQUIRED error code by @eric-murray in https://github.com/camaraproject/Commonalities/pull/429
