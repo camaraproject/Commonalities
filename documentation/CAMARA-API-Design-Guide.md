@@ -925,7 +925,7 @@ The following points can serve as a checklist to design the security mechanism o
 
 2. **Authentication and authorization must be considered**
 
-   CAMARA uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md).\
+   CAMARA uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md).\
 
 3. **Input parameter validation**
 
@@ -950,13 +950,13 @@ In general, all APIs MUST be secured to ensure who has access to what and for wh
 CAMARA uses OIDC and CIBA for authentication and consent collection and to determine whether the user has,
 e.g. opted out of some API access.
 
-The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose values are defined by W3C Data Privacy Vocabulary as indicated in the [Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#purpose-as-a-scope).
+The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose values are defined by W3C Data Privacy Vocabulary as indicated in the [Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#purpose-as-a-scope).
 
 ### 6.3. Expressing Security Requirements
 
 Security requirements of an API are expressed in OpenAPI through [Security Requirement Objects](https://spec.openapis.org/oas/v3.0.3#security-requirement-object).
 
-The following is an example of how to use the `openId` security scheme defined above as described in [Use of security property](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-security-property):
+The following is an example of how to use the `openId` security scheme defined above as described in [Use of security property](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#use-of-security-property):
 
 ```yaml
 paths:
@@ -1238,8 +1238,8 @@ Make the information available:
 
 ## Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier
 
-When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
-- If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly given that the `sub` will not be a globally unique identifier nor contain PII as per the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md#id-token-sub-claim) requirements.
+When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
+- If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly given that the `sub` will not be a globally unique identifier nor contain PII as per the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#id-token-sub-claim) requirements.
 - If the access token is a Two-Legged Access Token, no User is associated with the token, and hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
 
 If an API provider issues Three-Legged Access Tokens for use with the API, the following error may occur:
