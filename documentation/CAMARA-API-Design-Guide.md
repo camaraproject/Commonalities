@@ -899,7 +899,7 @@ Implementers MAY include the UTF-8 character set in the Content-Type header valu
 [Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object) express security in OpenAPI.
 Security can be expressed for the API as a whole or for each endpoint.
 
-As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all CAMARA OpenAPI files MUST include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
+As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all CAMARA OpenAPI files MUST include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
 
 ```yaml
 components:
@@ -973,7 +973,7 @@ The name `openId` MUST be same as defined in the `components.securitySchemes` se
 
 ### 6.4. Mandatory Template for `info.description` in CAMARA API
 
-The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) MUST be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specification.
+The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) MUST be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specification.
 
 ### 6.5. POST or GET for Transferring Sensitive or Complex Data
 
@@ -1282,3 +1282,4 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
