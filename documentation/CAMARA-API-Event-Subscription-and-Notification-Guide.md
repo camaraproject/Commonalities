@@ -103,7 +103,7 @@ but the 'eventType' attribute is used to distinguish distinct events subscribed.
 To ease developer adoption,
 the pattern for Resource-based event subscription SHOULD be consistent with all API providing this feature.
 
-CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents/) directory (event-subscription-template.yaml).
+CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/cesql/v-1.0.0/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents/) directory (event-subscription-template.yaml).
 
 To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
