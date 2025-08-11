@@ -932,11 +932,7 @@ The following points can serve as a checklist to design the security mechanism o
    All authentication and authorization decisions are bundled in an Authorization Server, which ensures that CAMARA access tokens are only then issued
    to the API consumer,
    - if the API consumer is registered through the onboarding process
-   - if the API consumer is using the authorization grant agreed upon during the onboarding process
-     - grant-type urn:openid:params:grant-type:ciba
-     - grant-type urn:ietf:params:oauth:grant-type:jwt-bearer
-     - grant-type authorization_code
-     - grant-type client_credentials
+   - if the API consumer is using the authorization grant/flow agreed upon during the onboarding process
    - if and after the User or API consumer sucessfully authenticated to the Authorization Server
    - if the requested Purpose and scopes were agreed upon during the onboarding process
   
@@ -1305,5 +1301,6 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
 
 
