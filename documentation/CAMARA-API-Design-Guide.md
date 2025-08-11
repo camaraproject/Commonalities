@@ -936,7 +936,8 @@ The following points can serve as a checklist to design the security mechanism o
    - if and after the User or API consumer sucessfully authenticated to the Authorization Server
    - if the requested Purpose and scopes were agreed upon during the onboarding process
   
-   This separation of concerns simplifies the implementation of the API endpoint that, after validating the access token, can now focus its API implementation.
+   This separation of concerns simplifies the implementation of the API endpoint that, after validating the access token, can now focus on its API implementation.
+
    The access token is created by the API provider's Authorization Server to be consumed by the API provider's API endpoint.
 
    As described in [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier) a three-legged access token is associated with Personal Identifiable Information (PII).
