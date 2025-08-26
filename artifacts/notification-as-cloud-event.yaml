@@ -43,7 +43,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.3.0
+  version: wip
 externalDocs:
   description: Product documentation at CAMARA
   url: https://github.com/camaraproject/Commonalities
@@ -112,19 +112,19 @@ components:
     ErrorInfo:
       type: object
       required:
-        - message
         - status
         - code
+        - message
       properties:
-        message:
-          type: string
-          description: A human-readable description of what the event represents
         status:
           type: integer
           description: HTTP response status code
         code:
           type: string
           description: A human-readable code to describe the error
+        message:
+          type: string
+          description: A human-readable description of what the event represents
           
     XCorrelator:
       type: string
