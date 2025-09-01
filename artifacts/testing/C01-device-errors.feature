@@ -52,7 +52,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
             | {path_to_device}.phoneNumber       | /components/schemas/PhoneNumber             |
             | {path_to_device}.ipv4Address       | /components/schemas/DeviceIpv4Addr          |
             | {path_to_device}.ipv6Address       | /components/schemas/DeviceIpv6Address       |
-            | {path_to_device}.networkIdentifier | /components/schemas/NetworkAccessIdentifier |
+            | {path_to_device}.networkAccessIdentifier | /components/schemas/NetworkAccessIdentifier |
 
     # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
     @{feature_identifier}_C01.03_device_not_found
