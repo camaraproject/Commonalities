@@ -6,7 +6,7 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 0.7.0
-  x-camara-commonalities: 0.6
+  x-camara-commonalities: wip
   
 paths: {}
 components:
@@ -795,3 +795,4 @@ components:
                 status: 504
                 code: TIMEOUT
                 message: Request timeout exceeded.
+
