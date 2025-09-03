@@ -1,6 +1,7 @@
 # Changelog Commonalities
 
 ## Table of Contents
+- **[r3.4](#r34)**
 - **[r3.3](#r33)**
 - **[r3.2](#r32)**
 - **[r3.1](#r31)**
@@ -14,6 +15,17 @@
 - **[v0.3.0](#v030)**
 - **[v0.2.0](#v020)**
 - **[v0.1.0 - Initial version](#v010---initial-version)**
+
+# r3.4
+## Release Notes
+
+This release contains Commonalities version 0.6.1 a patch release from [r3.3](#r33).
+
+### Fixed
+* ErrorInfo schema properties order in template files aligned to [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md) by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/517
+* Fixed typo in [Gherkin Device Errors Template](/artifacts/testing/C01-device-errors.feature) by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/523
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r3.3...r3.4
 
 # r3.3
 ## Release Notes
