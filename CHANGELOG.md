@@ -19,7 +19,7 @@
 # r3.4
 ## Release Notes
 
-This release contains Commonalities version 0.6.1 a patch release from [r3.3](#r33).
+This release contains Commonalities version 0.6.1, a patch release from [r3.3](#r33).
 
 ### Fixed
 * ErrorInfo schema properties order in template files aligned to [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md) by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/517
