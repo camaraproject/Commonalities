@@ -20,6 +20,10 @@
 ## Release Notes
 
 This release contains Commonalities version 0.6.1, a patch release from [r3.3](#r33).
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r3.4/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r3.4/artifacts)** folder.
+
+**The relevant details of authentication and consent collection are covered by [release 3.3](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Management Working Group documents.**
 
 ### Fixed
 * ErrorInfo schema properties order in template files aligned to [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md) by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/517
