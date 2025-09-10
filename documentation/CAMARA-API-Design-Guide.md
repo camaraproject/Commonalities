@@ -944,7 +944,7 @@ The following points can serve as a checklist to design the security mechanism o
 
    If the access token is self-contained then the three-legged access token contains PII and the confidentiality of that PII must be protected.
    The confidentiallity of the PII in the self-contained access token can be achieved by the API provider's authorization server encrypting 
-   the access token to the API Provider's API endpoint.
+   the PII to the API Provider's API endpoint.
    
 4. **Input parameter validation**
 
@@ -1301,5 +1301,6 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
 
 
