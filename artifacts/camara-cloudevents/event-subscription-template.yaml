@@ -609,7 +609,7 @@ components:
         - Application-specific identifier:
           * /cloudevents/spec/pull/123
           * 1-555-123-4567
-      example: "https://notificationSendServer12.supertelco.com"
+      example: "https://notificationSendServer12.example.com"
 
     DateTime:
       type: string
