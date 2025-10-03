@@ -508,7 +508,7 @@ curl -X 'POST' \
  ```json
 {
   "id": 123654,
-  "source": "https://notificationSendServer12.supertelco.com",
+  "source": "https://notificationSendServer12.example.com",
   "type": "org.camaraproject.device-roaming-subscriptions.v1.roaming-status",
   "specversion": "1.0",
   "datacontenttype": "application/json",
@@ -545,7 +545,7 @@ curl -X 'POST' \
  ```json
 {
   "id": 123658,
-  "source": "https://notificationSendServer12.supertelco.com",
+  "source": "https://notificationSendServer12.example.com",
   "type": "org.camaraproject.api.device-roaming-subscriptions.v1.subscription-ended",
   "specversion": "1.0",
   "datacontenttype": "application/json",
