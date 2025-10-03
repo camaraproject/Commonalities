@@ -153,7 +153,7 @@ components:
         - Application-specific identifier:
           * /cloudevents/spec/pull/123
           * 1-555-123-4567
-      example: "https://notificationSendServer12.supertelco.com"
+      example: "https://notificationSendServer12.example.com"
 
     CloudEvent:
       description: The notification callback
@@ -333,7 +333,7 @@ components:
     QOS_STATUS_CHANGED_EXAMPLE:
       value:
         id: "123e4567-e89b-12d3-a456-426655440000"
-        source: "https://notificationSendServer12.supertelco.com"
+        source: "https://notificationSendServer12.example.com"
         type: "org.camaraproject.quality-on-demand.v0.qos-status-changed"
         specversion: "1.0"
         time: "2023-01-17T13:18:23.682Z"
