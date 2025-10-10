@@ -42,7 +42,7 @@ NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-
 
 
 ## Status and released versions
-* Version 0.6.0 of guidelines and assets for Fall25 meta-release of CAMARA APIs is available with the [r3.3 tag](https://github.com/camaraproject/Commonalities/tree/r3.3)
+* Version 0.6.1 of guidelines and assets for Fall25 meta-release of CAMARA APIs is available with the [r3.4 tag](https://github.com/camaraproject/Commonalities/releases/tag/r3.4)
 * Previous releases and pre-releases are available in https://github.com/camaraproject/Commonalities/releases
 
 For changes see [CHANGELOG.md](https://github.com/camaraproject/Commonalities/blob/main/CHANGELOG.md).
