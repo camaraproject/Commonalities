@@ -228,7 +228,7 @@ To ensure interoperability, it is crucial to implement error management that str
 
 An error representation MUST NOT differ from the representation of any resource. A main error message is defined with JSON structure with the following fields:
 - A field `status`, which can be identified in the response as a standard code from a list of Hypertext Transfer Protocol (HTTP) response status codes.
-- A unique error `code`, which can be identified and traced for more details. It MUST be human-readable; therefore, it MUST NOT be a numeric code. In turn, to achieve a better location of the error, you can reference the value or the field causing it, and include it in the message.
+- A unique error `code`, which can be identified and traced for more details. It MUST be human-readable; therefore, it MUST NOT be a numeric code. In turn, to achieve a better location of the error, you can reference the value or the field causing it, and include it in the message. The format for this field MUST be `SCREAMING_SNAKE_CASE` (e.g. "INVALID_ARGUMENT").
 - A detailed description in `message` - in English language in API specification, it can be changed to other languages in implementation if needed.
 
 All these aforementioned fields are mandatory in Error Responses.
@@ -315,6 +315,8 @@ In the following, we elaborate on the existing client errors. In particular, we 
 > _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, an `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
 
 > _NOTE 2: A {{SPECIFIC_CODE}}, unless it may have traversal scope (i.e. re-usable among different APIs), SHALL follow this scheme for a specific API: {{API_NAME}}.{{SPECIFIC_CODE}}_
+
+> _NOTE 3: Meaning of {{API_NAME}}.{{SPECIFIC_CODE}}. The double curly brackets '{{..}}' represent a placeholder to be replaced with the real values for the exception. `API_NAME` is the value of [`api-name`](#551-api-name) in `SCREAMING_SNAKE_CASE` format while `SPECIFIC_CODE` represents the value agreed within a WG for a given API error case scenario, in `SCREAMING_SNAKE_CASE` format as well (e.g. CARRIER_BILLING.PAYMENT_DENIED)._
 
 **Mandatory Errors** to be **documented in CAMARA API Spec YAML** are the following:
 
