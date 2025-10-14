@@ -316,7 +316,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 > _NOTE 2: A {{SPECIFIC_CODE}}, unless it may have traversal scope (i.e. re-usable among different APIs), SHALL follow this scheme for a specific API: {{API_NAME}}.{{SPECIFIC_CODE}}_
 
-> _NOTE 3: Meaning of {{API_NAME}}.{{SPECIFIC_CODE}}. The double curly brackets '{{..}}' represent a placeholder to be replaced with the real values for the exception. `API_NAME` is the value of [`api-name`](#551-api-name) in `SCREAMING_SNAKE_CASE` format while `SPECIFIC_CODE` represents the value agreed within a WG for a given API error case scenario, in `SCREAMING_SNAKE_CASE` format as well (e.g. CARRIER_BILLING.PAYMENT_DENIED)._
+> _NOTE 3: Meaning of {{API_NAME}}.{{SPECIFIC_CODE}}. The double curly brackets '{{..}}' represent a placeholder to be replaced with the real values for the exception. `API_NAME` is the value of [`api-name`](#551-api-name) in `SCREAMING_SNAKE_CASE` format while `SPECIFIC_CODE` represents the value agreed for a given API error case scenario, in `SCREAMING_SNAKE_CASE` format as well (e.g. CARRIER_BILLING.PAYMENT_DENIED)._
 
 **Mandatory Errors** to be **documented in CAMARA API Spec YAML** are the following:
 
