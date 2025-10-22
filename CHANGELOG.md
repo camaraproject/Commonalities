@@ -1,6 +1,7 @@
 # Changelog Commonalities
 
 ## Table of Contents
+- **[r3.4](#r34)**
 - **[r3.3](#r33)**
 - **[r3.2](#r32)**
 - **[r3.1](#r31)**
@@ -14,6 +15,26 @@
 - **[v0.3.0](#v030)**
 - **[v0.2.0](#v020)**
 - **[v0.1.0 - Initial version](#v010---initial-version)**
+
+# r3.4
+## Release Notes
+
+This release contains Commonalities version 0.6.1, a patch release from [r3.3](#r33).
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r3.4/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r3.4/artifacts)** folder.
+
+**The relevant details of authentication and consent collection are covered by [release 3.3](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Management Working Group documents.**
+
+### Fixed
+* ErrorInfo schema properties order in template files aligned to [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md) by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/517
+* Fixed typo in [Gherkin Device Errors Template](/artifacts/testing/C01-device-errors.feature) by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/523
+* Fixed link and description of `SubscriptionId` in  event-subscription-template.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/536
+* Changed networkAccessIdentifier and notification server example to use `example.com` by @Kevsy in https://github.com/camaraproject/Commonalities/pull/530
+
+### Removed
+* Removed "Hashing Passwords" subsection from  CAMARA API Design Guide by @AxelNennker in https://github.com/camaraproject/Commonalities/pull/511
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r3.3...r3.4
 
 # r3.3
 ## Release Notes
