@@ -626,7 +626,7 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   # CAMARA Commonalities minor version - x.y
-  x-camara-commonalities: "0.5"
+  x-camara-commonalities: "0.6"
 ```
 
 #### 5.3.1. Title
@@ -1278,4 +1278,5 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
 
