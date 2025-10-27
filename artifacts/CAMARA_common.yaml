@@ -310,7 +310,7 @@ components:
               value:
                 status: 400
                 code: "{{SPECIFIC_CODE}}"
-                message: "{{SPECIFIC_CODE_MESSAGE}}"
+                message: Message for specific code
     Generic401:
       description: Unauthorized
       headers:
@@ -374,7 +374,7 @@ components:
               value:
                 status: 403
                 code: "{{SPECIFIC_CODE}}"
-                message: "{{SPECIFIC_CODE_MESSAGE}}"
+                message: Message for specific code
     Generic404:
       description: Not found
       headers:
@@ -413,7 +413,7 @@ components:
               value:
                 status: 404
                 code: "{{SPECIFIC_CODE}}"
-                message: "{{SPECIFIC_CODE_MESSAGE}}"
+                message: Message for specific code
     Generic405:
       description: Method Not Allowed
       headers:
@@ -509,7 +509,7 @@ components:
               value:
                 status: 409
                 code: "{{SPECIFIC_CODE}}"
-                message: "{{SPECIFIC_CODE_MESSAGE}}"
+                message: Message for specific code
     Generic410:
       description: Gone
       headers:
@@ -637,7 +637,7 @@ components:
               value:
                 status: 422
                 code: "{{SPECIFIC_CODE}}"
-                message: "{{SPECIFIC_CODE_MESSAGE}}"
+                message: Message for specific code
     Generic429:
       description: Too Many Requests
       headers:
