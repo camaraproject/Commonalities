@@ -63,7 +63,7 @@ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SH
 | **Header**     | HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by a colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.                                                               |
 | **HTTP**       | Hypertext Transfer Protocol (HTTP) is a communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.                                                                                                                                                                                                   |
 | **JSON**       | The JavaScript Object Notation (JSON) Data Interchange Format [RFC8259](https://datatracker.ietf.org/doc/html/rfc8259)                                                                                                                                                                                                                              |
-| **JWT**        | JSON Web Token (JWT) is an open standard based on JSON [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519)                                                                                                                                                                                                                                     |
+| **JWT**        | JSON Web Token (JWT) is an open standard based on JSON [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519)                                                                                                                                                                                                                                 |
 | **Kebab-case** | Practice in the words denomination where the hyphen is used to separate words.                                                                                                                                                                                                                                                                      |
 | **OAuth2**     | Open Authorization is an open standard that allows simple Authorization flows to be used in websites or applications. [RFC6749](https://datatracker.ietf.org/doc/html/rfc6749)                                                                                                                                                                      |
 | **OIDC**       | [OpenId Connect](https://openid.net/specs/openid-connect-core-1_0.html) is standard based on OAuth2 that adds authentication and consent to OAuth2.                                                                                                                                                                                                 |
@@ -923,11 +923,29 @@ The following points can serve as a checklist to design the security mechanism o
    - With HTTP/2 or HTTP/3, performance improvements can be achieved due to better optimization and multiplexing of requests.
    - If HTTP 1.1 is used, usage of _TCP persistent connections_ is RECOMMENDED to achieve comparable performance.
 
-2. **Authentication and authorization must be considered**
+2. **Authentication and authorization**
 
-   CAMARA uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md).\
+   CAMARA follows the OAuth2 paradigm that separates authentication and authorization from API access.
 
-3. **Input parameter validation**
+   CAMARA uses the authentication and authorization protocols and flows as described in the released version of the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/).
+   
+   All authentication and authorization decisions are bundled in an Authorization Server, which ensures that CAMARA access tokens are only then issued
+   to the API consumer,
+   - if the API consumer is registered through the onboarding process
+   - if the API consumer is using the authorization grant/flow agreed upon during the onboarding process
+   - if and after the User or API consumer sucessfully authenticated to the Authorization Server
+   - if the requested Purpose and scopes were agreed upon during the onboarding process
+  
+   This separation of concerns simplifies the implementation of the API endpoint that, after validating the access token, can now focus on its API implementation.
+
+   The access token is created by the API provider's Authorization Server to be consumed by the API provider's API endpoint.
+
+   As described in [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier) a three-legged access token is associated with Personal Identifiable Information (PII).
+
+   If the access token is self-contained then the three-legged access token contains PII and the confidentiality of that PII must be protected.
+   The confidentiality of the PII in the self-contained access token can be achieved by the API provider's authorization server encrypting the PII to the API Provider's API endpoint.
+   
+4. **Input parameter validation**
 
   Validate the request parameters as the first step before they reach the application logic.
 Implement strong validation checks and immediately reject the request if validation fails.
@@ -1278,4 +1296,7 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
+
+
 
