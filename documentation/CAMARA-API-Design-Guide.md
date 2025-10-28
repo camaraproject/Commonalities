@@ -318,8 +318,8 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 **Mandatory Errors** to be **documented in CAMARA API Spec YAML** are the following:
 
-- For event subscriptions APIs, the ones defined in Event Subscription section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification.md)
-- For event notifications flow, the ones defined in Event Notification section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification.md)
+- For event subscriptions APIs, the ones defined in Event Subscription section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md)
+- For event notifications flow, the ones defined in Event Notification section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md)
 - For the rest of APIs:
   - Error status 401
   - Error status 403
