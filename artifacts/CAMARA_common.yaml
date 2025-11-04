@@ -795,5 +795,31 @@ components:
                 status: 504
                 code: TIMEOUT
                 message: Request timeout exceeded.
+    SuccessLimitedPayload:
+      description: Standard informative 200 response for limited outcomes. Indicates successful request processing where the result is partially complete.
+      allOf:
+        - $ref: '#/components/schemas/ErrorInfo'
+        - type: object
+          additionalProperties: false
+          required:
+            - status
+            - code
+            - message
+          properties:
+            status:
+              type: integer
+              enum:
+                - 200
+              description: Fixed HTTP status for informative limited success.
+            code:
+              type: string
+              enum:
+                - subject-context
+              description: Domain tag indicating a limited-success condition.
+            message:
+              type: string
+              enum:
+                - NotConnected
+              description: Short machine-readable reason for the limited success.
 
 
