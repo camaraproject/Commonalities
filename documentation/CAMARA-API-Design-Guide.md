@@ -11,6 +11,7 @@ This document outlines guidelines for API design within the CAMARA project, appl
 - [2. Data](#2-data)
   - [2.1. Common Data Types](#21-common-data-types)
   - [2.2. Data Definitions](#22-data-definitions)
+  - [2.3. Limited Success Responses](#23-limited-success-responses)
 - [3. Error Responses](#3-error-responses)
   - [3.1. Standardized Use of CAMARA Error Responses](#31-standardized-use-of-camara-error-responses)
   - [3.2. Error Responses - Device Object/Phone Number](#32-error-responses---device-objectphone-number)
@@ -220,7 +221,111 @@ When IpAddr is used in a payload, the property `objectType` MUST be present to i
 }
 ```
 
+### 2.3. Limited Success Responses
 
+Occasionally, an API operation may be successfully processed, yet the resulting data cannot be fully determined or is only partially available due to contextual limitations (for example, the device is not connected at the time of request). In such cases, API providers can use the **Limited Success Response** pattern.
+
+#### 2.3.1. Purpose and Scope
+
+A Limited Success Response represents an **informative 200 OK response** indicating that:
+
+- The request was **successfully processed**, and
+- The resulting data is **incomplete, indeterminate, or partially available** due to environmental or contextual factors beyond the control of the API.
+
+This mechanism prevents overuse of non-2xx codes for outcomes that are *not errors* and ensures consistent client behavior for successful-but-limited results across CAMARA APIs.
+
+#### 2.3.2. Reuse of `ErrorInfo` Schema
+
+The Limited Success Response is standardized as a reusable schema — **`SuccessLimitedPayload`** — defined in `CAMARA_common.yaml`.
+It leverages the existing `ErrorInfo` schema using `allOf` composition to ensure consistency of structure and semantics.
+
+```yaml
+components:
+  schemas:
+    SuccessLimitedPayload:
+      description: >
+        Standard informative 200 response for limited outcomes.
+        Indicates successful request processing where the result is partially complete.
+      allOf:
+        - $ref: '#/components/schemas/ErrorInfo'
+        - type: object
+          additionalProperties: false
+          required:
+            - status
+            - code
+            - message
+          properties:
+            status:
+              type: integer
+              enum:
+                - 200
+              description: Fixed HTTP status for informative limited success.
+            code:
+              type: string
+              enum:
+                - subject-context
+              description: Domain tag indicating a limited-success condition.
+            message:
+              type: string
+              enum:
+                - NotConnected
+              description: Short machine-readable reason for the limited success.
+```
+
+> NOTE: The use of `allOf` ensures the same shape and naming conventions as the standardized CAMARA `ErrorInfo` object, avoiding the introduction of new discriminators or response subtypes.
+
+#### 2.3.3. Usage Rules
+
+- APIs that can yield partial or indeterminate results **SHOULD define** their 200 responses using `oneOf`, including both:
+  1. The **primary domain object** (normal success case), and
+  2. The **`SuccessLimitedPayload`** (limited success case).
+- The HTTP **status code MUST remain 200** for both cases.
+- The `code` and `message` fields in `SuccessLimitedPayload` **MUST use enumerated values** defined in `CAMARA_common.yaml` to maintain semantic alignment.
+- The Limited Success pattern **MUST NOT** be used for business logic failures or validation errors — these MUST continue to use the standard Error Response model defined in [Section 3](#3-error-responses).
+
+#### 2.3.4. OpenAPI Structure Example
+
+Example for a `POST /retrieve` [roaming-status] operation:
+
+```yaml
+paths:
+  /retrieve:
+    post:
+      summary: Get current device roaming status and country information
+      responses:
+        '200':
+          description: Roaming status or limited outcome.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/RoamingStatusResponse'   # normal success
+                  - $ref: 'CAMARA_common.yaml#/components/schemas/SuccessLimitedPayload'  # informative success
+```
+
+In this structure:
+- `RoamingStatusResponse` is the domain schema returning full roaming information.
+- `SuccessLimitedPayload` is used when the result is informative but incomplete, for instance, when the device is disconnected.
+
+#### 2.3.5. Examples
+
+**A) Normal Success (roaming status available):**
+```json
+{
+  "roaming": true,
+  "countryCode": 208,
+  "countryName": ["FR"]
+}
+```
+
+**B) Limited Success (device not connected):**
+```json
+{
+  "status": 200,
+  "code": "subject-context",
+  "message": "NotConnected"
+}
+```
 
 ## 3. Error Responses
 
@@ -1278,4 +1383,5 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
 
