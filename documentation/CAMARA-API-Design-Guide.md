@@ -843,6 +843,51 @@ All properties within the object MUST have a description.
 UpperCamelCase SHOULD be used for response names.
 All properties within the object MUST have a description.
 
+When a response schema or field is an array, a `description` property MUST be allocated within `items` structure.
+
+**Case A:** Response is an array
+
+```yaml
+responses:
+  "2xx":
+    description: <description>
+    headers:
+      x-correlator:
+        $ref: "#/components/headers/x-correlator"
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/<schema-name>"
+...
+components:
+  schemas:
+    <schema-name>:
+      type: array
+      items:
+        type: string
+        description: <description>
+```
+
+**Case B:** Specific field is an array
+
+```yaml
+components:
+  schemas:
+    <schema-name>:
+      type: object
+      properties:
+        <property-name>:
+          type: array
+          items:
+            $ref: "#/components/schemas/<schema-item-name>"
+...
+    <schema-item-name>:
+      type: array
+      items:
+        type: string
+        description: <description>
+```
+
 #### 5.8.3. Parameters
 Parameter names are defined in lowerCamelCase: For example: `sessionId`.
 
