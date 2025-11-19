@@ -484,7 +484,7 @@ components:
                       - ABORTED
                       - ALREADY_EXISTS
                       - CONFLICT
-                      - WRONG_STATE
+                      - INCOMPATIBLE_STATE
                       - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_409_ABORTED:
@@ -505,12 +505,12 @@ components:
                 status: 409
                 code: CONFLICT
                 message: A specified resource duplicate entry found.
-            GENERIC_409_WRONG_STATE:
-              description: A resource referenced in the request is in a wrong state for the requested operation
+            GENERIC_409_INCOMPATIBLE_STATE:
+              description: A resource referenced in the request is in an incompatible state for the requested operation
               value:
                 status: 409
-                code: WRONG_STATE
-                message: A referenced resource is in a wrong state.                
+                code: INCOMPATIBLE_STATE
+                message: A referenced resource is in an incompatible state.                
             GENERIC_409_{{SPECIFIC_CODE}}:
               description: Specific conflict situation that is relevant in the context of the API
               value:
