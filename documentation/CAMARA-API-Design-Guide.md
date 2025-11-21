@@ -843,7 +843,8 @@ All properties within the object MUST have a description.
 UpperCamelCase SHOULD be used for response names.
 All properties within the object MUST have a description.
 
-When a response schema or field is an array, a `description` property MUST be allocated within `items` structure.
+When a response schema or field is an array, a `description` property MUST be provided in the `items` object.
+
 
 **Case A:** Response is an array
 
