@@ -878,11 +878,9 @@ components:
       type: object
       properties:
         <property-name>:
-          type: array
-          items:
-            $ref: "#/components/schemas/<schema-item-name>"
+          $ref: "#/components/schemas/<schema-array-name>"
 ...
-    <schema-item-name>:
+    <schema-array-name>:
       type: array
       items:
         type: string
