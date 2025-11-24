@@ -278,7 +278,8 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       409        |        `ABORTED`        | Concurrency conflict.                                               | Concurrency of processes of the same nature/scope                                                                               |
 |       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                                                           |
 |       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource                                                                                             |
-|       409        |       `INCOMPATIBLE_STATE`     | Resource state conflict. | A resource referenced in the request is in an incompatible state for the requested operation                                                                                             |
+|       409        |       `INCOMPATIBLE_STATE`     | A referenced resource is in an incompatible state. | A resource referenced in the request is in an incompatible state for the requested operation                                                                                             |
+
 |       409        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific conflict situation that is relevant in the context of the API                                                          |
 
 <font size="3"><span style="color: blue"> Service Exceptions </span></font>
