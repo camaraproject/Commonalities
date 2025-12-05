@@ -48,7 +48,7 @@
   ]
  }],
   "file-name": ["off", {"style": "kebab-case"}],
-  "max-scenarios-per-file": ["on", {"maxScenarios": 50, "countOutlineExamples": true}],
+  "max-scenarios-per-file": ["on", {"maxScenarios": 50, "countOutlineExamples": false}],
   "no-restricted-patterns": ["off", {
     "Global": [
       "^globally restricted pattern"
