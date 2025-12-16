@@ -259,32 +259,31 @@ NOTE: When standardized AuthN/AuthZ flows are used, please refer to [6.2. Securi
 
 ### 3.1. Standardized Use of CAMARA Error Responses
 
-This section aims to provide a common use of the fields `status` and `code` across CAMARA APIs.
+This section aims to provide a common use of the fields `status` and `code` of the `ErrorInfo` object across CAMARA APIs. The value of the `status` field is matching the numeric status code of the HTTP response message, e.g. "400". The `ErrorInfo` object is provided within the HTTP body of the HTTP response message.
 
-In the following, we elaborate on the existing client errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature:
+In the following, we elaborate on the existing client and server errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature:
 - i) syntax exceptions
 - ii) service exceptions
 - iii) server errors
 
 <font size="3"><span style="color: blue"> Syntax Exceptions </span></font>
 
-| **Error status** |     **Error code**      | **Message example**                                                 | **Scope/description**                                                                                                           |
+| **`status`** |     **`code`**      | **`message` example**                                                 | **Scope/description**                                                                                                           |
 |:----------------:|:-----------------------:|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
 |       400        |   `INVALID_ARGUMENT`    | Client specified an invalid argument, request body or query param.  | Generic Syntax Exception                                                                                                        |
 |       400        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific Syntax Exception regarding a field that is relevant in the context of the API (e.g. format of an amount)               |
 |       400        |     `OUT_OF_RANGE`      | Client specified an invalid range.                                  | Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested |
 |       403        |   `PERMISSION_DENIED`   | Client does not have sufficient permissions to perform this action. | OAuth2 token access does not have the required scope or when the user fails operational security                                |
 |       403        | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token.                    | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token. This error SHOULD be used only when the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.                             |
-|       409        |        `ABORTED`        | Concurrency conflict.                                               | Concurrency of processes of the same nature/scope                                                                               |
-|       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                                                           |
-|       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource                                                                                             |
-|       409        |       `INCOMPATIBLE_STATE`     | A referenced resource is in an incompatible state. | A resource referenced in the request is in an incompatible state for the requested operation                                                                                             |
-
+|       409        |        `ABORTED`        | Concurrency conflict. Another operation is modifying this resource  | Generic concurrency conflict (Race condition)                                                                                   |
+|       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | A resource with the same identifying characteristics already exists                                                             |
+|       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing (**Deprecated with Commonalities verion X**)                                                         |
+|       409        |       `INCOMPATIBLE_STATE`     | Resource is in an incompatible state for this operation. | Resource (target or referenced) is in incompatible state for the requested operation. Can be applicable for both:<br><li>Target resource state conflicts (e.g., session not in AVAILABLE state for extension)</li><li>Referenced resource state conflicts (e.g., device already has active session)</li>The message should clarify which resource and required state. |
 |       409        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific conflict situation that is relevant in the context of the API                                                          |
 
 <font size="3"><span style="color: blue"> Service Exceptions </span></font>
 
-| **Error status** |        **Error code**         | **Message example**                                                        | **Scope/description**                                                                                                                                                        |
+| **`status`** |        **`code`**         | **`message` example**                                                        | **Scope/description**                                                                                                                                                        |
 |:----------------:|:-----------------------------:|----------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |       401        |       `UNAUTHENTICATED`       | Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required. | The request cannot be authenticated and a new authentication is required                                                            |
 |       403        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API (e.g QoD session cannot be created for a set of users) |
@@ -301,7 +300,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 <font size="3"><span style="color: blue"> Server Exceptions </span></font>
 
-| **Error status** |      **Error code**      | **Message example**                                                                                           | **Scope/description**                                                                                                                    |
+| **`status`** |      **`code`**      | **`message` example**                                                                                           | **Scope/description**                                                                                                                    |
 |:----------------:|:------------------------:|---------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 |       405        |   `METHOD_NOT_ALLOWED`   | The requested method is not allowed/supported on the target resource.                                         | Invalid HTTP verb used with a given endpoint                                                                                             |
 |       406        |     `NOT_ACCEPTABLE`     | The server cannot produce a response matching the content requested by the client through `Accept-*` headers. | API Server does not accept the media type (`Accept-*` header) indicated by API client                                                    |
