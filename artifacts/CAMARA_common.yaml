@@ -488,30 +488,30 @@ components:
                       - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_409_ABORTED:
-              description: Concurreny of processes of the same nature/scope
+              description: Concurrency of processes of the same nature/scope
               value:
                 status: 409
                 code: ABORTED
-                message: "Resource is being modified by another operation. Please retry."
+                message: Resource is being modified by another operation. Please retry.
             GENERIC_409_ALREADY_EXISTS:
               description: Trying to create an existing resource
               value:
                 status: 409
                 code: ALREADY_EXISTS
-                message: "The resource that a client tried to create already exists."
+                message: The resource that a client tried to create already exists.
             GENERIC_409_CONFLICT:
               description: Duplication of an existing resource (**Deprecated with Commonalities X**)
               value:
                 status: 409
                 code: CONFLICT
-                message: "A specified resource duplicate entry found."
+                message: A specified resource duplicate entry found.
             GENERIC_409_INCOMPATIBLE_STATE:
               description: |
                 The status of the referenced resource is not compatible.
               value:
                 status: 409
                 code: INCOMPATIBLE_STATE
-                message: "Session must be in AVAILABLE state to extend. Current state: UNAVAILABLE"
+                message: Session must be in AVAILABLE state to extend. Current state is UNAVAILABLE.
             GENERIC_409_{{SPECIFIC_CODE}}:
               description: Specific conflict situation that is relevant in the context of the API
               value:
