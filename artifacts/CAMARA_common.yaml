@@ -76,7 +76,7 @@ components:
         networkAccessIdentifier:
           $ref: "#/components/schemas/NetworkAccessIdentifier"
         ipv4Address:
-          $ref: "#/components/schemas/DeviceIpv4Addr"
+          $ref: "#/components/schemas/DeviceIpv4Address"
         ipv6Address:
           $ref: "#/components/schemas/DeviceIpv6Address"
       minProperties: 1
@@ -102,7 +102,7 @@ components:
       type: string
       example: "123456789@example.com"
 
-    DeviceIpv4Addr:
+    DeviceIpv4Address:
       type: object
       description: |
         The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
@@ -114,9 +114,9 @@ components:
         In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
       properties:
         publicAddress:
-          $ref: "#/components/schemas/SingleIpv4Addr"
+          $ref: "#/components/schemas/SingleIpv4Address"
         privateAddress:
-          $ref: "#/components/schemas/SingleIpv4Addr"
+          $ref: "#/components/schemas/SingleIpv4Address"
         publicPort:
           $ref: "#/components/schemas/Port"
       anyOf:
@@ -126,7 +126,7 @@ components:
         publicAddress: "84.125.93.10"
         publicPort: 59765
 
-    SingleIpv4Addr:
+    SingleIpv4Address:
       description: A single IPv4 address with no subnet mask
       type: string
       format: ipv4
@@ -802,5 +802,6 @@ components:
                 status: 504
                 code: TIMEOUT
                 message: Request timeout exceeded.
+
 
 
