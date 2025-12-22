@@ -834,7 +834,6 @@ responses:
 ```
 #### 5.7.6.1 Success Responses with Meta Information
 CAMARA APIs MAY include an optional `meta` field in success responses to express *successful but indeterminate* outcomes without breaking clients.
-[JSON:API v1.0 — Section 7.5: Meta Information](https://jsonapi.org/format/#document-meta)
 
 ##### Purpose
 - Provide contextual or diagnostic information.
@@ -857,7 +856,7 @@ components:
       # Conditional requirement:
       #   - Either `meta` MUST be present alone, OR
       #   - The normal required fields must be present
-      oneOf:
+      anyOf:
         - required: ["meta"]
         - required: ["fieldA", "fieldB"]
       properties:
@@ -1363,6 +1362,7 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
 
 
 
