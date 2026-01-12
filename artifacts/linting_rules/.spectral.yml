@@ -6,7 +6,7 @@
 # - 03.12.2024: Corrected camara-path-param-id and camara-discriminator-use to handle null values error in example fields
 # - 09.01.2025: Updated info-contact rule
 # - 21.07.2025: Added camara-schema-type-check rule
-# - 12.01.2026: camara-discriminator-use depracated
+# - 12.01.2026: camara-discriminator-use deprecated
 
 
 extends: "spectral:oas"
