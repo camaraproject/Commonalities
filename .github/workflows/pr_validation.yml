@@ -1,0 +1,65 @@
+# =========================================================================================
+# CAMARA Project - Pull Request Validation Workflow for Commonalities repository
+#
+# =========================================================================================
+
+name: PR validation for CAMARA Commonalities
+
+on: 
+  # Pull Requests to main
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  general:
+    name: MegaLinter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout linting config
+        uses: actions/checkout@v6
+        with:
+          repository: rartych/tooling
+          path: lint-config
+          # using configurations from v0 floating tag
+          ref: main
+          sparse-checkout: |
+            linting/config/
+          sparse-checkout-cone-mode: false
+      - name: Copy specified folder to workspace root
+        # --strip-trailing-slashes remove any trailing slashes from each SOURCE argument - when ${{ inputs.configurations }} is empty
+        run: cp -RT --strip-trailing-slashes ${{ github.workspace }}/lint-config/linting/config/ ${{ github.workspace }}
+      - name: MegaLinter
+        id: ml
+        # You can override MegaLinter flavor used to have faster performances
+        # c_cpp MegaLinter Flavor https://megalinter.io/latest/flavors/c_cpp/ includes all needed linters - can be upgraded to v8
+        uses: oxsecurity/megalinter/flavors/c_cpp@v8
+        # configuration of Megalinter
+        env:
+          VALIDATE_ALL_CODEBASE: true
+          PRINT_ALPACA: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_COMMENT_REPORTER: true
+          GITHUB_STATUS_REPORTER: true
+          DISABLE: COPYPASTE,SPELL,JAVASCRIPT,MARKDOWN
+          DISABLE_LINTERS: ACTION_ACTIONLINT,YAML_PRETTIER,REPOSITORY_GRYPE,REPOSITORY_SEMGREP,REPOSITORY_DEVSKIM,REPOSITORY_KICS,REPOSITORY_TRIVY,REPOSITORY_TRIVY_SBOM,REPOSITORY_TRUFFLEHOG,REPOSITORY_CHECKOV,REPOSITORY_GITLEAKS,YAML_V8R,JAVA_PMD
+          API_SPECTRAL_CONFIG_FILE: .spectral.yaml
+          YAML_YAMLLINT_CONFIG_FILE: .yamllint.yaml
+          GHERKIN_GHERKIN_LINT_CONFIG_FILE: .gherkin-lintrc
+          API_SPECTRAL_FILTER_REGEX_INCLUDE: (artifacts/)
+          YAML_YAMLLINT_FILTER_REGEX_INCLUDE: (artifacts/)
+          YAML_YAMLLINT_FILTER_REGEX_EXCLUDE: (artifacts/linting_rules)
+          GHERKIN_GHERKIN_LINT_FILTER_REGEX_INCLUDE: (artifacts/testing/)
+      - name: Archive production artifacts
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: MegaLinter reports
+          include-hidden-files: "true"
+          path: |
+            megalinter-reports
+            mega-linter.log
