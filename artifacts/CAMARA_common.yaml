@@ -500,7 +500,10 @@ components:
                 code: ALREADY_EXISTS
                 message: The resource that a client tried to create already exists.
             GENERIC_409_CONFLICT:
-              description: Duplication of an existing resource (**Deprecated with Commonalities X**)
+              ###################################
+              # This Error Code is DEPRECATED
+              ###################################
+              description: Duplication of an existing resource 
               value:
                 status: 409
                 code: CONFLICT
@@ -511,7 +514,8 @@ components:
               value:
                 status: 409
                 code: INCOMPATIBLE_STATE
-                message: Session must be in AVAILABLE state to extend. Current state is UNAVAILABLE.
+                message: Resource must be in AVAILABLE state to extend. Current state is UNAVAILABLE.
+
             GENERIC_409_{{SPECIFIC_CODE}}:
               description: Specific conflict situation that is relevant in the context of the API
               value:
