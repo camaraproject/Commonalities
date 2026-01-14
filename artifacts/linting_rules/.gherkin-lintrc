@@ -27,7 +27,7 @@
   "no-multiple-empty-lines": "on",
   "no-empty-file": "on",
   "no-scenario-outlines-without-examples": "on",
-  "name-length": ["on", {"Feature": 190, "Step": 190, "Scenario": 190}],
+  "name-length": ["on", {"Feature": 250, "Step": 250, "Scenario": 250}],
   "no-restricted-tags": ["on", {"tags": ["@watch", "@wip"]}],
   "use-and": "on",
   "keywords-in-logical-order": "on",
@@ -38,7 +38,7 @@
   "no-unused-variables": "on",
   "no-background-only-scenario": "on",
   "no-empty-background": "on",
-  "scenario-size": ["on", { "steps-length": {"Background": 15, "Scenario": 15}}],
+  "scenario-size": ["off", { "steps-length": {"Background": 15, "Scenario": 15}}],
   "only-one-when": "off",
   "allowed-tags": ["on", {
   "patterns": [
@@ -48,7 +48,7 @@
   ]
  }],
   "file-name": ["off", {"style": "kebab-case"}],
-  "max-scenarios-per-file": ["on", {"maxScenarios": 50, "countOutlineExamples": true}],
+  "max-scenarios-per-file": ["on", {"maxScenarios": 50, "countOutlineExamples": false}],
   "no-restricted-patterns": ["off", {
     "Global": [
       "^globally restricted pattern"

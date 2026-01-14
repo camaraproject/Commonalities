@@ -299,6 +299,7 @@ When request bodies or response payloads may be one of a number of different sch
 _Spectral rule_: [camara-discriminator-use](/artifacts/linting_rules/.spectral.yml)
 
 *Severity*: `hint`
+DEPRECATED: this rule generates mainly false positives - its implementation can be rewritten in future
 
 ### Casing convention
 
@@ -404,7 +405,7 @@ _Spectral rule_: [camara-schema-type-check](/artifacts/linting_rules/.spectral.y
 | camara-response-descriptions                           | All response objects must have a description                                               | Yes         | Yes        | Warning         |
 | camara-properties-descriptions                         | All properties within the object must have a description                                   | Yes         | Yes        | Warning         |
 | camara-operation-summary                               | Summary must be defined on each operation                                                  | Yes         | Yes        | Warning         |
-| camara-discriminator-use                               | discriminator object can be used to aid in serialization, deserialization, and validation  | Yes         | Yes        | Warning         |
+| camara-discriminator-use                               | discriminator object can be used to aid in serialization, deserialization, and validation  | Yes         | No         | Hint            |
 | camara-operationid-casing-convention                   | Operation ids should follow a specific case convention: camel case                         | Yes         | Yes        | Hint            |
 | camara-schema-casing-convention                        | Schema should follow a specific case convention pascal case (upper camel case)             | Yes         | Yes        | Warning         |
 | camara-parameter-casing-convention                     | Path parameter should follow a specific case convention, with the default being kebab-case | Yes         | Yes        | Error           |
@@ -412,4 +413,5 @@ _Spectral rule_: [camara-schema-type-check](/artifacts/linting_rules/.spectral.y
 | camara-enum-casing-convention                          | enum fields contain values that follow a specific case convention: macro (CAPITAL_LETTERS) | tbd         | tbd        | Info            |
 | camara-property-casing-convention                      | Property names should follow a specific case convention, with the default being camel case | Yes         | Yes        | Error           |
 | camara-schema-type-check                               | `type` attribute is mandatory in property schema definition                                | Yes         | Yes        | Error           |
+
 

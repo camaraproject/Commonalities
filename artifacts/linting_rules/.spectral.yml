@@ -6,6 +6,7 @@
 # - 03.12.2024: Corrected camara-path-param-id and camara-discriminator-use to handle null values error in example fields
 # - 09.01.2025: Updated info-contact rule
 # - 21.07.2025: Added camara-schema-type-check rule
+# - 12.01.2026: camara-discriminator-use deprecated
 
 
 extends: "spectral:oas"
@@ -233,7 +234,7 @@ rules:
       - field: discriminator
         function: truthy
         message: "A 'discriminator' object is required when using 'oneOf' or 'anyOf'."
-    recommended: true  # Set to true/false to enable/disable this rule
+    recommended: false # Set to true/false to enable/disable this rule
 
   camara-operationid-casing-convention:
     message: Operation Id must be in Camel case "{{error}}"
