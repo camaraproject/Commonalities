@@ -833,6 +833,14 @@ responses:
     $ref: "#/components/responses/<schema-name>"
 ```
 
+##### 5.7.6.1 Asynchronous responses
+
+An asynchronous response is not really an event. An event is something that can happen or not, once or several times and it is the occurrence of the event that carries the main information, whereas an asynchronous response represents the metainformation carried over in the same format as it would be a synchronous response and will happen once and only once.
+
+This is the rationale to NOT use [CAMARA cloudevents-based model for event notification](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#3-event-notification) for these kind of scenarios but to use the same response model as in an analogous synchronous scenario.
+
+A recommendation for this case is the use of `sink` and `sinkCredential` concepts, that represents the callback URL and their associated securitization, in the involved API Request design, as for concept alignment among CAMARA specifications. Those concepts follow the same rules design as per [CAMARA Instance-based (Implicit) Subscription](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#21-instance-based-implicit-subscription) model.
+
 
 ### 5.8. Components
 
