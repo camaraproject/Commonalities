@@ -891,6 +891,33 @@ components:
         description: <description>
 ```
 
+**Case C:** Specific field is an array and their items are reference by `$ref` keyword (e.g. an item is an object)
+
+```yaml
+components:
+  schemas:
+    <schema-name>:
+      type: object
+      properties:
+        <property-name>:
+          $ref: "#/components/schemas/<schema-array-name>"
+...
+    <schema-array-name>:
+      type: array
+      items:
+        $ref: "#/components/schemas/<schema-item-name>"
+...      
+    <schema-item-name>:
+      type: object
+      properties:
+        <item-object-property1-name>:
+          type: string
+          description: <description>
+        <item-object-property2-name>:
+          type: boolean
+          description: <description> 
+```
+
 #### 5.8.3. Parameters
 Parameter names are defined in lowerCamelCase: For example: `sessionId`.
 
