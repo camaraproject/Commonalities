@@ -6,7 +6,7 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version:  wip
-  x-camara-commonalities: 0.6
+  x-camara-commonalities: "0.6"
   
 paths: {}
 components:
@@ -67,7 +67,7 @@ components:
             * `ipv6Address`
             * `phoneNumber`
             * `networkAccessIdentifier`
-            NOTE1: the network operator might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different network operators. In this case the identifiers MUST belong to the same device.
+            NOTE1: the network operator might support only a subset of these options. The API Consumer can provide multiple identifiers to ensure compatibility across different network operators. In this case, the API Provider will use one of the identifiers for the API logic without performing any matching checks among the provided identifiers.
             NOTE2: as for this Commonalities release, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
       type: object
       properties:
@@ -76,7 +76,7 @@ components:
         networkAccessIdentifier:
           $ref: "#/components/schemas/NetworkAccessIdentifier"
         ipv4Address:
-          $ref: "#/components/schemas/DeviceIpv4Addr"
+          $ref: "#/components/schemas/DeviceIpv4Address"
         ipv6Address:
           $ref: "#/components/schemas/DeviceIpv6Address"
       minProperties: 1
@@ -102,7 +102,7 @@ components:
       type: string
       example: "123456789@example.com"
 
-    DeviceIpv4Addr:
+    DeviceIpv4Address:
       type: object
       description: |
         The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
@@ -114,9 +114,9 @@ components:
         In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
       properties:
         publicAddress:
-          $ref: "#/components/schemas/SingleIpv4Addr"
+          $ref: "#/components/schemas/SingleIpv4Address"
         privateAddress:
-          $ref: "#/components/schemas/SingleIpv4Addr"
+          $ref: "#/components/schemas/SingleIpv4Address"
         publicPort:
           $ref: "#/components/schemas/Port"
       anyOf:
@@ -126,7 +126,7 @@ components:
         publicAddress: "84.125.93.10"
         publicPort: 59765
 
-    SingleIpv4Addr:
+    SingleIpv4Address:
       description: A single IPv4 address with no subnet mask
       type: string
       format: ipv4
@@ -309,8 +309,8 @@ components:
               description: Specific Syntax Exception regarding a field that is relevant in the context of the API
               value:
                 status: 400
-                code: { { SPECIFIC_CODE } }
-                message: { { SPECIFIC_CODE_MESSAGE } }
+                code: "{{SPECIFIC_CODE}}"
+                message: Message for specific code
     Generic401:
       description: Unauthorized
       headers:
@@ -373,8 +373,8 @@ components:
               description: Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API
               value:
                 status: 403
-                code: { { SPECIFIC_CODE } }
-                message: { { SPECIFIC_CODE_MESSAGE } }
+                code: "{{SPECIFIC_CODE}}"
+                message: Message for specific code
     Generic404:
       description: Not found
       headers:
@@ -412,8 +412,8 @@ components:
               description: Specific situation to highlight the resource/concept not found
               value:
                 status: 404
-                code: { { SPECIFIC_CODE } }
-                message: { { SPECIFIC_CODE_MESSAGE } }
+                code: "{{SPECIFIC_CODE}}"
+                message: Message for specific code
     Generic405:
       description: Method Not Allowed
       headers:
@@ -484,6 +484,7 @@ components:
                       - ABORTED
                       - ALREADY_EXISTS
                       - CONFLICT
+                      - INCOMPATIBLE_STATE
                       - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_409_ABORTED:
@@ -504,12 +505,18 @@ components:
                 status: 409
                 code: CONFLICT
                 message: A specified resource duplicate entry found.
+            GENERIC_409_INCOMPATIBLE_STATE:
+              description: A resource referenced in the request is in an incompatible state for the requested operation
+              value:
+                status: 409
+                code: INCOMPATIBLE_STATE
+                message: A referenced resource is in an incompatible state.                
             GENERIC_409_{{SPECIFIC_CODE}}:
               description: Specific conflict situation that is relevant in the context of the API
               value:
                 status: 409
-                code: { { SPECIFIC_CODE } }
-                message: { { SPECIFIC_CODE_MESSAGE } }
+                code: "{{SPECIFIC_CODE}}"
+                message: Message for specific code
     Generic410:
       description: Gone
       headers:
@@ -636,8 +643,8 @@ components:
               description: Any semantic condition associated to business logic, specifically related to a field or data structure
               value:
                 status: 422
-                code: { { SPECIFIC_CODE } }
-                message: { { SPECIFIC_CODE_MESSAGE } }
+                code: "{{SPECIFIC_CODE}}"
+                message: Message for specific code
     Generic429:
       description: Too Many Requests
       headers:
@@ -795,5 +802,6 @@ components:
                 status: 504
                 code: TIMEOUT
                 message: Request timeout exceeded.
+
 
 

@@ -228,7 +228,7 @@ To ensure interoperability, it is crucial to implement error management that str
 
 An error representation MUST NOT differ from the representation of any resource. A main error message is defined with JSON structure with the following fields:
 - A field `status`, which can be identified in the response as a standard code from a list of Hypertext Transfer Protocol (HTTP) response status codes.
-- A unique error `code`, which can be identified and traced for more details. It MUST be human-readable; therefore, it MUST NOT be a numeric code. In turn, to achieve a better location of the error, you can reference the value or the field causing it, and include it in the message.
+- A unique error `code`, which can be identified and traced for more details. It MUST be human-readable; therefore, it MUST NOT be a numeric code. In turn, to achieve a better location of the error, you can reference the value or the field causing it, and include it in the message. The format for this field MUST be `SCREAMING_SNAKE_CASE` (e.g. "INVALID_ARGUMENT").
 - A detailed description in `message` - in English language in API specification, it can be changed to other languages in implementation if needed.
 
 All these aforementioned fields are mandatory in Error Responses.
@@ -278,6 +278,8 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       409        |        `ABORTED`        | Concurrency conflict.                                               | Concurrency of processes of the same nature/scope                                                                               |
 |       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                                                           |
 |       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource                                                                                             |
+|       409        |       `INCOMPATIBLE_STATE`     | A referenced resource is in an incompatible state. | A resource referenced in the request is in an incompatible state for the requested operation                                                                                             |
+
 |       409        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific conflict situation that is relevant in the context of the API                                                          |
 
 <font size="3"><span style="color: blue"> Service Exceptions </span></font>
@@ -315,6 +317,8 @@ In the following, we elaborate on the existing client errors. In particular, we 
 > _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, an `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
 
 > _NOTE 2: A {{SPECIFIC_CODE}}, unless it may have traversal scope (i.e. re-usable among different APIs), SHALL follow this scheme for a specific API: {{API_NAME}}.{{SPECIFIC_CODE}}_
+
+> _NOTE 3: Meaning of {{API_NAME}}.{{SPECIFIC_CODE}}. The double curly brackets '{{..}}' represent a placeholder to be replaced with the real values for the exception. `API_NAME` is the value of [`api-name`](#551-api-name) in `SCREAMING_SNAKE_CASE` format while `SPECIFIC_CODE` represents the value agreed for a given API error case scenario, in `SCREAMING_SNAKE_CASE` format as well (e.g. CARRIER_BILLING.PAYMENT_DENIED)._
 
 **Mandatory Errors** to be **documented in CAMARA API Spec YAML** are the following:
 
@@ -626,7 +630,7 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   # CAMARA Commonalities minor version - x.y
-  x-camara-commonalities: 0.5
+  x-camara-commonalities: "0.6"
 ```
 
 #### 5.3.1. Title
@@ -1322,4 +1326,5 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
 
