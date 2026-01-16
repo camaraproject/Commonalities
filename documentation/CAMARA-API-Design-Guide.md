@@ -279,7 +279,8 @@ In the following, we elaborate on the existing client and server errors. In part
 
 |       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                             |
 
-|       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource (**Deprecated with Commonalities X**)                                                        |
+|       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource (**This Error Code is DEPRECATED**)                                                        |
+
 
 |       409        |       `INCOMPATIBLE_STATE`     | Resource must be in AVAILABLE state to extend. Current state is UNAVAILABLE. | Resource (target or referenced) is in incompatible state for the requested operation. Can be applicable for both:<br><li>Target resource state conflicts (e.g., session not in AVAILABLE state for extension)</li><li>Referenced resource state conflicts (e.g., device already has active session)</li>The message should clarify which resource and required state. |
 
