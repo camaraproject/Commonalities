@@ -492,7 +492,7 @@ components:
               value:
                 status: 409
                 code: ABORTED
-                message: Resource is being modified by another operation. Please retry.
+                message: Resource is being modified by another operation. Please wait, and retry if appropriate.
             GENERIC_409_ALREADY_EXISTS:
               description: Trying to create an existing resource
               value:
