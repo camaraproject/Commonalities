@@ -324,6 +324,25 @@ Typical response validations:
 - the response property "$.code" is "INVALID_ARGUMENT"
 ```
 
+### Inclusion of `$.device` in response
+
+These constrains are conditional on the inclusion of one or more device identifiers in the request body.
+In that scenario, the appropriate constraint is dependent on whether an API requires the device object to 
+always be returned (for 2-legged access tokens),or leaves that up to the API provider:
+
+_Up to API provider_
+```
+And the response property "$.device" exists only if provided in the request body and always if more than one device identifier is provided, And contains a single device identifier that was included in the request
+```
+
+_Mandatory for any API using 2-legged access tokens_
+```
+And the response property "$.device" contains a single device identifier that was included in the request
+```
+Note, the inclusion of "$.device" in the request body should be an exisintg constraint for when 2-legged
+access tokens are used.
+
+
 ## References
 
 * [Feature files]( https://copyprogramming.com/howto/multiple-feature-inside-single-feature-file#multiple-feature-inside-single-feature-file)
