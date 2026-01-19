@@ -488,7 +488,7 @@ components:
                       - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_409_ABORTED:
-              description: Concurrency of processes of the same nature/scope
+              description: The resource is undergoing modification by another process
               value:
                 status: 409
                 code: ABORTED

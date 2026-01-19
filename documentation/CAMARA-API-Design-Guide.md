@@ -275,7 +275,7 @@ In the following, we elaborate on the existing client and server errors. In part
 |       400        |     `OUT_OF_RANGE`      | Client specified an invalid range.                                  | Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested |
 |       403        |   `PERMISSION_DENIED`   | Client does not have sufficient permissions to perform this action. | OAuth2 token access does not have the required scope or when the user fails operational security                                |
 |       403        | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token.                    | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token. This error SHOULD be used only when the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.                             |
-|       409        |        `ABORTED`        | Resource is being modified by another operation. Please retry.      | Concurrency of processes of the same nature/scope                                                                                   |
+|       409        |        `ABORTED`        | Resource is being modified by another operation. Please wait, and retry if appropriate.      | The resource is undergoing modification by another process                                             |
 
 |       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                             |
 
