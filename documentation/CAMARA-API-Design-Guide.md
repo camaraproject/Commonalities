@@ -833,13 +833,13 @@ responses:
     $ref: "#/components/responses/<schema-name>"
 ```
 
-##### 5.7.6.1 Asynchronous responses
+##### 5.7.6.2 Asynchronous responses
 
-An asynchronous response is not really an event. An event is something that can happen or not, once or several times and it is the occurrence of the event that carries the main information, whereas an asynchronous response represents the metainformation carried over in the same format as it would be a synchronous response and will happen once and only once.
+An asynchronous response is not truly an event. An event is something that may occur once or multiple times, and it is the occurrence of that event that carries the main information. In contrast, an asynchronous response represents meta-information delivered in the same format as a synchronous response and happens exactly once.
 
-This is the rationale to NOT use [CAMARA cloudevents-based model for event notification](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#3-event-notification) for these kind of scenarios but to use the same response model as in an analogous synchronous scenario.
+This is the rationale for not using the [CAMARA CloudEvents-based model for event notification](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#3-event-notification) in such scenarios. Instead, it is recommended to use the same response model as in an analogous synchronous scenario. In this context, when an API request initiates an asynchronous process, the server SHOULD respond with the HTTP status code `202 Accepted`. This code indicates that the request has been accepted for processing, but the processing has not been completed yet. The actual response or final result will be delivered asynchronously to the client via the callback URL (sink).
 
-A recommendation for this case is the use of `sink` and `sinkCredential` concepts, that represents the callback URL and their associated securitization, in the involved API Request design, as for concept alignment among CAMARA specifications. Those concepts follow the same rules design as per [CAMARA Instance-based (Implicit) Subscription](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#21-instance-based-implicit-subscription) model.
+For this case, it is advisable to use the concepts of `sink` and `sinkCredential`, which represent the callback URL and its associated security configuration, respectively, within the API request design. This ensures alignment with CAMARA specifications. These concepts follow the same design rules as the [CAMARA Instance-based (Implicit) Subscription](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#21-instance-based-implicit-subscription) model.
 
 
 ### 5.8. Components
