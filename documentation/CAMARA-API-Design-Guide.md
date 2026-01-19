@@ -826,13 +826,28 @@ responses:
     content:
       application/json:
         schema:
-          $ref: "#/components/schemas/<schema-name>"
+          $ref: "#/components/schemas/<success-reponse-schema-name>"
   "4xx":
-    $ref: "#/components/responses/<schema-name>"
+    $ref: "#/components/responses/<4xx-schema-name>"
   "5xx":
-    $ref: "#/components/responses/<schema-name>"
+    $ref: "#/components/responses/<5xx-schema-name>"
 ```
 
+
+When a response schema or field is an array, a `description` property MUST be provided in the `items` object.
+
+
+**Case A:** Response is an array
+
+```yaml
+components:
+  schemas:
+    <success-reponse-schema-name>:
+      type: array
+      items:
+        type: string
+        description: <description>
+```
 
 ### 5.8. Components
 
@@ -846,77 +861,6 @@ All properties within the object MUST have a description.
 #### 5.8.2. Responses
 UpperCamelCase SHOULD be used for response names.
 All properties within the object MUST have a description.
-
-When a response schema or field is an array, a `description` property MUST be provided in the `items` object.
-
-
-**Case A:** Response is an array
-
-```yaml
-responses:
-  "2xx":
-    description: <description>
-    headers:
-      x-correlator:
-        $ref: "#/components/headers/x-correlator"
-    content:
-      application/json:
-        schema:
-          $ref: "#/components/schemas/<schema-name>"
-...
-components:
-  schemas:
-    <schema-name>:
-      type: array
-      items:
-        type: string
-        description: <description>
-```
-
-**Case B:** Specific field is an array
-
-```yaml
-components:
-  schemas:
-    <schema-name>:
-      type: object
-      properties:
-        <property-name>:
-          $ref: "#/components/schemas/<schema-array-name>"
-...
-    <schema-array-name>:
-      type: array
-      items:
-        type: string
-        description: <description>
-```
-
-**Case C:** Specific field is an array and their items are reference by `$ref` keyword (e.g. an item is an object)
-
-```yaml
-components:
-  schemas:
-    <schema-name>:
-      type: object
-      properties:
-        <property-name>:
-          $ref: "#/components/schemas/<schema-array-name>"
-...
-    <schema-array-name>:
-      type: array
-      items:
-        $ref: "#/components/schemas/<schema-item-name>"
-...      
-    <schema-item-name>:
-      type: object
-      properties:
-        <item-object-property1-name>:
-          type: string
-          description: <description>
-        <item-object-property2-name>:
-          type: boolean
-          description: <description> 
-```
 
 #### 5.8.3. Parameters
 Parameter names are defined in lowerCamelCase: For example: `sessionId`.
