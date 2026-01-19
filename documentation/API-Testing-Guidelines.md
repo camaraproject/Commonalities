@@ -339,7 +339,7 @@ _Mandatory for any API using 2-legged access tokens_
 ```
 And the response property "$.device" contains a single device identifier that was included in the request
 ```
-Note, the inclusion of "$.device" in the request body should be an exisintg constraint for when 2-legged
+Note, the inclusion of "$.device" in the request body SHOULD be an existing constraint for when 2-legged
 access tokens are used.
 
 
