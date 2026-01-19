@@ -326,7 +326,7 @@ Typical response validations:
 
 ### Inclusion of `$.device` in response
 
-These constrains are conditional on the inclusion of one or more device identifiers in the request body.
+These constraints are conditional on the inclusion of one or more device identifiers in the request body.
 In that scenario, the appropriate constraint is dependent on whether an API requires the device object to 
 always be returned (for 2-legged access tokens),or leaves that up to the API provider:
 
