@@ -899,10 +899,10 @@ components:
 
 
 ```
-##### Example Value with Meta Information Only
+Response with meta information only:
 ```json
 {
-  "meta": { "Request was valid. Unable to provide details." }
+  "meta": "Request was valid. Unable to provide details."
 }
 ```
 Response with optional meta information included:
