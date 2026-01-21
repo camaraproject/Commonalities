@@ -905,12 +905,11 @@ components:
   "meta": { "Request was valid. Unable to provide details." }
 }
 ```
-##### Example Response with Optional Meta Information
+Response with optional meta information included:
 ```json
 {
-
   "lastStatusTime": "2025-02-20T10:41:38Z",
-  "connectedNetworkType": "5G"
+  "connectedNetworkType": "5G",
   "meta":  "Mobile Network"
 }
 ```
