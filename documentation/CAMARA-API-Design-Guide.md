@@ -11,10 +11,9 @@ This document outlines guidelines for API design within the CAMARA project, appl
 - [2. Data](#2-data)
   - [2.1. Common Data Types](#21-common-data-types)
   - [2.2. Data Definitions](#22-data-definitions)
-- [3. Error Responses](#3-error-responses)
-  - [3.1. Standardized Use of CAMARA Error Responses](#31-standardized-use-of-camara-error-responses)
-  - [3.2. Error Responses - Device Object/Phone Number](#32-error-responses---device-objectphone-number)
-  - [3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API](#33-error-responses---mandatory-template-for-infodescription-in-camara-api)
+- [3. Responses](#3-responses)
+  - [3.1. Business-level Outcomes in Successful Responses](#31-business-level-outcomes-in-successful-responses)
+  - [3.2. Error Responses](#32-error-responses)
 - [4. Pagination, Sorting and Filtering](#4-pagination-sorting-and-filtering)
   - [4.1. Pagination](#41-pagination)
   - [4.2. Sorting](#42-sorting)
@@ -112,7 +111,7 @@ This part captures a detailed description of all the data structures used in the
       - String ones: min and max length
       - Integer ones: format (int32, int64), range, etc.
 
-In this part, the error response structure MUST also be defined following the guidelines in [3. Error Responses](#3-error-responses).
+In this part, the error response structure MUST also be defined following the guidelines in [3.2. Error Responses](#32-error-responses).
 
 #### 2.2.1. Usage of Discriminator
 
@@ -222,7 +221,89 @@ When IpAddr is used in a payload, the property `objectType` MUST be present to i
 
 
 
-## 3. Error Responses
+## 3. Responses
+
+This chapter covers how CAMARA APIs model responses, including both successful business outcomes and error conditions.
+
+### 3.1. Business-level Outcomes in Successful Responses
+
+#### 3.1.1. Scope and Problem Statement
+
+CAMARA APIs may need to return negative, partial, or unknown business outcomes even when a request is syntactically valid, authenticated, authorized, and processed successfully (HTTP 2xx). Without explicit guidance, CAMARA APIs have historically modeled these cases inconsistently, for example using boolean-only results, implicit meaning via empty payloads, or HTTP 4xx codes for data unavailability.
+
+#### 3.1.2. Core Principles
+
+The following principles apply to modeling business-level outcomes in successful responses:
+
+* HTTP `2xx` responses indicate that the request was valid and processed; they **MAY** still represent negative, partial, or unknown business outcomes.
+* Business-level outcomes **SHOULD** be modeled explicitly in the response body rather than inferred from missing data or encoded as errors.
+* APIs that can yield multiple business outcomes **SHOULD** expose a mandatory, typed primary outcome field (for example `status`, `verificationResult`, `availability`, or `responseStatus`) defined as an enum or closed set of values.
+* APIs **MAY** add optional refinement fields derived from the primary outcome field name, such as:
+  * a machine-readable `<baseName>Reason` (typed enum), and
+  * a human-readable `<baseName>Message` (free-text string).
+* HTTP `4xx` status codes **MUST** be reserved for true request errors (invalid input, unsupported identifier, authentication/authorization failure, or contract/configuration mismatches).
+* Inability to determine or provide data for a valid request (for example, data not available, device not reachable, information unknown) **SHOULD** be expressed via the explicit outcome field in a `2xx` response, not as a `4xx` error.
+
+#### 3.1.3. Recommended Outcome Pattern
+
+The recommended structural pattern for business-level outcomes consists of:
+
+* A **mandatory primary outcome field** representing the business result (for example `status`, `verificationResult`, or `outcome`).
+* An **optional machine-readable refinement field** named consistently with the primary outcome (for example `statusReason`, `verificationResultReason`, or `outcomeReason`).
+* An **optional human-readable message field** named consistently with the primary outcome (for example `statusMessage`, `verificationResultMessage`, or `outcomeMessage`).
+
+Note that:
+* The concrete field names are API- and domain-specific.
+* The example names (`outcome`, `outcomeReason`, `outcomeMessage`) used in this section are illustrative only.
+* The pattern **SHOULD** be applied consistently within a given API.
+
+#### 3.1.4. Example
+
+The following OpenAPI schema demonstrates the recommended pattern:
+
+```yaml
+components:
+  schemas:
+    CheckResult:
+      type: object
+      required:
+        - outcome
+      properties:
+        outcome:
+          type: string
+          description: Business-level result of the operation.
+          enum:
+            - SUCCESS
+            - FAILURE
+            - NOT_APPLICABLE
+            - UNKNOWN
+        outcomeReason:
+          type: string
+          description: Optional machine-readable reason code for the outcome.
+          example: TENURE.NOT_KNOWN_FOR_PORTED_IN_NUMBER
+        outcomeMessage:
+          type: string
+          description: Optional human-readable explanation of the outcome.
+          example: "The number has been ported in from another operator; tenure cannot be determined."
+```
+
+An example JSON response using HTTP `200`:
+
+```json
+{
+  "outcome": "UNKNOWN",
+  "outcomeReason": "TENURE.NOT_KNOWN_FOR_PORTED_IN_NUMBER",
+  "outcomeMessage": "The number has been ported in from another operator; tenure cannot be determined."
+}
+```
+
+#### 3.1.5. Versioning and Migration Guidance
+
+* New APIs and new MAJOR versions **SHOULD** follow this guidance.
+* Existing stable APIs **MAY** adopt it in a future MAJOR version where behavior or response semantics would otherwise change.
+* Where possible, APIs **MAY** introduce additive changes (for example new enum values or optional `…Reason` / `…Message` fields) in a backward-compatible way.
+
+### 3.2. Error Responses
 
 To ensure interoperability, it is crucial to implement error management that strictly adheres to the error codes defined in the HTTP protocol.
 
@@ -232,7 +313,7 @@ An error representation MUST NOT differ from the representation of any resource.
 - A detailed description in `message` - in English language in API specification, it can be changed to other languages in implementation if needed.
 
 All these aforementioned fields are mandatory in Error Responses.
-`status` and `code` fields have normative nature, so as their use has to be standardized (see [3.1. Standardized use of CAMARA error responses](#31-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
+`status` and `code` fields have normative nature, so as their use has to be standardized (see [3.2.1. Standardized use of CAMARA error responses](#321-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
 
 The values of the `status` and `code` fields are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/CAMARA_common.yaml).
 
@@ -257,7 +338,7 @@ The essential requirements to consider would be:
 
 NOTE: When standardized AuthN/AuthZ flows are used, please refer to [6.2. Security definition](#62-security-definition), the format and content of Error Response for those procedures SHALL follow the guidelines of those standards.
 
-### 3.1. Standardized Use of CAMARA Error Responses
+#### 3.2.1. Standardized Use of CAMARA Error Responses
 
 This section aims to provide a common use of the fields `status` and `code` across CAMARA APIs.
 
@@ -329,14 +410,14 @@ In the following, we elaborate on the existing client errors. In particular, we 
   - Error status 403
 
 NOTE:
-The documentation of non-mandatory error statuses defined in section 3.1 depends on the specific considerations and design of the given API.
+The documentation of non-mandatory error statuses defined in section 3.2.1 depends on the specific considerations and design of the given API.
  - Error statuses 400, 404, 409, 422, 429: These error statuses SHOULD be documented based on the API design and the functionality involved. Subprojects evaluate the relevance and necessity of including these statuses in API specifications.
  - Error statuses 405, 406, 410, 412, 415, and 5xx: These error statuses are not documented by default in the API specification. However, they SHOULD be included if there is a relevant use case that justifies their documentation.
    - Special Consideration for error 501 NOT IMPLEMENTED to indicate optional endpoint:
      - The use of optional endpoints is discouraged in order to have aligned implementations
      - Only for exceptions where an optional endpoint can not be avoided and defining it in separate, atomic API is not possible - error status 501 SHOULD be documented as a valid response
 
-### 3.2. Error Responses - Device Object/Phone Number
+#### 3.2.2. Error Responses - Device Object/Phone Number
 
 This section provides guidelines for error responses related to the `Device` object or `phoneNumber` field.
 
@@ -360,7 +441,7 @@ A `DeviceResponse` object is defined for this purpose, but is not mandatory to b
 
 An error MUST NOT be returned when the supplied device identifiers do not match to prevent the API consumer correlating identifiers for a given end user that they may not otherwise know. It is the responsibility of the API consumer to ensure that the identifiers they are using are associated with the same device. If they are unable to do that, only a single identifier SHOULD be provided to the API provider.
 
-#### 3.2.1. Templates
+##### 3.2.2.1. Templates
 
 ##### Response template
 
@@ -409,7 +490,7 @@ components:
         message: {{Message example}}
 ```
 
-### 3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API
+#### 3.2.3. Error Responses - Mandatory Template for `info.description` in CAMARA API
 
 The following template MUST be used as part of the API documentation in the `info.description` property of the CAMARA API specification to provide a common reference for API Consumers, API Developers and API Providers about not documented error responses in case they are supported by a given API implementation.
 
@@ -645,7 +726,7 @@ It is NOT RECOMMENDED to link images outside of the Github API repository, since
 ![API Diagram](https://raw.githubusercontent.com/camaraproject/{apiRepository}/main/documentation/API_documentation/resources/diagram.png)
 ```
 
-Some sections are REQUIRED, as defined in [Section 3.3](#33-error-responses---mandatory-template-for-infodescription-in-camara-api), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api)
+Some sections are REQUIRED, as defined in [Section 3.2.3](#323-error-responses---mandatory-template-for-infodescription-in-camara-api), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api)
  or [Appendix A](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
 
 #### 5.3.3. Version
