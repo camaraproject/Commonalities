@@ -832,6 +832,88 @@ responses:
   "5xx":
     $ref: "#/components/responses/<schema-name>"
 ```
+#### 5.7.6.1 Success Responses with Meta Information
+CAMARA APIs MAY include an optional `meta` field in success responses to express *successful but indeterminate* outcomes without breaking clients.
+
+##### Purpose
+- Provide contextual or diagnostic information.
+- Support cases where the request is valid but the domain result cannot be determined.
+- Enable backward-compatible extensibility as APIs evolve.
+
+##### Rules
+- **When `meta` is used alone, it MUST be required.**
+- **When standard required fields are present, `meta` MAY also appear** to convey supplementary meaning.
+- `meta` MAY be defined as either a **string** or an **object**, depending on API design.
+- This section **recommends** (but does not mandate) inclusion of this conditional optional field.
+
+##### Schema Pattern
+
+```yaml
+components:
+  schemas:
+    ExampleSuccessResponseWithMeta:
+
+      type: object
+      # Conditional requirement:
+      #   - Either `meta` MUST be present alone, OR
+      #   - The normal required fields must be present
+      anyOf:
+        - required: ["meta"]
+        - required: ["fieldA", "fieldB"]
+      properties:
+        fieldA:
+          type: string
+        fieldB:
+          type: string
+        meta:
+          description: Optional contextual metadata.
+          oneOf:
+            - type: string
+            - type: object
+          nullable: true
+
+```
+##### Example
+
+ `meta` field added to success response schema:
+```yaml
+components:
+  schemas:
+    ConnectedNetworkTypeResponse:
+      type: object
+      oneOf:
+        - required: ["meta"]
+        - required: ["lastStatusTime", "connectedNetworkType"]
+      properties:
+        device:
+          $ref: "#/components/schemas/DeviceResponse"
+        lastStatusTime:
+          $ref: "#/components/schemas/LastStatusTime"
+        connectedNetworkType:
+          $ref: "#/components/schemas/ConnectedNetworkType"
+        meta:
+          description: >
+            Optional metadata providing additional or indeterminate outcome
+            information. MAY be a string or object, as defined by the API.
+          type: string
+          nullable: true
+
+
+```
+Response with meta information only:
+```json
+{
+  "meta": "Request was valid. Unable to provide details."
+}
+```
+Response with optional meta information included:
+```json
+{
+  "lastStatusTime": "2025-02-20T10:41:38Z",
+  "connectedNetworkType": "5G",
+  "meta":  "Mobile Network"
+}
+```
 
 
 ### 5.8. Components
@@ -1282,5 +1364,7 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
+
 
 
