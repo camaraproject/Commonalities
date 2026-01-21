@@ -851,7 +851,8 @@ CAMARA APIs MAY include an optional `meta` field in success responses to express
 ```yaml
 components:
   schemas:
-    ExampleResponse:
+    ExampleSuccessResponseWithMeta:
+
       type: object
       # Conditional requirement:
       #   - Either `meta` MUST be present alone, OR
