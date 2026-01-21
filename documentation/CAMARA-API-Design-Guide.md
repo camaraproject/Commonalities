@@ -872,7 +872,9 @@ components:
           nullable: true
 
 ```
-##### Example - ConnectedNetworkType Service API (v0.2.0 - r1.2)
+##### Example
+
+ `meta` field added to success response schema:
 ```yaml
 components:
   schemas:
