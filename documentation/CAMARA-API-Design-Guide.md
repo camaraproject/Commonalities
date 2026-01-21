@@ -280,20 +280,20 @@ components:
         outcomeReason:
           type: string
           description: Optional machine-readable reason code for the outcome.
-          example: TENURE.NOT_KNOWN_FOR_PORTED_IN_NUMBER
+          example: REGIONAL_PRIVACY_RESTRICTION
         outcomeMessage:
           type: string
           description: Optional human-readable explanation of the outcome.
-          example: "The number has been ported in from another operator; tenure cannot be determined."
+          example: "The requested information could not be disclosed for privacy regulation reasons."
 ```
 
 An example JSON response using HTTP `200`:
 
 ```json
 {
-  "outcome": "UNKNOWN",
-  "outcomeReason": "TENURE.NOT_KNOWN_FOR_PORTED_IN_NUMBER",
-  "outcomeMessage": "The number has been ported in from another operator; tenure cannot be determined."
+  "outcome": "NOT_APPLICABLE",
+  "outcomeReason": "REGIONAL_PRIVACY_RESTRICTION",
+  "outcomeMessage": "The requested information could not be disclosed for privacy regulation reasons."
 }
 ```
 
