@@ -276,14 +276,9 @@ In the following, we elaborate on the existing client and server errors. In part
 |       403        |   `PERMISSION_DENIED`   | Client does not have sufficient permissions to perform this action. | OAuth2 token access does not have the required scope or when the user fails operational security                                |
 |       403        | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token.                    | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token. This error SHOULD be used only when the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.                             |
 |       409        |        `ABORTED`        | Resource is being modified by another operation. Please wait, and retry if appropriate.      | The resource is undergoing modification by another process                                             |
-
 |       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                             |
-
 |       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource (**This Error Code is DEPRECATED**)                                                        |
-
-
 |       409        |       `INCOMPATIBLE_STATE`     | Resource must be in AVAILABLE state to extend. Current state is UNAVAILABLE. | Resource (target or referenced) is in incompatible state for the requested operation. Can be applicable for both:<br><li>Target resource state conflicts (e.g., session not in AVAILABLE state for extension)</li><li>Referenced resource state conflicts (e.g., device already has active session)</li>The message should clarify which resource and required state. |
-
 |       409        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific conflict situation that is relevant in the context of the API                                                          |
 
 <font size="3"><span style="color: blue"> Service Exceptions </span></font>
@@ -1286,5 +1281,6 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
 
 
