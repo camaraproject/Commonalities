@@ -235,14 +235,14 @@ CAMARA APIs may need to return negative, partial, or unknown business outcomes e
 
 The following principles apply to modeling business-level outcomes in successful responses:
 
-* HTTP `2xx` responses indicate that the request was valid and processed; they **MAY** still represent negative, partial, or unknown business outcomes.
-* Business-level outcomes **SHOULD** be modeled explicitly in the response body rather than inferred from missing data or encoded as errors.
-* APIs that can yield multiple business outcomes **SHOULD** expose a mandatory, typed primary outcome field (for example `status`, `verificationResult`, `availability`, or `responseStatus`) defined as an enum or closed set of values.
-* APIs **MAY** add optional refinement fields derived from the primary outcome field name, such as:
+* HTTP `2xx` responses indicate that the request was valid and processed; they MAY still represent negative, partial, or unknown business outcomes.
+* Business-level outcomes SHOULD be modeled explicitly in the response body rather than inferred from missing data or encoded as errors.
+* APIs that can yield multiple business outcomes SHOULD expose a mandatory, typed primary outcome field (for example `status`, `verificationResult`, `availability`, or `responseStatus`) defined as an enum or closed set of values.
+* APIs MAY add optional refinement fields derived from the primary outcome field name, such as:
   * a machine-readable `<baseName>Reason` (typed enum), and
   * a human-readable `<baseName>Message` (free-text string).
-* HTTP `4xx` status codes **MUST** be reserved for true request errors (invalid input, unsupported identifier, authentication/authorization failure, or contract/configuration mismatches).
-* Inability to determine or provide data for a valid request (for example, data not available, device not reachable, information unknown) **SHOULD** be expressed via the explicit outcome field in a `2xx` response, not as a `4xx` error.
+* HTTP `4xx` status codes MUST be reserved for true request errors (invalid input, unsupported identifier, authentication/authorization failure, or contract/configuration mismatches).
+* Inability to determine or provide data for a valid request (for example, data not available, device not reachable, information unknown) SHOULD be expressed via the explicit outcome field in a `2xx` response, not as a `4xx` error.
 
 #### 3.1.3. Recommended Outcome Pattern
 
@@ -255,7 +255,7 @@ The recommended structural pattern for business-level outcomes consists of:
 Note that:
 * The concrete field names are API- and domain-specific.
 * The example names (`outcome`, `outcomeReason`, `outcomeMessage`) used in this section are illustrative only.
-* The pattern **SHOULD** be applied consistently within a given API.
+* The pattern SHOULD be applied consistently within a given API.
 
 #### 3.1.4. Example
 
@@ -299,9 +299,9 @@ An example JSON response using HTTP `200`:
 
 #### 3.1.5. Versioning and Migration Guidance
 
-* New APIs and new MAJOR versions **SHOULD** follow this guidance.
-* Existing stable APIs **MAY** adopt it in a future MAJOR version where behavior or response semantics would otherwise change.
-* Where possible, APIs **MAY** introduce additive changes (for example new enum values or optional `…Reason` / `…Message` fields) in a backward-compatible way.
+* New APIs and new MAJOR versions SHOULD follow this guidance.
+* Existing stable APIs MAY adopt it in a future MAJOR version where behavior or response semantics would otherwise change.
+* Where possible, APIs MAY introduce additive changes (for example new enum values or optional `…Reason` / `…Message` fields) in a backward-compatible way.
 
 ### 3.2. Error Responses
 
