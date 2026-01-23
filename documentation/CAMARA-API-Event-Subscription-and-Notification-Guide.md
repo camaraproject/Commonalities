@@ -65,32 +65,31 @@ If this capability is present in CAMARA API, the following attributes MUST be us
 | sink           | string | https callback address where the notification must be POST-ed, `format: uri` SHOULD be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).  The [security considerations](#43-notifications-security-considerations) SHOULD be followed.                | mandatory   |
 | sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. It is RECOMMENDED for subscription consumer to provide credential to protect notification endpoint. | optional    |
 
-Several types of `sinkCredential` could be available in the future, but for now only access token credential is managed.
+Several types of `sinkCredential` could be available in the future, but for now only access token and private key JWT credentials are managed.
 
-``sinkCredential`` attributes table (MUST be access token for now):
+``sinkCredential`` attributes table:
 
-| attribute name       | type             | attribute description                                                          | cardinality |
-|----------------------|------------------|--------------------------------------------------------------------------------|-------------|
-| credentialtype       | string           | Type of the credential - MUST be set to `ACCESSTOKEN` for now                  | mandatory   |
-| accessToken          | string           | Access Token granting access to the POST operation to create notification      | mandatory   |
-| accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory   |
-| accessTokenType      | string           | Type of access token - MUST be set to `Bearer` for now                         | mandatory   |
+| attribute name       | type             | attribute description                                                             | cardinality |
+|----------------------|------------------|-----------------------------------------------------------------------------------|-------------|
+| credentialtype       | string           | Type of the credential - CAN be set to `ACCESSTOKEN` or  `PRIVATE_KEY_JWT`        | mandatory   |
+| accessToken          | string           | Access Token granting access to send events related to the implicit subscription  | optional    |
 
 #### 2.1.1. Instance-based (Implicit) Subscription Example
 
-Illustration with bearer access token (Resource instance representation):
+Illustration with access token (Resource instance representation):
 
 ```json
 {
   "sink": "https://callback...",
   "sinkCredential": {
     "credentialType": "ACCESSTOKEN",
-    "accessToken" : "eyJ2ZXIiOiIxLjAiLCJ0eXAiOiJKV1QiL..",
-    "accessTokenExpireUtc" : "2024-12-06T14:37:56.147Z",
-    "accessTokenType" : "bearer"
+    "accessToken" : "eyJ2ZXIiOiIxLjAiLCJ0eXAiOiJKV1QiL.."
     }
 }
 ```
+Note: To use `credentialType` with value `PRIVATE_KEY_JWT`, the client and server shall share
+authentication information needed to request an access token. This includes a client ID, a token endpoint
+and a JWK set. 
 
 ### 2.2. Resource-based (Explicit) Subscription
 
@@ -160,21 +159,12 @@ The following table provides `/subscriptions` attributes
 | expiresAt      | string - date-time | Date when the event subscription will expire. This attribute MUST NOT be present in the `POST` request as it is provided (optionally) by API server. This attribute MUST be provided by the server if subscriptionExpireTime is provided in the request and server is not able to handle it.                                                                                                                                                                                                                                                                                                                                                                                 | optional                     |
 | status         | string             | Current status of the subscription - Management of Subscription state engine is not mandatory for now. Note: not all statuses MAY be considered to be implemented. See below status table.                                                                                                                                                                                                                                                                                                                                               | optional                     |
 
-``sinkCredential`` attributes table (MUST be only access token for now):
+``sinkCredential`` attributes table:
 
 | attribute name       | type               | attribute description                                                          | cardinality |
 |----------------------|--------------------|--------------------------------------------------------------------------------|-------------|
-| credentialtype       | string             | Type of the credential - MUST be set to `ACCESSTOKEN` for now                  | mandatory   |
-| accessToken          | string             | Access Token granting access to the POST operation to create notification      | mandatory   |
-| accessTokenExpireUtc | string - date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory   |
-| accessTokenType      | string             | Type of access token - MUST be set to `bearer` for now                         | mandatory   |
-
-Note about expired accessToken:
-when a notification is sent to the sink endpoint with sinkCredential it could occur a response back from the listener with an error about expired token.
-In this case, the subscription will shift to EXPIRED status.
-(as we do not have as of now capability to allow consumer to modify `subscription`).
-Remark: This action will trigger a subscription-ended event with terminationReason set to "ACCESS_TOKEN_EXPIRED"
-(probably this notification will also get the EXPIRED status answer).
+| credentialtype       | string             | Type of the credential - MUST be set to `ACCESSTOKEN` or `PRIVATE_KEY_JWT`     | mandatory   |
+| accessToken          | string             | Access Token granting access send events to for this subscription              | optional    |
 
 `config` attributes table:
 
@@ -198,7 +188,7 @@ Managing subscription is a draft feature, and it is not mandatory for now. An AP
 | ACTIVATION_REQUESTED | Subscription creation (POST) is triggered but subscription creation process is not finished yet.                                                                                                                                                                      |
 | ACTIVE               | Subscription creation process is completed. Subscription is fully operative.                                                                                                                                                                                          |
 | INACTIVE             | Subscription is temporarily inactive, but its workflow logic is not deleted. INACTIVE could be used when an user initially provided consent for the event monitor and then later denied this consent. For now we did not provide capability to reactive subscription. |
-| EXPIRED              | Subscription is ended (no longer active). This status applies when subscription is ended due to max event reached, expire time reached or access token indicated for notification security (i.e. sinkCredential) expiration time reached.                             |
+| EXPIRED              | Subscription is ended (no longer active). This status applies when subscription is ended due to max event reached or expire time reached.                             |
 | DELETED              | Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its meta-information is kept).                                                                     |
 
 #### 2.2.4. Error Definition for Resource-based (Explicit) Subscription
@@ -466,17 +456,11 @@ The following table lists values for `terminationReason` attribute:
 | NETWORK_TERMINATED | API server stopped sending notification |
 | SUBSCRIPTION_EXPIRED | Subscription expire time (optionally set by the requester) has been reached |
 | MAX_EVENTS_REACHED | Maximum number of events (optionally set by the requester) has been reached |
-| ACCESS_TOKEN_EXPIRED | Access Token sinkCredential (optionally set by the requester) expiration time has been reached |
 | SUBSCRIPTION_DELETED | Subscription was deleted by the requester |
 
 Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory).
 
 Note2: The "subscription-ended" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, and later, received 2 notifications, then a third notification will be sent for "subscription-ended").
-
-Note3: In the case of ACCESS_TOKEN_EXPIRED termination reason sending the notification once the token expired is useless. To avoid this case, following rules are defined :
-
-- For explicit subscription, implementation SHOULD send ACCESS_TOKEN_EXPIRED termination event just before the token expiration date (the 'just before' value is at the hands of each implementation). The following sentence MUST be added for the `accessTokenExpiresUtc` attribute documentation: An absolute (UTC) timestamp at which the token shall be considered expired. In the case of an ACCESS_TOKEN_EXPIRED termination reason, implementation SHOULD notify the client before the expiration date."
-- For implicit subscription following sentence MUST be added for the `accessTokenExpiresUtc` attribute documentation: "An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration SHOULD occur after the expiration of the requested _resource_, allowing the client to be notified of any changes during the _resource_'s existence. If the token expires while the _resource_ is still active, the client will stop receiving notifications.". The _resource_ word MUST be replaced by the entity managed by the subscription (session, payment, etc.).
 
 ### 3.5. Error Definition for Event Notification
 
@@ -612,7 +596,7 @@ This Security Considerations need to be reconsidered if other protocols than `HT
 Camara Notifications MUST use HTTPS. The value of `sink` MUST be an URL with url-scheme `https`.
 The implementation of the Notification Sender MUST follow [10.2 Security Implementation](#102-security-implementation).
 
-This document restricts the `credendentialType` to `ACCESSTOKEN`. Neither `PLAIN`nor `REFRESHTOKEN` are allowed.
+This document restricts the `credentialType` to `ACCESSTOKEN` or `PRIVATE_KEY_JWT`. 
 This Security Considerations need to be reconsidered if other `credentialsType` values are allowed.
 
 CloudEvent Security and Privacy considerations RECOMMEND protecting event **data** through signature and encryption. The value of the `data` field of the notifications SHOULD be signed and encrypted.
