@@ -1,6 +1,7 @@
 # Changelog Commonalities
 
 ## Table of Contents
+- **[r4.1](#r41)**
 - **[r3.4](#r34)**
 - **[r3.3](#r33)**
 - **[r3.2](#r32)**
@@ -15,6 +16,33 @@
 - **[v0.3.0](#v030)**
 - **[v0.2.0](#v020)**
 - **[v0.1.0 - Initial version](#v010---initial-version)**
+
+# r4.1
+## Release Notes
+
+This release contains documents and artifacts of Commonalities version 0.7.0-rc.1:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r4.1/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r4.1/artifacts)** folder.
+**The relevant details of authentication and consent collection are covered by [release 4.1](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
+### Added
+* New 409 error code called INCOMPATIBLE_STATE added by @tlohmar in https://github.com/camaraproject/Commonalities/pull/550
+
+### Changed
+* CAMARA_Common.yaml aligment with multiple device identifiers logic by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/570
+* Linting rules update 01 2026 by @rartych in https://github.com/camaraproject/Commonalities/pull/564
+* Status 409 stadardized error codes modified by @tlohmar in https://github.com/camaraproject/Commonalities/pull/569
+
+### Fixed
+* `x-camara-commonalities` format fixed to string by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/537
+* Clarification meaning of {{API_NAME}}.{{SPECIFIC_CODE}} by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/541
+* 'Addr' schema objects updated to 'Address' by @Kevsy in https://github.com/camaraproject/Commonalities/pull/563
+
+### Removed
+* Status 409 error code CONFLICT deprecated by @tlohmar in https://github.com/camaraproject/Commonalities/pull/569
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r3.4...r4.1
+
 
 # r3.4
 ## Release Notes
