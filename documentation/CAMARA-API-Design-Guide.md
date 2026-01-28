@@ -229,37 +229,52 @@ This chapter covers how CAMARA APIs model responses, including both successful b
 
 #### 3.1.1. Scope and Problem Statement
 
-CAMARA APIs may need to return negative, partial, or unknown business outcomes even when a request is syntactically valid, authenticated, authorized, and processed successfully (HTTP 2xx). Without explicit guidance, CAMARA APIs have historically modeled these cases inconsistently, for example using boolean-only results, implicit meaning via empty payloads, or HTTP 4xx codes for data unavailability.
+CAMARA APIs already return negative, partial, or unknown business outcomes under HTTP 2xx and model them in different ways (explicit enums, booleans, nullability, presence/absence rules). This section describes legitimate patterns for such modeling and introduces optional refinements (`contextCode`, `contextMessage`) to improve consistency across APIs.
 
 #### 3.1.2. Core Principles
 
 The following principles apply to modeling business-level outcomes in successful responses:
 
-* HTTP `2xx` responses indicate that the request was valid and processed; they MAY still represent negative, partial, or unknown business outcomes.
-* Business-level outcomes SHOULD be modeled explicitly in the response body rather than inferred from missing data or encoded as errors.
-* APIs that can yield multiple business outcomes SHOULD expose a mandatory, typed primary outcome field (for example `status`, `verificationResult`, `availability`, or `responseStatus`) defined as an enum or closed set of values.
-* APIs MAY add optional refinement fields derived from the primary outcome field name, such as:
-  * a machine-readable `<baseName>Reason` (typed enum), and
-  * a human-readable `<baseName>Message` (free-text string).
-* HTTP `4xx` status codes MUST be reserved for true request errors (invalid input, unsupported identifier, authentication/authorization failure, or contract/configuration mismatches).
-* Inability to determine or provide data for a valid request (for example, data not available, device not reachable, information unknown) SHOULD be expressed via the explicit outcome field in a `2xx` response, not as a `4xx` error.
+* HTTP `2xx` status codes indicate that the request was valid and processed; they MAY still represent negative, partial, or unknown business outcomes.
+* APIs SHOULD explicitly define and document how business outcomes are represented in successful responses (for example via explicit outcome enums, documented nullability, or documented presence/absence rules), and MUST NOT rely on undocumented inference from missing data.
+* APIs MAY add optional context fields to provide additional information about the outcome:
+  * `contextCode` — a machine-readable code providing additional context
+  * `contextMessage` — a human-readable explanation providing additional context
+* These optional context fields are additive and MUST NOT be the only way to interpret the business outcome of a successful response.
+* Outcome semantics (success, failure, partial, unknown, not applicable) MUST remain visible via the API's domain-specific response semantics and MUST NOT be moved into `contextCode` or `contextMessage`.
+* HTTP `4xx` status codes SHOULD be reserved for true request errors (invalid input, unsupported identifier, authentication/authorization failure, or contract/configuration mismatches).
+* Well-designed modeling of business-level outcomes in `2xx` responses can reduce the need to define `4xx` responses for otherwise valid requests.
 
-#### 3.1.3. Recommended Outcome Pattern
+This guidance primarily applies to new APIs and new MAJOR versions; existing APIs may evolve towards it over time (see Section 3.1.5).
+
+#### 3.1.3. Recommended Modeling Pattern
 
 The recommended structural pattern for business-level outcomes consists of:
 
-* A **mandatory primary outcome field** representing the business result (for example `status`, `verificationResult`, or `outcome`).
-* An **optional machine-readable refinement field** named consistently with the primary outcome (for example `statusReason`, `verificationResultReason`, or `outcomeReason`).
-* An **optional human-readable message field** named consistently with the primary outcome (for example `statusMessage`, `verificationResultMessage`, or `outcomeMessage`).
+* A **domain-specific primary outcome field** representing the business result, where needed (for example `status`, `verificationResult`, `availability`). The field name and values are defined by the API based on its domain.
+* An **optional `contextCode` field** — a machine-readable code providing additional context about the outcome. Values SHOULD be constrained and documented by the API (OpenAPI enum is recommended). Values may include:
+  * CAMARA-wide codes (if defined in future Commonalities releases)
+  * API-specific codes following CAMARA conventions (`API_NAME.SPECIFIC_CODE` in SCREAMING_SNAKE_CASE)
+  * Provider-specific codes if agreed contractually. Provider-specific codes SHOULD be namespaced to avoid collisions.
+* An **optional `contextMessage` field** — a human-readable explanation providing additional context.
+
+**Client interpretation:** `contextCode` and `contextMessage` are supplementary. They MUST NOT be the only way to interpret the business outcome of a successful response. The API specification MUST define how the business outcome is determined from the response payload (for example via explicit outcome enums, documented nullability, or documented presence/absence rules).
 
 Note that:
-* The concrete field names are API- and domain-specific.
-* The example names (`outcome`, `outcomeReason`, `outcomeMessage`) used in this section are illustrative only.
-* The pattern SHOULD be applied consistently within a given API.
+* The primary outcome field name is API- and domain-specific.
+* Not all APIs need to introduce a new primary outcome field; existing fields may already express the outcome clearly.
+* The `contextCode` and `contextMessage` names are standardized across APIs that choose to adopt them.
+
+**Legitimate patterns for outcome modeling:**
+
+CAMARA APIs use the following patterns to express business-level outcomes. Both are valid; the choice depends on the API's domain and existing contract. The optional `contextCode`/`contextMessage` fields can be used with either pattern:
+
+* **Explicit outcome enum:** Introduce a domain-specific enum field (for example `tenureStatus: KNOWN | UNKNOWN | NOT_APPLICABLE`) and make the data field conditional or nullable, present only when the outcome is KNOWN.
+* **Nullability/presence rules:** Where compatible, make the data field nullable or optional and document that `null` (or absence) represents unknown/unavailable. Use `contextCode`/`contextMessage` to explain why (for example privacy restriction, data not available).
 
 #### 3.1.4. Example
 
-The following OpenAPI schema demonstrates the recommended pattern:
+The following OpenAPI schema demonstrates the explicit enum approach. The primary outcome field (`status` in this example) is domain-specific and illustrative. APIs using nullability/presence rules would omit this field and document the semantics of `null` or absent values instead:
 
 ```yaml
 components:
@@ -267,33 +282,33 @@ components:
     CheckResult:
       type: object
       required:
-        - outcome
+        - status
       properties:
-        outcome:
+        status:
           type: string
-          description: Business-level result of the operation.
+          description: Business-level result of the operation (domain-specific).
           enum:
             - SUCCESS
             - FAILURE
             - NOT_APPLICABLE
             - UNKNOWN
-        outcomeReason:
+        contextCode:
           type: string
-          description: Optional machine-readable reason code for the outcome.
-          example: REGIONAL_PRIVACY_RESTRICTION
-        outcomeMessage:
+          description: Optional machine-readable code providing additional context.
+          example: COMMON.REGIONAL_PRIVACY_RESTRICTION
+        contextMessage:
           type: string
-          description: Optional human-readable explanation of the outcome.
+          description: Optional human-readable explanation providing additional context.
           example: "The requested information could not be disclosed for privacy regulation reasons."
 ```
 
-An example JSON response using HTTP `200`:
+An example JSON response body for an HTTP `200` response:
 
 ```json
 {
-  "outcome": "NOT_APPLICABLE",
-  "outcomeReason": "REGIONAL_PRIVACY_RESTRICTION",
-  "outcomeMessage": "The requested information could not be disclosed for privacy regulation reasons."
+  "status": "NOT_APPLICABLE",
+  "contextCode": "COMMON.REGIONAL_PRIVACY_RESTRICTION",
+  "contextMessage": "The requested information could not be disclosed for privacy regulation reasons."
 }
 ```
 
@@ -301,7 +316,7 @@ An example JSON response using HTTP `200`:
 
 * New APIs and new MAJOR versions SHOULD follow this guidance.
 * Existing stable APIs MAY adopt it in a future MAJOR version where behavior or response semantics would otherwise change.
-* Where possible, APIs MAY introduce additive changes (for example new enum values or optional `…Reason` / `…Message` fields) in a backward-compatible way.
+* Where possible, APIs MAY introduce `contextCode` and `contextMessage` as additive, backward-compatible changes.
 
 ### 3.2. Error Responses
 
