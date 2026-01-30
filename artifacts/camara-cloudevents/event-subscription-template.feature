@@ -188,6 +188,19 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     And the response property "$.code" is "INVALID_CREDENTIAL"
     And the response property "$.message" contains a user friendly text
 
+  @<xxx>_subscription_25_invalid_token
+  Scenario: Subscription creation with invalid token
+    Given a valid <xxx> subscription request body
+    And the request property "$.protocol" is set to "HTTP"
+    And the request property "$.sinkCredential.credentialType" is set to "ACCESSTOKEN"
+    And the request property "$.sinkCredential.accessTokenType" is not set to "bearer"
+    And the request property "$.sinkCredential.accessToken" is valued with a valid value
+    And the request property "$.sinkCredential.accessTokenExpiresUtc" is valued with a valid value
+    When the request "create<xxx>Subscription" is sent
+    Then the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_TOKEN"
+    And the response property "$.message" contains a user friendly text
+
   @<xxx>_subscription_26_invalid_url
   Scenario: Subscription creation with invalid url
     Given a valid <xxx> subscription request body

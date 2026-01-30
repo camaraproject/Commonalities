@@ -356,12 +356,12 @@ components:
         propertyName: credentialType
         mapping:
           ACCESSTOKEN: "#/components/schemas/AccessTokenCredential"
-          REFRESHTOKEN: "#/components/schemas/PrivateKeyJWTCredential"
+          PRIVATE_KEY_JWT: "#/components/schemas/PrivateKeyJWTCredential"
       required:
         - credentialType
     AccessTokenCredential:
       type: object
-      description: An access token credential. This type of credential is meant to be used by clients that have limited capabilities to handle authorization requests. 
+      description: An access token credential. This type of credential is meant to be used by API Consumers that have limited capabilities to handle authorization requests. 
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
         - type: object
@@ -369,8 +369,24 @@ components:
             accessToken:
               description: REQUIRED. An access token is a token granting access to the target resource.
               type: string
+            accessTokenExpiresUtc:
+              type: string
+              format: date-time
+              description: |
+                REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired.
+                In the case of an ACCESS_TOKEN_EXPIRED termination reason, implementation should notify the client before the expiration date.
+                If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
+                It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+              example: "2023-07-03T12:27:08.312Z"
+            accessTokenType:
+              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
+              type: string
+              enum:
+                - bearer
           required:
             - accessToken
+            - accessTokenExpiresUtc
+            - accessTokenType
     PrivateKeyJWTCredential:
       type: object
       description: Use PRIVATE_KEY_JWT to get an access token. The authorization server information needed for this type of sink credential (token endpoint, client ID, JWKS URL) is shared upfront between the client and the CAMARA entity. This type of credential is to be used by clients that have an authorization server. 
@@ -652,11 +668,13 @@ components:
         - NETWORK_TERMINATED - API server stopped sending notification
         - SUBSCRIPTION_EXPIRED - Subscription expire time (optionally set by the requester) has been reached
         - MAX_EVENTS_REACHED - Maximum number of events (optionally set by the requester) has been reached
+        - ACCESS_TOKEN_EXPIRED - Access Token sinkCredential (optionally set by the requester) expiration time has been reached
         - SUBSCRIPTION_DELETED - Subscription was deleted by the requester
       enum:
         - MAX_EVENTS_REACHED
         - NETWORK_TERMINATED
         - SUBSCRIPTION_EXPIRED
+        - ACCESS_TOKEN_EXPIRED
         - SUBSCRIPTION_DELETED
 
     HTTPSubscriptionRequest:
