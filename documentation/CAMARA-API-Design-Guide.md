@@ -96,7 +96,7 @@ This repository is referenced below.
 This part captures a detailed description of all the data structures used in the API specification. For each of these data, the specification MUST contain:
 - Name of the data object, used to reference it in other sections
 - Data type (string, integer, object, etc.)
-- If the data type is string, `maxLength` property or `enum`` construct MUST be used to constrain values.
+- If the data type is string, `maxLength` property or `enum` construct MUST be used to constrain values.
 - If the data type is string it is RECOMMENDED to use the appropriate modifier property `format` and/or `pattern` whenever possible. The [OpenAPI Initiative Formats Registry](https://spec.openapis.org/registry/format/) contains the list of formats used in OpenAPI specifications.
   - If the format of a string is `date-time`, the following sentence MUST be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.`
   - If the format of a string is `duration`, the following sentence MUST be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#appendix-A) for duration`
@@ -1280,4 +1280,5 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
 
