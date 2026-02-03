@@ -638,29 +638,29 @@ The following diagram describe the authentication flows for API Consumers with d
 ```mermaid
 sequenceDiagram
   autonumber
-  box API Consumer<br>Application Backend<br>(no authorization server)
-    participant appbe as Client / Resource Server
+  box API Consumer 1<br>Application Backend<br>(no authorization server)
+    participant appbe as API Client / Notification Sink
   end
-  box API Consumer<br>(Application Backend/Aggregator)
-    participant appclient as Client 
-    participant appres as Resource Server 
+  box API Consumer 2<br>(Application Backend/Aggregator)
+    participant appclient as API Client 
+    participant appres as Notification Sink 
     participant appauth as Authorization Server
   end
   box API Provider / Operator
     participant cspres as Resource Server
     participant cspauth as Authorization Server
-    participant cspclient as Client
+    participant cspclient as Notification Server
   end
 
    
   opt Using ACCESSTOKEN sink credential type
     opt Subscription
-      appbe ->> cspres: POST /subscription<br>Body: {<br>sink: <API Consumer>/notification,<br>sinkCredential:{ credentialType: ACCESSTOKEN,<br>accessToken:<Access Token>,<br>accessTokenExpireUtc:<access token expire time>,<br>accessTokenType: bearer },<br>...}
+      appbe ->> cspres: POST /subscriptions<br>Body: {<br>sink: <API Consumer>/sink,<br>sinkCredential:{ credentialType: ACCESSTOKEN,<br>accessToken:<Access Token>,<br>accessTokenExpireUtc:<access token expire time>,<br>accessTokenType: bearer },<br>...}
       cspres -->> appbe: 201 Created
     end
     opt Notification
       cspclient ->> appbe: POST /notification<br>Authorization: bearer <Access Token><br>{ ... }
-      appbe -->> cspclient: 200 OK
+      appbe -->> cspclient: 204 No Content
     end
   end
 
@@ -685,7 +685,7 @@ sequenceDiagram
       cspclient ->> appres: POST /notification<br>Authorization: bearer <Access Token><br>Body: { ... }
       appres->>appauth: validate <Access Token>
       appauth-->appres: OK
-      appres -->> cspclient: 200 OK
+      appres -->> cspclient: 204 No Content
     end
   end
 ```
