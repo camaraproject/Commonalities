@@ -242,7 +242,6 @@ The following principles apply to modeling business-level outcomes in successful
   * `contextMessage` — a human-readable explanation providing additional context
 * These optional context fields are additive and MUST NOT be the only way to interpret the business outcome of a successful response.
 * Outcome semantics (success, failure, partial, unknown, not applicable) MUST remain visible via the API's domain-specific response semantics and MUST NOT be moved into `contextCode` or `contextMessage`.
-* HTTP `4xx` status codes SHOULD be reserved for true request errors (invalid input, unsupported identifier, authentication/authorization failure, or contract/configuration mismatches).
 * Well-designed modeling of business-level outcomes in `2xx` responses can reduce the need to define `4xx` responses for otherwise valid requests.
 
 This guidance primarily applies to new APIs and new MAJOR versions; existing APIs may evolve towards it over time (see Section 3.1.5).
