@@ -833,7 +833,7 @@ responses:
     $ref: "#/components/responses/<schema-name>"
 ```
 
-##### 5.7.6.2 Asynchronous responses
+##### 5.7.6.1 Asynchronous responses
 
 An asynchronous response is not truly an event. An event is something that may occur once or multiple times, and it is the occurrence of that event that carries the main information. In contrast, an asynchronous response represents meta-information delivered in the same format as a synchronous response and happens exactly once.
 
