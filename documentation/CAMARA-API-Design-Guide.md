@@ -267,14 +267,18 @@ Note that:
 
 **Legitimate patterns for outcome modeling:**
 
-CAMARA APIs use the following patterns to express business-level outcomes. Both are valid; the choice depends on the API's domain and existing contract. The optional `contextCode`/`contextMessage` fields can be used with either pattern:
+CAMARA APIs use the following patterns to express business-level outcomes. Both are valid; the choice depends on the API's domain and existing contract:
 
-* **Explicit outcome enum:** Introduce a domain-specific enum field (for example `tenureStatus: KNOWN | UNKNOWN | NOT_APPLICABLE`) and make the data field conditional or nullable, present only when the outcome is KNOWN.
-* **Nullability/presence rules:** Where compatible, make the data field nullable or optional and document that `null` (or absence) represents unknown/unavailable. Use `contextCode`/`contextMessage` to explain why (for example privacy restriction, data not available).
+* **Outcome enum:** Introduce a domain-specific enum field and make further data fields optional or nullable.
+* **Nullability/presence rules:** Where compatible, make the data field nullable or optional and document that `null` (or absence) represents unknown/unavailable.
+
+Both patterns MAY use `contextCode`/`contextMessage` to explain why (for example privacy restriction, device not available).
 
 #### 3.1.4. Example
 
-The following OpenAPI schema demonstrates the explicit enum approach. The primary outcome field (`status` in this example) is domain-specific and illustrative. APIs using nullability/presence rules would omit this field and document the semantics of `null` or absent values instead:
+The following examples illustrate both legitimate patterns described in Section 3.1.3. Both use the optional `contextCode`/`contextMessage` fields.
+
+**Outcome enum approach:** The primary outcome field (`result` in this example) is domain-specific and illustrative:
 
 ```yaml
 components:
@@ -282,23 +286,22 @@ components:
     CheckResult:
       type: object
       required:
-        - status
+        - result
       properties:
-        status:
+        result:
           type: string
-          description: Business-level result of the operation (domain-specific).
+          description: Domain-specific result of the operation (example).
           enum:
-            - SUCCESS
-            - FAILURE
-            - NOT_APPLICABLE
+            - POSITIVE_CHECK
+            - NEGATIVE_CHECK
             - UNKNOWN
         contextCode:
           type: string
-          description: Optional machine-readable code providing additional context.
+          description: Optional machine-readable code providing additional business context to the result.
           example: COMMON.REGIONAL_PRIVACY_RESTRICTION
         contextMessage:
           type: string
-          description: Optional human-readable explanation providing additional context.
+          description: Optional human-readable explanation providing additional business context to the result.
           example: "The requested information could not be disclosed for privacy regulation reasons."
 ```
 
@@ -306,9 +309,47 @@ An example JSON response body for an HTTP `200` response:
 
 ```json
 {
-  "status": "NOT_APPLICABLE",
+  "result": "UNKNOWN",
   "contextCode": "COMMON.REGIONAL_PRIVACY_RESTRICTION",
   "contextMessage": "The requested information could not be disclosed for privacy regulation reasons."
+}
+```
+
+**Nullability/presence rules approach:** The primary outcome field (`result` in this example) is nullable. When the outcome is unavailable, `result` is `null`:
+
+```yaml
+components:
+  schemas:
+    DataResult:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: object
+          nullable: true
+          description: The requested data object. Null when the data is unavailable.
+          properties:
+            value:
+              type: string
+              description: The data value (domain-specific).
+        contextCode:
+          type: string
+          description: Optional machine-readable code providing additional business context to the result.
+          example: COMMON.DEVICE_NOT_AVAILABLE
+        contextMessage:
+          type: string
+          description: Optional human-readable explanation providing additional business context to the result.
+          example: "The requested device is currently not available in the network."
+```
+
+An example JSON response body for an HTTP `200` response when the data is unavailable:
+
+```json
+{
+  "result": null,
+  "contextCode": "COMMON.DEVICE_NOT_AVAILABLE",
+  "contextMessage": "The requested device is currently not available in the network."
 }
 ```
 
