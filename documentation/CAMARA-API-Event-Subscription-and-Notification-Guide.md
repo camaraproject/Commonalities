@@ -169,7 +169,7 @@ The following table provides `/subscriptions` attributes
 | attribute name       | type               | attribute description                                                          | cardinality |
 |----------------------|--------------------|--------------------------------------------------------------------------------|-------------|
 | credentialtype       | string             | Type of the credential - MUST be set to `ACCESSTOKEN` or `PRIVATE_KEY_JWT`     | mandatory   |
-| accessToken          | string             | Access Token granting access send events to for this subscription              | optional    |
+| accessToken          | string             | Access Token granting access to send events related to the explicit subscription              | optional    |
 | accessTokenExpireUtc | string - date-time | An absolute UTC instant at which the access token shall be considered expired. | optional    |
 | accessTokenType      | string             | Type of access token - MUST be set to `bearer` for now                         | optional    |
 
@@ -633,7 +633,7 @@ API Consumers SHOULD validate the schema of the notification event data that is 
 
 ## Appendix A: Notification authentication flows
 
-The following diagram describe the authentication flows for API Consumers with different authentication capabilities. Depending on those capabilities the sink credential type used will be `ACCESSTOKEN` or `PRIVATE_KEY_JWT`
+The following diagram describes the authentication flows for API Consumers with different authentication capabilities. Depending on those capabilities the sink credential type used will be `ACCESSTOKEN` or `PRIVATE_KEY_JWT`
 
 ```mermaid
 sequenceDiagram
@@ -655,11 +655,11 @@ sequenceDiagram
    
   opt Using ACCESSTOKEN sink credential type
     opt Subscription
-      appbe ->> cspres: POST /subscriptions<br>Body: {<br>sink: <API Consumer>/sink,<br>sinkCredential:{ credentialType: ACCESSTOKEN,<br>accessToken:<Access Token>,<br>accessTokenExpireUtc:<access token expire time>,<br>accessTokenType: bearer },<br>...}
+      appbe ->> cspres: POST /subscriptions<br>Body: {<br>sink: <API Consumer 1>/sink,<br>sinkCredential:{ credentialType: ACCESSTOKEN,<br>accessToken:<Access Token>,<br>accessTokenExpireUtc:<access token expire time>,<br>accessTokenType: bearer },<br>...}
       cspres -->> appbe: 201 Created
     end
     opt Notification
-      cspclient ->> appbe: POST /notification<br>Authorization: bearer <Access Token><br>{ ... }
+      cspclient ->> appbe: POST /notification<br>Authorization: Bearer <Access Token><br>{ ... }
       appbe -->> cspclient: 204 No Content
     end
   end
@@ -667,7 +667,7 @@ sequenceDiagram
   opt Using PRIVATE_KEY_JWT sink credential type
     note over appclient,cspclient: Onboarding: <br> API Consumer shares <Token Endpoint> and <Client ID><br>API Provider shares <JWKS URI>
     opt Subscription
-      appclient ->> cspres: POST /subscription<br>Body: {<br>sink: <API Consumer>/notification,<br>sinkCredential:{ credentialType: PRIVATE_KEY_JWT },<br>...}
+      appclient ->> cspres: POST /subscription<br>Body: {<br>sink: <API Consumer 2>/notification,<br>sinkCredential:{ credentialType: PRIVATE_KEY_JWT },<br>...}
       cspres -->> appclient: 201 Created
       opt No preshared information
       cspres -->> appclient: Invalid sink credential type or missing pre-shared information 
@@ -675,16 +675,16 @@ sequenceDiagram
     end
     opt Authentication
       cspclient->>appauth: Get Access Token<br>from API Consumer <Token Endpoint><br>with <signed JWT credentials>
-      appauth->>cspauth: Fetch <Public Key Set> form <JWKS URI>
+      appauth->>cspauth: Fetch <Public Key Set> from <JWKS URI>
       cspauth-->>appauth: Return <Public Key Set>
       note over appauth: Validate <signed JWT credentials>
-      appauth-->cspclient: Return <Access Token>
+      appauth-->>cspclient: Return <Access Token>
     end
 
     opt Notification
-      cspclient ->> appres: POST /notification<br>Authorization: bearer <Access Token><br>Body: { ... }
+      cspclient ->> appres: POST /notification<br>Authorization: Bearer <Access Token><br>Body: { ... }
       appres->>appauth: validate <Access Token>
-      appauth-->appres: OK
+      appauth-->>appres: OK
       appres -->> cspclient: 204 No Content
     end
   end
