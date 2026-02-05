@@ -1126,6 +1126,7 @@ components:
                       - UNNECESSARY_IDENTIFIER
                       - MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED
                       - MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED
+                      - PRIVATE_KEY_JWT_NOT_CONFIGURED
           examples:
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
@@ -1163,6 +1164,12 @@ components:
                 status: 422
                 code: MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED
                 message: The requested combination of event types is temporarily not supported.
+            GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
+              description: Privte key JWT sink credential type is used but no configuration was pre-shared
+              value:
+                status: 422
+                code: PRIVATE_KEY_JWT_NOT_CONFIGURED
+                message: No JWK Set configured for PRIVATE_KEY_JWT authentication.
     Generic429:
       description: Too Many Requests
       headers:

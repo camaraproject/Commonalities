@@ -92,9 +92,6 @@ Illustration with bearer access token (Resource instance representation):
     }
 }
 ```
-Note: To use `credentialType` with value `PRIVATE_KEY_JWT`, the API Consumer and API Provider shall share
-authentication information needed to request an access token. This includes a client ID, a token endpoint
-and a JWK set. 
 
 ### 2.2. Resource-based (Explicit) Subscription
 
@@ -172,10 +169,6 @@ The following table provides `/subscriptions` attributes
 | accessToken          | string             | Access Token granting access to send events related to the explicit subscription              | optional    |
 | accessTokenExpireUtc | string - date-time | An absolute UTC instant at which the access token shall be considered expired. | optional    |
 | accessTokenType      | string             | Type of access token - MUST be set to `bearer` for now                         | optional    |
-
-Note: To use `credentialType` with value `PRIVATE_KEY_JWT`, the API Consumer and API Provider shall share
-authentication information needed to request an access token. This includes a client ID, a token endpoint
-and a JWK set. 
 
 Note about expired access token when credentialType is `ACCESSTOKEN`:
 when a notification is sent to the sink endpoint with `sinkCredential` and `credentialType` set to `ACCESSTOKEN` it could occur a response back from the listener with an error about expired token.
@@ -631,6 +624,16 @@ It is RECOMMENDED that the API consumer inspects all the fields of the notificat
 
 API Consumers SHOULD validate the schema of the notification event data that is defined by the API subproject. It is RECOMMENDED that additional fields are ignored. Reliance on additional fields is an interoperability issue. Additional fields can lead to security issues.
 
+#### 4.3.1 Pre-requisites for using credential type `PRIVATE_KEY_JWT`
+
+To use `credentialType` with value `PRIVATE_KEY_JWT`, the API Consumer and API Provider shall share
+authentication information needed to request an access token. This includes a client ID, a token endpoint
+and a JWK set. 
+
+The client ID uniquely identifies the application ([RFC 6749, Section 2.2](https://www.rfc-editor.org/rfc/rfc6749.html#section-2.2)).
+
+The JWK Set ((JSON Web Key Set)) contains the cryptographic keys used for authentication ([RFC 7517](https://www.rfc-editor.org/rfc/rfc7517.html)) 
+
 ## Appendix A: Notification authentication flows
 
 The following diagram describes the authentication flows for API Consumers with different authentication capabilities. Depending on those capabilities the sink credential type used will be `ACCESSTOKEN` or `PRIVATE_KEY_JWT`
@@ -659,7 +662,7 @@ sequenceDiagram
       cspres -->> appbe: 201 Created
     end
     opt Notification
-      cspclient ->> appbe: POST /notification<br>Authorization: Bearer <Access Token><br>{ ... }
+      cspclient ->> appbe: POST /sink<br>Authorization: Bearer <Access Token><br>{ ... }
       appbe -->> cspclient: 204 No Content
     end
   end
@@ -667,7 +670,7 @@ sequenceDiagram
   opt Using PRIVATE_KEY_JWT sink credential type
     note over appclient,cspclient: Onboarding: <br> API Consumer shares <Token Endpoint> and <Client ID><br>API Provider shares <JWKS URI>
     opt Subscription
-      appclient ->> cspres: POST /subscription<br>Body: {<br>sink: <API Consumer 2>/notification,<br>sinkCredential:{ credentialType: PRIVATE_KEY_JWT },<br>...}
+      appclient ->> cspres: POST /subscriptions<br>Body: {<br>sink: <API Consumer 2>/sink,<br>sinkCredential:{ credentialType: PRIVATE_KEY_JWT },<br>...}
       cspres -->> appclient: 201 Created
       opt No preshared information
       cspres -->> appclient: Invalid sink credential type or missing pre-shared information 
@@ -682,7 +685,7 @@ sequenceDiagram
     end
 
     opt Notification
-      cspclient ->> appres: POST /notification<br>Authorization: Bearer <Access Token><br>Body: { ... }
+      cspclient ->> appres: POST /sink<br>Authorization: Bearer <Access Token><br>Body: { ... }
       appres->>appauth: validate <Access Token>
       appauth-->>appres: OK
       appres -->> cspclient: 204 No Content
