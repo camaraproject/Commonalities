@@ -28,12 +28,14 @@ This release contains documents and artifacts of Commonalities version 0.7.0-rc.
 ### Added
 * New 409 error code called INCOMPATIBLE_STATE added by @tlohmar in https://github.com/camaraproject/Commonalities/pull/550
 * Added device identifier constraints for test desfinitions by @Kevsy in https://github.com/camaraproject/Commonalities/pull/576
+* Array description guideline by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/559
+* Clarifications for asynchronous responses by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/575
+* Guidelines and linting rules for OWASP API Security Top 10 by @rartych in https://github.com/camaraproject/Commonalities/pull/582
 
 ### Changed
 * CAMARA_Common.yaml aligment with multiple device identifiers logic by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/570
 * Linting rules update 01 2026 by @rartych in https://github.com/camaraproject/Commonalities/pull/564
 * Status 409 standardized error codes modified by @tlohmar in https://github.com/camaraproject/Commonalities/pull/569
-
 
 ### Fixed
 * `x-camara-commonalities` format fixed to string by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/537
