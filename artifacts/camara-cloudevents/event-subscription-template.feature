@@ -182,7 +182,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   Scenario: Subscription creation with invalid credential
     Given a valid <xxx> subscription request body
     And the request property "$.protocol" is set to "HTTP"
-    And the request property "$.sinkCredential.credentialType" is not set to "ACCESSTOKEN"
+    And the request property "$.sinkCredential.credentialType" is not set to "ACCESSTOKEN" and is not set to "PRIVATE_KEY_JWT"
     When the request "create<xxx>Subscription" is sent
     Then the response property "$.status" is 400
     And the response property "$.code" is "INVALID_CREDENTIAL"
