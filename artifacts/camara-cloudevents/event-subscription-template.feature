@@ -141,7 +141,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 ########################### Error response scenarios ############################################
 ########################### Subscription creation scenarios #####################################
 
-  @<xxx>_subscriptions_20_create_<xxx>_subscription_with_invalid_parameter
+  @<xxx>_subscriptions_20_creation_<xxx>_subscription_with_invalid_parameter
   Scenario:  Create <xxx> subscription with invalid parameter
     Given the request body is not compliant with the schema "#/components/schemas/SubscriptionRequest"
     When the request "create<xxx>Subscription" is sent
@@ -354,7 +354,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
 
 ########Specific Subscription error scenario if multi-event is not permitted ################
 
-  @<xxx>_subscriptions_60_create_with_unsupported_multiple_event_type
+  @<xxx>_subscriptions_60_creation_with_unsupported_multiple_event_type
   Scenario: Multi event subscription not supported
     Given the API provider only allows one event to be subscribed per subscription request
     And a valid subscription request body
@@ -363,4 +363,17 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
     Then the response code is 422
     And the response property "$.status" is 422
     And the response property "$.code" is "MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED"
+    And the response property "$.message" contains a user friendly text
+
+########Specific Subscription error scenario if Private JWT Key is not pre-configured ################
+
+  @<xxx>_subscriptions_61_creation_with_private_jwt_key_not_configured
+  Scenario: Private JWT Key not configured for subscription creation
+    Given the API provider requires the use of a Private JWT key mechanism for subscription creation authentication
+    And the Private JWT key mechanism is not pre-configured in the environment
+    And a valid subscription request body with the property "$.sinkCredential.credentialType" set to "PRIVATE_KEY_JWT"
+    When the request "create<xxx>Subscription" is sent
+    Then the response code is 422
+    And the response property "$.status" is 422
+    And the response property "$.code" is "PRIVATE_KEY_JWT_NOT_CONFIGURED"
     And the response property "$.message" contains a user friendly text
