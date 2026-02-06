@@ -832,6 +832,14 @@ responses:
     $ref: "#/components/responses/<5xx-schema-name>"
 ```
 
+##### 5.7.6.1 Asynchronous responses
+
+An asynchronous response is not truly an event. An event is something that may occur once or multiple times, and it is the occurrence of that event that carries the main information. In contrast, an asynchronous response represents meta-information delivered in the same format as a synchronous response and happens exactly once.
+
+This is the rationale for not using the [CAMARA CloudEvents-based model for event notification](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#3-event-notification) in such scenarios. Instead, it is recommended to use the same response model as in an analogous synchronous scenario. In this context, when an API request initiates an asynchronous process, the server SHOULD respond with the HTTP status code `202 Accepted`. This code indicates that the request has been accepted for processing, but the processing has not been completed yet. The actual response or final result will be delivered asynchronously to the client via the callback URL (sink).
+
+For this case, it is advisable to use the concepts of `sink` and `sinkCredential`, which represent the callback URL and its associated security configuration, respectively, within the API request design. This ensures alignment with CAMARA specifications. These concepts follow the same design rules as the [CAMARA Instance-based (Implicit) Subscription](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#21-instance-based-implicit-subscription) model.
+
 
 When a response schema or field is an array, a `description` property MUST be provided in the `items` object.
 
