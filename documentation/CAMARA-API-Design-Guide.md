@@ -825,13 +825,28 @@ responses:
     content:
       application/json:
         schema:
-          $ref: "#/components/schemas/<schema-name>"
+          $ref: "#/components/schemas/<success-reponse-schema-name>"
   "4xx":
-    $ref: "#/components/responses/<schema-name>"
+    $ref: "#/components/responses/<4xx-schema-name>"
   "5xx":
-    $ref: "#/components/responses/<schema-name>"
+    $ref: "#/components/responses/<5xx-schema-name>"
 ```
 
+
+When a response schema or field is an array, a `description` property MUST be provided in the `items` object.
+
+
+**Case A:** Response is an array
+
+```yaml
+components:
+  schemas:
+    <success-reponse-schema-name>:
+      type: array
+      items:
+        type: string
+        description: <description>
+```
 
 ### 5.8. Components
 
