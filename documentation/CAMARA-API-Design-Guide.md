@@ -95,24 +95,23 @@ This repository is referenced below.
 
 This part captures a detailed description of all the data structures used in the API specification. For each of these data, the specification MUST contain:
 - Name of the data object, used to reference it in other sections
-- Data type (String, Integer, Object, etc.)
+- Data type (string, integer, object, etc.)
+- If the data type is string, `maxLength` property or `enum` construct MUST be used to constrain values.
 - If the data type is string it is RECOMMENDED to use the appropriate modifier property `format` and/or `pattern` whenever possible. The [OpenAPI Initiative Formats Registry](https://spec.openapis.org/registry/format/) contains the list of formats used in OpenAPI specifications.
-
-
   - If the format of a string is `date-time`, the following sentence MUST be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.`
   - If the format of a string is `duration`, the following sentence MUST be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#appendix-A) for duration`
     - Note: to avoid known ambiguity issues with duration strings, consider using intervals, which are anchored to a specific start and end date or time. Use of a start date or time string field in combination with the duration string field could help to mitigate ambiguity issues.
 
-- If the data type is an object, list of required properties.
+- If the data type is object, list of required properties.
+- If the data type is array, `maxItems` property MUST be specified.
+- If the data type is integer, format (`int32` or `int64`) and range (`minimum` and `maximum`properties) MUST be specified.
 - List of properties within the object data, including:
    - Property name
    - Property description
-   - Property type (String, Integer, Object, etc.)
-   - Other properties by type:
-      - String ones: min and max length
-      - Integer ones: format (int32, int64), range, etc.
+   - Property type (string, integer, object, etc.)
+   - Any other properties required for given type, as indicated above.
 
-In this part, the error response structure MUST also be defined following the guidelines in [3. Error Responses](#3-error-responses).
+The error response structure MUST also be defined following the guidelines in [3. Error Responses](#3-error-responses).
 
 #### 2.2.1. Usage of Discriminator
 
@@ -1304,3 +1303,5 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
+
