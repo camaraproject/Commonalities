@@ -1183,7 +1183,7 @@ components:
                 code: MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED
                 message: The requested combination of event types is temporarily not supported.
             GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
-              description: Privte key JWT sink credential type is used but no configuration was pre-shared
+              description: Private key JWT sink credential type is used but no configuration was pre-shared
               value:
                 status: 422
                 code: PRIVATE_KEY_JWT_NOT_CONFIGURED
