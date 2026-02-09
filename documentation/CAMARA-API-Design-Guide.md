@@ -94,24 +94,24 @@ This repository is referenced below.
 
 This part captures a detailed description of all the data structures used in the API specification. For each of these data, the specification MUST contain:
 - Name of the data object, used to reference it in other sections
-- Data type (String, Integer, Object, etc.)
+- Data type (string, integer, object, etc.)
+- If the data type is string, `maxLength` property or `enum` construct MUST be used to constrain values.
 - If the data type is string it is RECOMMENDED to use the appropriate modifier property `format` and/or `pattern` whenever possible. The [OpenAPI Initiative Formats Registry](https://spec.openapis.org/registry/format/) contains the list of formats used in OpenAPI specifications.
-
-
   - If the format of a string is `date-time`, the following sentence MUST be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.`
   - If the format of a string is `duration`, the following sentence MUST be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#appendix-A) for duration`
     - Note: to avoid known ambiguity issues with duration strings, consider using intervals, which are anchored to a specific start and end date or time. Use of a start date or time string field in combination with the duration string field could help to mitigate ambiguity issues.
 
-- If the data type is an object, list of required properties.
+- If the data type is object, list of required properties.
+- If the data type is array, `maxItems` property MUST be specified.
+- If the data type is integer, format (`int32` or `int64`) and range (`minimum` and `maximum`properties) MUST be specified.
 - List of properties within the object data, including:
    - Property name
    - Property description
-   - Property type (String, Integer, Object, etc.)
-   - Other properties by type:
-      - String ones: min and max length
-      - Integer ones: format (int32, int64), range, etc.
+   - Property type (string, integer, object, etc.)
+   - Any other properties required for given type, as indicated above.
 
-In this part, the error response structure MUST also be defined following the guidelines in [3.2. Error Responses](#32-error-responses).
+The error response structure MUST also be defined following the guidelines in [3.2. Error Responses](#32-error-responses).
+
 
 #### 2.2.1. Usage of Discriminator
 
@@ -395,32 +395,31 @@ NOTE: When standardized AuthN/AuthZ flows are used, please refer to [6.2. Securi
 
 #### 3.2.1. Standardized Use of CAMARA Error Responses
 
-This section aims to provide a common use of the fields `status` and `code` across CAMARA APIs.
+This section aims to provide a common use of the fields `status` and `code` of the `ErrorInfo` object across CAMARA APIs. The value of the `status` field is matching the numeric status code of the HTTP response message, e.g. "400". The `ErrorInfo` object is provided within the HTTP body of the HTTP response message.
 
-In the following, we elaborate on the existing client errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature:
+In the following, we elaborate on the existing client and server errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature:
 - i) syntax exceptions
 - ii) service exceptions
 - iii) server errors
 
 <font size="3"><span style="color: blue"> Syntax Exceptions </span></font>
 
-| **Error status** |     **Error code**      | **Message example**                                                 | **Scope/description**                                                                                                           |
+| **`status`** |     **`code`**      | **`message` example**                                                 | **Scope/description**                                                                                                           |
 |:----------------:|:-----------------------:|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
 |       400        |   `INVALID_ARGUMENT`    | Client specified an invalid argument, request body or query param.  | Generic Syntax Exception                                                                                                        |
 |       400        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific Syntax Exception regarding a field that is relevant in the context of the API (e.g. format of an amount)               |
 |       400        |     `OUT_OF_RANGE`      | Client specified an invalid range.                                  | Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested |
 |       403        |   `PERMISSION_DENIED`   | Client does not have sufficient permissions to perform this action. | OAuth2 token access does not have the required scope or when the user fails operational security                                |
 |       403        | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token.                    | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token. This error SHOULD be used only when the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.                             |
-|       409        |        `ABORTED`        | Concurrency conflict.                                               | Concurrency of processes of the same nature/scope                                                                               |
-|       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                                                           |
-|       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource                                                                                             |
-|       409        |       `INCOMPATIBLE_STATE`     | A referenced resource is in an incompatible state. | A resource referenced in the request is in an incompatible state for the requested operation                                                                                             |
-
+|       409        |        `ABORTED`        | Resource is being modified by another operation. Please wait, and retry if appropriate.      | The resource is undergoing modification by another process                                             |
+|       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                             |
+|       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource (**This Error Code is DEPRECATED**)                                                        |
+|       409        |       `INCOMPATIBLE_STATE`     | Resource must be in AVAILABLE state to extend. Current state is UNAVAILABLE. | Resource (target or referenced) is in incompatible state for the requested operation. Can be applicable for both:<br><li>Target resource state conflicts (e.g., session not in AVAILABLE state for extension)</li><li>Referenced resource state conflicts (e.g., device already has active session)</li>The message should clarify which resource and required state. |
 |       409        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific conflict situation that is relevant in the context of the API                                                          |
 
 <font size="3"><span style="color: blue"> Service Exceptions </span></font>
 
-| **Error status** |        **Error code**         | **Message example**                                                        | **Scope/description**                                                                                                                                                        |
+| **`status`** |        **`code`**         | **`message` example**                                                        | **Scope/description**                                                                                                                                                        |
 |:----------------:|:-----------------------------:|----------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |       401        |       `UNAUTHENTICATED`       | Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required. | The request cannot be authenticated and a new authentication is required                                                            |
 |       403        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API (e.g QoD session cannot be created for a set of users) |
@@ -437,7 +436,7 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 <font size="3"><span style="color: blue"> Server Exceptions </span></font>
 
-| **Error status** |      **Error code**      | **Message example**                                                                                           | **Scope/description**                                                                                                                    |
+| **`status`** |      **`code`**      | **`message` example**                                                                                           | **Scope/description**                                                                                                                    |
 |:----------------:|:------------------------:|---------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 |       405        |   `METHOD_NOT_ALLOWED`   | The requested method is not allowed/supported on the target resource.                                         | Invalid HTTP verb used with a given endpoint                                                                                             |
 |       406        |     `NOT_ACCEPTABLE`     | The server cannot produce a response matching the content requested by the client through `Accept-*` headers. | API Server does not accept the media type (`Accept-*` header) indicated by API client                                                    |
@@ -962,13 +961,36 @@ responses:
     content:
       application/json:
         schema:
-          $ref: "#/components/schemas/<schema-name>"
+          $ref: "#/components/schemas/<success-reponse-schema-name>"
   "4xx":
-    $ref: "#/components/responses/<schema-name>"
+    $ref: "#/components/responses/<4xx-schema-name>"
   "5xx":
-    $ref: "#/components/responses/<schema-name>"
+    $ref: "#/components/responses/<5xx-schema-name>"
 ```
 
+##### 5.7.6.1 Asynchronous responses
+
+An asynchronous response is not truly an event. An event is something that may occur once or multiple times, and it is the occurrence of that event that carries the main information. In contrast, an asynchronous response represents meta-information delivered in the same format as a synchronous response and happens exactly once.
+
+This is the rationale for not using the [CAMARA CloudEvents-based model for event notification](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#3-event-notification) in such scenarios. Instead, it is recommended to use the same response model as in an analogous synchronous scenario. In this context, when an API request initiates an asynchronous process, the server SHOULD respond with the HTTP status code `202 Accepted`. This code indicates that the request has been accepted for processing, but the processing has not been completed yet. The actual response or final result will be delivered asynchronously to the client via the callback URL (sink).
+
+For this case, it is advisable to use the concepts of `sink` and `sinkCredential`, which represent the callback URL and its associated security configuration, respectively, within the API request design. This ensures alignment with CAMARA specifications. These concepts follow the same design rules as the [CAMARA Instance-based (Implicit) Subscription](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#21-instance-based-implicit-subscription) model.
+
+
+When a response schema or field is an array, a `description` property MUST be provided in the `items` object.
+
+
+**Case A:** Response is an array
+
+```yaml
+components:
+  schemas:
+    <success-reponse-schema-name>:
+      type: array
+      items:
+        type: string
+        description: <description>
+```
 
 ### 5.8. Components
 
