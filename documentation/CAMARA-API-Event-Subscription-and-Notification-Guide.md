@@ -25,6 +25,7 @@ For general API design guidelines, please refer to [CAMARA API Design Guide](/do
   - [4.1. Scope Naming](#41-scope-naming)
   - [4.2. Abuse Protection](#42-abuse-protection)
   - [4.3. Notifications Security Considerations](#43-notifications-security-considerations)
+- [Appendix A: Notification authentication flows](#appendix-a-Notification-authentication-flows)
 
 <!-- /TOC -->
 
@@ -65,16 +66,16 @@ If this capability is present in CAMARA API, the following attributes MUST be us
 | sink           | string | https callback address where the notification must be POST-ed, `format: uri` SHOULD be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).  The [security considerations](#43-notifications-security-considerations) SHOULD be followed.                | mandatory   |
 | sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. It is RECOMMENDED for subscription consumer to provide credential to protect notification endpoint. | optional    |
 
-Several types of `sinkCredential` could be available in the future, but for now only access token credential is managed.
+Several types of `sinkCredential` could be available in the future, but for now only access token and private key JWT credentials are managed.
 
-``sinkCredential`` attributes table (MUST be access token for now):
+``sinkCredential`` attributes table:
 
-| attribute name       | type             | attribute description                                                          | cardinality |
-|----------------------|------------------|--------------------------------------------------------------------------------|-------------|
-| credentialtype       | string           | Type of the credential - MUST be set to `ACCESSTOKEN` for now                  | mandatory   |
-| accessToken          | string           | Access Token granting access to the POST operation to create notification      | mandatory   |
-| accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory   |
-| accessTokenType      | string           | Type of access token - MUST be set to `Bearer` for now                         | mandatory   |
+| attribute name       | type             | attribute description                                                             | cardinality |
+|----------------------|------------------|-----------------------------------------------------------------------------------|-------------|
+| credentialtype       | string           | Type of the credential - CAN be set to `ACCESSTOKEN` or  `PRIVATE_KEY_JWT`        | mandatory   |
+| accessToken          | string           | Access Token granting access to send events related to the implicit subscription  | optional    |
+| accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired.    | optional    |
+| accessTokenType      | string           | Type of access token - MUST be set to `Bearer` for now                            | optional    |
 
 #### 2.1.1. Instance-based (Implicit) Subscription Example
 
@@ -160,17 +161,17 @@ The following table provides `/subscriptions` attributes
 | expiresAt      | string - date-time | Date when the event subscription will expire. This attribute MUST NOT be present in the `POST` request as it is provided (optionally) by API server. This attribute MUST be provided by the server if subscriptionExpireTime is provided in the request and server is not able to handle it.                                                                                                                                                                                                                                                                                                                                                                                 | optional                     |
 | status         | string             | Current status of the subscription - Management of Subscription state engine is not mandatory for now. Note: not all statuses MAY be considered to be implemented. See below status table.                                                                                                                                                                                                                                                                                                                                               | optional                     |
 
-``sinkCredential`` attributes table (MUST be only access token for now):
+``sinkCredential`` attributes table:
 
 | attribute name       | type               | attribute description                                                          | cardinality |
 |----------------------|--------------------|--------------------------------------------------------------------------------|-------------|
-| credentialtype       | string             | Type of the credential - MUST be set to `ACCESSTOKEN` for now                  | mandatory   |
-| accessToken          | string             | Access Token granting access to the POST operation to create notification      | mandatory   |
-| accessTokenExpireUtc | string - date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory   |
-| accessTokenType      | string             | Type of access token - MUST be set to `bearer` for now                         | mandatory   |
+| credentialtype       | string             | Type of the credential - MUST be set to `ACCESSTOKEN` or `PRIVATE_KEY_JWT`     | mandatory   |
+| accessToken          | string             | Access Token granting access to send events related to the explicit subscription              | optional    |
+| accessTokenExpireUtc | string - date-time | An absolute UTC instant at which the access token shall be considered expired. | optional    |
+| accessTokenType      | string             | Type of access token - MUST be set to `bearer` for now                         | optional    |
 
-Note about expired accessToken:
-when a notification is sent to the sink endpoint with sinkCredential it could occur a response back from the listener with an error about expired token.
+Note about expired access token when credentialType is `ACCESSTOKEN`:
+when a notification is sent to the sink endpoint with `sinkCredential` and `credentialType` set to `ACCESSTOKEN` it could occur a response back from the listener with an error about expired token.
 In this case, the subscription will shift to EXPIRED status.
 (as we do not have as of now capability to allow consumer to modify `subscription`).
 Remark: This action will trigger a subscription-ended event with terminationReason set to "ACCESS_TOKEN_EXPIRED"
@@ -198,7 +199,7 @@ Managing subscription is a draft feature, and it is not mandatory for now. An AP
 | ACTIVATION_REQUESTED | Subscription creation (POST) is triggered but subscription creation process is not finished yet.                                                                                                                                                                      |
 | ACTIVE               | Subscription creation process is completed. Subscription is fully operative.                                                                                                                                                                                          |
 | INACTIVE             | Subscription is temporarily inactive, but its workflow logic is not deleted. INACTIVE could be used when an user initially provided consent for the event monitor and then later denied this consent. For now we did not provide capability to reactive subscription. |
-| EXPIRED              | Subscription is ended (no longer active). This status applies when subscription is ended due to max event reached, expire time reached or access token indicated for notification security (i.e. sinkCredential) expiration time reached.                             |
+| EXPIRED              | Subscription is ended (no longer active). This status applies when subscription is ended due to max event reached, expire time reached or access token indicated for notification security (i.e. sinkCredential and credentialType set to ACCESSTOKEN) expiration time reached.                             |
 | DELETED              | Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its meta-information is kept).                                                                     |
 
 #### 2.2.4. Error Definition for Resource-based (Explicit) Subscription
@@ -466,7 +467,7 @@ The following table lists values for `terminationReason` attribute:
 | NETWORK_TERMINATED | API server stopped sending notification |
 | SUBSCRIPTION_EXPIRED | Subscription expire time (optionally set by the requester) has been reached |
 | MAX_EVENTS_REACHED | Maximum number of events (optionally set by the requester) has been reached |
-| ACCESS_TOKEN_EXPIRED | Access Token sinkCredential (optionally set by the requester) expiration time has been reached |
+| ACCESS_TOKEN_EXPIRED | Access Token sinkCredential (optionally set by the requester with credential type `ACCESSTOKEN`) expiration time has been reached |
 | SUBSCRIPTION_DELETED | Subscription was deleted by the requester |
 
 Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory).
@@ -612,8 +613,8 @@ This Security Considerations need to be reconsidered if other protocols than `HT
 Camara Notifications MUST use HTTPS. The value of `sink` MUST be an URL with url-scheme `https`.
 The implementation of the Notification Sender MUST follow [10.2 Security Implementation](#102-security-implementation).
 
-This document restricts the `credendentialType` to `ACCESSTOKEN`. Neither `PLAIN`nor `REFRESHTOKEN` are allowed.
-This Security Considerations need to be reconsidered if other `credentialsType` values are allowed.
+This document restricts the `credentialType` to `ACCESSTOKEN` or `PRIVATE_KEY_JWT`. 
+This Security Considerations need to be reconsidered if other `credentialType` values are allowed.
 
 CloudEvent Security and Privacy considerations RECOMMEND protecting event **data** through signature and encryption. The value of the `data` field of the notifications SHOULD be signed and encrypted.
 As Camara Notifications are JSON, Camara RECOMMENDS that the Camara Notification is signed and then encrypted using [JSON Web Signature (JWS)](https://datatracker.ietf.org/doc/html/rfc7515) and [JSON Web Encryption (JWE)](https://datatracker.ietf.org/doc/html/rfc7516).
@@ -622,3 +623,72 @@ The API Consumer and event producer have to agree which keys to use for signing 
 It is RECOMMENDED that the API consumer inspects all the fields of the notification, especially `source` and `type`. It is RECOMMENDED that if the notification event data is signed, that then the `source` and the signature key are associated.
 
 API Consumers SHOULD validate the schema of the notification event data that is defined by the API subproject. It is RECOMMENDED that additional fields are ignored. Reliance on additional fields is an interoperability issue. Additional fields can lead to security issues.
+
+#### 4.3.1 Pre-requisites for using credential type `PRIVATE_KEY_JWT`
+
+To use `credentialType` with value `PRIVATE_KEY_JWT`, the API Consumer and API Provider shall share
+authentication information needed to request an access token. This includes a client ID, a token endpoint
+and a JWK set. 
+
+The client ID uniquely identifies the application ([RFC 6749, Section 2.2](https://www.rfc-editor.org/rfc/rfc6749.html#section-2.2)).
+
+The JWK Set ((JSON Web Key Set)) contains the cryptographic keys used for authentication ([RFC 7517](https://www.rfc-editor.org/rfc/rfc7517.html)) 
+
+## Appendix A: Notification authentication flows
+
+The following diagram describes the authentication flows for API Consumers with different authentication capabilities. Depending on those capabilities the sink credential type used will be `ACCESSTOKEN` or `PRIVATE_KEY_JWT`
+
+```mermaid
+sequenceDiagram
+  autonumber
+  box API Consumer 1<br>Application Backend<br>(no authorization server)
+    participant appbe as API Client / Notification Sink
+  end
+  box API Consumer 2<br>(Application Backend/Aggregator)
+    participant appclient as API Client 
+    participant appres as Notification Sink 
+    participant appauth as Authorization Server
+  end
+  box API Provider / Operator
+    participant cspres as Resource Server
+    participant cspauth as Authorization Server
+    participant cspclient as Notification Server
+  end
+
+   
+  opt Using ACCESSTOKEN sink credential type
+    opt Subscription
+      appbe ->> cspres: POST /subscriptions<br>Body: {<br>sink: <API Consumer 1>/sink,<br>sinkCredential:{ credentialType: ACCESSTOKEN,<br>accessToken:<Access Token>,<br>accessTokenExpireUtc:<access token expire time>,<br>accessTokenType: bearer },<br>...}
+      cspres -->> appbe: 201 Created
+    end
+    opt Notification
+      cspclient ->> appbe: POST /sink<br>Authorization: Bearer <Access Token><br>{ ... }
+      appbe -->> cspclient: 204 No Content
+    end
+  end
+
+  opt Using PRIVATE_KEY_JWT sink credential type
+    note over appclient,cspclient: Onboarding: <br> API Consumer shares <Token Endpoint> and <Client ID><br>API Provider shares <JWKS URI>
+    opt Subscription
+      appclient ->> cspres: POST /subscriptions<br>Body: {<br>sink: <API Consumer 2>/sink,<br>sinkCredential:{ credentialType: PRIVATE_KEY_JWT },<br>...}
+      cspres -->> appclient: 201 Created
+      opt No preshared information
+      cspres -->> appclient: Invalid sink credential type or missing pre-shared information 
+      end
+    end
+    opt Authentication
+      cspclient->>appauth: Get Access Token<br>from API Consumer <Token Endpoint><br>with <signed JWT credentials>
+      appauth->>cspauth: Fetch <Public Key Set> from <JWKS URI>
+      cspauth-->>appauth: Return <Public Key Set>
+      note over appauth: Validate <signed JWT credentials>
+      appauth-->>cspclient: Return <Access Token>
+    end
+
+    opt Notification
+      cspclient ->> appres: POST /sink<br>Authorization: Bearer <Access Token><br>Body: { ... }
+      appres->>appauth: validate <Access Token>
+      appauth-->>appres: OK
+      appres -->> cspclient: 204 No Content
+    end
+  end
+```
