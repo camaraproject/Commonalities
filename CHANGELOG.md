@@ -31,6 +31,8 @@ This release contains documents and artifacts of Commonalities version 0.7.0-rc.
 * Array description guideline by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/559
 * Clarifications for asynchronous responses by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/575
 * Guidelines and linting rules for OWASP API Security Top 10 by @rartych in https://github.com/camaraproject/Commonalities/pull/582
+* Business-level outcome guidance added to API Design Guide by @hdamker in https://github.com/camaraproject/Commonalities/pull/578
+* Subscription Testing Definitions Enhancements - Private JWT Key scenario by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/583
 
 ### Changed
 * CAMARA_Common.yaml aligment with multiple device identifiers logic by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/570
@@ -44,6 +46,9 @@ This release contains documents and artifacts of Commonalities version 0.7.0-rc.
 
 ### Removed
 * Status 409 error code CONFLICT deprecated by @tlohmar in https://github.com/camaraproject/Commonalities/pull/569
+
+## New Contributors
+* @m-nahum made their first contribution in https://github.com/camaraproject/Commonalities/pull/580
 
 **Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r3.4...r4.1
 
