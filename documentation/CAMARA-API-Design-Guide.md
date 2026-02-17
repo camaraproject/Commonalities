@@ -11,10 +11,9 @@ This document outlines guidelines for API design within the CAMARA project, appl
 - [2. Data](#2-data)
   - [2.1. Common Data Types](#21-common-data-types)
   - [2.2. Data Definitions](#22-data-definitions)
-- [3. Error Responses](#3-error-responses)
-  - [3.1. Standardized Use of CAMARA Error Responses](#31-standardized-use-of-camara-error-responses)
-  - [3.2. Error Responses - Device Object/Phone Number](#32-error-responses---device-objectphone-number)
-  - [3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API](#33-error-responses---mandatory-template-for-infodescription-in-camara-api)
+- [3. Responses](#3-responses)
+  - [3.1. Business-level Outcomes in Successful Responses](#31-business-level-outcomes-in-successful-responses)
+  - [3.2. Error Responses](#32-error-responses)
 - [4. Pagination, Sorting and Filtering](#4-pagination-sorting-and-filtering)
   - [4.1. Pagination](#41-pagination)
   - [4.2. Sorting](#42-sorting)
@@ -111,7 +110,8 @@ This part captures a detailed description of all the data structures used in the
    - Property type (string, integer, object, etc.)
    - Any other properties required for given type, as indicated above.
 
-The error response structure MUST also be defined following the guidelines in [3. Error Responses](#3-error-responses).
+The error response structure MUST also be defined following the guidelines in [3.2. Error Responses](#32-error-responses).
+
 
 #### 2.2.1. Usage of Discriminator
 
@@ -221,7 +221,144 @@ When IpAddr is used in a payload, the property `objectType` MUST be present to i
 
 
 
-## 3. Error Responses
+## 3. Responses
+
+This chapter covers how CAMARA APIs model responses, including both successful business outcomes and error conditions.
+
+### 3.1. Business-level Outcomes in Successful Responses
+
+#### 3.1.1. Scope and Problem Statement
+
+CAMARA APIs already return negative, partial, or unknown business outcomes under HTTP 2xx and model them in different ways (explicit enums, booleans, nullability, presence/absence rules). This section describes legitimate patterns for such modeling and introduces optional refinements (`contextCode`, `contextMessage`) to improve consistency across APIs.
+
+#### 3.1.2. Core Principles
+
+The following principles apply to modeling business-level outcomes in successful responses:
+
+* HTTP `2xx` status codes indicate that the request was valid and processed; they MAY still represent negative, partial, or unknown business outcomes.
+* APIs SHOULD explicitly define and document how business outcomes are represented in successful responses (for example via explicit outcome enums, documented nullability, or documented presence/absence rules), and MUST NOT rely on undocumented inference from missing data.
+* APIs MAY add optional context fields to provide additional information about the outcome:
+  * `contextCode` — a machine-readable code providing additional context
+  * `contextMessage` — a human-readable explanation providing additional context
+* These optional context fields are additive and MUST NOT be the only way to interpret the business outcome of a successful response.
+* Outcome semantics (success, failure, partial, unknown, not applicable) MUST remain visible via the API's domain-specific response semantics and MUST NOT be moved into `contextCode` or `contextMessage`.
+* Well-designed modeling of business-level outcomes in `2xx` responses can reduce the need to define `4xx` responses for otherwise valid requests.
+
+This guidance primarily applies to new APIs and new MAJOR versions; existing APIs may evolve towards it over time (see Section 3.1.5).
+
+#### 3.1.3. Recommended Modeling Pattern
+
+The recommended structural pattern for business-level outcomes consists of:
+
+* A **domain-specific primary outcome field** representing the business result, where needed (for example `status`, `verificationResult`, `availability`). The field name and values are defined by the API based on its domain.
+* An **optional `contextCode` field** — a machine-readable code providing additional context about the outcome. Values SHOULD be constrained and documented by the API (OpenAPI enum is recommended). Values may include:
+  * CAMARA-wide codes (if defined in future Commonalities releases)
+  * API-specific codes following CAMARA conventions (`API_NAME.SPECIFIC_CODE` in SCREAMING_SNAKE_CASE)
+  * Provider-specific codes if agreed contractually. Provider-specific codes SHOULD be namespaced to avoid collisions.
+* An **optional `contextMessage` field** — a human-readable explanation providing additional context.
+
+**Client interpretation:** `contextCode` and `contextMessage` are supplementary. They MUST NOT be the only way to interpret the business outcome of a successful response. The API specification MUST define how the business outcome is determined from the response payload (for example via explicit outcome enums, documented nullability, or documented presence/absence rules).
+
+Note that:
+* The primary outcome field name is API- and domain-specific.
+* Not all APIs need to introduce a new primary outcome field; existing fields may already express the outcome clearly.
+* The `contextCode` and `contextMessage` names are standardized across APIs that choose to adopt them.
+
+**Legitimate patterns for outcome modeling:**
+
+CAMARA APIs use the following patterns to express business-level outcomes. Both are valid; the choice depends on the API's domain and existing contract:
+
+* **Outcome enum:** Introduce a domain-specific enum field and make further data fields optional or nullable.
+* **Nullability/presence rules:** Where compatible, make the data field nullable or optional and document that `null` (or absence) represents unknown/unavailable.
+
+Both patterns MAY use `contextCode`/`contextMessage` to explain why (for example privacy restriction, device not available).
+
+#### 3.1.4. Example
+
+The following examples illustrate both legitimate patterns described in Section 3.1.3. Both use the optional `contextCode`/`contextMessage` fields.
+
+**Outcome enum approach:** The primary outcome field (`result` in this example) is domain-specific and illustrative:
+
+```yaml
+components:
+  schemas:
+    CheckResult:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: string
+          description: Domain-specific result of the operation (example).
+          enum:
+            - POSITIVE_CHECK
+            - NEGATIVE_CHECK
+            - UNKNOWN
+        contextCode:
+          type: string
+          description: Optional machine-readable code providing additional business context to the result.
+          example: COMMON.REGIONAL_PRIVACY_RESTRICTION
+        contextMessage:
+          type: string
+          description: Optional human-readable explanation providing additional business context to the result.
+          example: "The requested information could not be disclosed for privacy regulation reasons."
+```
+
+An example JSON response body for an HTTP `200` response:
+
+```json
+{
+  "result": "UNKNOWN",
+  "contextCode": "COMMON.REGIONAL_PRIVACY_RESTRICTION",
+  "contextMessage": "The requested information could not be disclosed for privacy regulation reasons."
+}
+```
+
+**Nullability/presence rules approach:** The primary outcome field (`result` in this example) is nullable. When the outcome is unavailable, `result` is `null`:
+
+```yaml
+components:
+  schemas:
+    DataResult:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: object
+          nullable: true
+          description: The requested data object. Null when the data is unavailable.
+          properties:
+            value:
+              type: string
+              description: The data value (domain-specific).
+        contextCode:
+          type: string
+          description: Optional machine-readable code providing additional business context to the result.
+          example: COMMON.DEVICE_NOT_AVAILABLE
+        contextMessage:
+          type: string
+          description: Optional human-readable explanation providing additional business context to the result.
+          example: "The requested device is currently not available in the network."
+```
+
+An example JSON response body for an HTTP `200` response when the data is unavailable:
+
+```json
+{
+  "result": null,
+  "contextCode": "COMMON.DEVICE_NOT_AVAILABLE",
+  "contextMessage": "The requested device is currently not available in the network."
+}
+```
+
+#### 3.1.5. Versioning and Migration Guidance
+
+* New APIs and new MAJOR versions SHOULD follow this guidance.
+* Existing stable APIs MAY adopt it in a future MAJOR version where behavior or response semantics would otherwise change.
+* Where possible, APIs MAY introduce `contextCode` and `contextMessage` as additive, backward-compatible changes.
+
+### 3.2. Error Responses
 
 To ensure interoperability, it is crucial to implement error management that strictly adheres to the error codes defined in the HTTP protocol.
 
@@ -231,7 +368,7 @@ An error representation MUST NOT differ from the representation of any resource.
 - A detailed description in `message` - in English language in API specification, it can be changed to other languages in implementation if needed.
 
 All these aforementioned fields are mandatory in Error Responses.
-`status` and `code` fields have normative nature, so as their use has to be standardized (see [3.1. Standardized use of CAMARA error responses](#31-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
+`status` and `code` fields have normative nature, so as their use has to be standardized (see [3.2.1. Standardized use of CAMARA error responses](#321-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
 
 The values of the `status` and `code` fields are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/CAMARA_common.yaml).
 
@@ -256,7 +393,7 @@ The essential requirements to consider would be:
 
 NOTE: When standardized AuthN/AuthZ flows are used, please refer to [6.2. Security definition](#62-security-definition), the format and content of Error Response for those procedures SHALL follow the guidelines of those standards.
 
-### 3.1. Standardized Use of CAMARA Error Responses
+#### 3.2.1. Standardized Use of CAMARA Error Responses
 
 This section aims to provide a common use of the fields `status` and `code` of the `ErrorInfo` object across CAMARA APIs. The value of the `status` field is matching the numeric status code of the HTTP response message, e.g. "400". The `ErrorInfo` object is provided within the HTTP body of the HTTP response message.
 
@@ -327,14 +464,14 @@ In the following, we elaborate on the existing client and server errors. In part
   - Error status 403
 
 NOTE:
-The documentation of non-mandatory error statuses defined in section 3.1 depends on the specific considerations and design of the given API.
+The documentation of non-mandatory error statuses defined in section 3.2.1 depends on the specific considerations and design of the given API.
  - Error statuses 400, 404, 409, 422, 429: These error statuses SHOULD be documented based on the API design and the functionality involved. Subprojects evaluate the relevance and necessity of including these statuses in API specifications.
  - Error statuses 405, 406, 410, 412, 415, and 5xx: These error statuses are not documented by default in the API specification. However, they SHOULD be included if there is a relevant use case that justifies their documentation.
    - Special Consideration for error 501 NOT IMPLEMENTED to indicate optional endpoint:
      - The use of optional endpoints is discouraged in order to have aligned implementations
      - Only for exceptions where an optional endpoint can not be avoided and defining it in separate, atomic API is not possible - error status 501 SHOULD be documented as a valid response
 
-### 3.2. Error Responses - Device Object/Phone Number
+#### 3.2.2. Error Responses - Device Object/Phone Number
 
 This section provides guidelines for error responses related to the `Device` object or `phoneNumber` field.
 
@@ -358,7 +495,7 @@ A `DeviceResponse` object is defined for this purpose, but is not mandatory to b
 
 An error MUST NOT be returned when the supplied device identifiers do not match to prevent the API consumer correlating identifiers for a given end user that they may not otherwise know. It is the responsibility of the API consumer to ensure that the identifiers they are using are associated with the same device. If they are unable to do that, only a single identifier SHOULD be provided to the API provider.
 
-#### 3.2.1. Templates
+##### 3.2.2.1. Templates
 
 ##### Response template
 
@@ -407,7 +544,7 @@ components:
         message: {{Message example}}
 ```
 
-### 3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API
+#### 3.2.3. Error Responses - Mandatory Template for `info.description` in CAMARA API
 
 The following template MUST be used as part of the API documentation in the `info.description` property of the CAMARA API specification to provide a common reference for API Consumers, API Developers and API Providers about not documented error responses in case they are supported by a given API implementation.
 
@@ -643,7 +780,7 @@ It is NOT RECOMMENDED to link images outside of the Github API repository, since
 ![API Diagram](https://raw.githubusercontent.com/camaraproject/{apiRepository}/main/documentation/API_documentation/resources/diagram.png)
 ```
 
-Some sections are REQUIRED, as defined in [Section 3.3](#33-error-responses---mandatory-template-for-infodescription-in-camara-api), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api)
+Some sections are REQUIRED, as defined in [Section 3.2.3](#323-error-responses---mandatory-template-for-infodescription-in-camara-api), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api)
  or [Appendix A](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
 
 #### 5.3.3. Version
