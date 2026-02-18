@@ -52,7 +52,6 @@ components:
     ErrorInfo:
       type: object
       description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
-  required:
       required:
         - status
         - code
@@ -825,3 +824,4 @@ components:
                 status: 504
                 code: TIMEOUT
                 message: Request timeout exceeded.
+
