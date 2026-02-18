@@ -5,9 +5,9 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version:  wip
+  version: wip
   x-camara-commonalities: "0.6"
-  
+
 paths: {}
 components:
   securitySchemes:
@@ -251,44 +251,44 @@ components:
       maximum: 180
 
   responses:
-#######################################################
-#######################################################
-# ERROR RESPONSE SCHEMA TEMPLATE
-#   - Objective: Make normative error `status` and `code` values
-#   - Schema Template rationale:
-#     - The `allOf` in content.application/json.schema allows a combination of both the generic ErrorInfo schema and the specific schema for this error response,
-#       which validates that `status` and `code` have only the specified values.
-#       This `allOf` is used without discriminator because it does not imply any hierarchy between the models, just 2 schemas that must be independently validated.
-#######################################################
-#    ErrorResponseSchema:
-#      ...
-#      content:
-#        application/json:
-#          schema:
-#            allOf:
-#              - $ref: '#/components/schemas/ErrorInfo'
-#              - type: object
-#                properties:
-#                  status:
-#                    enum:
-#                      - <status>
-#                  code:
-#                    enum:
-#                      - <code1>
-#                      - <code2>
-#          examples:
-#            ExampleKey1:
-#              value:
-#                status: <status>
-#                code: <code1>
-#                message: <message1>
-#            ExampleKey2:
-#              value:
-#                status: <status>
-#                code: <code2>
-#                message: <message2>
-#######################################################
-#######################################################
+    #######################################################
+    #######################################################
+    # ERROR RESPONSE SCHEMA TEMPLATE
+    #   - Objective: Make normative error `status` and `code` values
+    #   - Schema Template rationale:
+    #     - The `allOf` in content.application/json.schema allows a combination of both the generic ErrorInfo schema and the specific schema for this error response,
+    #       which validates that `status` and `code` have only the specified values.
+    #       This `allOf` is used without discriminator because it does not imply any hierarchy between the models, just 2 schemas that must be independently validated.
+    #######################################################
+    #    ErrorResponseSchema:
+    #      ...
+    #      content:
+    #        application/json:
+    #          schema:
+    #            allOf:
+    #              - $ref: '#/components/schemas/ErrorInfo'
+    #              - type: object
+    #                properties:
+    #                  status:
+    #                    enum:
+    #                      - <status>
+    #                  code:
+    #                    enum:
+    #                      - <code1>
+    #                      - <code2>
+    #          examples:
+    #            ExampleKey1:
+    #              value:
+    #                status: <status>
+    #                code: <code1>
+    #                message: <message1>
+    #            ExampleKey2:
+    #              value:
+    #                status: <status>
+    #                code: <code2>
+    #                message: <message2>
+    #######################################################
+    #######################################################
     Generic400:
       description: Bad Request
       headers:
@@ -824,4 +824,5 @@ components:
                 status: 504
                 code: TIMEOUT
                 message: Request timeout exceeded.
+
 
