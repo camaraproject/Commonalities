@@ -31,6 +31,7 @@ This release contains documents and artifacts of Commonalities version 0.7.0-rc.
 * Array description guideline by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/559
 * Clarifications for asynchronous responses by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/575
 * Guidelines and linting rules for OWASP API Security Top 10 by @rartych in https://github.com/camaraproject/Commonalities/pull/582
+* Authentication mechanism based on pre-shared information for event notification by @m-nahum in https://github.com/camaraproject/Commonalities/pull/580
 * Business-level outcome guidance added to API Design Guide by @hdamker in https://github.com/camaraproject/Commonalities/pull/578
 * Subscription Testing Definitions Enhancements - Private JWT Key scenario by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/583
 
