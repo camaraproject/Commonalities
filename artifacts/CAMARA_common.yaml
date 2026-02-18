@@ -29,10 +29,13 @@ components:
   schemas:
     XCorrelator:
       type: string
+      description: Correlator string, UUID format recommended but any string matching the pattern can be used
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
       maxLength: 256
       example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
     TimePeriod:
+      type: object
+      description: A period of time defined by a start date and an optional end date
       properties:
         startDate:
           type: string
@@ -48,6 +51,8 @@ components:
         - startDate
     ErrorInfo:
       type: object
+      description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
+  required:
       required:
         - status
         - code
@@ -820,7 +825,3 @@ components:
                 status: 504
                 code: TIMEOUT
                 message: Request timeout exceeded.
-
-
-
-
