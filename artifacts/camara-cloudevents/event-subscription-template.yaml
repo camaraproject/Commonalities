@@ -17,7 +17,7 @@ info:
   
 externalDocs:
   description: Product documentation at CAMARA
-  url: https://github.com/camaraproject/{apiRepository}
+  url: https://github.com/camaraproject/apiRepository
   # {apiRepository} MUST be replaced by the CAMARA Subproject Repository name where the API design based on this template is hosted.
 servers:
   - url: "{apiRoot}/api-name/vx.y"
