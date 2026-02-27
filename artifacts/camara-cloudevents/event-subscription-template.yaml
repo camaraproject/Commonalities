@@ -542,7 +542,8 @@ components:
       example: qs15-h556-rt89-1298
 
     CloudEvent:
-      description: The notification callback
+      type: object
+      description: The notification callback content
       required:
         - id
         - source
