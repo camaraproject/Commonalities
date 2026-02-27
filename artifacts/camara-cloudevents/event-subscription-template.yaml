@@ -386,6 +386,7 @@ components:
             identifier:
               description: The identifier might be an account or username.
               type: string
+              maxLength: 256
             secret:
               description: The secret might be a password or passphrase.
               type: string
@@ -639,6 +640,8 @@ components:
           $ref: "#/components/schemas/SubscriptionId"
         initiationDescription:
           type: string
+          maxLength: 512
+          description: Description of subscription initiation
 
     InitiationReason:
       type: string
@@ -670,6 +673,8 @@ components:
           $ref: "#/components/schemas/SubscriptionId"
         updateDescription:
           type: string
+          maxLength: 512
+          description: Description of subscription initiation
 
     UpdateReason:
       type: string
@@ -703,6 +708,8 @@ components:
           $ref: "#/components/schemas/SubscriptionId"
         terminationDescription:
           type: string
+          maxLength: 512
+          description: Description of subscription initiation
 
     TerminationReason:
       type: string
