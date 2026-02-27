@@ -141,6 +141,7 @@ paths:
               schema:
                 type: array
                 minItems: 0
+                maxItems: 1000
                 items:
                   $ref: '#/components/schemas/Subscription'
         "400":
@@ -253,17 +254,24 @@ components:
       properties:
         status:
           type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
           description: HTTP response status code
         code:
           type: string
+          maxLength: 96
           description: A human-readable code to describe the error
         message:
           type: string
+          maxLength: 512
           description: A human-readable description of what the event represents
 
     XCorrelator:
       type: string
+      description: Correlator string, UUID format recommended but any string matching the pattern can be used
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      maxLength: 256
       example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
 
     SubscriptionRequest:
@@ -280,6 +288,7 @@ components:
         sink:
           type: string
           format: uri
+          maxLength: 2048
           pattern: ^https:\/\/.+$
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
@@ -327,12 +336,15 @@ components:
         subscriptionExpireTime:
           type: string
           format: date-time
+          maxLength: 64
           example: 2023-01-17T13:18:23.682Z
           description: The subscription expiration time (in date-time format) requested by the API consumer. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Up to API project decision to keep it.
         subscriptionMaxEvents:
           type: integer
+          format: int32
           description: Identifies the maximum number of event reports to be generated (>=1) requested by the API consumer - Once this number is reached, the subscription ends. Up to API project decision to keep it.
           minimum: 1
+          maximum: 1000000
           example: 5
         initialEvent:
           type: boolean
@@ -377,6 +389,7 @@ components:
             secret:
               description: The secret might be a password or passphrase.
               type: string
+              maxLength: 512
     AccessTokenCredential:
       type: object
       description: An access token credential. This type of credential is meant to be used by API Consumers that have limited capabilities to handle authorization requests. 
@@ -387,9 +400,11 @@ components:
             accessToken:
               description: REQUIRED. An access token is a token granting access to the target resource.
               type: string
+              maxLength: 4096
             accessTokenExpiresUtc:
               type: string
               format: date-time
+              maxLength: 64
               description: |
                 REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired.
                 In the case of an ACCESS_TOKEN_EXPIRED termination reason, implementation should notify the client before the expiration date.
@@ -452,6 +467,7 @@ components:
         sink:
           type: string
           format: uri
+          maxLength: 2048
           pattern: ^https:\/\/.+$
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
@@ -471,6 +487,7 @@ components:
         startsAt:
           type: string
           format: date-time
+          maxLength: 64
           description: |
             Date when the event subscription will begin/began
             It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
@@ -478,6 +495,7 @@ components:
         expiresAt:
           type: string
           format: date-time
+          maxLength: 64
           description: |
             Date when the event subscription will expire. Only provided when `subscriptionExpireTime` is indicated by API client or Telco Operator has specific policy about that.
             It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
@@ -518,6 +536,7 @@ components:
 
     SubscriptionId:
       type: string
+      maxLength: 256
       description: The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, it SHALL be referred to as `subscriptionId` as per the Commonalities Event Notification Model.
       example: qs15-h556-rt89-1298
 
@@ -532,6 +551,7 @@ components:
       properties:
         id:
           type: string
+          maxLength: 256
           description: identifier of this event, that must be unique in the source context.
         source:
           $ref: "#/components/schemas/Source"
@@ -565,6 +585,7 @@ components:
       type: string
       format: uri-reference
       minLength: 1
+      maxLength: 2048
       description: |
         Identifies the context in which an event happened - be a non-empty `URI-reference` like:
         - URI with a DNS authority:
@@ -580,6 +601,7 @@ components:
     DateTime:
       type: string
       format: date-time
+      maxLength: 64
       description: Timestamp of when the occurrence happened. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
       example: "2018-04-05T17:31:00Z"
 
@@ -620,6 +642,7 @@ components:
 
     InitiationReason:
       type: string
+      maxLength: 512
       description: |
         - SUBSCRIPTION_CREATED - Subscription created by API Server
       enum:
@@ -650,6 +673,7 @@ components:
 
     UpdateReason:
       type: string
+      maxLength: 512
       description: |
         - SUBSCRIPTION_ACTIVE - API server transitioned susbcription status to `ACTIVE`
         - SUBSCRIPTION_INACTIVE - API server transitioned susbcription status to `INACTIVE`
@@ -682,6 +706,7 @@ components:
 
     TerminationReason:
       type: string
+      maxLength: 512
       description: |
         - NETWORK_TERMINATED - API server stopped sending notification
         - SUBSCRIPTION_EXPIRED - Subscription expire time (optionally set by the requester) has been reached
@@ -719,9 +744,10 @@ components:
           description: |-
             A set of key/value pairs that is copied into the HTTP request as custom headers.
 
-            NOTE: Use/Applicability of this concept has not been discussed in Commonalities under the scope of Meta Release v0.4. When required by an API project as an option to meet a UC/Requirement, please generate an issue for Commonalities discussion about it.
+            NOTE: Use/Applicability of this concept has not been discussed in Commonalities. When required by an API project as an option to meet a UC/Requirement, please generate an issue for Commonalities discussion about it.
           additionalProperties:
             type: string
+            maxLength: 512
         method:
           type: string
           description: The HTTP method to use for sending the message.
@@ -749,14 +775,22 @@ components:
       properties:
         topicName:
           type: string
+          maxLength: 256
+          description: MQTT topic name
         qos:
           type: integer
           format: int32
+          minimum: 0
+          maximum: 2
+          description: Quality of Service level (0, 1, or 2
         retain:
           type: boolean
         expiry:
           type: integer
           format: int32
+          minimum: 0
+          maximum: 2147483647
+          description: Message expiry interval in seconds
         userProperties:
           type: object
       required:
@@ -783,8 +817,10 @@ components:
       properties:
         address:
           type: string
+          maxLength: 512
         linkName:
           type: string
+          maxLength: 256
         senderSettlementMode:
           type: string
           enum: ["settled", "unsettled"]
@@ -792,6 +828,7 @@ components:
           type: object
           additionalProperties:
             type: string
+            maxLength: 1024
 
     ApacheKafkaSubscriptionRequest:
       allOf:
@@ -814,12 +851,19 @@ components:
       properties:
         topicName:
           type: string
+          maxLength: 249
         partitionKeyExtractor:
           type: string
+          maxLength: 512
         clientId:
           type: string
+          maxLength: 256
         ackMode:
           type: integer
+          format: int32
+          minimum: 0
+          maximum: 2
+          description: Acknowledgment mode (0=no ack, 1=leader ack, 2=all replicas ack)
       required:
         - topicName
 
@@ -844,6 +888,8 @@ components:
       properties:
         subject:
           type: string
+          maxLength: 256
+          description: NATS subject
       required:
         - subject
   responses:
