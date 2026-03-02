@@ -675,7 +675,7 @@ components:
         updateDescription:
           type: string
           maxLength: 512
-          description: Description of subscription initiation
+          description: Description of subscription update
 
     UpdateReason:
       type: string
@@ -710,7 +710,7 @@ components:
         terminationDescription:
           type: string
           maxLength: 512
-          description: Description of subscription initiation
+          description: Description of subscription termination
 
     TerminationReason:
       type: string
@@ -790,7 +790,7 @@ components:
           format: int32
           minimum: 0
           maximum: 2
-          description: Quality of Service level (0, 1, or 2
+          description: Quality of Service level (0, 1, or 2)
         retain:
           type: boolean
         expiry:
