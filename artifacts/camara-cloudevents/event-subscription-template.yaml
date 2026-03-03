@@ -647,7 +647,6 @@ components:
 
     InitiationReason:
       type: string
-      maxLength: 512
       description: |
         - SUBSCRIPTION_CREATED - Subscription created by API Server
       enum:
@@ -680,7 +679,6 @@ components:
 
     UpdateReason:
       type: string
-      maxLength: 512
       description: |
         - SUBSCRIPTION_ACTIVE - API server transitioned susbcription status to `ACTIVE`
         - SUBSCRIPTION_INACTIVE - API server transitioned susbcription status to `INACTIVE`
@@ -715,7 +713,6 @@ components:
 
     TerminationReason:
       type: string
-      maxLength: 512
       description: |
         - NETWORK_TERMINATED - API server stopped sending notification
         - SUBSCRIPTION_EXPIRED - Subscription expire time (optionally set by the requester) has been reached
