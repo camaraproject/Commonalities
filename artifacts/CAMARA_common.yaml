@@ -8,7 +8,7 @@ info:
   version: 0.8.0-rc.1
 
   x-camara-commonalities: "0.7"
-  
+
 paths: {}
 components:
   securitySchemes:
@@ -30,22 +30,29 @@ components:
   schemas:
     XCorrelator:
       type: string
+      description: Correlator string, UUID format recommended but any string matching the pattern can be used
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      maxLength: 256
       example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
     TimePeriod:
+      type: object
+      description: A period of time defined by a start date and an optional end date
       properties:
         startDate:
           type: string
           format: date-time
+          maxLength: 64
           description: An instant of time, starting of the TimePeriod. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
         endDate:
           type: string
           format: date-time
+          maxLength: 64
           description: An instant of time, ending of the TimePeriod. If not included, then the period has no ending date. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
       required:
         - startDate
     ErrorInfo:
       type: object
+      description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
       required:
         - status
         - code
@@ -53,12 +60,17 @@ components:
       properties:
         status:
           type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
           description: HTTP response status code
         code:
           type: string
+          maxLength: 96
           description: A human-readable code to describe the error
         message:
           type: string
+          maxLength: 512
           description: A human-readable description of what the event represents
     Device:
       description: |
@@ -96,11 +108,13 @@ components:
       description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
       type: string
       pattern: '^\+[1-9][0-9]{4,14}$'
+      maxLength: 16
       example: "+123456789"
 
     NetworkAccessIdentifier:
       description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
       type: string
+      maxLength: 253
       example: "123456789@example.com"
 
     DeviceIpv4Address:
@@ -131,12 +145,14 @@ components:
       description: A single IPv4 address with no subnet mask
       type: string
       format: ipv4
+      maxLength: 15
       example: "84.125.93.10"
 
     Port:
       description: TCP or UDP port number
       type: integer
-      minimum: 0
+      format: int32
+      minimum: 1
       maximum: 65535
 
     DeviceIpv6Address:
@@ -144,6 +160,7 @@ components:
         The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
       type: string
       format: ipv6
+      maxLength: 45
       example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
 
     Area:
@@ -235,44 +252,44 @@ components:
       maximum: 180
 
   responses:
-#######################################################
-#######################################################
-# ERROR RESPONSE SCHEMA TEMPLATE
-#   - Objective: Make normative error `status` and `code` values
-#   - Schema Template rationale:
-#     - The `allOf` in content.application/json.schema allows a combination of both the generic ErrorInfo schema and the specific schema for this error response,
-#       which validates that `status` and `code` have only the specified values.
-#       This `allOf` is used without discriminator because it does not imply any hierarchy between the models, just 2 schemas that must be independently validated.
-#######################################################
-#    ErrorResponseSchema:
-#      ...
-#      content:
-#        application/json:
-#          schema:
-#            allOf:
-#              - $ref: '#/components/schemas/ErrorInfo'
-#              - type: object
-#                properties:
-#                  status:
-#                    enum:
-#                      - <status>
-#                  code:
-#                    enum:
-#                      - <code1>
-#                      - <code2>
-#          examples:
-#            ExampleKey1:
-#              value:
-#                status: <status>
-#                code: <code1>
-#                message: <message1>
-#            ExampleKey2:
-#              value:
-#                status: <status>
-#                code: <code2>
-#                message: <message2>
-#######################################################
-#######################################################
+    #######################################################
+    #######################################################
+    # ERROR RESPONSE SCHEMA TEMPLATE
+    #   - Objective: Make normative error `status` and `code` values
+    #   - Schema Template rationale:
+    #     - The `allOf` in content.application/json.schema allows a combination of both the generic ErrorInfo schema and the specific schema for this error response,
+    #       which validates that `status` and `code` have only the specified values.
+    #       This `allOf` is used without discriminator because it does not imply any hierarchy between the models, just 2 schemas that must be independently validated.
+    #######################################################
+    #    ErrorResponseSchema:
+    #      ...
+    #      content:
+    #        application/json:
+    #          schema:
+    #            allOf:
+    #              - $ref: '#/components/schemas/ErrorInfo'
+    #              - type: object
+    #                properties:
+    #                  status:
+    #                    enum:
+    #                      - <status>
+    #                  code:
+    #                    enum:
+    #                      - <code1>
+    #                      - <code2>
+    #          examples:
+    #            ExampleKey1:
+    #              value:
+    #                status: <status>
+    #                code: <code1>
+    #                message: <message1>
+    #            ExampleKey2:
+    #              value:
+    #                status: <status>
+    #                code: <code2>
+    #                message: <message2>
+    #######################################################
+    #######################################################
     Generic400:
       description: Bad Request
       headers:
@@ -808,7 +825,3 @@ components:
                 status: 504
                 code: TIMEOUT
                 message: Request timeout exceeded.
-
-
-
-
