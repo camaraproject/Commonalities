@@ -395,7 +395,14 @@ NOTE: When standardized AuthN/AuthZ flows are used, please refer to [6.2. Securi
 
 #### 3.2.1. Standardized Use of CAMARA Error Responses
 
-This section aims to provide a common use of the fields `status` and `code` of the `ErrorInfo` object across CAMARA APIs. The value of the `status` field is matching the numeric status code of the HTTP response message, e.g. "400". The `ErrorInfo` object is provided within the HTTP body of the HTTP response message.
+This section aims to provide a common use of the fields `status` and `code` of the `ErrorInfo` object across CAMARA APIs. 
+
+- The value of the `status` field is matching the numeric status code of the HTTP response message, e.g. "400". 
+- The value of the `code` field is matching the numeric error code value, which further details about the HTTP status code. 
+- The value of the `message` field is an optional human understandable description.
+
+The `ErrorInfo` object is provided within the HTTP body of the HTTP response message.
+
 
 In the following, we elaborate on the existing errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature:
 - i) syntax exceptions
