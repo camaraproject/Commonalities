@@ -13,7 +13,7 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 0.4.0-rc.1
-  x-camara-commonalities: "0.7"
+  x-camara-commonalities: 0.7.0
   
 externalDocs:
   description: Product documentation at CAMARA
