@@ -1,6 +1,6 @@
 # GeoJSON Geometry Model (Optional) – Commonalities Guidance
 
-This document introduces an **optional GeoJSON (RFC 7946)** geometry model for CAMARA APIs that require spatial comparison or GIS-native capabilities.
+This document introduces an **optional [GeoJSON (RFC 7946)](https://www.rfc-editor.org/rfc/rfc7946.html)** geometry model for CAMARA APIs that require spatial comparison or GIS-native capabilities.
 
 The intention is **not** to replace the existing CAMARA `Area` datatype, but to provide an additional model when needed, 
 without impacting existing and future CAMARA APIs that only require simple Circle or Polygon structures.
