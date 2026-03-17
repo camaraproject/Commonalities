@@ -410,7 +410,7 @@ In the following, we elaborate on the existing errors. In particular, we identif
   
   Examples: `400 - INVALID_ARGUMENT`, `405 - METHOD_NOT_ALLOWED`, etc.
 - ii) service exceptions
-  - The API Consumer has made a request with valid syntax, but the API Provider is currently unable to fulfil it. This can be due to a technical reason (e.g. server or backend failure) or a policy reason (e.g. business quota exceeded). The API Provider should indicate to the client if/when the request can be resubmitted and whether any modification is required.
+  - The API Consumer has made a request but the API Provider is currently unable to fulfil it. This can be due to a technical reason (e.g. server or backend failure) or a policy reason (e.g. business quota exceeded). The API Provider should indicate to the client if/when the request can be resubmitted and whether any modification is required.
   
   Examples: `403 - PERMISSION_DENIED`, `422 - SERVICE_NOT_APPLICABLE`, `429 - QUOTA_EXCEEDED`, `5xx` range, etc.
 
