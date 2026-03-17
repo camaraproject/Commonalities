@@ -18,7 +18,7 @@ Some CAMARA APIs currently perform **geometric comparisons**, such as:
 
 These are best handled using **GIS-native geometry models**, which already exist in spatial databases and GIS engines.
 
-The current CAMARA `Area` model (Circle / Polygon using custom JSON) is sufficient for *simple* APIs that only **return** an area.  
+The current CAMARA `Area` model (Circle / Polygon using custom JSON) is sufficient for *simple* APIs that only **return** an area and/or **require** an area as an input.  
 However, APIs performing **spatial predicates** benefit from using a standard format.
 
 ---
