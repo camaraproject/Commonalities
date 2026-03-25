@@ -21,10 +21,11 @@ The documents that are relevant for CAMARA API Repositories are found in the `do
 
 The `artifacts` directory contains:
 * templates for creating Github issues
-* common data and error formats for CAMARA APIs in [CAMARA_common.yaml](artifacts/CAMARA_common.yaml)
+* common data and error formats for CAMARA APIs in [CAMARA_common.yaml](artifacts/common/CAMARA_common.yaml)
+* API templates demonstrating `$ref` consumption of common schemas: in [artifacts/api-templates](artifacts/api-templates) folder
 * notification subscription template: [event-subscription-template.yaml](artifacts/camara-cloudevents/event-subscription-template.yaml)
 * OAS definition of CAMARA Event using CloudEvents: [notification-as-cloud-event.yaml](artifacts/notification-as-cloud-event.yaml)
-* Common artifacts for testing error scenarios for device and phoneNumber: in [artifacts/testing](artifacts/testing) folder 
+* Common artifacts for testing error scenarios for device and phoneNumber: in [artifacts/testing](artifacts/testing) folder
 
 ### Frequently-accessed output documents
 

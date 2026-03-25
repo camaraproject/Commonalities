@@ -87,7 +87,7 @@ that this point is open to continuous evolution over time through the addition o
 To allow for proper management of this ever-evolving list, an external repository has been defined to that end.
 This repository is referenced below.
 
-[Link to Common Data Types documentation repository](../artifacts/CAMARA_common.yaml)
+[Link to Common Data Types documentation repository](../artifacts/common/CAMARA_common.yaml)
 
 
 ### 2.2. Data Definitions
@@ -370,7 +370,7 @@ An error representation MUST NOT differ from the representation of any resource.
 All these aforementioned fields are mandatory in Error Responses.
 `status` and `code` fields have normative nature, so as their use has to be standardized (see [3.2.1. Standardized use of CAMARA error responses](#321-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
 
-The values of the `status` and `code` fields are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/CAMARA_common.yaml).
+The values of the `status` and `code` fields are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/common/CAMARA_common.yaml).
 
 An example of JSON error structure is as follows:
 
@@ -487,7 +487,7 @@ The Following table compiles the guidelines to be adopted:
 |     5      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
 
 **NOTE:**
-The `Device` object defined in [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
+The `Device` object defined in [CAMARA_common.yaml](/artifacts/common/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
 
 Where an API consumer provides more than one device identifier, it is RECOMMENDED that the API provider include in the response a single device identifier (from those provided) which they are using to fulfil the API. This would apply even if the device identifiers do not all match the same device, as the API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device.
 
@@ -1398,7 +1398,7 @@ Make the information available:
 
 When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
 - If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly given that the `sub` will not be a globally unique identifier nor contain PII as per the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#id-token-sub-claim) requirements.
-- If the access token is a Two-Legged Access Token, no User is associated with the token, and hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
+- If the access token is a Two-Legged Access Token, no User is associated with the token, and hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/common/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
 
 If an API provider issues Three-Legged Access Tokens for use with the API, the following error may occur:
 - **Both a Three-Legged Access Token and an explicit User identifier (device or phone number) are provided by the API consumer.**

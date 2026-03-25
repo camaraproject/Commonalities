@@ -1,0 +1,232 @@
+openapi: 3.0.3
+info:
+  title: Sample CAMARA Service API
+  description: |
+    Template for a request-response CAMARA API.
+
+    Copy this file to your API repository's `code/API_definitions/` directory
+    and adapt it to your API's resources and operations.
+
+    This template demonstrates:
+    - `$ref` to `../common/CAMARA_common.yaml` for shared schemas, error responses,
+      parameters, headers, and security schemes
+    - Two options for error responses:
+      - Option A: Pure `$ref` for responses using only generic error codes
+      - Option B: Local response definition extending generic errors with API-specific codes
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: wip
+  x-camara-commonalities: 0.7.0
+servers:
+  - url: "{apiRoot}/sample-service/vwip"
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root, Apache 2.0 licensed
+tags:
+  - name: Resources
+    description: Operations on sample resources
+security:
+  - openId:
+      - sample-service:resource:read
+      - sample-service:resource:write
+paths:
+  /resources:
+    post:
+      tags:
+        - Resources
+      summary: Create a resource
+      description: Creates a new resource with the provided properties.
+      operationId: createResource
+      parameters:
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResource"
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+        "409":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic409"
+        "422":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic422"
+        "429":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
+        "500":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+    get:
+      tags:
+        - Resources
+      summary: List resources
+      description: Returns a list of all resources accessible to the API consumer.
+      operationId: listResources
+      parameters:
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      responses:
+        "200":
+          description: List of resources
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Resource"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+        "500":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+  /resources/{resourceId}:
+    get:
+      tags:
+        - Resources
+      summary: Get a resource by ID
+      description: Returns the details of a specific resource identified by its ID.
+      operationId: getResource
+      parameters:
+        - $ref: "#/components/parameters/ResourceId"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      responses:
+        "200":
+          description: Resource details
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+        # Option A — pure $ref for responses using only generic error codes
+        "404":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+        "500":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+    delete:
+      tags:
+        - Resources
+      summary: Delete a resource
+      description: Deletes a specific resource identified by its ID.
+      operationId: deleteResource
+      parameters:
+        - $ref: "#/components/parameters/ResourceId"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      responses:
+        "204":
+          description: Resource deleted
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+        # Option B — local response extending generic errors with API-specific codes
+        "404":
+          $ref: "#/components/responses/ResourceNotFound404"
+        "500":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+components:
+  securitySchemes:
+    openId:
+      $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
+  responses:
+    # Option B example: API-specific error response extending generic error codes.
+    # Use this pattern when an operation needs API-specific error codes in addition
+    # to the generic ones defined in CAMARA_common.yaml.
+    ResourceNotFound404:
+      description: Resource not found
+      headers:
+        x-correlator:
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 404
+                  code:
+                    enum:
+                      - NOT_FOUND
+                      - IDENTIFIER_NOT_FOUND
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: The specified resource was not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+            RESOURCE_404_IDENTIFIER_NOT_FOUND:
+              description: API-specific — some identifier cannot be matched to a resource
+              value:
+                status: 404
+                code: IDENTIFIER_NOT_FOUND
+                message: Some of the provided identifiers are not found.
+  parameters:
+    ResourceId:
+      name: resourceId
+      in: path
+      required: true
+      description: Identifier of the resource to operate on
+      schema:
+        $ref: "#/components/schemas/ResourceId"
+  schemas:
+    ResourceId:
+      type: string
+      format: uuid
+      description: Unique identifier for the resource
+    CreateResource:
+      description: Properties for creating a new resource
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          maxLength: 128
+          description: Human-readable name for the resource
+        device:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/Device"
+    Resource:
+      description: A resource managed by the API
+      type: object
+      required:
+        - resourceId
+        - name
+      properties:
+        resourceId:
+          $ref: "#/components/schemas/ResourceId"
+        name:
+          type: string
+          maxLength: 128
+          description: Human-readable name for the resource
+        device:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/Device"
