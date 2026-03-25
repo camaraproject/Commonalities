@@ -67,7 +67,7 @@ paths:
                 content:
                   application/cloudevents+json:
                     schema:
-                      $ref: "#/components/schemas/CloudEvent"
+                      $ref: "#/components/schemas/NotificationEvent"
               responses:
                 "204":
                   description: Successful notification
@@ -462,8 +462,6 @@ components:
         support explicit subscriptions.
         Extends the CloudEvent envelope and constrains `type` to the set of
         lifecycle event types managed by Commonalities.
-        API projects include this group via NotificationEvent.oneOf and must
-        not modify it.
       allOf:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
@@ -673,7 +671,7 @@ components:
       example: "2018-04-05T17:31:00Z"
 
     # ─────────────────────────────────────────────────────────────────────────
-    # Layer 2 — Callback union (API project-owned)
+    # Callback union (API project-owned)
     #
     # oneOf over all valid event groups at the callback endpoint.
     # Owns no discriminator and applies no constraints of its own.
