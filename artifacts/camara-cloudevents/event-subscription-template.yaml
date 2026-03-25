@@ -221,10 +221,14 @@ components:
     openId:
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
+      description: OpenID Connect authentication via discovery metadata.
     notificationsBearerAuth:
       type: http
       scheme: bearer
       bearerFormat: "{$request.body#/sinkCredential.credentialType}"
+      description: |
+        Bearer token for notification delivery. Token format is determined
+        by `sinkCredential.credentialType` in the subscription request.
   parameters:
     SubscriptionId:
       name: subscriptionId
@@ -453,7 +457,6 @@ components:
     # and owns the lifecycle discriminator mapping.
     #
     # API projects reference this group via NotificationEvent but never modify it.
-    # In a split-file layout this schema lives in CAMARA_Events_common.yaml.
     # ─────────────────────────────────────────────────────────────────────────
 
     SubscriptionLifecycleEvent:
@@ -576,6 +579,12 @@ components:
       description: The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, it SHALL be referred to as `subscriptionId` as per the Commonalities Event Notification Model.
       example: qs15-h556-rt89-1298
 
+    # ─────────────────────────────────────────────────────────────────────────
+    # CloudEvents 1.0 envelope (Commonalities-owned, never modified)
+    #
+    # Knows nothing about CAMARA event types, data payloads, or discriminator
+    # mappings. Any CAMARA API that needs to send a notification starts here.
+    # ─────────────────────────────────────────────────────────────────────────
     CloudEvent:
       type: object
       description: |
@@ -598,6 +607,7 @@ components:
           $ref: "#/components/schemas/Source"
         type:
           type: string
+          maxLength: 512
           description: |
             Identifies the event type. CAMARA APIs use reverse-DNS notation:
             org.camaraproject.<api-name>.<event-version>.<event-name>
@@ -617,6 +627,7 @@ components:
           description: Event details payload. Structure is defined by each concrete event schema.
         time:
           $ref: "#/components/schemas/DateTime"
+
     # ─────────────────────────────────────────────────────────────────────────
     # Extends CloudEvent via allOf and does exactly two things:
     #   1. Constrains `type` to its own ApiEventType enum
@@ -644,7 +655,6 @@ components:
         mapping:
           org.camaraproject.api-name.v0.event-type1: "#/components/schemas/EventApiSpecific1"
           org.camaraproject.api-name.v0.event-type2: "#/components/schemas/EventApiSpecific2"
-
 
     Source:
       type: string
@@ -834,6 +844,7 @@ components:
     # ─────────────────────────────────────────────────────────────────────────
 
     HTTPSubscriptionRequest:
+      description: Subscription request for HTTP-based event delivery.
       allOf:
         - $ref: "#/components/schemas/SubscriptionRequest"
         - type: object
@@ -842,6 +853,7 @@ components:
               $ref: "#/components/schemas/HTTPSettings"
 
     HTTPSubscriptionResponse:
+      description: Subscription resource returned for HTTP-based event delivery.
       allOf:
         - $ref: "#/components/schemas/Subscription"
         - type: object
@@ -851,6 +863,7 @@ components:
 
     HTTPSettings:
       type: object
+      description: HTTP protocol settings for event delivery.
       properties:
         headers:
           type: object
