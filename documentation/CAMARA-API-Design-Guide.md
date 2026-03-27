@@ -764,8 +764,8 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  # CAMARA Commonalities minor version - x.y
-  x-camara-commonalities: "0.6"
+  # CAMARA Commonalities version
+  x-camara-commonalities: 0.7.0
 ```
 
 #### 5.3.1. Title
@@ -801,7 +801,7 @@ license
 ```
 
 #### 5.3.7. Extension Field
-The API SHALL specify the Commonalities minor release number they are compliant to, by including the `x-camara-commonalities` extension field.
+The API SHALL specify the Commonalities release version they are compliant to, by including the `x-camara-commonalities` extension field. The value is the full version string of the Commonalities release used by the API, as stored in `VERSION.yaml` at the corresponding Commonalities release tag (e.g. `0.7.0` for a public release, or `0.7.0-rc.1` for a pre-release).
 
 ### 5.4. ExternalDocs Object
 The `externalDocs` object SHALL have the following content:
