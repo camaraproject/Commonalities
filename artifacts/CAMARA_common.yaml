@@ -7,7 +7,7 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 0.8.0-rc.1
 
-  x-camara-commonalities: "0.7"
+  x-camara-commonalities: 0.7.0
 
 paths: {}
 components:
