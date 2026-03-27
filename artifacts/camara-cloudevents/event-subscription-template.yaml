@@ -21,7 +21,7 @@ externalDocs:
   # {apiRepository} MUST be replaced by the CAMARA Subproject Repository name where the API design based on this template is hosted.
 servers:
   - url: "{apiRoot}/api-name/vx.y"
-    # api-name and version should be valued accordingly to the CAMARA API versioning guidelines, e.g. for a version x.y.z, put v0.y for x=0 or just vx for x>0 in the url.
+- url: "{apiRoot}/api-name/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -442,7 +442,7 @@ components:
       type: string
       description: |
         Enum of API-specific event type strings for this API project.
-        The reverse-DNS prefix org.camaraproject.<api-name> makes each value
+        The reverse-DNS prefix `org.camaraproject.<api-name>` makes each value
         globally unique, so two different API groups can independently define
         identically-named event types without any collision risk.
       enum:
@@ -610,7 +610,7 @@ components:
           maxLength: 512
           description: |
             Identifies the event type. CAMARA APIs use reverse-DNS notation:
-            org.camaraproject.<api-name>.<event-version>.<event-name>
+            `org.camaraproject.<api-name>.<event-version>.<event-name>`
             The api-name segment makes each type globally unique across API groups.
         specversion:
           type: string
@@ -629,6 +629,8 @@ components:
           $ref: "#/components/schemas/DateTime"
 
     # ─────────────────────────────────────────────────────────────────────────
+    # API-specific notification event group
+    #
     # Extends CloudEvent via allOf and does exactly two things:
     #   1. Constrains `type` to its own ApiEventType enum
     #   2. Owns the discriminator mapping from each enum value to a concrete schema
