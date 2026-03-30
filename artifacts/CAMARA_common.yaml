@@ -309,7 +309,7 @@ components:
                     enum:
                       - INVALID_ARGUMENT
                       - OUT_OF_RANGE
-                      - "{{SPECIFIC_CODE}}"
+                      # - "{{SPECIFIC_CODE}}" - API-specific codes added if needed
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               description: Invalid Argument. Generic Syntax Exception
@@ -323,12 +323,12 @@ components:
                 status: 400
                 code: OUT_OF_RANGE
                 message: Client specified an invalid range.
-            GENERIC_400_{{SPECIFIC_CODE}}:
-              description: Specific Syntax Exception regarding a field that is relevant in the context of the API
-              value:
-                status: 400
-                code: "{{SPECIFIC_CODE}}"
-                message: Message for specific code
+                # GENERIC_400_{{SPECIFIC_CODE}}:
+                #   description: Specific Syntax Exception regarding a field that is relevant in the context of the API
+                #   value:
+                #     status: 400
+                #     code: "{{SPECIFIC_CODE}}"
+                #     message: Message for specific code
     Generic401:
       description: Unauthorized
       headers:
@@ -373,7 +373,7 @@ components:
                     enum:
                       - PERMISSION_DENIED
                       - INVALID_TOKEN_CONTEXT
-                      - "{{SPECIFIC_CODE}}"
+                      # - "{{SPECIFIC_CODE}}" - API-specific codes added if needed
           examples:
             GENERIC_403_PERMISSION_DENIED:
               description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
@@ -386,13 +386,14 @@ components:
               value:
                 status: 403
                 code: INVALID_TOKEN_CONTEXT
-                message: "{{field}} is not consistent with access token."
-            GENERIC_403_{{SPECIFIC_CODE}}:
-              description: Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API
-              value:
-                status: 403
-                code: "{{SPECIFIC_CODE}}"
-                message: Message for specific code
+                # message: "{{field}} is not consistent with access token."
+                message: "... is not consistent with access token."
+                # GENERIC_403_{{SPECIFIC_CODE}}:
+                #   description: Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API
+                #   value:
+                #     status: 403
+                #     code: "{{SPECIFIC_CODE}}"
+                #     message: Message for specific code
     Generic404:
       description: Not found
       headers:
@@ -412,7 +413,7 @@ components:
                     enum:
                       - NOT_FOUND
                       - IDENTIFIER_NOT_FOUND
-                      - "{{SPECIFIC_CODE}}"
+                      # - "{{SPECIFIC_CODE}}" - API-specific codes added if needed
           examples:
             GENERIC_404_NOT_FOUND:
               description: Resource is not found
@@ -426,12 +427,12 @@ components:
                 status: 404
                 code: IDENTIFIER_NOT_FOUND
                 message: Device identifier not found.
-            GENERIC_404_{{SPECIFIC_CODE}}:
-              description: Specific situation to highlight the resource/concept not found
-              value:
-                status: 404
-                code: "{{SPECIFIC_CODE}}"
-                message: Message for specific code
+                # GENERIC_404_{{SPECIFIC_CODE}}:
+                #   description: Specific situation to highlight the resource/concept not found
+                #   value:
+                #     status: 404
+                #     code: "{{SPECIFIC_CODE}}"
+                #     message: Message for specific code
     Generic405:
       description: Method Not Allowed
       headers:
@@ -503,7 +504,7 @@ components:
                       - ALREADY_EXISTS
                       - CONFLICT
                       - INCOMPATIBLE_STATE
-                      - "{{SPECIFIC_CODE}}"
+                      # - "{{SPECIFIC_CODE}}" - API-specific codes added if needed
           examples:
             GENERIC_409_ABORTED:
               description: The resource is undergoing modification by another process
@@ -521,7 +522,7 @@ components:
               ###################################
               # This Error Code is DEPRECATED
               ###################################
-              description: Duplication of an existing resource 
+              description: Duplication of an existing resource
               value:
                 status: 409
                 code: CONFLICT
@@ -533,13 +534,12 @@ components:
                 status: 409
                 code: INCOMPATIBLE_STATE
                 message: Resource must be in AVAILABLE state to extend. Current state is UNAVAILABLE.
-
-            GENERIC_409_{{SPECIFIC_CODE}}:
-              description: Specific conflict situation that is relevant in the context of the API
-              value:
-                status: 409
-                code: "{{SPECIFIC_CODE}}"
-                message: Message for specific code
+                # GENERIC_409_{{SPECIFIC_CODE}}:
+                #   description: Specific conflict situation that is relevant in the context of the API
+                #   value:
+                #     status: 409
+                #     code: "{{SPECIFIC_CODE}}"
+                #     message: Message for specific code
     Generic410:
       description: Gone
       headers:
@@ -636,7 +636,7 @@ components:
                       - MISSING_IDENTIFIER
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
-                      - "{{SPECIFIC_CODE}}"
+                      # - "{{SPECIFIC_CODE}}" - API-specific codes added if needed
           examples:
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
@@ -662,12 +662,12 @@ components:
                 status: 422
                 code: UNNECESSARY_IDENTIFIER
                 message: The device is already identified by the access token.
-            GENERIC_422_{{SPECIFIC_CODE}}:
-              description: Any semantic condition associated to business logic, specifically related to a field or data structure
-              value:
-                status: 422
-                code: "{{SPECIFIC_CODE}}"
-                message: Message for specific code
+                # GENERIC_422_{{SPECIFIC_CODE}}:
+                #   description: Any semantic condition associated to business logic, specifically related to a field or data structure
+                #   value:
+                #     status: 422
+                #     code: "{{SPECIFIC_CODE}}"
+                #     message: Message for specific code
     Generic429:
       description: Too Many Requests
       headers:
