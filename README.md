@@ -21,11 +21,15 @@ The documents that are relevant for CAMARA API Repositories are found in the `do
 
 The `artifacts` directory contains:
 * templates for creating Github issues
-* common data and error formats for CAMARA APIs in [CAMARA_common.yaml](artifacts/common/CAMARA_common.yaml)
-* API templates demonstrating `$ref` consumption of common schemas: in [artifacts/api-templates](artifacts/api-templates) folder
-* notification subscription template: [event-subscription-template.yaml](artifacts/camara-cloudevents/event-subscription-template.yaml)
-* OAS definition of CAMARA Event using CloudEvents: [notification-as-cloud-event.yaml](artifacts/notification-as-cloud-event.yaml)
-* Common artifacts for testing error scenarios for device and phoneNumber: in [artifacts/testing](artifacts/testing) folder
+* common data types and error formats for CAMARA APIs in [artifacts/common](artifacts/common):
+  * [CAMARA_common.yaml](artifacts/common/CAMARA_common.yaml) — shared schemas, error responses, headers, and parameters
+  * [CAMARA_event_common.yaml](artifacts/common/CAMARA_event_common.yaml) — CloudEvents envelope, subscription management, protocol settings, credentials, and subscription-specific error responses
+* API templates demonstrating `$ref` consumption of common schemas in [artifacts/api-templates](artifacts/api-templates):
+  * [sample-service.yaml](artifacts/api-templates/sample-service.yaml) — request-response CRUD template
+  * [sample-service-subscriptions.yaml](artifacts/api-templates/sample-service-subscriptions.yaml) — explicit subscription management template
+* notification callback template in [artifacts/notification-templates](artifacts/notification-templates):
+  * [sample-notification.yaml](artifacts/notification-templates/sample-notification.yaml) — receiver-side notification endpoint
+* common test scenarios in [artifacts/testing](artifacts/testing) — error handling for device/phoneNumber APIs and subscription APIs
 
 ### Frequently-accessed output documents
 
