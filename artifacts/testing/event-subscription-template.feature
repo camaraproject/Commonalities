@@ -14,7 +14,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   #        + Add here the specific testing asset(s) required to test the API
   #
   # References to OAS spec schemas refer to schemas specified in <xxx>-subscriptions.yaml
-  # References to schemas starting with the # symbol are JSON Pointers from the root of the OAS document: <xxx>-subscriptions.yaml, Schema names are aligned with the event-subscription-template.yaml artifact.
+  # References to schemas starting with the # symbol are JSON Pointers from the root of the OAS document: <xxx>-subscriptions.yaml, Schema names are aligned with the sample-service-subscriptions.yaml template.
   #
   # IMPORTANT:
   # 1/ This file must be completed with the test cases specific to the subscription type managed by the API.
