@@ -12,16 +12,16 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.4.0-rc.1
+  version: wip
   x-camara-commonalities: 0.7.0
-  
+
 externalDocs:
   description: Product documentation at CAMARA
   url: https://github.com/camaraproject/apiRepository
   # {apiRepository} MUST be replaced by the CAMARA Subproject Repository name where the API design based on this template is hosted.
 servers:
   - url: "{apiRoot}/api-name/vx.y"
-    # api-name and version should be valued accordingly to the CAMARA API versioning guidelines, e.g. for a version x.y.z, put v0.y for x=0 or just vx for x>0 in the url.
+- url: "{apiRoot}/api-name/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -67,7 +67,7 @@ paths:
                 content:
                   application/cloudevents+json:
                     schema:
-                      $ref: "#/components/schemas/CloudEvent"
+                      $ref: "#/components/schemas/NotificationEvent"
               responses:
                 "204":
                   description: Successful notification
@@ -221,10 +221,14 @@ components:
     openId:
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
+      description: OpenID Connect authentication via discovery metadata.
     notificationsBearerAuth:
       type: http
       scheme: bearer
       bearerFormat: "{$request.body#/sinkCredential.credentialType}"
+      description: |
+        Bearer token for notification delivery. Token format is determined
+        by `sinkCredential.credentialType` in the subscription request.
   parameters:
     SubscriptionId:
       name: subscriptionId
@@ -298,12 +302,15 @@ components:
         types:
           description: |
             Camara Event types eligible to be delivered by this subscription.
-            Note: the maximum number of event types per subscription will be decided at API project level
+            References ApiEventType (not the full NotificationEvent union) —
+            subscription requests target API-specific events only; lifecycle
+            events are server-initiated and cannot be subscribed to directly.
+            Note: the maximum number of event types per subscription will be decided at API project level.
           type: array
           minItems: 1
           maxItems: 1
           items:
-            $ref: "#/components/schemas/SubscriptionEventType"
+            $ref: "#/components/schemas/ApiEventType"
         config:
           $ref: "#/components/schemas/Config"
       discriminator:
@@ -326,8 +333,8 @@ components:
       description: |
         Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
         In CAMARA we have predefined attributes like `subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`
-        Specific event type attributes must be defined in `subscriptionDetail`
-        Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        Specific event type attributes must be defined in `subscriptionDetail`.
+        Note: if a request is performed for several event types, all subscribed events will use same `config` parameters.
       type: object
       required:
         - subscriptionDetail
@@ -394,7 +401,7 @@ components:
               maxLength: 512
     AccessTokenCredential:
       type: object
-      description: An access token credential. This type of credential is meant to be used by API Consumers that have limited capabilities to handle authorization requests. 
+      description: An access token credential. This type of credential is meant to be used by API Consumers that have limited capabilities to handle authorization requests.
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
         - type: object
@@ -424,35 +431,65 @@ components:
             - accessTokenType
     PrivateKeyJWTCredential:
       type: object
-      description: Use PRIVATE_KEY_JWT to get an access token. The authorization server information needed for this type of sink credential (token endpoint, client ID, JWKS URL) is shared upfront between the client and the CAMARA entity. This type of credential is to be used by clients that have an authorization server. 
+      description: Use PRIVATE_KEY_JWT to get an access token. The authorization server information needed for this type of sink credential (token endpoint, client ID, JWKS URL) is shared upfront between the client and the CAMARA entity. This type of credential is to be used by clients that have an authorization server.
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
     CreateSubscriptionDetail:
       description: The detail of the requested event subscription.
       type: object
 
-    EventTypeNotification:
+    ApiEventType:
       type: string
       description: |
-        event-type - Event triggered when an event-type event occurred. Several event-type could be defined.
-
-        - subscription-started: Event triggered when the subscription starts
-        - subscription-updated: Event triggered when the subscription is updated
-        - subscription-ended: Event triggered when the subscription ends
+        Enum of API-specific event type strings for this API project.
+        The reverse-DNS prefix `org.camaraproject.<api-name>` makes each value
+        globally unique, so two different API groups can independently define
+        identically-named event types without any collision risk.
       enum:
         - org.camaraproject.api-name.v0.event-type1
         - org.camaraproject.api-name.v0.event-type2
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Subscription lifecycle event group (Commonalities-owned)
+    #
+    # Common to every CAMARA API that supports subscriptions.
+    # Extends CloudEvent via allOf, constrains `type` to lifecycle values,
+    # and owns the lifecycle discriminator mapping.
+    #
+    # API projects reference this group via NotificationEvent but never modify it.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    SubscriptionLifecycleEvent:
+      description: |
+        Subscription lifecycle event group, common to all CAMARA APIs that
+        support explicit subscriptions.
+        Extends the CloudEvent envelope and constrains `type` to the set of
+        lifecycle event types managed by Commonalities.
+      allOf:
+        - $ref: "#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            type:
+              $ref: "#/components/schemas/SubscriptionLifecycleEventType"
+      discriminator:
+        propertyName: type
+        mapping:
+          org.camaraproject.api-name.v0.subscription-started: "#/components/schemas/EventSubscriptionStarted"
+          org.camaraproject.api-name.v0.subscription-updated: "#/components/schemas/EventSubscriptionUpdated"
+          org.camaraproject.api-name.v0.subscription-ended: "#/components/schemas/EventSubscriptionEnded"
+
+    SubscriptionLifecycleEventType:
+      type: string
+      description: |
+        Enum of subscription lifecycle event type strings.
+        These are managed by Commonalities and are identical across all CAMARA
+        APIs that support explicit subscriptions.
+        Kept as a separate named schema so the set of valid lifecycle type
+        strings can be referenced independently from the discriminated schema.
+      enum:
         - org.camaraproject.api-name.v0.subscription-started
         - org.camaraproject.api-name.v0.subscription-updated
         - org.camaraproject.api-name.v0.subscription-ended
-
-    SubscriptionEventType:
-      type: string
-      description: |
-        event-type that could be subscribed through this subscription. Several event-type could be defined.
-      enum:
-        - org.camaraproject.api-name.v0.event-type1
-        - org.camaraproject.api-name.v0.event-type2
 
     Subscription:
       description: Represents a event-type subscription.
@@ -481,7 +518,7 @@ components:
           minItems: 1
           maxItems: 1
           items:
-            $ref: "#/components/schemas/SubscriptionEventType"
+            $ref: "#/components/schemas/ApiEventType"
         config:
           $ref: '#/components/schemas/Config'
         id:
@@ -542,9 +579,19 @@ components:
       description: The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, it SHALL be referred to as `subscriptionId` as per the Commonalities Event Notification Model.
       example: qs15-h556-rt89-1298
 
+    # ─────────────────────────────────────────────────────────────────────────
+    # CloudEvents 1.0 envelope (Commonalities-owned, never modified)
+    #
+    # Knows nothing about CAMARA event types, data payloads, or discriminator
+    # mappings. Any CAMARA API that needs to send a notification starts here.
+    # ─────────────────────────────────────────────────────────────────────────
     CloudEvent:
       type: object
-      description: The notification callback content
+      description: |
+        CloudEvents 1.0 specification envelope.
+        This schema is the stable base for all CAMARA event notifications.
+        It imposes no constraints on `type` values or `data` structure —
+        those concerns belong to the API-specific and lifecycle group schemas.
       required:
         - id
         - source
@@ -555,11 +602,16 @@ components:
         id:
           type: string
           maxLength: 256
-          description: identifier of this event, that must be unique in the source context.
+          description: Identifier of this event, unique within the source context.
         source:
           $ref: "#/components/schemas/Source"
         type:
-          $ref: "#/components/schemas/EventTypeNotification"
+          type: string
+          maxLength: 512
+          description: |
+            Identifies the event type. CAMARA APIs use reverse-DNS notation:
+            `org.camaraproject.<api-name>.<event-version>.<event-name>`
+            The api-name segment makes each type globally unique across API groups.
         specversion:
           type: string
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
@@ -572,17 +624,39 @@ components:
             - application/json
         data:
           type: object
-          description: Event details payload described in each CAMARA API and referenced by its type
+          description: Event details payload. Structure is defined by each concrete event schema.
         time:
           $ref: "#/components/schemas/DateTime"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # API-specific notification event group
+    #
+    # Extends CloudEvent via allOf and does exactly two things:
+    #   1. Constrains `type` to its own ApiEventType enum
+    #   2. Owns the discriminator mapping from each enum value to a concrete schema
+    #
+    # Adding a new event type requires only: adding a value to ApiEventType and
+    # adding a discriminator mapping entry here. CloudEvent is never touched.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    ApiNotificationEvent:
+      description: |
+        API-specific notification event group.
+        Extends the CloudEvent envelope and constrains `type` to the set of
+        event types defined by this API project.
+        Adding a new event type only requires updating ApiEventType and the
+        discriminator mapping below — the CloudEvent base never changes.
+      allOf:
+        - $ref: "#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            type:
+              $ref: "#/components/schemas/ApiEventType"
       discriminator:
         propertyName: "type"
         mapping:
           org.camaraproject.api-name.v0.event-type1: "#/components/schemas/EventApiSpecific1"
           org.camaraproject.api-name.v0.event-type2: "#/components/schemas/EventApiSpecific2"
-          org.camaraproject.api-name.v0.subscription-started: "#/components/schemas/EventSubscriptionStarted"
-          org.camaraproject.api-name.v0.subscription-updated: "#/components/schemas/EventSubscriptionUpdated"
-          org.camaraproject.api-name.v0.subscription-ended: "#/components/schemas/EventSubscriptionEnded"
 
     Source:
       type: string
@@ -608,22 +682,64 @@ components:
       description: Timestamp of when the occurrence happened. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
       example: "2018-04-05T17:31:00Z"
 
+    # ─────────────────────────────────────────────────────────────────────────
+    # Callback union (API project-owned)
+    #
+    # oneOf over all valid event groups at the callback endpoint.
+    # Owns no discriminator and applies no constraints of its own.
+    # Its only job is to enumerate which groups are valid for this API.
+    #
+    # To add a new event group: add it to the oneOf list. That is the only
+    # change required at this layer.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    NotificationEvent:
+      description: |
+        Union of all valid notification event groups at the callback endpoint.
+        This schema owns no discriminator — routing within each group is
+        handled by ApiNotificationEvent and SubscriptionLifecycleEvent
+        respectively. Its only responsibility is to enumerate which groups
+        are valid payloads for this API's notification callback.
+      oneOf:
+        - $ref: "#/components/schemas/ApiNotificationEvent"
+        - $ref: "#/components/schemas/SubscriptionLifecycleEvent"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Concrete event schemas — API-specific (API project-owned)
+    # ─────────────────────────────────────────────────────────────────────────
+
     EventApiSpecific1:
       description: event structure for event-type event 1
       allOf:
-        - $ref: "#/components/schemas/CloudEvent"
+        - $ref: "#/components/schemas/ApiNotificationEvent"
         - type: object
+          properties:
+            data:
+              type: object
+              description: |
+                Event-specific payload for event-type1.
+                Replace with the actual data schema for this event type.
 
     EventApiSpecific2:
       description: event structure for event-type event 2
       allOf:
-        - $ref: "#/components/schemas/CloudEvent"
+        - $ref: "#/components/schemas/ApiNotificationEvent"
         - type: object
+          properties:
+            data:
+              type: object
+              description: |
+                Event-specific payload for event-type2.
+                Replace with the actual data schema for this event type.
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Concrete event schemas — Subscription lifecycle (Commonalities-owned)
+    # ─────────────────────────────────────────────────────────────────────────
 
     EventSubscriptionStarted:
       description: event structure for event subscription started
       allOf:
-        - $ref: "#/components/schemas/CloudEvent"
+        - $ref: "#/components/schemas/SubscriptionLifecycleEvent"
         - type: object
           properties:
             data:
@@ -655,7 +771,7 @@ components:
     EventSubscriptionUpdated:
       description: event structure for event subscription updated
       allOf:
-        - $ref: "#/components/schemas/CloudEvent"
+        - $ref: "#/components/schemas/SubscriptionLifecycleEvent"
         - type: object
           properties:
             data:
@@ -680,8 +796,8 @@ components:
     UpdateReason:
       type: string
       description: |
-        - SUBSCRIPTION_ACTIVE - API server transitioned susbcription status to `ACTIVE`
-        - SUBSCRIPTION_INACTIVE - API server transitioned susbcription status to `INACTIVE`
+        - SUBSCRIPTION_ACTIVE - API server transitioned subscription status to `ACTIVE`
+        - SUBSCRIPTION_INACTIVE - API server transitioned subscription status to `INACTIVE`
       enum:
         - SUBSCRIPTION_ACTIVE
         - SUBSCRIPTION_INACTIVE
@@ -689,7 +805,7 @@ components:
     EventSubscriptionEnded:
       description: event structure for event subscription ended
       allOf:
-        - $ref: "#/components/schemas/CloudEvent"
+        - $ref: "#/components/schemas/SubscriptionLifecycleEvent"
         - type: object
           properties:
             data:
@@ -725,8 +841,12 @@ components:
         - SUBSCRIPTION_EXPIRED
         - ACCESS_TOKEN_EXPIRED
         - SUBSCRIPTION_DELETED
+    # ─────────────────────────────────────────────────────────────────────────
+    # Protocol-specific subscription schemas
+    # ─────────────────────────────────────────────────────────────────────────
 
     HTTPSubscriptionRequest:
+      description: Subscription request for HTTP-based event delivery.
       allOf:
         - $ref: "#/components/schemas/SubscriptionRequest"
         - type: object
@@ -735,6 +855,7 @@ components:
               $ref: "#/components/schemas/HTTPSettings"
 
     HTTPSubscriptionResponse:
+      description: Subscription resource returned for HTTP-based event delivery.
       allOf:
         - $ref: "#/components/schemas/Subscription"
         - type: object
@@ -744,6 +865,7 @@ components:
 
     HTTPSettings:
       type: object
+      description: HTTP protocol settings for event delivery.
       properties:
         headers:
           type: object
@@ -898,6 +1020,7 @@ components:
           description: NATS subject
       required:
         - subject
+
   responses:
     CreateSubscriptionBadRequest400:
       description: Problem with the client request
@@ -942,7 +1065,7 @@ components:
                 code: INVALID_PROTOCOL
                 message: Only HTTP is supported
             GENERIC_400_INVALID_CREDENTIAL:
-              description: Invalid sink credential type 
+              description: Invalid sink credential type
               value:
                 status: 400
                 code: INVALID_CREDENTIAL
@@ -1058,7 +1181,7 @@ components:
               value:
                 status: 403
                 code: PERMISSION_DENIED
-                message: Client does not have sufficient permissions to perform this action.       
+                message: Client does not have sufficient permissions to perform this action.
     SubscriptionPermissionDenied403:
       description: Client does not have sufficient permission
       headers:
@@ -1137,7 +1260,7 @@ components:
                       - ALREADY_EXISTS
           examples:
             GENERIC_409_ABORTED:
-              description: Concurreny of processes of the same nature/scope
+              description: Concurrency of processes of the same nature/scope
               value:
                 status: 409
                 code: ABORTED
