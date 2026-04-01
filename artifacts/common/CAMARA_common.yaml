@@ -19,6 +19,7 @@ components:
     openId:
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
+      description: OpenID Connect authentication via discovery metadata.
   headers:
     x-correlator:
       description: Correlation id for the different services

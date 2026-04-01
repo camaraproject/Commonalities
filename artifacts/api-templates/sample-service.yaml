@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Sample CAMARA Service API
+  title: Sample Service
   description: |
     Template for a request-response CAMARA API.
 
@@ -18,12 +18,16 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: wip
   x-camara-commonalities: 0.7.0
+externalDocs:
+  description: Product documentation at CAMARA
+  url: https://github.com/camaraproject/{apiRepository}
+  # {apiRepository} MUST be replaced by the CAMARA API Repository name where the API specification is hosted.
 servers:
   - url: "{apiRoot}/sample-service/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
-        description: API root, Apache 2.0 licensed
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
   - name: Resources
     description: Operations on sample resources
@@ -89,6 +93,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 1000
                 items:
                   $ref: "#/components/schemas/Resource"
         "401":
@@ -202,6 +208,7 @@ components:
     ResourceId:
       type: string
       format: uuid
+      maxLength: 36
       description: Unique identifier for the resource
     CreateResource:
       description: Properties for creating a new resource

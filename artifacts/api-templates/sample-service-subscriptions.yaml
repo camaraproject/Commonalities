@@ -219,9 +219,7 @@ paths:
 components:
   securitySchemes:
     openId:
-      type: openIdConnect
-      openIdConnectUrl: https://example.com/.well-known/openid-configuration
-      description: OpenID Connect authentication via discovery metadata.
+      $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
     notificationsBearerAuth:
       type: http
       scheme: bearer
