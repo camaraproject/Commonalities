@@ -619,4 +619,3 @@ components:
           properties:
             protocolSettings:
               $ref: "../common/CAMARA_event_common.yaml#/components/schemas/NATSSettings"
-
