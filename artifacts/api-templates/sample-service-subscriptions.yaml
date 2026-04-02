@@ -285,11 +285,12 @@ components:
         propertyName: protocol
         mapping:
           HTTP: "#/components/schemas/HTTPSubscriptionRequest"
-          MQTT3: "#/components/schemas/MQTTSubscriptionRequest"
-          MQTT5: "#/components/schemas/MQTTSubscriptionRequest"
-          AMQP: "#/components/schemas/AMQPSubscriptionRequest"
-          NATS: "#/components/schemas/NATSSubscriptionRequest"
-          KAFKA: "#/components/schemas/ApacheKafkaSubscriptionRequest"
+          # Future protocol support (not yet used in CAMARA):
+          # MQTT3: "#/components/schemas/MQTTSubscriptionRequest"
+          # MQTT5: "#/components/schemas/MQTTSubscriptionRequest"
+          # AMQP: "#/components/schemas/AMQPSubscriptionRequest"
+          # NATS: "#/components/schemas/NATSSubscriptionRequest"
+          # KAFKA: "#/components/schemas/ApacheKafkaSubscriptionRequest"
 
     Subscription:
       description: Represents a event-type subscription.
@@ -348,11 +349,12 @@ components:
         propertyName: protocol
         mapping:
           HTTP: "#/components/schemas/HTTPSubscriptionResponse"
-          MQTT3: "#/components/schemas/MQTTSubscriptionResponse"
-          MQTT5: "#/components/schemas/MQTTSubscriptionResponse"
-          AMQP: "#/components/schemas/AMQPSubscriptionResponse"
-          NATS: "#/components/schemas/NATSSubscriptionResponse"
-          KAFKA: "#/components/schemas/ApacheKafkaSubscriptionResponse"
+          # Future protocol support (not yet used in CAMARA):
+          # MQTT3: "#/components/schemas/MQTTSubscriptionResponse"
+          # MQTT5: "#/components/schemas/MQTTSubscriptionResponse"
+          # AMQP: "#/components/schemas/AMQPSubscriptionResponse"
+          # NATS: "#/components/schemas/NATSSubscriptionResponse"
+          # KAFKA: "#/components/schemas/ApacheKafkaSubscriptionResponse"
 
     SubscriptionAsync:
       description: Response for a event-type subscription request managed asynchronously (Creation or Deletion)
@@ -536,6 +538,64 @@ components:
     # ─────────────────────────────────────────────────────────────────────────
     # Protocol-specific subscription schemas
     # Protocol settings are referenced from CAMARA_event_common.yaml.
+    #
+    # Future protocol support (not yet used in CAMARA):
+    # MQTTSubscriptionRequest:
+    #   allOf:
+    #     - $ref: "#/components/schemas/SubscriptionRequest"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/MQTTSettings"
+    # MQTTSubscriptionResponse:
+    #   allOf:
+    #     - $ref: "#/components/schemas/Subscription"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/MQTTSettings"
+    # AMQPSubscriptionRequest:
+    #   allOf:
+    #     - $ref: "#/components/schemas/SubscriptionRequest"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/AMQPSettings"
+    # AMQPSubscriptionResponse:
+    #   allOf:
+    #     - $ref: "#/components/schemas/Subscription"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/AMQPSettings"
+    # ApacheKafkaSubscriptionRequest:
+    #   allOf:
+    #     - $ref: "#/components/schemas/SubscriptionRequest"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ApacheKafkaSettings"
+    # ApacheKafkaSubscriptionResponse:
+    #   allOf:
+    #     - $ref: "#/components/schemas/Subscription"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ApacheKafkaSettings"
+    # NATSSubscriptionRequest:
+    #   allOf:
+    #     - $ref: "#/components/schemas/SubscriptionRequest"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/NATSSettings"
+    # NATSSubscriptionResponse:
+    #   allOf:
+    #     - $ref: "#/components/schemas/Subscription"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/NATSSettings"
     # ─────────────────────────────────────────────────────────────────────────
 
     HTTPSubscriptionRequest:
@@ -555,67 +615,3 @@ components:
           properties:
             protocolSettings:
               $ref: "../common/CAMARA_event_common.yaml#/components/schemas/HTTPSettings"
-
-    MQTTSubscriptionRequest:
-      allOf:
-        - $ref: "#/components/schemas/SubscriptionRequest"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/MQTTSettings"
-
-    MQTTSubscriptionResponse:
-      allOf:
-        - $ref: "#/components/schemas/Subscription"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/MQTTSettings"
-
-    AMQPSubscriptionRequest:
-      allOf:
-        - $ref: "#/components/schemas/SubscriptionRequest"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/AMQPSettings"
-
-    AMQPSubscriptionResponse:
-      allOf:
-        - $ref: "#/components/schemas/Subscription"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/AMQPSettings"
-
-    ApacheKafkaSubscriptionRequest:
-      allOf:
-        - $ref: "#/components/schemas/SubscriptionRequest"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ApacheKafkaSettings"
-
-    ApacheKafkaSubscriptionResponse:
-      allOf:
-        - $ref: "#/components/schemas/Subscription"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ApacheKafkaSettings"
-
-    NATSSubscriptionRequest:
-      allOf:
-        - $ref: "#/components/schemas/SubscriptionRequest"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/NATSSettings"
-
-    NATSSubscriptionResponse:
-      allOf:
-        - $ref: "#/components/schemas/Subscription"
-        - type: object
-          properties:
-            protocolSettings:
-              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/NATSSettings"

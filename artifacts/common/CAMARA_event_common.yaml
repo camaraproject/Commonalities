@@ -143,7 +143,14 @@ components:
 
     Protocol:
       type: string
-      enum: ["HTTP", "MQTT3", "MQTT5", "AMQP", "NATS", "KAFKA"]
+      enum:
+        - HTTP
+        # Future protocol support (not yet used in CAMARA):
+        # - MQTT3
+        # - MQTT5
+        # - AMQP
+        # - NATS
+        # - KAFKA
       description: Identifier of a delivery protocol. Only HTTP is allowed for now
       example: "HTTP"
 
@@ -166,80 +173,81 @@ components:
           enum:
             - POST
 
-    MQTTSettings:
-      type: object
-      properties:
-        topicName:
-          type: string
-          maxLength: 256
-          description: MQTT topic name
-        qos:
-          type: integer
-          format: int32
-          minimum: 0
-          maximum: 2
-          description: Quality of Service level (0, 1, or 2)
-        retain:
-          type: boolean
-        expiry:
-          type: integer
-          format: int32
-          minimum: 0
-          maximum: 2147483647
-          description: Message expiry interval in seconds
-        userProperties:
-          type: object
-      required:
-        - topicName
+    # Future protocol support (not yet used in CAMARA):
+    # MQTTSettings:
+    #   type: object
+    #   properties:
+    #     topicName:
+    #       type: string
+    #       maxLength: 256
+    #       description: MQTT topic name
+    #     qos:
+    #       type: integer
+    #       format: int32
+    #       minimum: 0
+    #       maximum: 2
+    #       description: Quality of Service level (0, 1, or 2)
+    #     retain:
+    #       type: boolean
+    #     expiry:
+    #       type: integer
+    #       format: int32
+    #       minimum: 0
+    #       maximum: 2147483647
+    #       description: Message expiry interval in seconds
+    #     userProperties:
+    #       type: object
+    #   required:
+    #     - topicName
 
-    AMQPSettings:
-      type: object
-      properties:
-        address:
-          type: string
-          maxLength: 512
-        linkName:
-          type: string
-          maxLength: 256
-        senderSettlementMode:
-          type: string
-          enum: ["settled", "unsettled"]
-        linkProperties:
-          type: object
-          additionalProperties:
-            type: string
-            maxLength: 1024
+    # AMQPSettings:
+    #   type: object
+    #   properties:
+    #     address:
+    #       type: string
+    #       maxLength: 512
+    #     linkName:
+    #       type: string
+    #       maxLength: 256
+    #     senderSettlementMode:
+    #       type: string
+    #       enum: ["settled", "unsettled"]
+    #     linkProperties:
+    #       type: object
+    #       additionalProperties:
+    #         type: string
+    #         maxLength: 1024
 
-    ApacheKafkaSettings:
-      type: object
-      properties:
-        topicName:
-          type: string
-          maxLength: 249
-        partitionKeyExtractor:
-          type: string
-          maxLength: 512
-        clientId:
-          type: string
-          maxLength: 256
-        ackMode:
-          type: integer
-          format: int32
-          minimum: 0
-          maximum: 2
-          description: Acknowledgment mode (0=no ack, 1=leader ack, 2=all replicas ack)
-      required:
-        - topicName
+    # ApacheKafkaSettings:
+    #   type: object
+    #   properties:
+    #     topicName:
+    #       type: string
+    #       maxLength: 249
+    #     partitionKeyExtractor:
+    #       type: string
+    #       maxLength: 512
+    #     clientId:
+    #       type: string
+    #       maxLength: 256
+    #     ackMode:
+    #       type: integer
+    #       format: int32
+    #       minimum: 0
+    #       maximum: 2
+    #       description: Acknowledgment mode (0=no ack, 1=leader ack, 2=all replicas ack)
+    #   required:
+    #     - topicName
 
-    NATSSettings:
-      type: object
-      properties:
-        subject:
-          type: string
-          maxLength: 256
-          description: NATS subject
-      required:
-        - subject
+    # NATSSettings:
+    #   type: object
+    #   properties:
+    #     subject:
+    #       type: string
+    #       maxLength: 256
+    #       description: NATS subject
+    #   required:
+    #     - subject
 
     # ─────────────────────────────────────────────────────────────────────────
     # Section 4: Sink credentials
