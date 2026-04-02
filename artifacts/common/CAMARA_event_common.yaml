@@ -272,7 +272,7 @@ components:
         credentialType:
           type: string
           enum:
-            - PLAIN
+            # - PLAIN  # not used in CAMARA
             - ACCESSTOKEN
             - PRIVATE_KEY_JWT
           description: |
@@ -280,30 +280,30 @@ components:
       discriminator:
         propertyName: credentialType
         mapping:
-          PLAIN: "#/components/schemas/PlainCredential"
+          # PLAIN: "#/components/schemas/PlainCredential"  # not used in CAMARA
           ACCESSTOKEN: "#/components/schemas/AccessTokenCredential"
           PRIVATE_KEY_JWT: "#/components/schemas/PrivateKeyJWTCredential"
       required:
         - credentialType
 
-    PlainCredential:
-      type: object
-      description: A plain credential as a combination of an identifier and a secret.
-      allOf:
-        - $ref: "#/components/schemas/SinkCredential"
-        - type: object
-          required:
-            - identifier
-            - secret
-          properties:
-            identifier:
-              description: The identifier might be an account or username.
-              type: string
-              maxLength: 256
-            secret:
-              description: The secret might be a password or passphrase.
-              type: string
-              maxLength: 512
+    # PlainCredential:  # not used in CAMARA
+    #   type: object
+    #   description: A plain credential as a combination of an identifier and a secret.
+    #   allOf:
+    #     - $ref: "#/components/schemas/SinkCredential"
+    #     - type: object
+    #       required:
+    #         - identifier
+    #         - secret
+    #       properties:
+    #         identifier:
+    #           description: The identifier might be an account or username.
+    #           type: string
+    #           maxLength: 256
+    #         secret:
+    #           description: The secret might be a password or passphrase.
+    #           type: string
+    #           maxLength: 512
 
     AccessTokenCredential:
       type: object
