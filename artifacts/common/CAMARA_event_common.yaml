@@ -14,6 +14,15 @@ info:
   x-camara-commonalities: 0.7.0
 
 components:
+  securitySchemes:
+    notificationsBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
+      description: |
+        Bearer token for notification delivery. Token format is determined
+        by `sinkCredential.credentialType` in the subscription request.
+
   schemas:
 
     # ─────────────────────────────────────────────────────────────────────────

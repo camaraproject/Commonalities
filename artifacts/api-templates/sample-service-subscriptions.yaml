@@ -221,12 +221,7 @@ components:
     openId:
       $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
     notificationsBearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
-      description: |
-        Bearer token for notification delivery. Token format is determined
-        by `sinkCredential.credentialType` in the subscription request.
+      $ref: "../common/CAMARA_event_common.yaml#/components/securitySchemes/notificationsBearerAuth"
 
   parameters:
     SubscriptionId:
