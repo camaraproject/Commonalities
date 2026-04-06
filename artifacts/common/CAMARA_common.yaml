@@ -50,13 +50,11 @@ components:
       description: A period of time defined by a start date and an optional end date
       properties:
         startDate:
-            $ref: "#/components/schemas/DateTime"
           type: string
           format: date-time
           maxLength: 64
           description: An instant of time, starting of the TimePeriod. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
         endDate:
-              $ref: "#/components/schemas/DateTime"
           type: string
           format: date-time
           maxLength: 64
