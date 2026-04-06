@@ -7,17 +7,17 @@
 <img src="https://img.shields.io/badge/Working%20Group-red">
 
 # Commonalities
-Repository to describe and document common guidelines and assets for CAMARA APIs
+Repository to describe and document common guidelines and artifacts for CAMARA APIs
 
 ## Scope
-* Guidelines and assets for “Commonalities” (see APIBacklog.md)  
+* Guidelines and artifacts for “Commonalities” (see APIBacklog.md)  
 * All deliverables are mandatory for all CAMARA Sub Projects 
 * Describe, develop, document and test the deliverables
 * Started: October 2021
 
 ## Documents for CAMARA Sub Projects
 
-The documents that are relevant for CAMARA API Repositories are found in the `documentation` directory (at the top-level). The rest of the sub-directories are primarily for internal working of the Commonalities Working Group.
+The documents that are relevant for CAMARA API Sub Projects are found in the `documentation` directory (at the top-level).
 
 The `artifacts` directory contains:
 * templates for creating Github issues
@@ -31,7 +31,9 @@ The `artifacts` directory contains:
   * [sample-notification.yaml](artifacts/notification-templates/sample-notification.yaml) — receiver-side notification endpoint
 * common test scenarios in [artifacts/testing](artifacts/testing) — error handling for device/phoneNumber APIs and subscription APIs
 
-### Frequently-accessed output documents
+The remaining sub-directories are primarily for internal working of the Commonalities Working Group.
+
+### Links to frequently-accessed documents
 
 A list of some of the frequently accessed documents that are an output of the work done in the Commonalities Working Group is provided below. Note that the links are relative to the branch selected. Refer to the section below for released versions. 
 

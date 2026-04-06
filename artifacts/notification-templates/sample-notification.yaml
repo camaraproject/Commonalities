@@ -12,7 +12,7 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: wip
 
-  x-camara-commonalities: 0.8.0
+  x-camara-commonalities: 0.7.0
 
 externalDocs:
   description: Product documentation at CAMARA
