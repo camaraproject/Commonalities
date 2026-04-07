@@ -97,6 +97,8 @@ paths:
                 maxItems: 1000
                 items:
                   $ref: "#/components/schemas/Resource"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
@@ -123,6 +125,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
@@ -147,6 +151,8 @@ paths:
           headers:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
