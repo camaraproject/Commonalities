@@ -7,7 +7,7 @@ info:
 
     Note on event name convention: the event type name MUST follow: ``org.camaraproject.<api-name>.<event-version>.<event-name>``
 
-    Note on ``security`` - ``openId`` scope: The value in this yaml `api-name:event-type1:grant-level` must be replaced accordingly to the format defined in the guideline document.
+    Note on ``security`` - ``openId`` scope: The scope values must be replaced accordingly to the format defined in the guideline document.
 
   license:
     name: Apache 2.0
@@ -20,29 +20,29 @@ externalDocs:
   url: https://github.com/camaraproject/apiRepository
   # {apiRepository} MUST be replaced by the CAMARA Subproject Repository name where the API design based on this template is hosted.
 servers:
-  - url: "{apiRoot}/api-name/vwip"
+  - url: "{apiRoot}/sample-service-subscriptions/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
-  - name: <apiName> Subscription
+  - name: Sample Service Subscription
     description: Operations to manage event subscriptions on event-type event
 
 paths:
   /subscriptions:
     post:
       tags:
-        - <apiName> Subscription
-      summary: "Create a apiName event subscription"
-      description: Create a apiName event subscription
-      operationId: createApiNameSubscription
+        - Sample Service Subscription
+      summary: "Create a sample service event subscription"
+      description: Create a sample service event subscription
+      operationId: createSampleServiceSubscription
       parameters:
         - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
       security:
         - openId:
-            - api-name:event-type1:grant-level
-            - api-name:event-type2:grant-level
+            - sample-service-subscriptions:event-type1:grant-level
+            - sample-service-subscriptions:event-type2:grant-level
       requestBody:
         content:
           application/json:
@@ -56,7 +56,7 @@ paths:
               summary: "notifications callback"
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
-                The apiName server will call this endpoint whenever a apiName event occurs.
+                The sample service server will call this endpoint whenever a sample service event occurs.
                 `operationId` value will have to be replaced accordingly with WG API specific semantic
               operationId: postNotification
               parameters:
@@ -120,15 +120,15 @@ paths:
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
     get:
       tags:
-        - <apiName> Subscription
-      summary: "Retrieve a list of apiName event subscription"
-      description: Retrieve a list of apiName event subscription(s)
-      operationId: retrieveApiNameSubscriptionList
+        - Sample Service Subscription
+      summary: "Retrieve a list of sample service event subscriptions"
+      description: Retrieve a list of sample service event subscriptions
+      operationId: retrieveSampleServiceSubscriptionList
       parameters:
         - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
       security:
         - openId:
-            - api-name:read
+            - sample-service-subscriptions:read
       responses:
         "200":
           description: List of event subscription details
@@ -152,13 +152,13 @@ paths:
   /subscriptions/{subscriptionId}:
     get:
       tags:
-        - <apiName> Subscription
-      summary: "Retrieve a apiName event subscription"
-      description: retrieve apiName subscription information for a given subscription.
-      operationId: retrieveApiNameSubscription
+        - Sample Service Subscription
+      summary: "Retrieve a sample service event subscription"
+      description: Retrieve sample service subscription information for a given subscription.
+      operationId: retrieveSampleServiceSubscription
       security:
         - openId:
-            - api-name:read
+            - sample-service-subscriptions:read
       parameters:
         - $ref: "#/components/parameters/SubscriptionId"
         - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
@@ -182,19 +182,19 @@ paths:
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
     delete:
       tags:
-        - <apiName> Subscription
-      summary: "Delete a apiName event subscription"
-      operationId: deleteApiNameSubscription
-      description: delete a given apiName subscription.
+        - Sample Service Subscription
+      summary: "Delete a sample service event subscription"
+      operationId: deleteSampleServiceSubscription
+      description: Delete a given sample service subscription.
       security:
         - openId:
-            - api-name:delete
+            - sample-service-subscriptions:delete
       parameters:
         - $ref: "#/components/parameters/SubscriptionId"
         - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
       responses:
         "204":
-          description: apiName subscription deleted
+          description: Sample service subscription deleted
           headers:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
@@ -238,7 +238,7 @@ components:
     # Subscription management (API-specific due to ApiEventType reference)
     #
     # SubscriptionRequest and Subscription reference ApiEventType in their
-    # `types` field, which contains api-name placeholders. Protocol-specific
+    # `types` field, which contains sample-service placeholders. Protocol-specific
     # request/response schemas extend these via allOf.
     # ─────────────────────────────────────────────────────────────────────────
 
@@ -359,7 +359,7 @@ components:
           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionId"
 
     # ─────────────────────────────────────────────────────────────────────────
-    # API-specific event type enum (contains api-name placeholders)
+    # API-specific event type enum (contains sample-service placeholders)
     # ─────────────────────────────────────────────────────────────────────────
 
     ApiEventType:
@@ -370,19 +370,19 @@ components:
         globally unique, so two different API groups can independently define
         identically-named event types without any collision risk.
       enum:
-        - org.camaraproject.api-name.v0.event-type1
-        - org.camaraproject.api-name.v0.event-type2
+        - org.camaraproject.sample-service-subscriptions.v0.event-type1
+        - org.camaraproject.sample-service-subscriptions.v0.event-type2
 
     # ─────────────────────────────────────────────────────────────────────────
     # Subscription lifecycle event group (Commonalities-owned structure,
-    # but event type strings contain api-name placeholders)
+    # but event type strings contain sample-service placeholders)
     #
     # Common to every CAMARA API that supports subscriptions.
     # Extends CloudEvent via allOf, constrains `type` to lifecycle values,
     # and owns the lifecycle discriminator mapping.
     #
     # API projects reference this group via NotificationEvent but only update
-    # the api-name prefix in the event type strings.
+    # the sample-service prefix in the event type strings.
     # ─────────────────────────────────────────────────────────────────────────
 
     SubscriptionLifecycleEvent:
@@ -400,9 +400,9 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          org.camaraproject.api-name.v0.subscription-started: "#/components/schemas/EventSubscriptionStarted"
-          org.camaraproject.api-name.v0.subscription-updated: "#/components/schemas/EventSubscriptionUpdated"
-          org.camaraproject.api-name.v0.subscription-ended: "#/components/schemas/EventSubscriptionEnded"
+          org.camaraproject.sample-service-subscriptions.v0.subscription-started: "#/components/schemas/EventSubscriptionStarted"
+          org.camaraproject.sample-service-subscriptions.v0.subscription-updated: "#/components/schemas/EventSubscriptionUpdated"
+          org.camaraproject.sample-service-subscriptions.v0.subscription-ended: "#/components/schemas/EventSubscriptionEnded"
 
     SubscriptionLifecycleEventType:
       type: string
@@ -413,9 +413,9 @@ components:
         Kept as a separate named schema so the set of valid lifecycle type
         strings can be referenced independently from the discriminated schema.
       enum:
-        - org.camaraproject.api-name.v0.subscription-started
-        - org.camaraproject.api-name.v0.subscription-updated
-        - org.camaraproject.api-name.v0.subscription-ended
+        - org.camaraproject.sample-service-subscriptions.v0.subscription-started
+        - org.camaraproject.sample-service-subscriptions.v0.subscription-updated
+        - org.camaraproject.sample-service-subscriptions.v0.subscription-ended
 
     # ─────────────────────────────────────────────────────────────────────────
     # API-specific notification event group
@@ -443,8 +443,8 @@ components:
       discriminator:
         propertyName: "type"
         mapping:
-          org.camaraproject.api-name.v0.event-type1: "#/components/schemas/EventApiSpecific1"
-          org.camaraproject.api-name.v0.event-type2: "#/components/schemas/EventApiSpecific2"
+          org.camaraproject.sample-service-subscriptions.v0.event-type1: "#/components/schemas/EventApiSpecific1"
+          org.camaraproject.sample-service-subscriptions.v0.event-type2: "#/components/schemas/EventApiSpecific2"
 
     # ─────────────────────────────────────────────────────────────────────────
     # Callback union (API project-owned)
