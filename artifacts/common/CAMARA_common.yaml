@@ -392,7 +392,7 @@ components:
                 status: 403
                 code: INVALID_TOKEN_CONTEXT
                 # message: "{{field}} is not consistent with access token."
-                message: "... is not consistent with access token."
+                message: "Request body is not consistent with access token."
                 # GENERIC_403_{{SPECIFIC_CODE}}:
                 #   description: Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API
                 #   value:
