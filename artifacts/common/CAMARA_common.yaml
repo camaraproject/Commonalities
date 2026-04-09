@@ -47,7 +47,7 @@ components:
       example: "2018-04-05T17:31:00Z"
     TimePeriod:
       type: object
-      description: A period of time defined by a start date and an optional end date. If endDate is not included, then the period has no ending date.
+      description: A period of time defined by a start date and an optional end date. If `endDate` is not included, then the period has no ending date.
       properties:
         startDate:
           $ref: "#/components/schemas/DateTime"

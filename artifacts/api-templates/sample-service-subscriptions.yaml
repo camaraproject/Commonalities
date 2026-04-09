@@ -1,3 +1,5 @@
+# NOTE: This is a template. Replace all occurrences of "sample-service-subscriptions"
+# (and its Title Case variant) with the actual API name in the appropriate casing.
 openapi: 3.0.3
 info:
   title: Sample Service Subscription Template
