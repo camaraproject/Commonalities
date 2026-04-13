@@ -1,20 +1,25 @@
-openapi: 3.0.3
 info:
   title: CAMARA common data types
-  description: Common data types for CAMARA APIs
+  description: |
+    Common data types for CAMARA APIs.
+    This file contains Commonalities-owned schemas that are identical across all
+    CAMARA APIs, including error responses, common parameters, headers, and
+    reusable data types.
+
+    API repositories place this file in `code/common/` and reference schemas
+    via `$ref: "../common/CAMARA_common.yaml#/components/schemas/<SchemaName>"`.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.8.0-rc.1
-
+  version: wip
   x-camara-commonalities: 0.7.0
 
-paths: {}
 components:
   securitySchemes:
     openId:
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
+      description: OpenID Connect authentication via discovery metadata.
   headers:
     x-correlator:
       description: Correlation id for the different services
@@ -34,20 +39,20 @@ components:
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
       maxLength: 256
       example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+    DateTime:
+      type: string
+      format: date-time
+      maxLength: 64
+      description: Timestamp. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+      example: "2018-04-05T17:31:00Z"
     TimePeriod:
       type: object
-      description: A period of time defined by a start date and an optional end date
+      description: A period of time defined by a start date and an optional end date. If `endDate` is not included, then the period has no ending date.
       properties:
         startDate:
-          type: string
-          format: date-time
-          maxLength: 64
-          description: An instant of time, starting of the TimePeriod. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+          $ref: "#/components/schemas/DateTime"
         endDate:
-          type: string
-          format: date-time
-          maxLength: 64
-          description: An instant of time, ending of the TimePeriod. If not included, then the period has no ending date. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+          $ref: "#/components/schemas/DateTime"
       required:
         - startDate
     ErrorInfo:

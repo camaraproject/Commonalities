@@ -1,5 +1,5 @@
 @<xxx>
-Feature: Camara Template Subscriptions API, v{version here} - Operations on subscriptions
+Feature: Camara Template Subscriptions API, vwip - Operations on subscriptions
 
   # This feature file is to be used by CAMARA subproject when an event subscription resource is provided.
   # We use <xxx> as the subscription resource prefix.
@@ -14,7 +14,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   #        + Add here the specific testing asset(s) required to test the API
   #
   # References to OAS spec schemas refer to schemas specified in <xxx>-subscriptions.yaml
-  # References to schemas starting with the # symbol are JSON Pointers from the root of the OAS document: <xxx>-subscriptions.yaml, Schema names are aligned with the event-subscription-template.yaml artifact.
+  # References to schemas starting with the # symbol are JSON Pointers from the root of the OAS document: <xxx>-subscriptions.yaml, Schema names are aligned with the sample-service-subscriptions.yaml template.
   #
   # IMPORTANT:
   # 1/ This file must be completed with the test cases specific to the subscription type managed by the API.
@@ -205,7 +205,7 @@ Feature: Camara Template Subscriptions API, v{version here} - Operations on subs
   Scenario: Subscription creation with invalid url
     Given a valid <xxx> subscription request body
     And the request property "$.protocol" is set to "HTTP"
-    And the request property "$.sink" is set to "azerty"
+    And the request property "$.sink" is set to "invalid-url"
     When the request "create<xxx>Subscription" is sent
     Then the response property "$.status" is 400
     And the response property "$.code" is "INVALID_SINK"
