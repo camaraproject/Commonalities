@@ -34,6 +34,7 @@ This release contains documents and artifacts of Commonalities version 0.8.0-rc.
 * Cloudevents decoupled from EventTypeNotification scheme in Event Subscription Template by @rartych in https://github.com/camaraproject/Commonalities/pull/604
 * CAMARA error grouping updated in CAMARA API Design Guide by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/595
 * Message for Invalid Token Context Error by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/607
+* Artifacts directory restructured for $ref consumption by @hdamker in https://github.com/camaraproject/Commonalities/pull/606
 
 ### Fixed
 * x-camara-commonalities to use full version string by @hdamker in https://github.com/camaraproject/Commonalities/pull/599
