@@ -1,0 +1,77 @@
+openapi: 3.0.3
+info:
+  title: Sample Notification Template
+  description: |
+    Template for the CAMARA event notification callback endpoint.
+    This is the receiver-side endpoint that API consumers implement to receive event notifications.
+
+    Additional information is provided in the
+    [CAMARA API Event Subscription and Notification Guide](https://github.com/camaraproject/Commonalities/blob/main/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md#3-event-notification).
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: wip
+
+  x-camara-commonalities: 0.7.0
+
+externalDocs:
+  description: Product documentation at CAMARA
+  url: https://github.com/camaraproject/Commonalities
+
+servers:
+  - url: "{apiRoot}"
+    variables:
+      apiRoot:
+        default: https://localhost:8080
+        description: Can be any notification server address sent by the client application
+
+tags:
+  - name: CAMARA Cloud Event
+    description: Events received on subscription listener side.
+
+security:
+  - notificationsBearerAuth: []
+  - {}
+
+paths:
+  /your_webhook_notification_url:
+    post:
+      tags:
+        - CAMARA Cloud Event
+      summary: Cloud Event notification endpoint to notify consumer that statement of fact had occurred
+      description: |
+        INFORMATIVE ENDPOINT: The value of this endpoint is freely declared by each client app by means of resource-based
+        subscription or instance-based subscription. `/your_webhook_notification_url` is
+        just a convention naming referring to an absolute URL, indeed the one indicated by API client
+        in the triggering of the procedure (resource-based or instance-based). In this way, it represents an absolute
+        URL, i.e.: notifications won't be sent to `/event-notification/vX/your_webhook_notification_url`.
+      operationId: sendEvent
+      parameters:
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      requestBody:
+        required: true
+        content:
+          application/cloudevents+json:
+            schema:
+              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent"
+      responses:
+        "204":
+          description: No Content
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+        "429":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
+
+components:
+  securitySchemes:
+    notificationsBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: "{$request.body#/sinkCredential.credentialType}"

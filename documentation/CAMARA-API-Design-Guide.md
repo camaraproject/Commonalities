@@ -87,7 +87,7 @@ that this point is open to continuous evolution over time through the addition o
 To allow for proper management of this ever-evolving list, an external repository has been defined to that end.
 This repository is referenced below.
 
-[Link to Common Data Types documentation repository](../artifacts/CAMARA_common.yaml)
+[Link to Common Data Types documentation repository](../artifacts/common/CAMARA_common.yaml)
 
 
 ### 2.2. Data Definitions
@@ -370,7 +370,7 @@ An error representation MUST NOT differ from the representation of any resource.
 All these aforementioned fields are mandatory in Error Responses.
 `status` and `code` fields have normative nature, so as their use has to be standardized (see [3.2.1. Standardized use of CAMARA error responses](#321-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
 
-The values of the `status` and `code` fields are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/CAMARA_common.yaml).
+The values of the `status` and `code` fields are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/common/CAMARA_common.yaml).
 
 An example of JSON error structure is as follows:
 
@@ -407,11 +407,11 @@ The `ErrorInfo` object is provided within the HTTP body of the HTTP response mes
 In the following, we elaborate on the existing errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature:
 - i) syntax exceptions
   - The API Consumer has made a request with invalid syntax, and re-sending the same request will always result in the same exception. The API Provider should indicate to the client what modification is required for the request to be resubmitted.
-  
+
   Examples: `400 - INVALID_ARGUMENT`, `405 - METHOD_NOT_ALLOWED`, etc.
 - ii) service exceptions
   - The API Consumer has made a request but the API Provider is currently unable to fulfil it. This can be due to a technical reason (e.g. server or backend failure) or a policy reason (e.g. business quota exceeded). The API Provider should indicate to the client if/when the request can be resubmitted and whether any modification is required.
-  
+
   Examples: `403 - PERMISSION_DENIED`, `422 - SERVICE_NOT_APPLICABLE`, `429 - QUOTA_EXCEEDED`, `5xx` range, etc.
 
 <font size="3"><span style="color: blue"> Syntax Exceptions </span></font>
@@ -494,7 +494,7 @@ The Following table compiles the guidelines to be adopted:
 |     5      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
 
 **NOTE:**
-The `Device` object defined in [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
+The `Device` object defined in [CAMARA_common.yaml](/artifacts/common/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
 
 Where an API consumer provides more than one device identifier, it is RECOMMENDED that the API provider include in the response a single device identifier (from those provided) which they are using to fulfil the API. This would apply even if the device identifiers do not all match the same device, as the API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device.
 
@@ -575,27 +575,99 @@ To alleviate the above-mentioned issues and concerns, Pagination, Sorting and Fi
 
 ### 4.1. Pagination
 
-Services can answer with a resource or article collections. Sometimes these collections MAY be a partial set due to performance or security reasons. Elements MUST be identified and arranged consistently on all pages. Paging can be enabled by default on the server side to mitigate denial of service or similar attack.
 
-Services MUST accept and use these query parameters when paging is supported:
-- `perPage`: number of resources requested to be provided in the response
-- `page`: requested page number to indicate the start of the resources to be provided in the response (considering perPage page size)
-- `seek`: index of last result read, to create the next/previous number of results. This query parameter is used for pagination in systems with more than 1000 records. `seek` parameter offers finer control than `page` and could be used one or another as an alternative. If both are used in combination (NOT RECOMMENDED) `seek` would mark the index starting from the page number specified by `page` and `perPage` [index = (page * perPage) + seek].
+Services MAY return collections as a partial set due to performance or security constraints. All elements MUST be identified and arranged consistently across all pages — the same query with the same parameters must return the same ordering. Pagination MAY be enabled by default on the server side to mitigate denial-of-service and similar threats.
 
-Services MUST accept and use these headers when paging is supported:
-- `Content-Last-Key`: it allows specifying the key of the last resort provided in the response
-- `X-Total-Count`: it allows indicating the total number of elements in the collection
+#### 4.1.1. Query Parameters
+Services MUST accept the following query parameters on all list endpoints where pagination is supported:
+- `page` (integer, default: 1, minimum: 1) The requested page number. Pages are 1-indexed. Values below 1 MUST be rejected with `400 INVALID_ARGUMENT` error.
+- `perPage`  (integer, default: 20, minimum: 1, maximum: 100) Number of resources to return per page. Values outside the allowed range MUST be rejected with `400 INVALID_ARGUMENT` error. Servers MAY enforce a lower maximum for specific endpoints.
 
-If the server cannot meet any of the required parameters, it SHOULD return an error message.
+#### 4.1.2. Request Headers
+No pagination-specific request headers are required. Pagination is controlled entirely via query parameters.
 
-The HTTP codes that the server will use as a response are:
-- `200`: the response includes the complete list of resources
-- `206`: the response does not include the complete list of resources
-- `400`: request outside the range of the resource list
+#### 4.1.3. Response Body
 
-Petitions examples:
-- `page=0 perPage=20`, which returns the first 20 resources
-- `page=10 perPage=20`, which returns 20 resources from the 10th page (in terms of absolute index, 10 pages and 20 elements per page, means it will start on the 200th position as 10x20=200)
+When paginated response is returned the `pagination` object SHOULD always be present; `totalCount` and `totalPages` MAY be omitted only where a full count query is prohibitively expensive — this MUST be documented per endpoint.
+
+```yaml
+ResourceList:
+  type: object
+  required:
+    - items
+  properties:
+    items:
+      type: array
+      items:
+        $ref: "#/components/schemas/Resource"
+    pagination:
+      $ref: "#/components/schemas/Pagination"
+
+Pagination:
+  type: object
+  properties:
+    page:
+      type: integer
+      minimum: 1
+    perPage:
+      type: integer
+      minimum: 1
+      maximum: 100
+    totalCount:
+      type: integer
+      minimum: 0
+    totalPages:
+      type: integer
+      minimum: 0
+```
+
+#### 4.1.4. Response Headers
+
+Services MAY return the following headers on all paginated `200` responses:
+
+**`X-Total-Count`**
+Total number of items in the collection matching the current query, after filters are applied. Mirrors `pagination.totalCount` in the body.
+
+**`X-Total-Pages`**
+Total number of pages. Mirrors `pagination.totalPages` in the body.
+
+**`Link`**
+Navigation links per [RFC 8288](https://www.rfc-editor.org/rfc/rfc8288). MUST include only the rels applicable to the current position (`first`, `prev`, `next`, `last`). All original filter and sort query parameters MUST be preserved in Link URLs.
+```
+Link: <https://api.example.com/v1/resources?page=1&perPage=20>; rel="first",
+      <https://api.example.com/v1/resources?page=2&perPage=20>; rel="prev",
+      <https://api.example.com/v1/resources?page=4&perPage=20>; rel="next",
+      <https://api.example.com/v1/resources?page=5&perPage=20>; rel="last"
+```
+
+
+#### 4.1.5 HTTP Status Codes
+
+| Code | When to use |
+|---|---|
+| `200 OK` | All paginated responses, including empty result sets and out-of-range pages. The response body is always a complete, valid answer to the request. |
+| `400 INVALID_ARGUMENT` | Malformed pagination input: `page` or `perPage` violating type or range constraints (`page=-1`, `perPage=abc`, `perPage=999`). |
+
+
+Both empty result sets and out-of-range page requests MUST return `200` with an empty `items` array. The `pagination` object MUST still be present and accurate so the API Client can self-correct.
+
+```json
+// Request: GET /resources?page=50&perPage=20  (totalPages = 5)
+// HTTP 200 OK
+{
+  "items": [],
+  "pagination": {
+    "page": 50,
+    "perPage": 20,
+    "totalCount": 87,
+    "totalPages": 5,
+
+  }
+}
+```
+
+NOTE: The client receives all information needed to detect the out-of-range condition (`page > totalPages`) and redirect to the last valid page
+
 
 ### 4.2. Sorting
 
@@ -623,7 +695,7 @@ Filtering consists of restricting the number of resources queried by specifying 
 
 Next, it is specified how it should be used according to the filtering based on the type of data being searched for: a number or a date and the type of operation.
 
-Note: Services MAY not support all attributes for filtering.  In case a query includes an attribute for which filtering is not supported, it MAY be ignored by the service.
+NOTE: Services MAY not support all attributes for filtering.  In case a query includes an attribute for which filtering is not supported, it MAY be ignored by the service.
 
 #### 4.3.1. Filtering Security Considerations
 
@@ -1046,6 +1118,33 @@ When an API client provides an `x-correlator` value not matching the pattern, er
 
 NOTE: HTTP headers are case-insensitive. The use of the naming `x-correlator` is a guideline to align the format across CAMARA APIs.
 
+
+##### Pagination Headers
+As documented in [4.1.4. Response Headers](#414-response-headers)  `X-Total-Count`, `X-Total-Pages` and `Link` MAY be added to paginated response
+
+```yaml
+headers:
+  X-Total-Count:
+    required: false
+    schema:
+      $ref: "#/components/schemas/TotalCount"
+  X-Total-Pages:
+    required: false
+    schema:
+      $ref: "#/components/schemas/TotalPages"
+  Link:
+    required: false
+    description: |
+      Navigation links following RFC 8288.
+      Example:
+        Link: <https://api.example.com/v1/resources?page=1&perPage=20>; rel="first",
+               <https://api.example.com/v1/resources?page=2&perPage=20>; rel="prev",
+               <https://api.example.com/v1/resources?page=4&perPage=20>; rel="next",
+               <https://api.example.com/v1/resources?page=5&perPage=20>; rel="last"
+    schema:
+      type: string
+```
+
 ##### Content-Type Header - clarification
 
 The character set supported MUST only be UTF-8. The [JSON Data Interchange Format (RFC 8259)](https://datatracker.ietf.org/doc/html/rfc8259#section-8.1) states the following
@@ -1290,8 +1389,8 @@ This allows for both test and commercial usage of initial API versions as they a
 ### 7.3. API Versions Throughout the Release Process
 
 A given API will go through various intermediate and public versions during its life cycle:
-* intermediate versions are created during API version development, indicated by alpha and release-candidate version extensions 
-* various public versions may be created due to updates to a published API 
+* intermediate versions are created during API version development, indicated by alpha and release-candidate version extensions
+* various public versions may be created due to updates to a published API
 
 Overall, during its life cycle, an API can have any of the following versions:
 
@@ -1313,9 +1412,9 @@ The following table gives the values of the API version (Info object) and the AP
 
 The version in the URL is a shorthand of the API version. However, both v0.y.z-rc.1 and v0.y.z+1-rc.1 would be shortened to v0.yrc1 and, for x>0, both vx.y1.z1.0-rc.2 and vx.y2.z2-rc.2 would be shortened to vxrc2.
 
-To avoid such clashes of the version in the URL, both alpha and release-candidate (rc) version extension numbers need to be numbered consecutively across the whole life cycle of an API, including its PATCH versions. 
+To avoid such clashes of the version in the URL, both alpha and release-candidate (rc) version extension numbers need to be numbered consecutively across the whole life cycle of an API, including its PATCH versions.
 
-For example, in the life cycle of a (MAJOR) version 1 of an API, alpha and rc extension numbers will evolve as follows: 
+For example, in the life cycle of a (MAJOR) version 1 of an API, alpha and rc extension numbers will evolve as follows:
 
 | API Version | v1.0.0-alpha.1 | v1.0.0-alpha.2 | v1.0.0-rc.1 | v1.0.0-rc.2 | v1.0.0 | v1.1.0-alpha.3 | v1.1.0-rc.3 | v1.1.0
 | :---: | :---: | :---: | :--: | :--: | :--: | :--: | :--: | :--:
@@ -1405,7 +1504,7 @@ Make the information available:
 
 When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
 - If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly given that the `sub` will not be a globally unique identifier nor contain PII as per the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#id-token-sub-claim) requirements.
-- If the access token is a Two-Legged Access Token, no User is associated with the token, and hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
+- If the access token is a Two-Legged Access Token, no User is associated with the token, and hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/common/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
 
 If an API provider issues Three-Legged Access Tokens for use with the API, the following error may occur:
 - **Both a Three-Legged Access Token and an explicit User identifier (device or phone number) are provided by the API consumer.**
@@ -1447,5 +1546,3 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
-
-

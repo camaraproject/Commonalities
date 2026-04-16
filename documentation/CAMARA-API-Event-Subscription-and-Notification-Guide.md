@@ -104,7 +104,7 @@ but the 'eventType' attribute is used to distinguish distinct events subscribed.
 To ease developer adoption,
 the pattern for Resource-based event subscription SHOULD be consistent with all API providing this feature.
 
-CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/cesql/v-1.0.0/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents/) directory (event-subscription-template.yaml).
+CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/cesql/v-1.0.0/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in [Commonalities/artifacts/api-templates](/artifacts/api-templates/) directory (`sample-service-subscriptions.yaml`), with common event schemas in [Commonalities/artifacts/common](/artifacts/common/) (`CAMARA_event_common.yaml`).
 
 To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
@@ -213,7 +213,7 @@ The Following Error codes MUST be present:
 * for `GET .../{subscriptionId}`: 400, 401, 403, 404
 * for `DELETE`: 400, 401, 403, 404
 
-Please see in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory ``event-subscription-template.yaml`` for more information and error examples.
+Please see in [Commonalities/artifacts/api-templates](/artifacts/api-templates) directory `sample-service-subscriptions.yaml` for more information and error examples.
 
 #### 2.2.5. Termination for Resource-based (Explicit) Subscription
 
@@ -384,7 +384,7 @@ Examples of non breaking (backward-compatible) changes related to events are
 
 The API server uses the event notification endpoint to notify the API consumer that an event occurred.
 
-CAMARA event notification leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [1.0.2](https://github.com/cloudevents/spec/releases/tag/v1.0.2) as it is a vendor-neutral specification for defining the format of event data. A generic neutral CloudEvent notification OpenAPI specification is available in Commonalities/artifact directory (notification-as-cloud-event.yaml).
+CAMARA event notification leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [1.0.2](https://github.com/cloudevents/spec/releases/tag/v1.0.2) as it is a vendor-neutral specification for defining the format of event data. A generic neutral CloudEvent notification OpenAPI specification is available in [Commonalities/artifacts/notification-templates](/artifacts/notification-templates/) directory (`sample-notification.yaml`).
 
 Note: The notification is the message posted on the listener side.
 We describe the notification(s) in the CAMARA API using the `callbacks`.
@@ -432,7 +432,7 @@ The following table lists values for `initiationReason` attribute:
 | -----------|-------------------- |
 | SUBSCRIPTION_CREATED | Subscription created by API Server |
 
-Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory).
+Note1: This enumeration is also defined in `sample-service-subscriptions.yaml` (placed in [Commonalities/artifacts/api-templates](/artifacts/api-templates) directory).
 
 Note2: The "subscription-started" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can receive 2 notifications, besides the notification sent for "subscription-started").
 
@@ -450,7 +450,7 @@ The following table lists values for `updateReason` attribute:
 | SUBSCRIPTION_ACTIVE | API server transitioned susbcription status to `ACTIVE` |
 | SUBSCRIPTION_INACTIVE | API server transitioned susbcription status to `INACTIVE` |
 
-Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory).
+Note1: This enumeration is also defined in `sample-service-subscriptions.yaml` (placed in [Commonalities/artifacts/api-templates](/artifacts/api-templates) directory).
 
 Note2: The "subscription-updated" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can receive 2 notifications, besides the notifications sent for "subscription-updated").
 
@@ -470,7 +470,7 @@ The following table lists values for `terminationReason` attribute:
 | ACCESS_TOKEN_EXPIRED | Access Token sinkCredential (optionally set by the requester with credential type `ACCESSTOKEN`) expiration time has been reached |
 | SUBSCRIPTION_DELETED | Subscription was deleted by the requester |
 
-Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory).
+Note1: This enumeration is also defined in `sample-service-subscriptions.yaml` (placed in [Commonalities/artifacts/api-templates](/artifacts/api-templates) directory).
 
 Note2: The "subscription-ended" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, and later, received 2 notifications, then a third notification will be sent for "subscription-ended").
 
