@@ -35,12 +35,15 @@ This release contains documents and artifacts of Commonalities version 0.8.0-rc.
 * CAMARA error grouping updated in CAMARA API Design Guide by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/595
 * Message for Invalid Token Context Error by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/607
 * Artifacts directory restructured for $ref consumption by @hdamker in https://github.com/camaraproject/Commonalities/pull/606
+* Changed response pagination guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/610
 
 ### Fixed
 * x-camara-commonalities to use full version string by @hdamker in https://github.com/camaraproject/Commonalities/pull/599
 * Commented out placeholders in CAMARA_common.yaml for $ref consumption by @hdamker in https://github.com/camaraproject/Commonalities/pull/602
 
 ### Removed
+* Removed linting artifacts by @rartych in https://github.com/camaraproject/Commonalities/pull/614
+
 
 **Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r4.1...r4.2
 
