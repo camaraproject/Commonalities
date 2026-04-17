@@ -370,6 +370,7 @@ components:
       type: object
       required:
         - subscriptions
+        - pagination
       properties:
         subscriptions:
           description: Subscriptions list
