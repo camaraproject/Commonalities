@@ -25,7 +25,7 @@ Feature: CAMARA Template Artifact 400 - Test scenarios for 400 syntax errors
 
   @{feature_identifier}_{operationId}_400.1_schema_not_compliant
   Scenario: Invalid Argument. Generic Syntax Exception
-    Given the request body is set to any value which is not compliant with the schema at "/components/schemas/<requestSchema>"
+    Given the request body is included but is not compliant with the schema at "/components/schemas/<requestSchema>"
     When the request "{operationId}" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
