@@ -355,8 +355,6 @@ components:
       maximum: 2147483647
       description: Total number of pages. Equals ceil(totalCount / perPage). MAY be omitted where totalCount is omitted.
       example: 5
-
-
   responses:
     #######################################################
     #######################################################
