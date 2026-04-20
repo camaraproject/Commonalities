@@ -128,6 +128,8 @@ paths:
       operationId: retrieveSampleServiceSubscriptionList
       parameters:
         - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/page"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/perPage"
       security:
         - openId:
             - sample-service-subscriptions:read
@@ -137,14 +139,17 @@ paths:
           headers:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+            X-Total-Count:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-total-count"
+            X-Total-Pages:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-total-pages"
+            Link:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/link"
+
           content:
             application/json:
               schema:
-                type: array
-                minItems: 0
-                maxItems: 1000
-                items:
-                  $ref: "#/components/schemas/Subscription"
+                $ref: "#/components/schemas/SubscriptionList"
         "400":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
         "401":
@@ -359,6 +364,23 @@ components:
       properties:
         id:
           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionId"
+
+    SubscriptionList:
+      description: Response with subscriptions list
+      type: object
+      required:
+        - subscriptions
+        - pagination
+      properties:
+        subscriptions:
+          description: Subscriptions list
+          type: array
+          minItems: 0
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/Subscription"
+        pagination:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
 
     # ─────────────────────────────────────────────────────────────────────────
     # API-specific event type enum (contains sample-service placeholders)

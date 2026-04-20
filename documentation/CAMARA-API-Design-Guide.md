@@ -588,13 +588,16 @@ No pagination-specific request headers are required. Pagination is controlled en
 
 #### 4.1.3. Response Body
 
-When paginated response is returned the `pagination` object SHOULD always be present; `totalCount` and `totalPages` MAY be omitted only where a full count query is prohibitively expensive — this MUST be documented per endpoint.
+In paginated response the `pagination` object MUST always be present; `totalCount` and `totalPages` MAY be omitted only where a full count query is prohibitively expensive — this MUST be documented per endpoint.
+
+The example below defines a paginated response schema named `ResourceList`, which includes an `items` array and a required `pagination` object. Note that the names `ResourceList` and `items` are specific to given API.
 
 ```yaml
 ResourceList:
   type: object
   required:
     - items
+    - pagination
   properties:
     items:
       type: array
