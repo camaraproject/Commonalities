@@ -96,6 +96,7 @@ This part captures a detailed description of all the data structures used in the
 - Name of the data object, used to reference it in other sections
 - Data type (string, integer, object, etc.)
 - If the data type is string, `maxLength` property or `enum` construct MUST be used to constrain values.
+  - Note: The `maxLength` requirement applies to all string properties regardless of whether format or pattern is also specified. While pattern may implicitly constrain length, `maxLength` provides a machine-readable upper bound that tools can consume without regex analysis. For properties with a well-defined format (e.g. `uuid`, `date-time`), set `maxLength` to the format's maximum representation length.
 - If the data type is string it is RECOMMENDED to use the appropriate modifier property `format` and/or `pattern` whenever possible. The [OpenAPI Initiative Formats Registry](https://spec.openapis.org/registry/format/) contains the list of formats used in OpenAPI specifications.
   - If the format of a string is `date-time`, the following sentence MUST be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.`
   - If the format of a string is `duration`, the following sentence MUST be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#appendix-A) for duration`
