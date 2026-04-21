@@ -27,6 +27,7 @@ The `artifacts` directory contains:
 * API templates demonstrating `$ref` consumption of common schemas in [artifacts/api-templates](artifacts/api-templates):
   * [sample-service.yaml](artifacts/api-templates/sample-service.yaml) — request-response CRUD template
   * [sample-service-subscriptions.yaml](artifacts/api-templates/sample-service-subscriptions.yaml) — explicit subscription management template
+  * [sample-implicit-events.yaml](artifacts/api-templates/sample-implicit-events.yaml) — implicit-subscription template (event notifications via OpenAPI callbacks on a resource-creation operation)
 * notification callback template in [artifacts/notification-templates](artifacts/notification-templates):
   * [sample-notification.yaml](artifacts/notification-templates/sample-notification.yaml) — receiver-side notification endpoint
 * common test scenarios in [artifacts/testing](artifacts/testing) — error handling for device/phoneNumber APIs and subscription APIs

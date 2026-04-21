@@ -20,11 +20,42 @@ components:
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
       description: OpenID Connect authentication via discovery metadata.
+
   headers:
     x-correlator:
       description: Correlation id for the different services
       schema:
         $ref: "#/components/schemas/XCorrelator"
+
+    x-total-count:
+      description: Total number of items. Mirrors `pagination.totalCount` in the response body.
+      required: false
+      schema:
+        $ref: "#/components/schemas/TotalCount"
+
+    x-total-pages:
+      description: Total number of pages. Mirrors `pagination.totalPages` in the response body.
+      required: false
+      schema:
+        $ref: "#/components/schemas/TotalPages"
+
+    link:
+      description: |
+        Navigation links for paginated results following
+        [RFC 8288](https://www.rfc-editor.org/rfc/rfc8288).
+        Includes only the rels applicable to the current position
+        (`first`, `prev`, `next`, `last`). All original query parameters
+        are preserved in Link URLs.
+        Example:
+          Link: <https://api.example.com/v1/resources?page=1&perPage=20>; rel="first",
+                <https://api.example.com/v1/resources?page=2&perPage=20>; rel="prev",
+                <https://api.example.com/v1/resources?page=4&perPage=20>; rel="next",
+                <https://api.example.com/v1/resources?page=5&perPage=20>; rel="last"
+      required: false
+      schema:
+        type: string
+        maxLength: 8192
+
   parameters:
     x-correlator:
       name: x-correlator
@@ -32,6 +63,27 @@ components:
       description: Correlation id for the different services
       schema:
         $ref: "#/components/schemas/XCorrelator"
+
+    page:
+      name: page
+      in: query
+      description: >
+        Requested page number. Pages are 1-indexed.
+        Values below 1 are rejected with `400 INVALID_ARGUMENT`.
+      required: false
+      schema:
+        $ref: "#/components/schemas/Page"
+
+    perPage:
+      name: perPage
+      in: query
+      description: >
+        Number of subscriptions to return per page.
+        Values outside the allowed range are rejected with `400 INVALID_ARGUMENT`.
+      required: false
+      schema:
+        $ref: "#/components/schemas/PerPage"
+
   schemas:
     XCorrelator:
       type: string
@@ -256,6 +308,53 @@ components:
       minimum: -180
       maximum: 180
 
+    # ─────────────────────────────────────────────────────────────────────────
+    # Pagination
+    # ─────────────────────────────────────────────────────────────────────────
+
+    Pagination:
+      description: Pagination details helping to navigate through paged results efficiently.
+      type: object
+      properties:
+        page:
+          $ref: "#/components/schemas/Page"
+        perPage:
+          $ref: "#/components/schemas/PerPage"
+        totalCount:
+          $ref: "#/components/schemas/TotalCount"
+        totalPages:
+          $ref: "#/components/schemas/TotalPages"
+
+    Page:
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 2147483647
+      default: 1
+      description: Current page number (1-indexed).
+      example: 1
+    PerPage:
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 100
+      default: 20
+      description: Number of items per page.
+      example: 20
+    TotalCount:
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 2147483647
+      description: Total number of items matching the query, after filters applied. MAY be omitted where a full count query is prohibitively expensive.
+      example: 87
+    TotalPages:
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 2147483647
+      description: Total number of pages. Equals ceil(totalCount / perPage). MAY be omitted where totalCount is omitted.
+      example: 5
   responses:
     #######################################################
     #######################################################

@@ -1,0 +1,394 @@
+# NOTE: This is a template. Replace all occurrences of "sample-implicit-events"
+# (and its Title Case variant) with the actual API name in the appropriate casing.
+#
+# This template demonstrates event notifications via OpenAPI `callbacks:` on a
+# resource-creation operation (the implicit-subscription pattern), where the
+# consumer supplies a callback `sink` inline as part of creating a resource.
+# There is no dedicated `/subscriptions` sub-API.
+#
+# For the explicit-subscription pattern with full subscription CRUD, see
+# `sample-service-subscriptions.yaml`.
+openapi: 3.0.3
+info:
+  title: Sample Implicit Events
+  description: |
+    Template for a CAMARA API that delivers event notifications via OpenAPI
+    `callbacks:` on a resource-creation operation (implicit-subscription pattern).
+
+    The consumer provides an HTTPS `sink` (and optionally `sinkCredential`) as
+    part of the resource creation request. The API provider then delivers events
+    related to that resource to the supplied sink, using the CloudEvents format.
+    There is no separate subscription resource and no subscription lifecycle
+    management — the notification lifetime is bound to the resource lifetime.
+
+    Additional information is provided in the
+    [CAMARA API Event Subscription and Notification Guide](https://github.com/camaraproject/Commonalities/blob/main/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md).
+
+    Note on event name convention: the event type name MUST follow: ``org.camaraproject.<api-name>.<event-version>.<event-name>``
+
+    Note on ``security`` - ``openId`` scope: The scope values must be replaced accordingly to the format defined in the guideline document.
+
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: wip
+  x-camara-commonalities: 0.7.0
+
+externalDocs:
+  description: Product documentation at CAMARA
+  url: https://github.com/camaraproject/apiRepository
+  # {apiRepository} MUST be replaced by the CAMARA Subproject Repository name where the API design based on this template is hosted.
+servers:
+  - url: "{apiRoot}/sample-implicit-events/vwip"
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+tags:
+  - name: Resources
+    description: Operations on sample resources that emit event notifications.
+
+security:
+  - openId:
+      - sample-implicit-events:resource:read
+      - sample-implicit-events:resource:write
+
+paths:
+  /resources:
+    post:
+      tags:
+        - Resources
+      summary: Create a resource
+      description: |
+        Creates a new resource with the provided properties. If the request
+        includes the `sink` (and optionally `sinkCredential`) property, the API
+        provider will deliver event notifications related to this resource to
+        the supplied sink for as long as the resource exists.
+      operationId: createResource
+      parameters:
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResource"
+      callbacks:
+        notifications:
+          "{$request.body#/sink}":
+            post:
+              summary: "notifications callback"
+              description: |
+                Important: this endpoint is to be implemented by the API consumer.
+                The sample service server will call this endpoint whenever a
+                sample service event occurs for a resource whose creation
+                request registered a `sink`.
+                `operationId` value will have to be replaced accordingly with
+                WG API specific semantic.
+              operationId: postNotification
+              parameters:
+                - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+              requestBody:
+                required: true
+                content:
+                  application/cloudevents+json:
+                    schema:
+                      $ref: "#/components/schemas/ApiNotificationEvent"
+              responses:
+                "204":
+                  description: Successful notification
+                  headers:
+                    x-correlator:
+                      $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+                "400":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+                "401":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+                "403":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+                "410":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic410"
+                "429":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
+              security:
+                - {}
+                - notificationsBearerAuth: []
+
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+        "400":
+          $ref: "../common/CAMARA_event_common.yaml#/components/responses/CreateSubscriptionBadRequest400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+        "409":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic409"
+        "422":
+          $ref: "../common/CAMARA_event_common.yaml#/components/responses/CreateSubscriptionUnprocessableEntity422"
+        "429":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
+        "500":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+    get:
+      tags:
+        - Resources
+      summary: List resources
+      description: Returns a list of all resources accessible to the API consumer.
+      operationId: listResources
+      parameters:
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      responses:
+        "200":
+          description: List of resources
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 0
+                maxItems: 1000
+                items:
+                  $ref: "#/components/schemas/Resource"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+        "500":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+  /resources/{resourceId}:
+    get:
+      tags:
+        - Resources
+      summary: Get a resource by ID
+      description: Returns the details of a specific resource identified by its ID.
+      operationId: getResource
+      parameters:
+        - $ref: "#/components/parameters/ResourceId"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      responses:
+        "200":
+          description: Resource details
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+        "404":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+        "500":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+    delete:
+      tags:
+        - Resources
+      summary: Delete a resource
+      description: |
+        Deletes a specific resource identified by its ID. If the resource was
+        created with a `sink`, no further event notifications will be delivered
+        to that sink after deletion completes.
+      operationId: deleteResource
+      parameters:
+        - $ref: "#/components/parameters/ResourceId"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      responses:
+        "204":
+          description: Resource deleted
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+        "404":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+        "500":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+
+components:
+  securitySchemes:
+    openId:
+      $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
+    notificationsBearerAuth:
+      $ref: "../common/CAMARA_event_common.yaml#/components/securitySchemes/notificationsBearerAuth"
+
+  parameters:
+    ResourceId:
+      name: resourceId
+      in: path
+      required: true
+      description: Identifier of the resource to operate on
+      schema:
+        $ref: "#/components/schemas/ResourceId"
+
+  schemas:
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Resource schemas (API-specific)
+    #
+    # CreateResource carries the notification opt-in fields `sink` and
+    # `sinkCredential` as flat top-level properties — the established
+    # convention across existing implicit-subscription CAMARA APIs.
+    # Omitting both creates the resource without any event notifications.
+    #
+    # Resource (response) echoes `sink` but deliberately omits `sinkCredential`
+    # — credentials are never returned to the consumer.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    ResourceId:
+      type: string
+      format: uuid
+      maxLength: 36
+      description: Unique identifier for the resource
+
+    CreateResource:
+      description: Properties for creating a new resource
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          maxLength: 128
+          description: Human-readable name for the resource
+        device:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/Device"
+        sink:
+          type: string
+          format: uri
+          maxLength: 2048
+          pattern: ^https:\/\/.+$
+          description: |
+            The HTTPS URL where event notifications for this resource will be
+            delivered. Omit this field (and `sinkCredential`) to create the
+            resource without event notifications.
+          example: "https://endpoint.example.com/sink"
+        sinkCredential:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
+
+    Resource:
+      description: A resource managed by the API
+      type: object
+      required:
+        - resourceId
+        - name
+      properties:
+        resourceId:
+          $ref: "#/components/schemas/ResourceId"
+        name:
+          type: string
+          maxLength: 128
+          description: Human-readable name for the resource
+        device:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/Device"
+        sink:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: |
+            The sink URL registered for notifications on this resource, if any.
+            `sinkCredential` is deliberately not echoed in responses.
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # API-specific event type enum (contains sample-implicit-events placeholders)
+    # ─────────────────────────────────────────────────────────────────────────
+
+    ApiEventType:
+      type: string
+      description: |
+        Enum of API-specific event type strings for this API project.
+        The reverse-DNS prefix `org.camaraproject.<api-name>` makes each value
+        globally unique, so two different API groups can independently define
+        identically-named event types without any collision risk.
+      enum:
+        - org.camaraproject.sample-implicit-events.v0.event-type1
+        - org.camaraproject.sample-implicit-events.v0.event-type2
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # API-specific notification event group
+    #
+    # Extends CloudEvent via allOf and does exactly two things:
+    #   1. Constrains `type` to its own ApiEventType enum
+    #   2. Owns the discriminator mapping from each enum value to a concrete schema
+    #
+    # Adding a new event type requires only: adding a value to ApiEventType and
+    # adding a discriminator mapping entry here. CloudEvent is never touched.
+    #
+    # Unlike the explicit-subscription template, this template intentionally
+    # does NOT define a SubscriptionLifecycleEvent group or a NotificationEvent
+    # oneOf wrapper. The implicit-subscription pattern has no subscription
+    # object and therefore no subscription lifecycle events, so ApiNotificationEvent
+    # is the sole schema at the callback endpoint. An API that later needs a
+    # second event group can introduce a NotificationEvent oneOf wrapper at
+    # that point — see `sample-service-subscriptions.yaml` for the two-group
+    # pattern.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    ApiNotificationEvent:
+      description: |
+        API-specific notification event group.
+        Extends the CloudEvent envelope and constrains `type` to the set of
+        event types defined by this API project.
+        Adding a new event type only requires updating ApiEventType and the
+        discriminator mapping below — the CloudEvent base never changes.
+      allOf:
+        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            type:
+              $ref: "#/components/schemas/ApiEventType"
+      discriminator:
+        propertyName: "type"
+        mapping:
+          org.camaraproject.sample-implicit-events.v0.event-type1: "#/components/schemas/EventApiSpecific1"
+          org.camaraproject.sample-implicit-events.v0.event-type2: "#/components/schemas/EventApiSpecific2"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Concrete event schemas — API-specific (API project-owned)
+    # ─────────────────────────────────────────────────────────────────────────
+
+    EventApiSpecific1:
+      description: event structure for event-type event 1
+      allOf:
+        - $ref: "#/components/schemas/ApiNotificationEvent"
+        - type: object
+          properties:
+            data:
+              type: object
+              description: |
+                Event-specific payload for event-type1.
+                Replace with the actual data schema for this event type.
+
+    EventApiSpecific2:
+      description: event structure for event-type event 2
+      allOf:
+        - $ref: "#/components/schemas/ApiNotificationEvent"
+        - type: object
+          properties:
+            data:
+              type: object
+              description: |
+                Event-specific payload for event-type2.
+                Replace with the actual data schema for this event type.
