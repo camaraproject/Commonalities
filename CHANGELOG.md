@@ -29,13 +29,17 @@ This release contains documents and artifacts of Commonalities version 0.8.0-rc.
 ### Added
 * Alignment with OWASP and other linting rules in CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/590 and by @tlohmar in https://github.com/camaraproject/Commonalities/pull/597
 * Alignment with OWASP and other linting rules in Event subscription template by @rartych in https://github.com/camaraproject/Commonalities/pull/591
+* Added implicit-subscription API template by @hdamker in https://github.com/camaraproject/Commonalities/pull/612
+* Added pagination shared components and pagination example in sample-service-subscriptions API template by @rartych in https://github.com/camaraproject/Commonalities/pull/617
+* Testing artifacts for 400 Syntax Error including empty request body scenario by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/618
+* Clarification on string `maxLength' value by @rartych in https://github.com/camaraproject/Commonalities/pull/620
 
 ### Changed
 * Cloudevents decoupled from EventTypeNotification scheme in Event Subscription Template by @rartych in https://github.com/camaraproject/Commonalities/pull/604
 * CAMARA error grouping updated in CAMARA API Design Guide by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/595
 * Message for Invalid Token Context Error by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/607
 * Artifacts directory restructured for $ref consumption by @hdamker in https://github.com/camaraproject/Commonalities/pull/606
-* Changed response pagination guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/610
+* Changed response pagination guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/610 and in https://github.com/camaraproject/Commonalities/pull/617
 
 ### Fixed
 * x-camara-commonalities to use full version string by @hdamker in https://github.com/camaraproject/Commonalities/pull/599
