@@ -1,7 +1,7 @@
 @<xxx>
 Feature: Camara Template Subscriptions AP - Operations on subscriptions
 
-CAMARA Commonalities: 0.8.0-rc.2
+    CAMARA Commonalities: 0.8.0-rc.2
 
   # This feature file is to be used by CAMARA subproject when an event subscription resource is provided.
   # We use <xxx> as the subscription resource prefix.
