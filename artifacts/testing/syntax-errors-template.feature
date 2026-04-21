@@ -1,6 +1,6 @@
 Feature: CAMARA Template Artifact 400 - Test scenarios for 400 syntax errors
 
-    CAMARA Commonalities: 0.7.0
+    CAMARA Commonalities: 0.8.0-rc.2
     Common syntax error scenarios for operations.
 
     NOTES:
