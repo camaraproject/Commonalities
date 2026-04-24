@@ -1,6 +1,7 @@
 # Changelog Commonalities
 
 ## Table of Contents
+- **[r4.2](#r42)**
 - **[r4.1](#r41)**
 - **[r3.4](#r34)**
 - **[r3.3](#r33)**
@@ -16,6 +17,40 @@
 - **[v0.3.0](#v030)**
 - **[v0.2.0](#v020)**
 - **[v0.1.0 - Initial version](#v010---initial-version)**
+
+# r4.2
+## Release Notes
+
+This release contains documents and artifacts of Commonalities version 0.8.0-rc.2:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r4.2/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r4.2/artifacts)** folder.
+**The relevant details of authentication and consent collection are covered by [release 4.2](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
+### Added
+* Alignment with OWASP and other linting rules in CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/590 and by @tlohmar in https://github.com/camaraproject/Commonalities/pull/597
+* Alignment with OWASP and other linting rules in Event subscription template by @rartych in https://github.com/camaraproject/Commonalities/pull/591
+* Added implicit-subscription API template by @hdamker in https://github.com/camaraproject/Commonalities/pull/612
+* Added pagination shared components and pagination example in sample-service-subscriptions API template by @rartych in https://github.com/camaraproject/Commonalities/pull/617
+* Testing artifacts for 400 Syntax Error including empty request body scenario by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/618
+* Clarification on string `maxLength' value by @rartych in https://github.com/camaraproject/Commonalities/pull/620
+
+### Changed
+* Cloudevents decoupled from EventTypeNotification scheme in Event Subscription Template by @rartych in https://github.com/camaraproject/Commonalities/pull/604
+* CAMARA error grouping updated in CAMARA API Design Guide by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/595
+* Message for Invalid Token Context Error by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/607
+* Artifacts directory restructured for $ref consumption by @hdamker in https://github.com/camaraproject/Commonalities/pull/606
+* Changed response pagination guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/610 and in https://github.com/camaraproject/Commonalities/pull/617
+
+### Fixed
+* x-camara-commonalities to use full version string by @hdamker in https://github.com/camaraproject/Commonalities/pull/599
+* Commented out placeholders in CAMARA_common.yaml for $ref consumption by @hdamker in https://github.com/camaraproject/Commonalities/pull/602
+
+### Removed
+* Removed linting artifacts by @rartych in https://github.com/camaraproject/Commonalities/pull/614
+
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r4.1...r4.2
+
 
 # r4.1
 ## Release Notes
@@ -70,7 +105,7 @@ This release contains Commonalities version 0.6.1, a patch release from [r3.3](#
 * Changed networkAccessIdentifier and notification server example to use `example.com` by @Kevsy in https://github.com/camaraproject/Commonalities/pull/530
 
 ### Removed
-* Removed "Hashing Passwords" subsection from  CAMARA API Design Guide by @AxelNennker in https://github.com/camaraproject/Commonalities/pull/511
+* Removed "Hashing Passwords" subsection from CAMARA API Design Guide by @AxelNennker in https://github.com/camaraproject/Commonalities/pull/511
 
 **Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r3.3...r3.4
 
