@@ -1,5 +1,5 @@
 @<xxx>
-Feature: Camara Template Subscriptions AP - Operations on subscriptions
+Feature: Camara Template Subscriptions API - Operations on subscriptions
 
     CAMARA Commonalities: 0.8.0-rc.2
 
@@ -71,7 +71,9 @@ Feature: Camara Template Subscriptions AP - Operations on subscriptions
     Then the response code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
-    And the response body is an empty array
+    And the response body complies with the OAS schema at "#/components/schemas/SubscriptionList"
+    And the response body property "$.subscriptions" is an empty array
+    And the response body property "$.pagination" complies with the OAS schema at "#/components/schemas/Pagination"
 
   @<xxx>_subscriptions_05_Operation_to_retrieve_list_of_subscriptions
   Scenario: Get a list of subscriptions
@@ -80,7 +82,9 @@ Feature: Camara Template Subscriptions AP - Operations on subscriptions
     Then the response code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
-    And the response body has an array of items and each item complies with the OAS schema at "#/components/schemas/Subscription"
+    And the response body complies with the OAS schema at "#/components/schemas/SubscriptionList"
+    And each item in the response body property "$.subscriptions" complies with the OAS schema at "#/components/schemas/Subscription"
+    And the response body property "$.pagination" complies with the OAS schema at "#/components/schemas/Pagination"
 
   @<xxx>_subscriptions_06_Operation_to_retrieve_subscription_based_on_an_existing_subscription-id
   Scenario: Get a subscription based on existing subscription-id.
@@ -378,4 +382,94 @@ Feature: Camara Template Subscriptions AP - Operations on subscriptions
     Then the response code is 422
     And the response property "$.status" is 422
     And the response property "$.code" is "PRIVATE_KEY_JWT_NOT_CONFIGURED"
+    And the response property "$.message" contains a user friendly text
+
+######## Subscription Pagination Scenarios (Optional depending on API initiative) ################
+
+# Check applicability of below tests according to the nature of the API initiative Use Cases
+
+  @<xxx>_subscriptions_70_pagination_default_values
+  Scenario: Subscription list pagination with default values for page and perPage
+    Given an API client with more than 20 <xxx> subscriptions created
+    When the request "retrieve<xxx>SubscriptionList" is sent without setting query parameters "page" and "perPage"
+    Then the response code is 200
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response header "Link" contains a link to the next page with rel="next"
+    And the response body complies with the OAS schema at "#/components/schemas/SubscriptionList"
+    And the response body property "$.subscriptions" has 20 items and each item complies with the OAS schema at "#/components/schemas/Subscription"
+    And the response body property "$.pagination" complies with the OAS schema at "#/components/schemas/Pagination"
+    And the response body property "$.pagination.page" is 1
+    And the response body property "$.pagination.perPage" is 20
+
+  @<xxx>_subscriptions_71_pagination_custom_values
+  Scenario: Subscription list pagination with custom values for page and perPage
+    Given an API client with more than 40 <xxx> subscriptions created
+    When the request "retrieve<xxx>SubscriptionList" is sent with query parameters "page" set to 1 and "perPage" set to 20
+    Then the response code is 200
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response header "Link" contains a link to the next page with rel="next"
+    And the response header "X-Total-Pages" is equal to the value of the response body property "$.pagination.totalPages"
+    And the response header "X-Total-Count" is equal to the value of the response body property "$.pagination.totalCount"
+    And the response body complies with the OAS schema at "#/components/schemas/SubscriptionList"
+    And the response body property "$.subscriptions" has 20 items and each item complies with the OAS schema at "#/components/schemas/Subscription"
+    And the response body property "$.pagination" complies with the OAS schema at "#/components/schemas/Pagination"
+    And the response body property "$.pagination.page" is 1
+    And the response body property "$.pagination.perPage" is 20
+    And the response body property "$.pagination.totalPages", if present, is greater than 2
+    And the response body property "$.pagination.totalCount", if present, is greater than 40
+
+  @<xxx>_subscriptions_72_pagination_middle_page
+  Scenario: Subscription list pagination fetching a middle page of the list
+    Given an API client with more than 40 <xxx> subscriptions created
+    When the request "retrieve<xxx>SubscriptionList" is sent with query parameters "page" set to 2 and "perPage" set to 20
+    Then the response code is 200
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response header "Link" contains a link to the previous page with rel="prev" and a link to the next page with rel="next"
+    And the response header "X-Total-Pages" is equal to the value of the response body property "$.pagination.totalPages"
+    And the response header "X-Total-Count" is equal to the value of the response body property "$.pagination.totalCount"
+    And the response body complies with the OAS schema at "#/components/schemas/SubscriptionList"
+    And the response body property "$.subscriptions" has 20 items and each item complies with the OAS schema at "#/components/schemas/Subscription"
+    And the response body property "$.pagination" complies with the OAS schema at "#/components/schemas/Pagination"
+    And the response body property "$.pagination.page" is 2
+    And the response body property "$.pagination.perPage" is 20
+    And the response body property "$.pagination.totalPages", if present, is greater than 2
+    And the response body property "$.pagination.totalCount", if present, is greater than 40
+
+  @<xxx>_subscriptions_73_pagination_last_page
+  Scenario: Subscription list pagination fetching the last page of the list
+    Given an API client with more than 40 <xxx> subscriptions created
+    When the request "retrieve<xxx>SubscriptionList" is sent with query parameters "page" set to 3 and "perPage" set to 20
+    Then the response code is 200
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response header "Link" contains a link to the previous page with rel="prev"
+    And the response header "X-Total-Pages" is equal to the value of the response body property "$.pagination.totalPages"
+    And the response header "X-Total-Count" is equal to the value of the response body property "$.pagination.totalCount"
+    And the response body complies with the OAS schema at "#/components/schemas/SubscriptionList"
+    And the response body property "$.subscriptions" has between 1 and 20 items and each item complies with the OAS schema at "#/components/schemas/Subscription"
+    And the response body property "$.pagination" complies with the OAS schema at "#/components/schemas/Pagination"
+    And the response body property "$.pagination.page" is 3
+    And the response body property "$.pagination.perPage" is 20
+    And the response body property "$.pagination.totalPages", if present, is greater than 2
+    And the response body property "$.pagination.totalCount", if present, is greater than 40
+
+ @<xxx>_subscriptions_74_pagination_invalid_page_parameter
+  Scenario: Subscription list pagination with invalid value for page parameter
+    Given an API client with more than 20 <xxx> subscriptions created
+    When the request "retrieve<xxx>SubscriptionList" is sent with query parameter "page" set to any value less than 1 and "perPage" set to 20
+    Then the response code is 400
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+  @<xxx>_subscriptions_75_pagination_invalid_perPage_parameter
+  Scenario: Subscription list pagination with invalid value for perPage parameter
+    Given an API client with more than 20 <xxx> subscriptions created
+    When the request "retrieve<xxx>SubscriptionList" is sent with query parameter "page" set to 1 and "perPage" set to any value outside the range [1-100]
+    Then the response code is 400
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
