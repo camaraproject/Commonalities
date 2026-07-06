@@ -5,44 +5,101 @@ This document outlines guidelines for API design within the CAMARA project, appl
 
 <!-- TOC tocDepth:2..3 chapterDepth:2..3 -->
 
-- [1. Introduction](#1-introduction)
-  - [1.1. Conventions](#11-conventions)
-  - [1.2. Common Vocabulary and Acronyms](#12-common-vocabulary-and-acronyms)
-- [2. Data](#2-data)
-  - [2.1. Common Data Types](#21-common-data-types)
-  - [2.2. Data Definitions](#22-data-definitions)
-  - [2.3. Strictness of Request Body Schemas](#23-strictness-of-request-body-schemas)
-- [3. Responses](#3-responses)
-  - [3.1. Business-level Outcomes in Successful Responses](#31-business-level-outcomes-in-successful-responses)
-  - [3.2. Error Responses](#32-error-responses)
-- [4. Pagination, Sorting and Filtering](#4-pagination-sorting-and-filtering)
-  - [4.1. Pagination](#41-pagination)
-  - [4.2. Sorting](#42-sorting)
-  - [4.3. Filtering](#43-filtering)
-- [5. OpenAPI Sections](#5-openapi-sections)
-  - [5.1. Reserved Words](#51-reserved-words)
-  - [5.2. OpenAPI Version](#52-openapi-version)
-  - [5.3. Info Object](#53-info-object)
-  - [5.4. ExternalDocs Object](#54-externaldocs-object)
-  - [5.5. Servers Object](#55-servers-object)
-  - [5.6. Tags](#56-tags)
-  - [5.7. Paths and Operations](#57-paths-and-operations)
-  - [5.8. Components](#58-components)
-- [6. Security](#6-security)
-  - [6.1. Good Practices for Securing REST APIs](#61-good-practices-for-securing-rest-apis)
-  - [6.2. Security Definition](#62-security-definition)
-  - [6.3. Expressing Security Requirements](#63-expressing-security-requirements)
-  - [6.4. Mandatory Template for `info.description` in CAMARA API](#64-mandatory-template-for-infodescription-in-camara-api)
-  - [6.5. POST or GET for Transferring Sensitive or Complex Data](#65-post-or-get-for-transferring-sensitive-or-complex-data)
-  - [6.6. Scope Naming](#66-scope-naming)
-  - [6.7. Resource Access Restriction](#67-resource-access-restriction)
-- [7. Versioning](#7-versioning)
-  - [7.1. API Version (OAS `info` Object)](#71-api-version-oas-info-object)
-  - [7.2. API Version in URL (OAS `servers` Object)](#72-api-version-in-url-oas-servers-object)
-  - [7.3. API Versions Throughout the Release Process](#73-api-versions-throughout-the-release-process)
-  - [7.4. Backward and Forward Compatibility](#74-backward-and-forward-compatibility)
-- [8. External Documentation](#8-external-documentation)
-- [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
+- [CAMARA API Design Guide](#camara-api-design-guide)
+  - [1. Introduction](#1-introduction)
+    - [1.1. Conventions](#11-conventions)
+    - [1.2. Common Vocabulary and Acronyms](#12-common-vocabulary-and-acronyms)
+  - [2. Data](#2-data)
+    - [2.1. Common Data Types](#21-common-data-types)
+    - [2.2. Data Definitions](#22-data-definitions)
+      - [2.2.1. Usage of Discriminator](#221-usage-of-discriminator)
+        - [Inheritance](#inheritance)
+        - [Polymorphism](#polymorphism)
+    - [2.3. Strictness of Request Body Schemas](#23-strictness-of-request-body-schemas)
+  - [3. Responses](#3-responses)
+    - [3.1. Business-level Outcomes in Successful Responses](#31-business-level-outcomes-in-successful-responses)
+      - [3.1.1. Scope and Problem Statement](#311-scope-and-problem-statement)
+      - [3.1.2. Core Principles](#312-core-principles)
+      - [3.1.3. Recommended Modeling Pattern](#313-recommended-modeling-pattern)
+      - [3.1.4. Example](#314-example)
+      - [3.1.5. Versioning and Migration Guidance](#315-versioning-and-migration-guidance)
+    - [3.2. Error Responses](#32-error-responses)
+      - [3.2.1. Standardized Use of CAMARA Error Responses](#321-standardized-use-of-camara-error-responses)
+      - [3.2.2. Error Responses - Device Object/Phone Number](#322-error-responses---device-objectphone-number)
+        - [3.2.2.1. Templates](#3221-templates)
+        - [Response template](#response-template)
+        - [Examples template](#examples-template)
+      - [3.2.3. Error Responses - Mandatory Template for `info.description` in CAMARA API](#323-error-responses---mandatory-template-for-infodescription-in-camara-api)
+      - [3.2.4. Request Body Strictness - Mandatory Template for `info.description` in CAMARA API](#324-request-body-strictness---mandatory-template-for-infodescription-in-camara-api)
+  - [4. Pagination, Sorting and Filtering](#4-pagination-sorting-and-filtering)
+    - [4.1. Pagination](#41-pagination)
+      - [4.1.1. Query Parameters](#411-query-parameters)
+      - [4.1.2. Request Headers](#412-request-headers)
+      - [4.1.3. Response Body](#413-response-body)
+      - [4.1.4. Response Headers](#414-response-headers)
+      - [4.1.5 HTTP Status Codes](#415-http-status-codes)
+    - [4.2. Sorting](#42-sorting)
+    - [4.3. Filtering](#43-filtering)
+      - [4.3.1. Filtering Security Considerations](#431-filtering-security-considerations)
+      - [4.3.2. Filtering Operations](#432-filtering-operations)
+  - [5. OpenAPI Sections](#5-openapi-sections)
+    - [5.1. Reserved Words](#51-reserved-words)
+    - [5.2. OpenAPI Version](#52-openapi-version)
+    - [5.3. Info Object](#53-info-object)
+      - [5.3.1. Title](#531-title)
+      - [5.3.2. Description](#532-description)
+      - [5.3.3. Version](#533-version)
+      - [5.3.4. Terms of Service](#534-terms-of-service)
+      - [5.3.5. Contact Information](#535-contact-information)
+      - [5.3.6. License](#536-license)
+      - [5.3.7. Extension Field](#537-extension-field)
+    - [5.4. ExternalDocs Object](#54-externaldocs-object)
+    - [5.5. Servers Object](#55-servers-object)
+      - [5.5.1. api-name](#551-api-name)
+      - [5.5.2. api-version](#552-api-version)
+    - [5.6. Tags](#56-tags)
+    - [5.7. Paths and Operations](#57-paths-and-operations)
+      - [5.7.1. Paths](#571-paths)
+        - [Resource hierarchy](#resource-hierarchy)
+      - [5.7.2. Operations](#572-operations)
+      - [5.7.3. Tags](#573-tags)
+      - [5.7.4. Parameters](#574-parameters)
+      - [5.7.5. Request Bodies](#575-request-bodies)
+      - [5.7.6. Responses](#576-responses)
+        - [5.7.6.1 Asynchronous responses](#5761-asynchronous-responses)
+    - [5.8. Components](#58-components)
+      - [5.8.1. Schemas](#581-schemas)
+      - [5.8.2. Responses](#582-responses)
+      - [5.8.3. Parameters](#583-parameters)
+      - [5.8.4. Request Bodies](#584-request-bodies)
+      - [5.8.5. Headers](#585-headers)
+        - [x-correlator Header](#x-correlator-header)
+        - [Pagination Headers](#pagination-headers)
+        - [Content-Type Header - clarification](#content-type-header---clarification)
+      - [5.8.6. Security Schemes](#586-security-schemes)
+  - [6. Security](#6-security)
+    - [6.1. Good Practices for Securing REST APIs](#61-good-practices-for-securing-rest-apis)
+    - [6.2. Security Definition](#62-security-definition)
+    - [6.3. Expressing Security Requirements](#63-expressing-security-requirements)
+    - [6.4. Mandatory Template for `info.description` in CAMARA API](#64-mandatory-template-for-infodescription-in-camara-api)
+    - [6.5. POST or GET for Transferring Sensitive or Complex Data](#65-post-or-get-for-transferring-sensitive-or-complex-data)
+    - [6.6. Scope Naming](#66-scope-naming)
+      - [6.6.1. APIs Which Do Not Deal with Explicit Subscriptions](#661-apis-which-do-not-deal-with-explicit-subscriptions)
+        - [Examples](#examples)
+      - [6.6.2. API-level Scopes (Sometimes Referred to as Wildcard Scopes in CAMARA)](#662-api-level-scopes-sometimes-referred-to-as-wildcard-scopes-in-camara)
+    - [6.7. Resource Access Restriction](#67-resource-access-restriction)
+  - [7. Versioning](#7-versioning)
+    - [7.1. API Version (OAS `info` Object)](#71-api-version-oas-info-object)
+    - [7.2. API Version in URL (OAS `servers` Object)](#72-api-version-in-url-oas-servers-object)
+    - [7.3. API Versions Throughout the Release Process](#73-api-versions-throughout-the-release-process)
+    - [7.4. Backward and Forward Compatibility](#74-backward-and-forward-compatibility)
+  - [8. External Documentation](#8-external-documentation)
+  - [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
+  - [Appendix B (Informative): `operationId` and `description` Guidelines for MCP and AI Agent Readiness](#appendix-b-informative-operationid-and-description-guidelines-for-mcp-and-ai-agent-readiness)
+    - [B.1. `operationId` Naming Rules](#b1-operationid-naming-rules)
+      - [Proposal: Approved Verb List](#proposal-approved-verb-list)
+    - [B.2. Operation `description` Completeness Rules](#b2-operation-description-completeness-rules)
+    - [B.3. Property `description` Completeness Rules](#b3-property-description-completeness-rules)
 
 <!-- /TOC -->
 
@@ -1580,3 +1637,124 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+You're right — if it's still feeling too short, then we’ve likely crossed into **over-concision**, sacrificing too much of the **design guidance**, **context**, and **educational value** that makes this appendix useful as a *standard*, not just a machine-readable checklist.
+
+The goal isn’t minimalism — it’s **clarity, usability, and enforceability** without unnecessary verbosity.
+
+Below is a **refined, balanced version** that:
+- Retains all **key rules, examples, and intent**,
+- Keeps helpful **explanations and boundaries** (e.g., *why* a rule exists, *what* it prevents),
+- Removes only **redundant phrasing, obvious filler, and excessive whitespace**,
+- Flows naturally for a designer reading it to understand and apply the guidance,
+- Is **approximately 70–75% the length** of the original — substantive, but not bloated.
+
+
+## Appendix B (Informative): `operationId` and `description` Guidelines for MCP and AI Agent Readiness
+
+This appendix is the outcome of the CAMARA MCP Enablement Program – Phase 0. It extends the naming and documentation rules in [5.7.2](#572-operations) and [2.2](#22-data-definitions) with additional, targeted constraints to ensure CAMARA API operations can be reliably selected and invoked by automated consumers, including AI agents and **Model Context Protocol (MCP)** tool-selection pipelines. These consumers rely on the operation object itself — not the top-level `info.description` — to understand what an operation does, when to use it, and how to invoke it correctly.
+
+### B.1. `operationId` Naming Rules
+
+While [5.7.2](#572-operations) requires `operationId` to use lowerCamelCase when present, it does not mandate its presence. Since `operationId` is frequently used by tooling and automated systems as the primary handle to select and invoke an operation — and an operation without one generally cannot be used by such consumers — the following rules apply, beginning with an explicit presence requirement:
+
+- `operationId` **MUST be present** on every operation.
+- `operationId` **MUST be in lowerCamelCase format** and **MUST NOT exceed 64 characters in length**. This ensures compatibility with most code generators and vendor tooling limits. (These requirements are formally expressed by the regular expression: `^[a-z][a-zA-Z0-9]{0,63}$`.)
+- `operationId` **MUST follow the shape** `<verb><Noun>[<Qualifier>]`, for example:
+  - `createSession` (verb + noun)
+  - `getDeviceLocation` (verb + compound noun)
+  - `deleteSessionById` (verb + noun + qualifier)
+
+  The `<Noun>` represents the core resource, entity, or concept being acted upon — and MAY be a compound noun (e.g., `DeviceLocation`, `UserProfile`) formed from multiple domain terms.
+
+  The `<Qualifier>` is optional and, when used, **MUST serve only to disambiguate** two operations that would otherwise share the same `<verb><Noun>`. When the qualifier disambiguates on an identifying parameter, it **SHOULD take the form** `By<Param>` (e.g., `deleteSessionById`). Otherwise, it **SHOULD be a single PascalCase noun or short noun phrase** appended directly to `<Noun>`.
+- `operationId` **MUST NOT be prefixed** with the HTTP method name, with the exception of `get` when used as an ordinary English verb.
+  This avoids duplicating information already present in the OpenAPI `path`/`method` pair and adds no disambiguation value for automated selection.
+- `operationId` **MUST NOT include a version marker** such as `V1`, `_v1`, `v2`, or similar. Versioning belongs in the API path (e.g., `/v1/sessions`) or headers, not in the operation identifier.
+- Within a single API document, designers **SHOULD use one consistent read verb** (e.g., always `get` rather than alternating between `get`, `retrieve`, and `fetch`) to promote clarity and reduce cognitive load for consumers.
+- `operationId` **SHOULD be unique** within the document to prevent collisions in code generation, tool registries, and AI agent tool-calling systems.
+
+#### Proposal: Approved Verb List
+
+Verbs used in `operationId` SHOULD be restricted to the list below. Verbs not on this list **MUST** undergo a formal review process before use.
+
+**CRUD Core Verbs** (replace vague synonyms):
+- `create` — Instantiate a new resource. Replaces: `add`, `new`, `insert`, `post`.
+- `get` — Fetch a single resource by identity. Replaces: `fetch`, `retrieve`, `read`, `find`.
+- `list` — Fetch a collection, optionally filtered. Replaces: `getAll`, `fetchAll`, `search` (when browsing).
+- `update` — Modify an existing resource, fully or partially. Replaces: `edit`, `modify`, `patch`, `put`.
+- `replace` — Full replacement of a resource (PUT semantics). Replaces: `put`, `overwrite`.
+- `delete` — Remove a resource permanently. Replaces: `remove`, `destroy`, `drop`.
+
+**Action Verbs** (for non-CRUD operations):
+- `send` — Dispatch a message, notification, or payload.
+- `submit` — Hand off for processing (e.g., forms, orders, applications).
+- `approve` — Grant explicit authorization.
+- `cancel` — Abort an in-progress or future operation.
+- `publish` — Make a resource publicly available.
+- `archive` — Move to long-term / read-only storage.
+- `restore` — Reverse an archive or soft delete.
+- `enable` / `disable` — Toggle active state.
+- `activate` / `deactivate` — Lifecycle state transitions.
+- `import` / `export` — Bulk data movement across system boundaries.
+- `search` — Intentional query with user-supplied terms (distinct from `list`, which implies browsing).
+- `validate` — Check correctness without side effects.
+- `preview` — Dry-run or read-only rendering of an action’s outcome.
+- `transfer` — Move ownership or location between entities.
+- `assign` / `unassign` — Attach or detach a resource to an owner.
+- `tag` / `untag` — Apply or remove a label.
+
+**Forbidden Verbs** (never permitted):
+- `process` — too vague; does not convey what the operation does.
+- `handle` — internal/implementation language, not semantic.
+- `manage` — a catch-all with no meaning to an agent.
+- `do`, `run`, `execute`, `perform`, `trigger` — no accompanying noun can make these specific enough.
+- `get*Data` patterns (e.g., `getInvoiceData`) — the `Data` suffix adds noise; use `getInvoice` instead.
+
+
+### B.2. Operation `description` Completeness Rules
+
+Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations using only the operation object — its `description`, `parameters`, `requestBody`, and `responses` — not the global `info.description`. To ensure they can make correct choices, each operation must be **self-contained** for the purpose of selection and invocation.
+
+Therefore:
+- `operation description` **MUST be present and non-empty**.
+- `operation description` **MUST NOT be verbatim identical** to `summary`.
+- The description **MUST contain all information** a tool-selecting consumer needs to:
+  - Decide whether to invoke the operation (`When to use`),
+  - Distinguish it from similar operations (`Differences`),
+  - Understand what it does (`Side effects`),
+  - Know what it returns and how to use the result (`Returns`),
+  - Identify required inputs (`Requires`).
+- This information **MUST be reachable from the operation object** — via its `description`, parameters, and schemas — and **MUST NOT rely exclusively** on `info.description`.
+  - `info.description` may still provide valuable context (e.g., authentication flow, error-handling philosophy, rate limits), but the *operational essentials* must be self-contained.
+
+To help ensure completeness, designers **MAY** use the following template as a guide:
+```yaml
+description: |
+  When to use: {{ user asks to... }}
+  Differences: {{ Use instead of X when... }} (optional)
+  Side effects: {{ Action taken }} or "None"
+  Returns: {{ What's in the response and how to use it }}
+  Requires: {{ Data needed, e.g. "customerId from context" }}
+```
+This template is **not mandatory**. It may be adapted, shortened, or omitted where the operation’s purpose is already unambiguous from its `operationId`, parameter names, and response schema — for example, simple, side-effect-free, parameter-light operations like `getHealth` or `getRoamingStatus`.
+In such cases, a brief description such as`"Returns the service health status"` or `"Returns the current roaming status and the country information"` is sufficient.
+
+The fuller template remains **expected** for operations that:
+- Take meaningful input,
+- Have side effects,
+- Return complex data requiring interpretation,
+- Or could be confused with similarly named operations elsewhere in the API.
+
+### B.3. Property `description` Completeness Rules
+
+Building on the existing requirement in [2.2](#22-data-definitions) that every schema property must have a `description`, this section adds guidance for enums whose values are not self-explanatory to an automated consumer.
+
+Where enum values are not evident from their name alone (e.g., domain- or context-specific codes like `STATUS_OK`, `ERR_AUTH_FAIL`, or `STATE_PENDING`), the enum’s `description` **SHOULD** explain the meaning of each value using a **markdown bullet list**, with one bullet per value:
+```
+description: |
+  Result of the verification:
+  - `TRUE`: the provided data matches
+  - `FALSE`: the provided data does not match
+  - `UNKNOWN`: the match could not be determined
+```
+This format is **not required** for self-evident enums (e.g., `true`/`false`, `red`/`green`/`blue`, `open`/`closed`), but is **strongly encouraged** where ambiguity could lead to misinterpretation by tools or agents.
