@@ -11,8 +11,10 @@ info:
     - `$ref` to `../common/CAMARA_common.yaml` for shared schemas, error responses,
       parameters, headers, and security schemes
     - Two options for error responses:
-      - Option A: Pure `$ref` for responses using only generic error codes
-      - Option B: Local response definition extending generic errors with API-specific codes
+      - Option A: Pure `$ref` to a catalogue response in `CAMARA_common.yaml`,
+        which contains only error codes every referencing API can return
+      - Option B: Local response definition for API-specific error codes or other
+        code combinations, referencing the shared examples from `CAMARA_common.yaml`
 
     What follows are the mandatory CAMARA `info.description` content blocks, each bracketed by `<!-- CAMARA:MANDATORY:<name>:BEGIN/END -->` HTML comments (invisible in rendered documentation). The reference text lives in `code/common/info-description-templates.yaml` (synced from Commonalities); copy each block as-is from there. The Appendix A block (`identifying-device-from-access-token` shown below) is opt-in — swap to `identifying-phone-number-from-access-token` if your API uses `phoneNumber` as the subject identifier, or remove it if the access-token-subject pattern does not apply.
 
@@ -98,6 +100,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateResource"
       responses:
+        # 5xx and the other not-documented-by-default statuses (405, 406, 412,
+        # 415) are intentionally not declared — see the CAMARA API Design Guide
         "201":
           description: Resource created
           headers:
@@ -108,19 +112,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/Resource"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
         "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+        "404":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/IdentifierNotFound404"
         "409":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic409"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/AlreadyExists409"
+        # Device-identified flavour — a phoneNumber-identified API references
+        # PhoneNumberIdentifier422 here instead
         "422":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic422"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/DeviceIdentifier422"
         "429":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
-        "500":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/TooManyRequests429"
     get:
       tags:
         - Resources
@@ -144,13 +150,11 @@ paths:
                 items:
                   $ref: "#/components/schemas/Resource"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
         "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
-        "500":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
   /resources/{resourceId}:
     get:
       tags:
@@ -172,16 +176,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/Resource"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
         "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
-        # Option A — pure $ref for responses using only generic error codes
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+        # Option A — pure $ref to a catalogue response
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
-        "500":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
     delete:
       tags:
         - Resources
@@ -198,26 +200,31 @@ paths:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
         "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
-        # Option B — local response extending generic errors with API-specific codes
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+        # Option B — locally defined response with an API-specific error code
         "404":
           $ref: "#/components/responses/ResourceNotFound404"
-        "500":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
 components:
   securitySchemes:
     openId:
       $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
   responses:
-    # Option B example: API-specific error response extending generic error codes.
-    # Use this pattern when an operation needs API-specific error codes in addition
-    # to the generic ones defined in CAMARA_common.yaml.
+    # Option B example: locally defined error response.
+    # Use this pattern when an operation returns API-specific error codes, or a
+    # code combination not covered by the catalogue in CAMARA_common.yaml: list
+    # exactly the codes the API can return and reference the shared examples
+    # from `CAMARA_common.yaml#/components/examples` so that the error wording
+    # stays consistent across CAMARA APIs. For identifier-related codes, pick
+    # the example variant matching the API's subject type (`_DEVICE` or
+    # `_PHONE_NUMBER`). API-specific codes follow the
+    # `{{API_NAME}}.{{SPECIFIC_CODE}}` scheme and get their example defined
+    # inline.
     ResourceNotFound404:
-      description: Resource not found
+      description: Not found
       headers:
         x-correlator:
           $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
@@ -234,20 +241,16 @@ components:
                   code:
                     enum:
                       - NOT_FOUND
-                      - IDENTIFIER_NOT_FOUND
+                      - SAMPLE_SERVICE.RESOURCE_EXPIRED
           examples:
             GENERIC_404_NOT_FOUND:
-              description: The specified resource was not found
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_404_NOT_FOUND"
+            SAMPLE_SERVICE_404_RESOURCE_EXPIRED:
+              description: API-specific error case — the resource has expired
               value:
                 status: 404
-                code: NOT_FOUND
-                message: The specified resource is not found.
-            RESOURCE_404_IDENTIFIER_NOT_FOUND:
-              description: API-specific — some identifier cannot be matched to a resource
-              value:
-                status: 404
-                code: IDENTIFIER_NOT_FOUND
-                message: Some of the provided identifiers are not found.
+                code: SAMPLE_SERVICE.RESOURCE_EXPIRED
+                message: The requested resource has expired and is no longer available.
   parameters:
     ResourceId:
       name: resourceId
