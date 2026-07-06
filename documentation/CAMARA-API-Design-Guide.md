@@ -3,7 +3,7 @@
 
 This document outlines guidelines for API design within the CAMARA project, applicable to all APIs developed under the initiative.
 
-<!-- TOC tocDepth:2..3 chapterDepth:2..3 -->
+<!-- TOC tocDepth:2 chapterDepth:2..3 -->
 
 - [CAMARA API Design Guide](#camara-api-design-guide)
   - [1. Introduction](#1-introduction)
@@ -99,6 +99,7 @@ This document outlines guidelines for API design within the CAMARA project, appl
     - [B.1. `operationId` Naming Rules](#b1-operationid-naming-rules)
       - [Proposal: Approved Verb List](#proposal-approved-verb-list)
     - [B.2. Operation `description` Completeness Rules](#b2-operation-description-completeness-rules)
+      - [Proposal: Operation `description` Template](#proposal-operation-description-template)
     - [B.3. Property `description` Completeness Rules](#b3-property-description-completeness-rules)
 
 <!-- /TOC -->
@@ -1637,17 +1638,6 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
-You're right — if it's still feeling too short, then we’ve likely crossed into **over-concision**, sacrificing too much of the **design guidance**, **context**, and **educational value** that makes this appendix useful as a *standard*, not just a machine-readable checklist.
-
-The goal isn’t minimalism — it’s **clarity, usability, and enforceability** without unnecessary verbosity.
-
-Below is a **refined, balanced version** that:
-- Retains all **key rules, examples, and intent**,
-- Keeps helpful **explanations and boundaries** (e.g., *why* a rule exists, *what* it prevents),
-- Removes only **redundant phrasing, obvious filler, and excessive whitespace**,
-- Flows naturally for a designer reading it to understand and apply the guidance,
-- Is **approximately 70–75% the length** of the original — substantive, but not bloated.
-
 
 ## Appendix B (Informative): `operationId` and `description` Guidelines for MCP and AI Agent Readiness
 
@@ -1657,25 +1647,25 @@ This appendix is the outcome of the CAMARA MCP Enablement Program – Phase 0. I
 
 While [5.7.2](#572-operations) requires `operationId` to use lowerCamelCase when present, it does not mandate its presence. Since `operationId` is frequently used by tooling and automated systems as the primary handle to select and invoke an operation — and an operation without one generally cannot be used by such consumers — the following rules apply, beginning with an explicit presence requirement:
 
-- `operationId` **MUST be present** on every operation.
-- `operationId` **MUST be in lowerCamelCase format** and **MUST NOT exceed 64 characters in length**. This ensures compatibility with most code generators and vendor tooling limits. (These requirements are formally expressed by the regular expression: `^[a-z][a-zA-Z0-9]{0,63}$`.)
-- `operationId` **MUST follow the shape** `<verb><Noun>[<Qualifier>]`, for example:
+- `operationId` MUST be present on every operation.
+- `operationId` MUST be in lowerCamelCase format and MUST NOT exceed 64 characters in length. This ensures compatibility with most code generators and vendor tooling limits. (These requirements are formally expressed by the regular expression: `^[a-z][a-zA-Z0-9]{0,63}$`.)
+- `operationId` MUST follow the shape `<verb><Noun>[<Qualifier>]`, for example:
   - `createSession` (verb + noun)
   - `getDeviceLocation` (verb + compound noun)
   - `deleteSessionById` (verb + noun + qualifier)
 
   The `<Noun>` represents the core resource, entity, or concept being acted upon — and MAY be a compound noun (e.g., `DeviceLocation`, `UserProfile`) formed from multiple domain terms.
 
-  The `<Qualifier>` is optional and, when used, **MUST serve only to disambiguate** two operations that would otherwise share the same `<verb><Noun>`. When the qualifier disambiguates on an identifying parameter, it **SHOULD take the form** `By<Param>` (e.g., `deleteSessionById`). Otherwise, it **SHOULD be a single PascalCase noun or short noun phrase** appended directly to `<Noun>`.
-- `operationId` **MUST NOT be prefixed** with the HTTP method name, with the exception of `get` when used as an ordinary English verb.
+  The `<Qualifier>` is optional and, when used, MUST serve only to disambiguate two operations that would otherwise share the same `<verb><Noun>`. When the qualifier disambiguates on an identifying parameter, it SHOULD take the form `By<Param>` (e.g., `deleteSessionById`). Otherwise, it SHOULD be a single PascalCase noun or short noun phrase appended directly to `<Noun>`.
+- `operationId` MUST NOT be prefixed with the HTTP method name, with the exception of `get` when used as an ordinary English verb.
   This avoids duplicating information already present in the OpenAPI `path`/`method` pair and adds no disambiguation value for automated selection.
-- `operationId` **MUST NOT include a version marker** such as `V1`, `_v1`, `v2`, or similar. Versioning belongs in the API path (e.g., `/v1/sessions`) or headers, not in the operation identifier.
-- Within a single API document, designers **SHOULD use one consistent read verb** (e.g., always `get` rather than alternating between `get`, `retrieve`, and `fetch`) to promote clarity and reduce cognitive load for consumers.
-- `operationId` **SHOULD be unique** within the document to prevent collisions in code generation, tool registries, and AI agent tool-calling systems.
+- `operationId` MUST NOT include a version marker** such as `V1`, `_v1`, `v2`, or similar. Versioning belongs in the API path (e.g., `/v1/sessions`) or headers, not in the operation identifier.
+- Within a single API document, designers SHOULD use one consistent read verb (e.g., always `get` rather than alternating between `get`, `retrieve`, and `fetch`) to promote clarity and reduce cognitive load for consumers.
+- `operationId` SHOULD be unique within the document to prevent collisions in code generation, tool registries, and AI agent tool-calling systems.
 
 #### Proposal: Approved Verb List
 
-Verbs used in `operationId` SHOULD be restricted to the list below. Verbs not on this list **MUST** undergo a formal review process before use.
+Verbs used in `operationId` SHOULD be restricted to the list below. Verbs not on this list MUST undergo a formal review process before use.
 
 **CRUD Core Verbs** (replace vague synonyms):
 - `create` — Instantiate a new resource. Replaces: `add`, `new`, `insert`, `post`.
@@ -1713,21 +1703,23 @@ Verbs used in `operationId` SHOULD be restricted to the list below. Verbs not on
 
 ### B.2. Operation `description` Completeness Rules
 
-Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations using only the operation object — its `description`, `parameters`, `requestBody`, and `responses` — not the global `info.description`. To ensure they can make correct choices, each operation must be **self-contained** for the purpose of selection and invocation.
+Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations using only the operation object — its `description`, `parameters`, `requestBody`, and `responses` — not the global `info.description`. To ensure they can make correct choices, each operation must be self-contained for the purpose of selection and invocation.
 
 Therefore:
-- `operation description` **MUST be present and non-empty**.
-- `operation description` **MUST NOT be verbatim identical** to `summary`.
-- The description **MUST contain all information** a tool-selecting consumer needs to:
+- `operation description` MUST be present and non-empty.
+- `operation description` MUST NOT be verbatim identical to `summary`.
+- The description MUST contain all information a tool-selecting consumer needs to:
   - Decide whether to invoke the operation (`When to use`),
   - Distinguish it from similar operations (`Differences`),
   - Understand what it does (`Side effects`),
   - Know what it returns and how to use the result (`Returns`),
   - Identify required inputs (`Requires`).
-- This information **MUST be reachable from the operation object** — via its `description`, parameters, and schemas — and **MUST NOT rely exclusively** on `info.description`.
+- This information MUST be reachable from the operation object — via its `description`, parameters, and schemas — and MUST NOT rely exclusively on `info.description`.
   - `info.description` may still provide valuable context (e.g., authentication flow, error-handling philosophy, rate limits), but the *operational essentials* must be self-contained.
 
-To help ensure completeness, designers **MAY** use the following template as a guide:
+
+#### Proposal: Operation `description` Template
+To help ensure completeness, designers MAY use the following template as a guide:
 ```yaml
 description: |
   When to use: {{ user asks to... }}
@@ -1736,10 +1728,10 @@ description: |
   Returns: {{ What's in the response and how to use it }}
   Requires: {{ Data needed, e.g. "customerId from context" }}
 ```
-This template is **not mandatory**. It may be adapted, shortened, or omitted where the operation’s purpose is already unambiguous from its `operationId`, parameter names, and response schema — for example, simple, side-effect-free, parameter-light operations like `getHealth` or `getRoamingStatus`.
+This template is not mandatory. It may be adapted, shortened, or omitted where the operation’s purpose is already unambiguous from its `operationId`, parameter names, and response schema — for example, simple, side-effect-free, parameter-light operations like `getHealth` or `getRoamingStatus`.
 In such cases, a brief description such as`"Returns the service health status"` or `"Returns the current roaming status and the country information"` is sufficient.
 
-The fuller template remains **expected** for operations that:
+The fuller template remains expected for operations that:
 - Take meaningful input,
 - Have side effects,
 - Return complex data requiring interpretation,
@@ -1749,7 +1741,7 @@ The fuller template remains **expected** for operations that:
 
 Building on the existing requirement in [2.2](#22-data-definitions) that every schema property must have a `description`, this section adds guidance for enums whose values are not self-explanatory to an automated consumer.
 
-Where enum values are not evident from their name alone (e.g., domain- or context-specific codes like `STATUS_OK`, `ERR_AUTH_FAIL`, or `STATE_PENDING`), the enum’s `description` **SHOULD** explain the meaning of each value using a **markdown bullet list**, with one bullet per value:
+Where enum values are not evident from their name alone (e.g., domain- or context-specific codes like `STATUS_OK`, `ERR_AUTH_FAIL`, or `STATE_PENDING`), the enum’s `description` SHOULD explain the meaning of each value using a markdown *bullet list*, with one bullet per value:
 ```
 description: |
   Result of the verification:
@@ -1757,4 +1749,4 @@ description: |
   - `FALSE`: the provided data does not match
   - `UNKNOWN`: the match could not be determined
 ```
-This format is **not required** for self-evident enums (e.g., `true`/`false`, `red`/`green`/`blue`, `open`/`closed`), but is **strongly encouraged** where ambiguity could lead to misinterpretation by tools or agents.
+This format is NOT REQUIRED for self-evident enums (e.g., `true`/`false`, `red`/`green`/`blue`, `open`/`closed`), but is strongly encouraged where ambiguity could lead to misinterpretation by tools or agents.
