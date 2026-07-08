@@ -91,6 +91,15 @@ components:
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
       maxLength: 256
       example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+
+    Date:
+      type: string
+      description: The date, using [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) full-date format "YYYY-MM-DD"
+      format: date
+      minLength: 10
+      maxLength: 10
+      example: "2023-07-03"
+
     DateTime:
       type: string
       format: date-time

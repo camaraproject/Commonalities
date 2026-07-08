@@ -1499,6 +1499,8 @@ Breaking changes to an API that **DO** affect consumers:
 - Modifying or removing a mandatory parameter in existing operations (resource verbs). For example, when consulting a resource, a certain field is no longer returned. Another example: a field that was previously a string is now numeric.
 - Modifying or adding new responses to existing operations. For example: creating a resource can return a 412 response code.
 
+When adding or tightening schema constraints such as `maxLength`, `maxItems`, `minimum`, or `maximum` on an already published API, the compatibility impact MUST be assessed against the previous public API contract. The change can be treated as backward-compatible when it only makes an already intended or domain-limited constraint machine-readable and does not restrict well-behaving clients; if it newly rejects previously valid requests, narrows the responses that clients could validly receive, or requires new client behavior such as pagination, it is a breaking change. The API change should clearly communicate what changed, why it changed, and why well-behaving clients are not restricted when the change is classified as a clarification.
+
 Compatibility management:
 
 To ensure this compatibility, the following guidelines MUST be applied.
@@ -1572,7 +1574,7 @@ This API requires the API consumer to identify a [ device | phone number ](*) as
 - When the API is invoked using a two-legged access token, the subject will be identified from the optional [`device` object | `phoneNumber` field](*), which therefore MUST be provided.
 - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
+This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information associated with the access token that was identified during the authentication process.
 
 ## Error handling:
 

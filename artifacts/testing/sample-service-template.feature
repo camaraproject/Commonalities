@@ -39,10 +39,56 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   
   # createResource MUST be replaced by applicable operationId for the tested operation
   # schema names MUST be replaced by applicable values for the tested operation
+  # Applicable for APIs with device concept
   @{feature_identifier}_{createResource}_01_generic_success_scenario
   Scenario Outline: Common validations for any success scenario
     # Valid testing device and default request body compliant with the schema
     Given a valid testing device supported by the service, identified by the token or provided in the request body
+    # Several clauses for request body property may apply depending on the operation
+    And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
+    And the request body is compliant with the schema at "#/components/schemas/<createResource>"
+    When the request "<createResource>" is sent
+    Then the response status code is 201
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    # The response has to comply with the generic response schema which is part of the spec
+    And the response body complies with the OAS schema at "#/components/schemas/<Resource>"
+    # Additionally, in case any success response has to comply with some constraints beyond the schema compliance
+    And the response property "<property>" matches the rule: <condition>
+
+    Examples:
+      | property                 | condition                 |
+      | $.xxx                    | yyy                       |
+
+  # createResource MUST be replaced by applicable operationId for the tested operation
+  # schema names MUST be replaced by applicable values for the tested operation
+  # Applicable for APIs with phoneNumber concept
+  @{feature_identifier}_{createResource}_01_generic_success_scenario
+  Scenario Outline: Common validations for any success scenario
+    # Valid testing phone number and default request body compliant with the schema
+    Given a valid testing phone number supported by the service, identified by the token or provided in the request body
+    # Several clauses for request body property may apply depending on the operation
+    And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
+    And the request body is compliant with the schema at "#/components/schemas/<createResource>"
+    When the request "<createResource>" is sent
+    Then the response status code is 201
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    # The response has to comply with the generic response schema which is part of the spec
+    And the response body complies with the OAS schema at "#/components/schemas/<Resource>"
+    # Additionally, in case any success response has to comply with some constraints beyond the schema compliance
+    And the response property "<property>" matches the rule: <condition>
+
+    Examples:
+      | property                 | condition                 |
+      | $.xxx                    | yyy                       |
+
+  # createResource MUST be replaced by applicable operationId for the tested operation
+  # schema names MUST be replaced by applicable values for the tested operation
+  # Applicable for APIs that does not own device nor phoneNumber concept
+  @{feature_identifier}_{createResource}_01_generic_success_scenario
+  Scenario Outline: Common validations for any success scenario
+    Given the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     # Several clauses for request body property may apply depending on the operation
     And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     And the request body is compliant with the schema at "#/components/schemas/<createResource>"
@@ -191,6 +237,7 @@ Scenario Outline: Error response for missing required property in request body
     Then the response status code is 400
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
 
   # Service Error scenarios
 
@@ -198,7 +245,7 @@ Scenario Outline: Error response for missing required property in request body
 
     # Generic 401 errors
 
-  @{feature_identifier}_{operationId}_401.1_no_authorization_header
+  @{feature_identifier}_{operationId}_401.01_no_authorization_header
   Scenario: Error response for no header "Authorization"
     Given the header "Authorization" is not sent
     When the request "{operationId}" is sent
@@ -209,7 +256,7 @@ Scenario Outline: Error response for missing required property in request body
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
 
-  @{feature_identifier}_{operationId}_401.2_expired_access_token
+  @{feature_identifier}_{operationId}_401.02_expired_access_token
   Scenario: Error response for expired access token
     Given the header "Authorization" is set to an expired access token
     When the request "{operationId}" is sent
@@ -220,7 +267,7 @@ Scenario Outline: Error response for missing required property in request body
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
 
-  @{feature_identifier}_{operationId}_401.3_invalid_access_token
+  @{feature_identifier}_{operationId}_401.03_invalid_access_token
   Scenario: Error response for invalid access token
     Given the header "Authorization" is set to an invalid access token
     When the request "{operationId}" is sent
@@ -233,7 +280,7 @@ Scenario Outline: Error response for missing required property in request body
 
   # Generic 403 errors
 
-  @{feature_identifier}_{operationId}_403.1_missing_access_token_scope
+  @{feature_identifier}_{operationId}_403.01_missing_access_token_scope
   Scenario: Missing access token scope
     Given the header "Authorization" is set to an access token that does not include scope "<scope>"
     When the request "{operationId}" is sent
@@ -244,7 +291,7 @@ Scenario Outline: Error response for missing required property in request body
     And the response property "$.code" is "PERMISSION_DENIED"
     And the response property "$.message" contains a user friendly text
 
-  @{feature_identifier}_{operationId}_403.2_api_client_token_mismatch
+  @{feature_identifier}_{operationId}_403.02_api_client_token_mismatch
   Scenario: "<Resource>" not created by the API client given in the access token
     # To test this, a token has to be obtained for a different client
     Given the header "Authorization" is set to a valid access token emitted to an API client which did not have rights to access/manage the "<Resource>"
