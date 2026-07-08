@@ -75,7 +75,7 @@ Several types of `sinkCredential` could be available in the future, but for now 
 | credentialtype       | string           | Type of the credential - CAN be set to `ACCESSTOKEN` or  `PRIVATE_KEY_JWT`        | mandatory   |
 | accessToken          | string           | Access Token granting access to send events related to the implicit subscription  | optional    |
 | accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired.    | optional    |
-| accessTokenType      | string           | Type of access token - MUST be set to `Bearer` for now                            | optional    |
+| accessTokenType      | string           | Type of access token - MUST be set to `bearer` for now                            | optional    |
 
 A sample OpenAPI template for the implicit-subscription pattern is available in [Commonalities/artifacts/api-templates](/artifacts/api-templates/) directory (`sample-implicit-events.yaml`), with common event schemas in [Commonalities/artifacts/common](/artifacts/common/) (`CAMARA_event_common.yaml`).
 
