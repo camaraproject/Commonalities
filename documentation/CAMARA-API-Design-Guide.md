@@ -1643,7 +1643,6 @@ Verbs used in `operationId` SHOULD be restricted to the list below. Verbs not on
 - `do`, `run`, `execute`, `perform`, `trigger` — no accompanying noun can make these specific enough.
 - `get*Data` patterns (e.g., `getInvoiceData`) — the `Data` suffix adds noise; use `getInvoice` instead.
 
-
 ### B.2. Operation `description` Completeness Rules
 
 Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations using only the operation object — its `description`, `parameters`, `requestBody`, and `responses` — not the global `info.description`. To ensure they can make correct choices, each operation must be self-contained for the purpose of selection and invocation.
@@ -1659,7 +1658,6 @@ Therefore:
   - Identify required inputs (`Requires`).
 - This information MUST be reachable from the operation object — via its `description`, parameters, and schemas — and MUST NOT rely exclusively on `info.description`.
   - `info.description` may still provide valuable context (e.g., authentication flow, error-handling philosophy, rate limits), but the *operational essentials* must be self-contained.
-
 
 #### Proposal: Operation `description` Template
 To help ensure completeness, designers MAY use the following template as a guide:
