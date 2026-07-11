@@ -1600,83 +1600,75 @@ While [5.7.2](#572-operations) requires `operationId` to use lowerCamelCase when
   The `<Noun>` represents the core resource, entity, or concept being acted upon — and MAY be a compound noun (e.g., `DeviceLocation`, `UserProfile`) formed from multiple domain terms.
 
   The `<Qualifier>` is optional and, when used, MUST serve only to disambiguate two operations that would otherwise share the same `<verb><Noun>`. When the qualifier disambiguates on an identifying parameter, it SHOULD take the form `By<Param>` (e.g., `deleteSessionById`). Otherwise, it SHOULD be a single PascalCase noun or short noun phrase appended directly to `<Noun>`.
-- `operationId` MUST NOT be prefixed with the HTTP method name, with the exception of `get` when used as an ordinary English verb.
+- `operationId` MUST NOT be prefixed with `post`, `put`, or `patch`. (`get` and `delete` are ordinary English verbs describing the operation's action and are not considered HTTP-method leakage.)
   This avoids duplicating information already present in the OpenAPI `path`/`method` pair and adds no disambiguation value for automated selection.
-- `operationId` MUST NOT include a version marker** such as `V1`, `_v1`, `v2`, or similar. Versioning belongs in the API path (e.g., `/v1/sessions`) or headers, not in the operation identifier.
-- Within a single API document, designers SHOULD use one consistent read verb (e.g., always `get` rather than alternating between `get`, `retrieve`, and `fetch`) to promote clarity and reduce cognitive load for consumers.
-- `operationId` SHOULD be unique within the document to prevent collisions in code generation, tool registries, and AI agent tool-calling systems.
+- `operationId` MUST NOT include a version marker such as `V1`, `_v1`, `v2`, or similar. Versioning belongs in the API path (e.g., `/v1/sessions`) or headers, not in the operation identifier.
+- Within a single API document, designers SHOULD use one consistent read verb per retrieval style: `get` for reading resources via `GET`, and `retrieve` for POST-based queries as defined in [6.5. POST or GET for Transferring Sensitive or Complex Data](#65-post-or-get-for-transferring-sensitive-or-complex-data), mirroring the `retrieve-*` verb path. Synonyms such as `read` or `fetch` SHOULD NOT be used in their place.
+- `operationId` MUST be unique within the API document, as required by the OpenAPI specification.
 
 #### Proposal: Approved Verb List
 
-Verbs used in `operationId` SHOULD be restricted to the list below. Verbs not on this list MUST undergo a formal review process before use.
+Verbs used in `operationId` SHOULD be restricted to the list below. Any verb not present in the list MUST be submitted for formal review through a GitHub issue in the Commonalities repository before it may be used.
 
 **CRUD Core Verbs** (replace vague synonyms):
 - `create` — Instantiate a new resource. Replaces: `add`, `new`, `insert`, `post`.
-- `get` — Fetch a single resource by identity. Replaces: `fetch`, `retrieve`, `read`, `find`.
+- `get` — Fetch a single resource by identity. Replaces: `fetch`, `read`, `find`.
+- `retrieve` — Fetch a single resource using POST-based queries. Replaces: `fetch`, `read`, `find`.
 - `list` — Fetch a collection, optionally filtered. Replaces: `getAll`, `fetchAll`, `search` (when browsing).
 - `update` — Modify an existing resource, fully or partially. Replaces: `edit`, `modify`, `patch`, `put`.
-- `replace` — Full replacement of a resource (PUT semantics). Replaces: `put`, `overwrite`.
 - `delete` — Remove a resource permanently. Replaces: `remove`, `destroy`, `drop`.
 
 **Action Verbs** (for non-CRUD operations):
 - `send` — Dispatch a message, notification, or payload.
 - `submit` — Hand off for processing (e.g., forms, orders, applications).
-- `approve` — Grant explicit authorization.
 - `cancel` — Abort an in-progress or future operation.
-- `publish` — Make a resource publicly available.
-- `archive` — Move to long-term / read-only storage.
-- `restore` — Reverse an archive or soft delete.
 - `enable` / `disable` — Toggle active state.
 - `activate` / `deactivate` — Lifecycle state transitions.
-- `import` / `export` — Bulk data movement across system boundaries.
 - `search` — Intentional query with user-supplied terms (distinct from `list`, which implies browsing).
 - `validate` — Check correctness without side effects.
-- `preview` — Dry-run or read-only rendering of an action’s outcome.
-- `transfer` — Move ownership or location between entities.
 - `assign` / `unassign` — Attach or detach a resource to an owner.
-- `tag` / `untag` — Apply or remove a label.
 
-**Forbidden Verbs** (never permitted):
+**Forbidden Verbs** (SHOULD NOT be used):
 - `process` — too vague; does not convey what the operation does.
 - `handle` — internal/implementation language, not semantic.
 - `manage` — a catch-all with no meaning to an agent.
 - `do`, `run`, `execute`, `perform`, `trigger` — no accompanying noun can make these specific enough.
 - `get*Data` patterns (e.g., `getInvoiceData`) — the `Data` suffix adds noise; use `getInvoice` instead.
 
+Note:  The rules in this section apply to path operations only (i.e., operations defined under the OpenAPI `paths` object). Callback `operationId`s — such as the `postNotification` used in CAMARA notification callback definitions, which are implemented by the API consumer and never exposed as tools — are **out of scope** and not subject to these rules.
+
 ### B.2. Operation `description` Completeness Rules
 
-Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations using only the operation object — its `description`, `parameters`, `requestBody`, and `responses` — not the global `info.description`. To ensure they can make correct choices, each operation must be self-contained for the purpose of selection and invocation.
+Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations using only the operation object — its `description`, `parameters`, `requestBody`, and `responses` — not the global `info.description`.The following rules ensure operations remain self-contained for this purpose.
 
-Therefore:
-- `operation description` MUST be present and non-empty.
-- `operation description` MUST NOT be verbatim identical to `summary`.
+- Operation `description` MUST be present and non-empty.
+- Operation `description` MUST NOT be verbatim identical to `summary`.
 - The description MUST contain all information a tool-selecting consumer needs to:
-  - Decide whether to invoke the operation (`When to use`),
-  - Distinguish it from similar operations (`Differences`),
-  - Understand what it does (`Side effects`),
-  - Know what it returns and how to use the result (`Returns`),
-  - Identify required inputs (`Requires`).
+  - Decide whether to invoke the operation (*When to use*),
+  - Distinguish it from similar operations (*Differences*),
+  - Understand what it does (*Side effects*).
+
 - This information MUST be reachable from the operation object — via its `description`, parameters, and schemas — and MUST NOT rely exclusively on `info.description`.
   - `info.description` may still provide valuable context (e.g., authentication flow, error-handling philosophy, rate limits), but the *operational essentials* must be self-contained.
+  - Additional information in the operation `description` that is primarily intended for human readers rather than automated consumers SHOULD, if present, be placed at the end of the description. This allows to more easily ignore or remove such content when processing the operation for tool selection.
 
 #### Proposal: Operation `description` Template
-To help ensure completeness, designers MAY use the following template as a guide:
+To help satisfy this rule, API designers MAY structure the operation description using the following template:
 ```yaml
 description: |
-  When to use: {{ user asks to... }}
-  Differences: {{ Use instead of X when... }} (optional)
-  Side effects: {{ Action taken }} or "None"
-  Returns: {{ What's in the response and how to use it }}
-  Requires: {{ Data needed, e.g. "customerId from context" }}
+  {{Action}} {{core noun or concept}}.
+  {{Use this to... / Call this when... / Use this for...}}
+  {{Only mention side effects if they exist.}}
+  {{Any non-obvious requirements or context needed.}}
+```
+Example:
+```yaml
+description: |
+  Returns the current geographical location of a device.
+  Use this to get position information. 
 ```
 This template is not mandatory. It may be adapted, shortened, or omitted where the operation’s purpose is already unambiguous from its `operationId`, parameter names, and response schema — for example, simple, side-effect-free, parameter-light operations like `getHealth` or `getRoamingStatus`.
 In such cases, a brief description such as`"Returns the service health status"` or `"Returns the current roaming status and the country information"` is sufficient.
-
-The fuller template remains expected for operations that:
-- Take meaningful input,
-- Have side effects,
-- Return complex data requiring interpretation,
-- Or could be confused with similarly named operations elsewhere in the API.
 
 ### B.3. Property `description` Completeness Rules
 
