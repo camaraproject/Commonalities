@@ -312,7 +312,7 @@ components:
           items:
             $ref: "#/components/schemas/ApiEventType"
         config:
-          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Config"
+          $ref: "#/components/schemas/Config"
       discriminator:
         propertyName: protocol
         mapping:
@@ -352,7 +352,7 @@ components:
           items:
             $ref: "#/components/schemas/ApiEventType"
         config:
-          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Config"
+          $ref: "#/components/schemas/Config"
         id:
           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionId"
         startsAt:
