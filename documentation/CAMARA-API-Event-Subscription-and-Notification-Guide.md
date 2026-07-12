@@ -192,6 +192,23 @@ Remark: This action will trigger a subscription-ended event with terminationReas
 Unless explicitly decided otherwise by the API Sub Project, if an event is triggered following initialEvent set to `true`, this event will be counted towards subscriptionMaxEvents (if provided).
 It is RECOMMENDED to provide this clarification in all subscription APIs featuring subscriptionMaxEvents and initialEvent.
 
+**Note** on the `config` schema split between Commonalities and the API project:
+`subscriptionDetail` is inherently API-specific (it carries attributes such as `device`, `area`, or event type filters that differ per API) and therefore cannot be defined in the Commonalities-owned common file. For this reason, `CAMARA_event_common.yaml` only defines a `ConfigBase` schema containing the three common optional attributes (`subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`). Each API project MUST define its own `Config` schema, in its main OpenAPI file, that extends `ConfigBase` via `allOf` and adds the required `subscriptionDetail` property typed against its own `CreateSubscriptionDetail` schema:
+
+```yaml
+Config:
+  allOf:
+    - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ConfigBase"
+    - type: object
+      required:
+        - subscriptionDetail
+      properties:
+        subscriptionDetail:
+          $ref: "#/components/schemas/CreateSubscriptionDetail"
+```
+
+See [Commonalities/artifacts/api-templates](/artifacts/api-templates/) directory (`sample-service-subscriptions.yaml`) for a complete example.
+
 **Subscription status value table**:
 
 Managing subscription is a draft feature, and it is not mandatory for now. An API project could decide to use/not use it. A list of status is provided for global consistency.
