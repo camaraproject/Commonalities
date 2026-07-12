@@ -412,6 +412,32 @@ components:
           $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
 
     # ─────────────────────────────────────────────────────────────────────────
+    # Config (API-specific due to subscriptionDetail)
+    #
+    # Extends the Commonalities-owned ConfigBase via allOf, adding the required
+    # `subscriptionDetail` property typed against this API's own
+    # CreateSubscriptionDetail schema. `subscriptionDetail` cannot be defined
+    # in CAMARA_event_common.yaml because it is API-specific.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    Config:
+      allOf:
+        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ConfigBase"
+        - type: object
+          required:
+            - subscriptionDetail
+          properties:
+            subscriptionDetail:
+              $ref: "#/components/schemas/CreateSubscriptionDetail"
+
+    CreateSubscriptionDetail:
+      description: |
+        The detail of the requested event subscription.
+        Replace with the actual API-specific subscription detail properties
+        (e.g. `device`, `area`) for this API project.
+      type: object
+
+    # ─────────────────────────────────────────────────────────────────────────
     # API-specific event type enum (contains sample-service placeholders)
     # ─────────────────────────────────────────────────────────────────────────
 
