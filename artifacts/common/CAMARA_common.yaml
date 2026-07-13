@@ -384,8 +384,9 @@ components:
     # the ErrorInfo schema with a local restriction of `status` and `code` to
     # exactly the codes the API can return — and reference the shared examples:
     #   $ref: "../common/CAMARA_common.yaml#/components/examples/<EXAMPLE_NAME>"
-    # A complete locally defined response is demonstrated in the API templates
-    # (artifacts/api-templates/sample-service.yaml).
+    # A complete, copy-ready locally defined response is demonstrated in the
+    # API templates (artifacts/api-templates/sample-service.yaml) — use it as
+    # the skeleton for codes or combinations this catalogue does not cover.
     #
     # Statuses that are not documented by default (405, 406, 412, 415, 5xx —
     # see the CAMARA API Design Guide) have no referenceable response; their
@@ -641,10 +642,11 @@ components:
     # DEPRECATED error responses
     #
     # The Generic* responses below are DEPRECATED as of Commonalities 0.9.0
-    # and are planned for removal in the next meta-release cycle. They bundle
-    # error codes that do not apply to every referencing API; new and
-    # realigning API versions use the catalogue responses above, or define
-    # error responses locally from the shared examples.
+    # and are planned for removal — or downgrade to a commented-out reference —
+    # in the next meta-release cycle. They bundle error codes that do not apply
+    # to every referencing API; new and realigning API versions use the
+    # catalogue responses above, or define error responses locally from the
+    # shared examples.
     #
     # Replacements:
     #   Generic400 → BadRequestWithRange400 (or BadRequest400)
