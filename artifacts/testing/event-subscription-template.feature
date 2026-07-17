@@ -1,4 +1,4 @@
-@<xxx>
+  @<xxx>
 Feature: Camara Template Subscriptions API - Operations on subscriptions
 
     CAMARA Commonalities: wip
@@ -135,7 +135,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
 
 ######################### Scenario in case initialEvent is managed ##############################
 
-@<xxx>_subscriptions_11_subscription_creation_initial_event
+  @<xxx>_subscriptions_11_subscription_creation_initial_event
   Scenario: Receive initial event notification on creation
     Given the API supports initial events to be sent
     And a valid subscription request body with property "$.config.initialEvent" set to true
