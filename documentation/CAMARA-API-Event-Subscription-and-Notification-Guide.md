@@ -197,6 +197,10 @@ It is RECOMMENDED to provide this clarification in all subscription APIs featuri
 
 ```yaml
 Config:
+  description: |
+    Implementation-specific configuration parameters needed by the subscription manager
+    for acquiring events. Extends `ConfigBase` from `CAMARA_event_common.yaml` with the
+    required, API-specific `subscriptionDetail` property.
   allOf:
     - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ConfigBase"
     - type: object
