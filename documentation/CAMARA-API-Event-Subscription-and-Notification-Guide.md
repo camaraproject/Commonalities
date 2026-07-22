@@ -202,7 +202,7 @@ Config:
     for acquiring events. Extends `ConfigBase` from `CAMARA_event_common.yaml` with the
     required, API-specific `subscriptionDetail` property. As an example, this template
     also includes the predefined, optional `initialEvent` attribute; API projects MAY
-    omit it if sending a notification when a subscription is created is relevant to the
+    omit it if sending a notification when a subscription is created is not relevant to the
     API’s event type(s).
   allOf:
     - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ConfigBase"
