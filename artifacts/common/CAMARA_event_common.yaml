@@ -116,9 +116,9 @@ components:
       description: |
         Base schema for the `config` object: implementation-specific configuration parameters
         needed by the subscription manager for acquiring events. It defines the attributes
-        common to all CAMARA APIs (`subscriptionExpireTime`, `subscriptionMaxEvents`).
+        common to all CAMARA subscription APIs (`subscriptionExpireTime`, `subscriptionMaxEvents`).
 
-        API projects MUST define their own `Config` schema in their main OpenAPI file, extending `ConfigBase` via `allOf` to add the required, API-specific `subscriptionDetail` property. API projects MAY also add the predefined, optional `initialEvent` attribute (see sample-service-subscriptions.yaml), or omit it if sending a notification at subscription creation time does not make sense for the API's event type(s).
+        API projects MUST define their own `Config` schema in their main OpenAPI file, extending `ConfigBase` via `allOf` to add the required, API-specific `subscriptionDetail` property. API projects MAY also add the predefined, optional `initialEvent` attribute (see sample-service-subscriptions.yaml), or omit it if sending a notification at subscription creation time is created is not relevant to theAPI’s event type(s)
       type: object
       properties:
         subscriptionExpireTime:
@@ -126,12 +126,12 @@ components:
           format: date-time
           maxLength: 64
           example: 2023-01-17T13:18:23.682Z
-          description: The subscription expiration time (in date-time format) requested by the API consumer. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Up to API project decision to keep it.
+          description: The subscription expiration time (in date-time format) requested by the API consumer. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
         subscriptionMaxEvents:
           type: integer
           format: int32
-          description: Identifies the maximum number of event reports to be generated (>=1) requested by the API consumer - Once this number is reached, the subscription ends. Up to API project decision to keep it.
-          minimum: 1
+          description: Identifies the maximum number of event reports to be generated (>=1) requested by the API consumer - Once this number is reached, the subscription ends. 
+          minimum: 1 
           maximum: 1000000
           example: 5
 
