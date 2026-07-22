@@ -130,8 +130,8 @@ components:
         subscriptionMaxEvents:
           type: integer
           format: int32
-          description: Identifies the maximum number of event reports to be generated (>=1) requested by the API consumer - Once this number is reached, the subscription ends. 
-          minimum: 1 
+          description: Identifies the maximum number of event reports to be generated (>=1) requested by the API consumer - Once this number is reached, the subscription ends.
+          minimum: 1
           maximum: 1000000
           example: 5
 
