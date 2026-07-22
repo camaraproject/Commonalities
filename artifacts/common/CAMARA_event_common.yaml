@@ -116,11 +116,9 @@ components:
       description: |
         Base schema for the `config` object: implementation-specific configuration parameters
         needed by the subscription manager for acquiring events. It defines the attributes
-        common to all CAMARA APIs (`subscriptionExpireTime`, `subscriptionMaxEvents`, `initialEvent`).
+        common to all CAMARA APIs (`subscriptionExpireTime`, `subscriptionMaxEvents`).
 
-        API projects MUST define their own `Config` schema in their main OpenAPI file, extending `ConfigBase` via `allOf` to add the required, API-specific `subscriptionDetail` property.
-
-        Note: if a request is performed for several event types, all subscribed events will use same `config` parameters.
+        API projects MUST define their own `Config` schema in their main OpenAPI file, extending `ConfigBase` via `allOf` to add the required, API-specific `subscriptionDetail` property. API projects MAY also add the predefined, optional `initialEvent` attribute (see sample-service-subscriptions.yaml), or omit it if sending a notification at subscription creation time does not make sense for the API's event type(s).
       type: object
       properties:
         subscriptionExpireTime:
@@ -136,11 +134,6 @@ components:
           minimum: 1
           maximum: 1000000
           example: 5
-        initialEvent:
-          type: boolean
-          description: |
-            Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.
-            Up to API project decision to keep it.
 
     # ─────────────────────────────────────────────────────────────────────────
     # Section 3: Protocol support
