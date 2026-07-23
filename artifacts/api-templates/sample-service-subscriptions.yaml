@@ -418,7 +418,7 @@ components:
     # `subscriptionDetail` property typed against this API's own
     # CreateSubscriptionDetail schema. `subscriptionDetail` cannot be defined
     # in CAMARA_event_common.yaml because it is API-specific.
-    # This is also where each API project add the predefined, optional `initialEvent` attribute.
+    # This is also where each API project add the predefined, optional `initialEvent` property.
     # ─────────────────────────────────────────────────────────────────────────
 
     Config:
@@ -426,8 +426,8 @@ components:
         Implementation-specific configuration parameters needed by the subscription manager
         for acquiring events. Extends `ConfigBase` from `CAMARA_event_common.yaml` with the
         required, API-specific `subscriptionDetail` property. As an example, this template
-        also includes the predefined, optional `initialEvent` attribute; API projects MAY
-        omit it if sending a notification when a subscription is created is relevant to the
+        also includes the predefined, optional `initialEvent` property; API projects MAY
+        omit it if sending a notification when a subscription is created is not relevant to the
         API’s event type(s).
         Note: if a request is performed for several event types, all subscribed events will
         use the same `config` parameters.
