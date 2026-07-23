@@ -118,7 +118,10 @@ components:
         needed by the subscription manager for acquiring events. It defines the attributes
         common to all CAMARA subscription APIs (`subscriptionExpireTime`, `subscriptionMaxEvents`).
 
-        API projects MUST define their own `Config` schema in their main OpenAPI file, extending `ConfigBase` via `allOf` to add the required, API-specific `subscriptionDetail` property. API projects MAY also add the predefined, optional `initialEvent` attribute (see sample-service-subscriptions.yaml), or omit it if sending a notification at subscription creation time is created is not relevant to the API’s event type(s)
+        API projects MUST define their own `Config` schema in their main OpenAPI file, extending 
+        `ConfigBase` via `allOf` to add the required, API-specific `subscriptionDetail` property. 
+        API projects MAY also add the predefined, optional `initialEvent` attribute (see sample-service-subscriptions.yaml), 
+        or omit it if sending a notification at subscription creation time is not relevant to the API’s event type(s).
       type: object
       properties:
         subscriptionExpireTime:
