@@ -77,6 +77,13 @@ Several types of `sinkCredential` could be available in the future, but for now 
 | accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired.    | optional    |
 | accessTokenType      | string           | Type of access token - MUST be set to `bearer` for now                            | optional    |
 
+**Sink delivery behaviour**
+
+When `sink` is provided in the POST request, the following rules apply:
+- The API provider SHOULD support event delivery. If notification delivery is not supported (e.g. the implicit subscription feature is not implemented by this provider instance), the request MUST be rejected with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED` and the resource MUST NOT be created.
+- When event delivery is accepted, `sink` MUST be echoed in the response.
+- The implementation MUST NOT silently create the resource while ignoring the requested `sink`. If event delivery is unavailable, the consumer MUST be informed via the error response, so they can retry without `sink` (e.g. fall back to a polling pattern via `GET /<resource>`).
+
 A sample OpenAPI template for the implicit-subscription pattern is available in [Commonalities/artifacts/api-templates](/artifacts/api-templates/) directory (`sample-implicit-events.yaml`), with common event schemas in [Commonalities/artifacts/common](/artifacts/common/) (`CAMARA_event_common.yaml`).
 
 #### 2.1.1. Instance-based (Implicit) Subscription Example
