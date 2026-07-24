@@ -1585,6 +1585,7 @@ This approach simplifies API usage for API consumers using a three-legged access
 ## Appendix B (Informative): `operationId` and `description` Guidelines for MCP and AI Agent Readiness
 
 This appendix is the outcome of the CAMARA MCP Enablement Program – Phase 0. It extends the naming and documentation rules in [5.7.2](#572-operations) and [2.2](#22-data-definitions) with additional, targeted constraints to ensure CAMARA API operations can be reliably selected and invoked by automated consumers, including AI agents and **Model Context Protocol (MCP)** tool-selection pipelines. These consumers rely on the operation object itself — not the top-level `info.description` — to understand what an operation does, when to use it, and how to invoke it correctly.
+Note: Although this appendix is informative, it uses RFC 2119 keywords (MUST, SHOULD, MAY) to indicate the intended normative strength of each rule if and when it is promoted into the main body of this document.
 
 ### B.1. `operationId` Naming Rules
 
@@ -1599,7 +1600,8 @@ While [5.7.2](#572-operations) requires `operationId` to use lowerCamelCase when
 
   The `<Noun>` represents the core resource, entity, or concept being acted upon — and MAY be a compound noun (e.g., `DeviceLocation`, `UserProfile`) formed from multiple domain terms.
 
-  The `<Qualifier>` is optional and, when used, MUST serve only to disambiguate two operations that would otherwise share the same `<verb><Noun>`. When the qualifier disambiguates on an identifying parameter, it SHOULD take the form `By<Param>` (e.g., `deleteSessionById`). Otherwise, it SHOULD be a single PascalCase noun or short noun phrase appended directly to `<Noun>`.
+  The `<Qualifier>` is optional and SHOULD primarily serve to disambiguate two operations that would otherwise share the same `<verb><Noun>`, or to make the operation's scope explicit (e.g., `retrieveSessionsByDevice`). When the qualifier disambiguates on an identifying parameter, it SHOULD take the form `By<Param>` (e.g., `deleteSessionById`). Otherwise, it SHOULD be a single PascalCase noun or short noun phrase appended directly to `<Noun>`.
+  
 - `operationId` MUST NOT be prefixed with `post`, `put`, or `patch`. (`get` and `delete` are ordinary English verbs describing the operation's action and are not considered HTTP-method leakage.)
   This avoids duplicating information already present in the OpenAPI `path`/`method` pair and adds no disambiguation value for automated selection.
 - `operationId` MUST NOT include a version marker such as `V1`, `_v1`, `v2`, or similar. Versioning belongs in the API path (e.g., `/v1/sessions`) or headers, not in the operation identifier.
@@ -1619,16 +1621,17 @@ Verbs used in `operationId` SHOULD be restricted to the list below. Any verb not
 - `delete` — Remove a resource permanently. Replaces: `remove`, `destroy`, `drop`.
 
 **Action Verbs** (for non-CRUD operations):
+- `check` — Evaluate a condition or status and return a result without side effects (e.g., `checkSimSwap`).
+- `verify` — Confirm that provided data matches operator records (e.g., `verifyLocation`, `verifyNumber`).
 - `send` — Dispatch a message, notification, or payload.
 - `submit` — Hand off for processing (e.g., forms, orders, applications).
 - `cancel` — Abort an in-progress or future operation.
 - `enable` / `disable` — Toggle active state.
-- `activate` / `deactivate` — Lifecycle state transitions.
-- `search` — Intentional query with user-supplied terms (distinct from `list`, which implies browsing).
-- `validate` — Check correctness without side effects.
-- `assign` / `unassign` — Attach or detach a resource to an owner.
+- `validate` — Check structural or syntactic correctness without side effects.
 
-**Forbidden Verbs** (SHOULD NOT be used):
+This list is intentionally short and based on verbs in actual use across CAMARA APIs; it is expected to grow through the review process described above.
+
+**Discouraged Verbs** (SHOULD NOT be used):
 - `process` — too vague; does not convey what the operation does.
 - `handle` — internal/implementation language, not semantic.
 - `manage` — a catch-all with no meaning to an agent.
@@ -1639,7 +1642,7 @@ Note:  The rules in this section apply to path operations only (i.e., operations
 
 ### B.2. Operation `description` Completeness Rules
 
-Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations using only the operation object — its `description`, `parameters`, `requestBody`, and `responses` — not the global `info.description`.The following rules ensure operations remain self-contained for this purpose.
+Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations using only the operation object — its `description`, `parameters`, `requestBody`, and `responses` — not the global `info.description`. The following rules ensure operations remain self-contained for this purpose.
 
 - Operation `description` MUST be present and non-empty.
 - Operation `description` MUST NOT be verbatim identical to `summary`.
@@ -1650,7 +1653,7 @@ Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations
 
 - This information MUST be reachable from the operation object — via its `description`, parameters, and schemas — and MUST NOT rely exclusively on `info.description`.
   - `info.description` may still provide valuable context (e.g., authentication flow, error-handling philosophy, rate limits), but the *operational essentials* must be self-contained.
-  - Additional information in the operation `description` that is primarily intended for human readers rather than automated consumers SHOULD, if present, be placed at the end of the description. This allows to more easily ignore or remove such content when processing the operation for tool selection.
+  - Additional information in the operation `description` that is primarily intended for human readers rather than automated consumers SHOULD, if present, be placed at the end of the description. This makes it easier to ignore or strip such content when processing the operation for tool selection. Descriptions also contribute directly to the token size of generated tool definitions, so designers SHOULD keep them concise and avoid restating information already conveyed by parameter and response schemas.
 
 #### Proposal: Operation `description` Template
 To help satisfy this rule, API designers MAY structure the operation description using the following template:
@@ -1665,12 +1668,12 @@ Example:
 ```yaml
 description: |
   Returns the current geographical location of a device.
-  Use this to get position information. 
+  Use this to get position information.
 ```
 This template is not mandatory. It may be adapted, shortened, or omitted where the operation’s purpose is already unambiguous from its `operationId`, parameter names, and response schema — for example, simple, side-effect-free, parameter-light operations like `getHealth` or `getRoamingStatus`.
-In such cases, a brief description such as`"Returns the service health status"` or `"Returns the current roaming status and the country information"` is sufficient.
+In such cases, a brief description such as `"Returns the service health status"` or `"Returns the current roaming status and the country information"` is sufficient.
 
-### B.3. Property `description` Completeness Rules
+### B.3. Property `description` Completeness Rules for Enums
 
 Building on the existing requirement in [2.2](#22-data-definitions) that every schema property must have a `description`, this section adds guidance for enums whose values are not self-explanatory to an automated consumer.
 
@@ -1682,4 +1685,5 @@ description: |
   - `FALSE`: the provided data does not match
   - `UNKNOWN`: the match could not be determined
 ```
-This format is NOT REQUIRED for self-evident enums (e.g., `true`/`false`, `red`/`green`/`blue`, `open`/`closed`), but is strongly encouraged where ambiguity could lead to misinterpretation by tools or agents.
+
+This format is OPTIONAL for self-evident enums (e.g., `true`/`false`, `red`/`green`/`blue`, `open`/`closed`), but is strongly encouraged where ambiguity could lead to misinterpretation by tools or agents.
