@@ -465,7 +465,7 @@ components:
 
             If provided, the API provider SHOULD support event delivery. If
             notification delivery is not supported, the request is rejected
-            with `422 NOTIFICATIONS_NOT_SUPPORTED` and the resource is NOT
+            with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED` and the resource is NOT
             created.
           allOf:
             - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
