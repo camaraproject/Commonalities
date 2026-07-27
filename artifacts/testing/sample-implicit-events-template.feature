@@ -71,3 +71,16 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_TOKEN" OR "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
+
+  # Event notifications capability not supported scenario
+  @{feature_identifier}_{operationId}_422.01_event_notifications_not_supported
+  Scenario: Event notifications capability not supported
+    Given the request body includes property "$.sink" with a valid value
+    And the API provider does not implement event notifications delivery for the operation "{operationId}"
+    When the request "{operationId}" is sent
+    Then the response status code is 422
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response header "Content-Type" is "application/json"
+    And the response property "$.status" is 422
+    And the response property "$.code" is "EVENT_NOTIFICATIONS_NOT_SUPPORTED"
+    And the response property "$.message" contains a user friendly text
