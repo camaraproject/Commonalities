@@ -72,10 +72,13 @@ Several types of `sinkCredential` could be available in the future, but for now 
 
 | attribute name       | type             | attribute description                                                             | cardinality |
 |----------------------|------------------|-----------------------------------------------------------------------------------|-------------|
-| credentialtype       | string           | Type of the credential - CAN be set to `ACCESSTOKEN` or  `PRIVATE_KEY_JWT`        | mandatory   |
-| accessToken          | string           | Access Token granting access to send events related to the implicit subscription  | optional    |
-| accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired.    | optional    |
-| accessTokenType      | string           | Type of access token - MUST be set to `bearer` for now                            | optional    |
+| credentialType       | string           | Type of the credential - MUST be set to `ACCESSTOKEN` or  `PRIVATE_KEY_JWT`        | mandatory   |
+| accessToken          | string           | Access Token granting access to send events related to the implicit subscription. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Not returned in the response  | optional    |
+| accessTokenExpiresUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Returned in the response   | optional    |
+| accessTokenType      | string           | Type of access token - MUST be set to `bearer` for now. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Not returned in the response                            | optional    |
+| clientId             | string           | The client ID used to authenticate when requesting an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
+| tokenUri             | string           | The URI where to request an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
+| jwksUri              | string           | The URI used to request the public key to verify that the JWT assertion was signed by `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Not needed in the request. Optional in the response  | optional    |
 
 A sample OpenAPI template for the implicit-subscription pattern is available in [Commonalities/artifacts/api-templates](/artifacts/api-templates/) directory (`sample-implicit-events.yaml`), with common event schemas in [Commonalities/artifacts/common](/artifacts/common/) (`CAMARA_event_common.yaml`).
 
@@ -89,7 +92,7 @@ Illustration with bearer access token (Resource instance representation):
   "sinkCredential": {
     "credentialType": "ACCESSTOKEN",
     "accessToken" : "eyJ2ZXIiOiIxLjAiLCJ0eXAiOiJKV1QiL..",
-    "accessTokenExpireUtc" : "2024-12-06T14:37:56.147Z",
+    "accessTokenExpiresUtc" : "2024-12-06T14:37:56.147Z",
     "accessTokenType" : "bearer"
     }
 }
@@ -155,7 +158,7 @@ The following table provides `/subscriptions` attributes
 |----------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------|
 | protocol       | string             | Identifier of a delivery protocol for the event notifications. The values follow the definitions of the [CloudEvent specification](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md#protocol). **Only** `HTTP` **is allowed for now**.                                                                                                                                                                                                                                                                                | mandatory                    |
 | sink           | string             | The URL, to which event notifications shall be sent - `format: uri` SHOULD be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986). The URI-scheme SHALL be set according to the definition of the `protocol` value, e.g. the URI-scheme is `https` when `HTTP`is the value of the `protocol` property. The [security considerations](43#notifications-security-considerations) SHOULD be followed.                                                                                 | mandatory                    |
-| sinkCredential | object             | Sink credential provides authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. To protect the notification endpoint providing sinkCredential is RECOMMENDED. <br> The sinkCredential MUST NOT be present in `POST` and `GET` responses.                                                                                                                                                                                       | optional                     |
+| sinkCredential | object             | Sink credential provides authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. To protect the notification endpoint providing sinkCredential is RECOMMENDED. <br> The sinkCredential MAY be present in `POST` and `GET` responses, but limited to non-secret metadata only (e.g., `credentialType`).                                                                                                                                                                                       | optional                     |
 | types          | SubscriptionEventType | Type of event subscribed. This attribute MUST be present in the `POST` request. It is REQUIRED by API project to provide an enum for this attribute. The event type MUST follow the format: `org.camaraproject.<api-name>.<event-version>.<event-name>` - see chapter [2.3. Event versioning](#23-event-versioning) - Note: An array of types could be passed. The decision to use multiple event types in a single subscription will be made at the API level. | mandatory                    |
 | config         | object             | Implementation-specific configuration parameters needed by the subscription manager for acquiring events. In CAMARA we have predefined attributes like ``subscriptionExpireTime``, ``subscriptionMaxEvents`` or ``initialEvent``. See detail below.                                                                                                                                                                                                                                                                                      | mandatory                    |
 | id             | string             | Identifier of the event subscription - This attribute MUST NOT be present in the POST request as it is provided by API server                                                                                                                                                                                                                                                                                                                                                                                                            | mandatory in server response |
@@ -167,10 +170,13 @@ The following table provides `/subscriptions` attributes
 
 | attribute name       | type               | attribute description                                                          | cardinality |
 |----------------------|--------------------|--------------------------------------------------------------------------------|-------------|
-| credentialtype       | string             | Type of the credential - MUST be set to `ACCESSTOKEN` or `PRIVATE_KEY_JWT`     | mandatory   |
-| accessToken          | string             | Access Token granting access to send events related to the explicit subscription              | optional    |
-| accessTokenExpireUtc | string - date-time | An absolute UTC instant at which the access token shall be considered expired. | optional    |
-| accessTokenType      | string             | Type of access token - MUST be set to `bearer` for now                         | optional    |
+| credentialType       | string             | Type of the credential - MUST be set to `ACCESSTOKEN` or `PRIVATE_KEY_JWT`     | mandatory   |
+| accessToken          | string           | Access Token granting access to send events related to the explicit subscription. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Not returned in the response  | optional    |
+| accessTokenExpiresUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Returned in the response   | optional    |
+| accessTokenType      | string           | Type of access token - MUST be set to `bearer` for now. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Not returned in the response                            | optional    |
+| clientId             | string           | The client ID used to authenticate when requesting an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
+| tokenUri             | string           | The URI where to request an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
+| jwksUri              | string           | The URI used to request the public key to verify that the JWT assertion was signed by `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Not needed in the request. Optional in the response  | optional    |
 
 Note about expired access token when credentialType is `ACCESSTOKEN`:
 when a notification is sent to the sink endpoint with `sinkCredential` and `credentialType` set to `ACCESSTOKEN` it could occur a response back from the listener with an error about expired token.
@@ -662,7 +668,7 @@ sequenceDiagram
    
   opt Using ACCESSTOKEN sink credential type
     opt Subscription
-      appbe ->> cspres: POST /subscriptions<br>Body: {<br>sink: <API Consumer 1>/sink,<br>sinkCredential:{ credentialType: ACCESSTOKEN,<br>accessToken:<Access Token>,<br>accessTokenExpireUtc:<access token expire time>,<br>accessTokenType: bearer },<br>...}
+      appbe ->> cspres: POST /subscriptions<br>Body: {<br>sink: <API Consumer 1>/sink,<br>sinkCredential:{ credentialType: ACCESSTOKEN,<br>accessToken:<Access Token>,<br>accessTokenExpiresUtc:<access token expire time>,<br>accessTokenType: bearer },<br>...}
       cspres -->> appbe: 201 Created
     end
     opt Notification

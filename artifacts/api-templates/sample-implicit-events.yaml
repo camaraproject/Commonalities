@@ -423,7 +423,7 @@ components:
     # convention across existing implicit-subscription CAMARA APIs.
     # Omitting both creates the resource without any event notifications.
     #
-    # Resource (response) echoes `sink` but deliberately omits `sinkCredential`
+    # Resource (response) echoes `sink` and may return `sinkCredential`, but limited to non-secret metadata only (e.g., `credentialType`)
     # — credentials are never returned to the consumer.
     # ─────────────────────────────────────────────────────────────────────────
 
@@ -473,7 +473,7 @@ components:
         sink:
           description: |
             The sink URL registered for notifications on this resource, if any.
-            `sinkCredential` is deliberately not echoed in responses.
+            `sinkCredential` may be returned in responses, but limited to non-secret metadata only (e.g., `credentialType`).
           allOf:
             - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
         sinkCredential:
