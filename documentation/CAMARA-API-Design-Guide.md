@@ -43,6 +43,7 @@ This document outlines guidelines for API design within the CAMARA project, appl
   - [7.4. Backward and Forward Compatibility](#74-backward-and-forward-compatibility)
 - [8. External Documentation](#8-external-documentation)
 - [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
+- [Appendix B (Informative): `operationId` and `description` Guidelines for MCP and AI Agent Readiness](#appendix-b-informative-operationid-and-description-guidelines-for-mcp-and-ai-agent-readiness)
 
 <!-- /TOC -->
 
@@ -1583,3 +1584,109 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
+## Appendix B (Informative): `operationId` and `description` Guidelines for MCP and AI Agent Readiness
+
+This appendix is the outcome of the CAMARA MCP Enablement Program – Phase 0. It extends the naming and documentation rules in [5.7.2](#572-operations) and [2.2](#22-data-definitions) with additional, targeted constraints to ensure CAMARA API operations can be reliably selected and invoked by automated consumers, including AI agents and **Model Context Protocol (MCP)** tool-selection pipelines. These consumers rely on the operation object itself — not the top-level `info.description` — to understand what an operation does, when to use it, and how to invoke it correctly.
+Note: Although this appendix is informative, it uses RFC 2119 keywords (MUST, SHOULD, MAY) to indicate the intended normative strength of each rule if and when it is promoted into the main body of this document.
+
+### B.1. `operationId` Naming Rules
+
+While [5.7.2](#572-operations) requires `operationId` to use lowerCamelCase when present, it does not mandate its presence. Since `operationId` is frequently used by tooling and automated systems as the primary handle to select and invoke an operation — and an operation without one generally cannot be used by such consumers — the following rules apply, beginning with an explicit presence requirement:
+
+- `operationId` MUST be present on every operation.
+- `operationId` MUST be in lowerCamelCase format and MUST NOT exceed 64 characters in length. This ensures compatibility with most code generators and vendor tooling limits. (These requirements are formally expressed by the regular expression: `^[a-z][a-zA-Z0-9]{0,63}$`.)
+- `operationId` MUST follow the shape `<verb><Noun>[<Qualifier>]`, for example:
+  - `createSession` (verb + noun)
+  - `getDeviceLocation` (verb + compound noun)
+  - `deleteSessionById` (verb + noun + qualifier)
+
+  The `<Noun>` represents the core resource, entity, or concept being acted upon — and MAY be a compound noun (e.g., `DeviceLocation`, `UserProfile`) formed from multiple domain terms.
+
+  The `<Qualifier>` is optional and SHOULD primarily serve to disambiguate two operations that would otherwise share the same `<verb><Noun>`, or to make the operation's scope explicit (e.g., `retrieveSessionsByDevice`). When the qualifier disambiguates on an identifying parameter, it SHOULD take the form `By<Param>` (e.g., `deleteSessionById`). Otherwise, it SHOULD be a single PascalCase noun or short noun phrase appended directly to `<Noun>`.
+  
+- `operationId` MUST NOT be prefixed with `post`, `put`, or `patch`. (`get` and `delete` are ordinary English verbs describing the operation's action and are not considered HTTP-method leakage.)
+  This avoids duplicating information already present in the OpenAPI `path`/`method` pair and adds no disambiguation value for automated selection.
+- `operationId` MUST NOT include a version marker such as `V1`, `_v1`, `v2`, or similar. Versioning belongs in the API path (e.g., `/v1/sessions`) or headers, not in the operation identifier.
+- Within a single API document, designers SHOULD use one consistent read verb per retrieval style: `get` for reading resources via `GET`, and `retrieve` for POST-based queries as defined in [6.5. POST or GET for Transferring Sensitive or Complex Data](#65-post-or-get-for-transferring-sensitive-or-complex-data), mirroring the `retrieve-*` verb path. Synonyms such as `read` or `fetch` SHOULD NOT be used in their place.
+- `operationId` MUST be unique within the API document, as required by the OpenAPI specification.
+
+#### Proposal: Approved Verb List
+
+Verbs used in `operationId` SHOULD be restricted to the list below. Any verb not present in the list MUST be submitted for formal review through a GitHub issue in the Commonalities repository before it may be used.
+
+**CRUD Core Verbs** (replace vague synonyms):
+- `create` — Instantiate a new resource. Replaces: `add`, `new`, `insert`, `post`.
+- `get` — Fetch a single resource by identity. Replaces: `fetch`, `read`, `find`.
+- `retrieve` — Fetch a single resource using POST-based queries. Replaces: `fetch`, `read`, `find`.
+- `list` — Fetch a collection, optionally filtered. Replaces: `getAll`, `fetchAll`, `search` (when browsing).
+- `update` — Modify an existing resource, fully or partially. Replaces: `edit`, `modify`, `patch`, `put`.
+- `delete` — Remove a resource permanently. Replaces: `remove`, `destroy`, `drop`.
+
+**Action Verbs** (for non-CRUD operations):
+- `check` — Evaluate a condition or status and return a result without side effects (e.g., `checkSimSwap`).
+- `verify` — Confirm that provided data matches operator records (e.g., `verifyLocation`, `verifyNumber`).
+- `send` — Dispatch a message, notification, or payload.
+- `submit` — Hand off for processing (e.g., forms, orders, applications).
+- `cancel` — Abort an in-progress or future operation.
+- `enable` / `disable` — Toggle active state.
+- `validate` — Check structural or syntactic correctness without side effects.
+
+This list is intentionally short and based on verbs in actual use across CAMARA APIs; it is expected to grow through the review process described above.
+
+**Discouraged Verbs** (SHOULD NOT be used):
+- `process` — too vague; does not convey what the operation does.
+- `handle` — internal/implementation language, not semantic.
+- `manage` — a catch-all with no meaning to an agent.
+- `do`, `run`, `execute`, `perform`, `trigger` — no accompanying noun can make these specific enough.
+- `get*Data` patterns (e.g., `getInvoiceData`) — the `Data` suffix adds noise; use `getInvoice` instead.
+
+Note:  The rules in this section apply to path operations only (i.e., operations defined under the OpenAPI `paths` object). Callback `operationId`s — such as the `postNotification` used in CAMARA notification callback definitions, which are implemented by the API consumer and never exposed as tools — are **out of scope** and not subject to these rules.
+
+### B.2. Operation `description` Completeness Rules
+
+Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations using only the operation object — its `description`, `parameters`, `requestBody`, and `responses` — not the global `info.description`. The following rules ensure operations remain self-contained for this purpose.
+
+- Operation `description` MUST be present and non-empty.
+- Operation `description` MUST NOT be verbatim identical to `summary`.
+- The description MUST contain all information a tool-selecting consumer needs to:
+  - Decide whether to invoke the operation (*When to use*),
+  - Distinguish it from similar operations (*Differences*),
+  - Understand what it does (*Side effects*).
+
+- This information MUST be reachable from the operation object — via its `description`, parameters, and schemas — and MUST NOT rely exclusively on `info.description`.
+  - `info.description` may still provide valuable context (e.g., authentication flow, error-handling philosophy, rate limits), but the *operational essentials* must be self-contained.
+  - Additional information in the operation `description` that is primarily intended for human readers rather than automated consumers SHOULD, if present, be placed at the end of the description. This makes it easier to ignore or strip such content when processing the operation for tool selection. Descriptions also contribute directly to the token size of generated tool definitions, so designers SHOULD keep them concise and avoid restating information already conveyed by parameter and response schemas.
+
+#### Proposal: Operation `description` Template
+To help satisfy this rule, API designers MAY structure the operation description using the following template:
+```yaml
+description: |
+  {{Action}} {{core noun or concept}}.
+  {{Use this to... / Call this when... / Use this for...}}
+  {{Only mention side effects if they exist.}}
+  {{Any non-obvious requirements or context needed.}}
+```
+Example:
+```yaml
+description: |
+  Returns the current geographical location of a device.
+  Use this to get position information.
+```
+This template is not mandatory. It may be adapted, shortened, or omitted where the operation’s purpose is already unambiguous from its `operationId`, parameter names, and response schema — for example, simple, side-effect-free, parameter-light operations like `getHealth` or `getRoamingStatus`.
+In such cases, a brief description such as `"Returns the service health status"` or `"Returns the current roaming status and the country information"` is sufficient.
+
+### B.3. Property `description` Completeness Rules for Enums
+
+Building on the existing requirement in [2.2](#22-data-definitions) that every schema property must have a `description`, this section adds guidance for enums whose values are not self-explanatory to an automated consumer.
+
+Where enum values are not evident from their name alone (e.g., domain- or context-specific codes like `STATUS_OK`, `ERR_AUTH_FAIL`, or `STATE_PENDING`), the enum’s `description` SHOULD explain the meaning of each value using a markdown *bullet list*, with one bullet per value:
+```
+description: |
+  Result of the verification:
+  - `TRUE`: the provided data matches
+  - `FALSE`: the provided data does not match
+  - `UNKNOWN`: the match could not be determined
+```
+
+This format is OPTIONAL for self-evident enums (e.g., `true`/`false`, `red`/`green`/`blue`, `open`/`closed`), but is strongly encouraged where ambiguity could lead to misinterpretation by tools or agents.
