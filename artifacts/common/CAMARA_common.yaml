@@ -214,6 +214,13 @@ components:
       maxLength: 15
       example: "84.125.93.10"
 
+    SingleIpv6Address:
+      description: A single IPv6 address with no subnet mask
+      type: string
+      format: ipv6
+      maxLength: 45
+      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+
     Port:
       description: TCP or UDP port number
       type: integer
@@ -224,10 +231,8 @@ components:
     DeviceIpv6Address:
       description: |
         The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
-      type: string
-      format: ipv6
-      maxLength: 45
-      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
+      allOf:
+        - $ref: "#/components/schemas/SingleIpv6Address"
 
     Area:
       description: Base schema for all areas
