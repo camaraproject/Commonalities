@@ -1,0 +1,124 @@
+# =========================================================================================
+# CAMARA Commonalities - Artifacts Lint
+#
+# Lints the distributed artifacts (artifacts/**) so broken content is caught at
+# PR time instead of after a downstream sync into an API repository:
+#   1. yamllint over all YAML files in artifacts/ - including Github_templates/,
+#      whose installed copies in API repositories are not checked there.
+#   2. Spectral over the full-OpenAPI templates (api-templates/,
+#      notification-templates/) with the CAMARA ruleset of the release line
+#      under development; $ref resolution transitively lints the referenced
+#      common definitions (artifacts/common/).
+#   3. gplint over the Gherkin feature templates (artifacts/testing/).
+#
+# All three checks gate at error level; warnings and hints are reported but do
+# not block. Lint configurations and tool versions are taken from
+# camaraproject/tooling at the same pinned ref API repositories use for CAMARA
+# Validation, so findings here match the validation toolchain - no local
+# copies that could drift.
+#
+# The Spectral ruleset is pinned to the release line main currently targets
+# (r4.x); update SPECTRAL_RULESET when main starts targeting the next line.
+#
+# Changelog:
+# - 2026-07-16: Initial version (yamllint + Spectral + gplint)
+#
+# SEE ALSO: artifacts/linting_rules/README.md
+# =========================================================================================
+
+name: Artifacts Lint
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: artifacts-lint-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TOOLING_REF: v1-rc
+  SPECTRAL_RULESET: .spectral-r4.yaml
+  PYTHON_VERSION: "3.14"
+  NODE_VERSION: "24"
+
+jobs:
+  lint:
+    name: Lint artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # Lint configurations and dependency pins from tooling at the pinned ref.
+      - name: Checkout tooling lint configs
+        uses: actions/checkout@v7
+        with:
+          repository: camaraproject/tooling
+          ref: ${{ env.TOOLING_REF }}
+          path: .tooling
+          sparse-checkout: |
+            linting/config/
+            requirements.txt
+            validation/package.json
+            validation/package-lock.json
+            validation/.npmrc
+          sparse-checkout-cone-mode: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install yamllint (tooling-pinned version)
+        run: pip install --quiet -r .tooling/requirements.txt
+
+      - name: Install Spectral and gplint (tooling-pinned versions)
+        run: npm ci --ignore-scripts
+        working-directory: .tooling/validation
+
+      # The three checks run independently of each other's outcome, so a PR
+      # touching several artifact types reports all findings in one run.
+      - name: yamllint over artifacts/
+        if: ${{ !cancelled() }}
+        run: yamllint -c .tooling/linting/config/.yamllint.yaml -f github artifacts/
+
+      # Findings in transitively referenced common files carry their real
+      # artifacts/common/** paths. The github-actions output goes to a file
+      # first so annotations survive the non-zero exit of the lint command.
+      - name: Spectral over API and notification templates
+        if: ${{ !cancelled() }}
+        env:
+          NODE_PATH: ${{ github.workspace }}/.tooling/validation/node_modules
+        run: |
+          export PATH="${{ github.workspace }}/.tooling/validation/node_modules/.bin:${PATH}"
+          status=0
+          spectral lint \
+            --ruleset ".tooling/linting/config/${SPECTRAL_RULESET}" \
+            --fail-severity error \
+            -f pretty -f github-actions \
+            -o.pretty /dev/stdout \
+            -o.github-actions "${RUNNER_TEMP}/spectral-annotations.log" \
+            artifacts/api-templates/*.yaml artifacts/notification-templates/*.yaml \
+            || status=$?
+          cat "${RUNNER_TEMP}/spectral-annotations.log"
+          exit $status
+
+      # gplint exits non-zero only on error-level findings; warnings are
+      # reported in the log.
+      - name: gplint over feature templates
+        if: ${{ !cancelled() }}
+        run: |
+          export PATH="${{ github.workspace }}/.tooling/validation/node_modules/.bin:${PATH}"
+          gplint --config .tooling/linting/config/.gplintrc artifacts/testing/*.feature

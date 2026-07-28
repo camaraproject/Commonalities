@@ -43,6 +43,7 @@ This document outlines guidelines for API design within the CAMARA project, appl
   - [7.4. Backward and Forward Compatibility](#74-backward-and-forward-compatibility)
 - [8. External Documentation](#8-external-documentation)
 - [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
+- [Appendix B (Informative): `operationId` and `description` Guidelines for MCP and AI Agent Readiness](#appendix-b-informative-operationid-and-description-guidelines-for-mcp-and-ai-agent-readiness)
 
 <!-- /TOC -->
 
@@ -105,7 +106,8 @@ This part captures a detailed description of all the data structures used in the
 
 - If the data type is object, list of required properties.
 - If the data type is array, `maxItems` property MUST be specified.
-- If the data type is integer, format (`int32` or `int64`) and range (`minimum` and `maximum`properties) MUST be specified.
+- If the data type is integer, format (`int32` or `int64`) and range (`minimum` and `maximum` properties) MUST be specified.
+  - Numeric schema values (e.g. `minimum`, `maximum`, `default`, `enum` values, examples) MUST be within the 53-bit integer range (-9007199254740991 through 9007199254740991). As noted in the [OpenAPI Format Registry](https://spec.openapis.org/registry/format/int64), values outside this range cause interoperability problems with recipients that parse JSON numbers into double-precision (binary64) representation and may be silently altered. A property whose domain requires values outside the 53-bit range MUST instead be modeled as a `string` with an appropriate `pattern`, as recommended by the registry.
 - List of properties within the object data, including:
    - Property name
    - Property description
@@ -395,6 +397,15 @@ An example of JSON error structure is as follows:
 }
 ```
 
+CAMARA APIs document error responses in one of two ways:
+
+- **Reference a common error response.** [CAMARA_common.yaml](../artifacts/common/CAMARA_common.yaml) provides a catalogue of minimal, directly referenceable error responses under `components/responses`; each contains only error codes that every referencing API can return. Subscription and notification specific error responses are provided by [CAMARA_event_common.yaml](../artifacts/common/CAMARA_event_common.yaml). Responses related to subject identification come in two flavours — device (e.g. `DeviceIdentifier422`) and phone number (e.g. `PhoneNumberIdentifier422`) — and APIs reference the flavour matching their subject identifier (see [3.2.2. Error Responses - Device Object/Phone Number](#322-error-responses---device-objectphone-number)).
+- **Define the error response locally.** APIs that return API-specific error codes, or a combination of common error codes not covered by the catalogue, define the error response locally: the schema restricts `status` and `code` to exactly the codes the API can return (see the response template in [3.2.2.1. Templates](#3221-templates)), and the `examples` reference the shared error examples provided under `components/examples` of `CAMARA_common.yaml` and `CAMARA_event_common.yaml`, keeping the error documentation consistent across CAMARA APIs. Examples for API-specific error codes are defined inline in the API definition.
+
+In both cases, an API declares only the error codes it can actually return for the given operation. Each common file contains, per HTTP status, an intro comment listing the referenceable response(s) and the example ingredients available for local definitions; the API templates in [artifacts/api-templates](../artifacts/api-templates/) demonstrate both ways.
+
+NOTE: Releases of `CAMARA_common.yaml` up to Commonalities 0.8.0 provided `Generic<status>` error responses bundling all common error codes of an HTTP status. These are deprecated, as they declare error codes that do not apply to every referencing API, and are planned for removal in a future release.
+
 In error handling, different cases must be considered, even at the functional level that it is possible to modify the error message returned to the API consumer. For this error handling, there are two possible alternatives listed below:
 - Error handling done with custom policies in the API admin tool.
 - Error management performed in a service queried by API.
@@ -501,10 +512,12 @@ The Following table compiles the guidelines to be adopted:
 |:----------:|:---------------------------------------------------------------------------|:----------------:|:------------------------------:|:---------------------------------------------------------|
 |     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.            |
 |     1      | None of the provided identifiers is supported by the implementation |       422        |     UNSUPPORTED_IDENTIFIER     | The identifier provided is not supported.                                 |
-|     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | Device identifier not found.                             |
+|     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | The identifier is not found.                             |
 |     3      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        |     UNNECESSARY_IDENTIFIER      | The device is already identified by the access token. |
 |     4      | Service not applicable for the provided identifier                         |       422        |     SERVICE_NOT_APPLICABLE     | The service is not available for the provided identifier. |
 |     5      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
+
+`CAMARA_common.yaml` provides these cases as directly referenceable error responses: `IdentifierNotFound404` (case 2), and the subject-flavoured `DeviceIdentifier422` / `PhoneNumberIdentifier422` (cases 1, 3, 4, 5 — the phone number flavour omits `UNSUPPORTED_IDENTIFIER`, which does not apply to a single identifier type). The corresponding examples under `components/examples` come in `_DEVICE` and `_PHONE_NUMBER` wording variants for the identifier codes, so that the message wording matches the subject type.
 
 **NOTE:**
 The `Device` object defined in [CAMARA_common.yaml](/artifacts/common/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
@@ -519,8 +532,7 @@ An error MUST NOT be returned when the supplied device identifiers do not match 
 
 ##### Response template
 
-A response will group all examples for the same operation and status code.
-Schema is common for all errors.
+This template applies to error responses which are defined locally in the API definition (i.e. not referenced from the common files). A response will group all examples for the same operation and status code. Schema is common for all errors: the `allOf` combines the generic `ErrorInfo` schema with a local restriction of `status` and `code` to the values the API can return for this response.
 
 ```yaml
 description: |
@@ -531,7 +543,7 @@ content:
   application/json:
     schema:
       allOf:
-        - $ref: "#/components/schemas/ErrorInfo"
+        - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
         - type: object
           properties:
             status:
@@ -543,14 +555,16 @@ content:
                 - <code2>
     examples:
       {{case_1}}:
-        $ref: ""#/components/examples/{{case_1}}"
+        $ref: "../common/CAMARA_common.yaml#/components/examples/{{case_1}}"
       {{case_2}}:
-        $ref: ""#/components/examples/{{case_2}}"
+        $ref: "#/components/examples/{{case_2}}"
 ```
+
+Examples for common error codes are referenced from `components/examples` of `CAMARA_common.yaml` (or `CAMARA_event_common.yaml` for subscription-specific codes), as shown for `{{case_1}}`. For identifier-related codes, the example variant matching the API's subject type (`_DEVICE` or `_PHONE_NUMBER`) is referenced. Only examples for API-specific error codes are defined locally, as shown for `{{case_2}}`.
 
 ##### Examples template
 
-One case will be needed per row in the table above, following this template:
+For API-specific error codes, one case will be needed per error case scenario, following this template:
 
 ```yaml
 components:
@@ -1582,3 +1596,109 @@ This approach simplifies API usage for API consumers using a three-legged access
 
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
+
+## Appendix B (Informative): `operationId` and `description` Guidelines for MCP and AI Agent Readiness
+
+This appendix is the outcome of the CAMARA MCP Enablement Program – Phase 0. It extends the naming and documentation rules in [5.7.2](#572-operations) and [2.2](#22-data-definitions) with additional, targeted constraints to ensure CAMARA API operations can be reliably selected and invoked by automated consumers, including AI agents and **Model Context Protocol (MCP)** tool-selection pipelines. These consumers rely on the operation object itself — not the top-level `info.description` — to understand what an operation does, when to use it, and how to invoke it correctly.
+Note: Although this appendix is informative, it uses RFC 2119 keywords (MUST, SHOULD, MAY) to indicate the intended normative strength of each rule if and when it is promoted into the main body of this document.
+
+### B.1. `operationId` Naming Rules
+
+While [5.7.2](#572-operations) requires `operationId` to use lowerCamelCase when present, it does not mandate its presence. Since `operationId` is frequently used by tooling and automated systems as the primary handle to select and invoke an operation — and an operation without one generally cannot be used by such consumers — the following rules apply, beginning with an explicit presence requirement:
+
+- `operationId` MUST be present on every operation.
+- `operationId` MUST be in lowerCamelCase format and MUST NOT exceed 64 characters in length. This ensures compatibility with most code generators and vendor tooling limits. (These requirements are formally expressed by the regular expression: `^[a-z][a-zA-Z0-9]{0,63}$`.)
+- `operationId` MUST follow the shape `<verb><Noun>[<Qualifier>]`, for example:
+  - `createSession` (verb + noun)
+  - `getDeviceLocation` (verb + compound noun)
+  - `deleteSessionById` (verb + noun + qualifier)
+
+  The `<Noun>` represents the core resource, entity, or concept being acted upon — and MAY be a compound noun (e.g., `DeviceLocation`, `UserProfile`) formed from multiple domain terms.
+
+  The `<Qualifier>` is optional and SHOULD primarily serve to disambiguate two operations that would otherwise share the same `<verb><Noun>`, or to make the operation's scope explicit (e.g., `retrieveSessionsByDevice`). When the qualifier disambiguates on an identifying parameter, it SHOULD take the form `By<Param>` (e.g., `deleteSessionById`). Otherwise, it SHOULD be a single PascalCase noun or short noun phrase appended directly to `<Noun>`.
+  
+- `operationId` MUST NOT be prefixed with `post`, `put`, or `patch`. (`get` and `delete` are ordinary English verbs describing the operation's action and are not considered HTTP-method leakage.)
+  This avoids duplicating information already present in the OpenAPI `path`/`method` pair and adds no disambiguation value for automated selection.
+- `operationId` MUST NOT include a version marker such as `V1`, `_v1`, `v2`, or similar. Versioning belongs in the API path (e.g., `/v1/sessions`) or headers, not in the operation identifier.
+- Within a single API document, designers SHOULD use one consistent read verb per retrieval style: `get` for reading resources via `GET`, and `retrieve` for POST-based queries as defined in [6.5. POST or GET for Transferring Sensitive or Complex Data](#65-post-or-get-for-transferring-sensitive-or-complex-data), mirroring the `retrieve-*` verb path. Synonyms such as `read` or `fetch` SHOULD NOT be used in their place.
+- `operationId` MUST be unique within the API document, as required by the OpenAPI specification.
+
+#### Proposal: Approved Verb List
+
+Verbs used in `operationId` SHOULD be restricted to the list below. Any verb not present in the list MUST be submitted for formal review through a GitHub issue in the Commonalities repository before it may be used.
+
+**CRUD Core Verbs** (replace vague synonyms):
+- `create` — Instantiate a new resource. Replaces: `add`, `new`, `insert`, `post`.
+- `get` — Fetch a single resource by identity. Replaces: `fetch`, `read`, `find`.
+- `retrieve` — Fetch a single resource using POST-based queries. Replaces: `fetch`, `read`, `find`.
+- `list` — Fetch a collection, optionally filtered. Replaces: `getAll`, `fetchAll`, `search` (when browsing).
+- `update` — Modify an existing resource, fully or partially. Replaces: `edit`, `modify`, `patch`, `put`.
+- `delete` — Remove a resource permanently. Replaces: `remove`, `destroy`, `drop`.
+
+**Action Verbs** (for non-CRUD operations):
+- `check` — Evaluate a condition or status and return a result without side effects (e.g., `checkSimSwap`).
+- `verify` — Confirm that provided data matches operator records (e.g., `verifyLocation`, `verifyNumber`).
+- `send` — Dispatch a message, notification, or payload.
+- `submit` — Hand off for processing (e.g., forms, orders, applications).
+- `cancel` — Abort an in-progress or future operation.
+- `enable` / `disable` — Toggle active state.
+- `validate` — Check structural or syntactic correctness without side effects.
+
+This list is intentionally short and based on verbs in actual use across CAMARA APIs; it is expected to grow through the review process described above.
+
+**Discouraged Verbs** (SHOULD NOT be used):
+- `process` — too vague; does not convey what the operation does.
+- `handle` — internal/implementation language, not semantic.
+- `manage` — a catch-all with no meaning to an agent.
+- `do`, `run`, `execute`, `perform`, `trigger` — no accompanying noun can make these specific enough.
+- `get*Data` patterns (e.g., `getInvoiceData`) — the `Data` suffix adds noise; use `getInvoice` instead.
+
+Note:  The rules in this section apply to path operations only (i.e., operations defined under the OpenAPI `paths` object). Callback `operationId`s — such as the `postNotification` used in CAMARA notification callback definitions, which are implemented by the API consumer and never exposed as tools — are **out of scope** and not subject to these rules.
+
+### B.2. Operation `description` Completeness Rules
+
+Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations using only the operation object — its `description`, `parameters`, `requestBody`, and `responses` — not the global `info.description`. The following rules ensure operations remain self-contained for this purpose.
+
+- Operation `description` MUST be present and non-empty.
+- Operation `description` MUST NOT be verbatim identical to `summary`.
+- The description MUST contain all information a tool-selecting consumer needs to:
+  - Decide whether to invoke the operation (*When to use*),
+  - Distinguish it from similar operations (*Differences*),
+  - Understand what it does (*Side effects*).
+
+- This information MUST be reachable from the operation object — via its `description`, parameters, and schemas — and MUST NOT rely exclusively on `info.description`.
+  - `info.description` may still provide valuable context (e.g., authentication flow, error-handling philosophy, rate limits), but the *operational essentials* must be self-contained.
+  - Additional information in the operation `description` that is primarily intended for human readers rather than automated consumers SHOULD, if present, be placed at the end of the description. This makes it easier to ignore or strip such content when processing the operation for tool selection. Descriptions also contribute directly to the token size of generated tool definitions, so designers SHOULD keep them concise and avoid restating information already conveyed by parameter and response schemas.
+
+#### Proposal: Operation `description` Template
+To help satisfy this rule, API designers MAY structure the operation description using the following template:
+```yaml
+description: |
+  {{Action}} {{core noun or concept}}.
+  {{Use this to... / Call this when... / Use this for...}}
+  {{Only mention side effects if they exist.}}
+  {{Any non-obvious requirements or context needed.}}
+```
+Example:
+```yaml
+description: |
+  Returns the current geographical location of a device.
+  Use this to get position information.
+```
+This template is not mandatory. It may be adapted, shortened, or omitted where the operation’s purpose is already unambiguous from its `operationId`, parameter names, and response schema — for example, simple, side-effect-free, parameter-light operations like `getHealth` or `getRoamingStatus`.
+In such cases, a brief description such as `"Returns the service health status"` or `"Returns the current roaming status and the country information"` is sufficient.
+
+### B.3. Property `description` Completeness Rules for Enums
+
+Building on the existing requirement in [2.2](#22-data-definitions) that every schema property must have a `description`, this section adds guidance for enums whose values are not self-explanatory to an automated consumer.
+
+Where enum values are not evident from their name alone (e.g., domain- or context-specific codes like `STATUS_OK`, `ERR_AUTH_FAIL`, or `STATE_PENDING`), the enum’s `description` SHOULD explain the meaning of each value using a markdown *bullet list*, with one bullet per value:
+```
+description: |
+  Result of the verification:
+  - `TRUE`: the provided data matches
+  - `FALSE`: the provided data does not match
+  - `UNKNOWN`: the match could not be determined
+```
+
+This format is OPTIONAL for self-evident enums (e.g., `true`/`false`, `red`/`green`/`blue`, `open`/`closed`), but is strongly encouraged where ambiguity could lead to misinterpretation by tools or agents.

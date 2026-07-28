@@ -18,10 +18,10 @@ externalDocs:
   url: https://github.com/camaraproject/Commonalities
 
 servers:
-  - url: "{apiRoot}"
+  - url: "{sinkRoot}"
     variables:
-      apiRoot:
-        default: https://localhost:8080
+      sinkRoot:
+        default: https://endpoint.example.com
         description: Can be any notification server address sent by the client application
 
 tags:
@@ -33,17 +33,17 @@ security:
   - {}
 
 paths:
-  /your_webhook_notification_url:
+  /your-webhook-notification-url:
     post:
       tags:
         - CAMARA Cloud Event
       summary: Cloud Event notification endpoint to notify consumer that statement of fact had occurred
       description: |
         INFORMATIVE ENDPOINT: The value of this endpoint is freely declared by each client app by means of resource-based
-        subscription or instance-based subscription. `/your_webhook_notification_url` is
+        subscription or instance-based subscription. `/your-webhook-notification-url` is
         just a convention naming referring to an absolute URL, indeed the one indicated by API client
         in the triggering of the procedure (resource-based or instance-based). In this way, it represents an absolute
-        URL, i.e.: notifications won't be sent to `/event-notification/vX/your_webhook_notification_url`.
+        URL, i.e.: notifications won't be sent to `/event-notification/vX/your-webhook-notification-url`.
       operationId: sendEvent
       parameters:
         - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
@@ -60,13 +60,15 @@ paths:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
         "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+        "410":
+          $ref: "../common/CAMARA_event_common.yaml#/components/responses/SinkGone410"
         "429":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/TooManyRequests429"
 
 components:
   securitySchemes:
@@ -74,3 +76,6 @@ components:
       type: http
       scheme: bearer
       bearerFormat: "{$request.body#/sinkCredential.credentialType}"
+      description: |
+        Bearer token for notification delivery. Token format is determined
+        by `sinkCredential.credentialType` in the subscription request.
