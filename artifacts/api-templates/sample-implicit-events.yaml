@@ -151,15 +151,15 @@ paths:
                     x-correlator:
                       $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
                 "400":
-                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
                 "401":
-                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
                 "403":
-                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
                 "410":
-                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic410"
+                  $ref: "../common/CAMARA_event_common.yaml#/components/responses/SinkGone410"
                 "429":
-                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/TooManyRequests429"
               security:
                 - {}
                 - notificationsBearerAuth: []
@@ -177,17 +177,15 @@ paths:
         "400":
           $ref: "#/components/responses/CreateResourceBadRequest400"
         "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
         "409":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic409"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/AlreadyExists409"
         "422":
           $ref: "#/components/responses/CreateResourceUnprocessableEntity422"
         "429":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
-        "500":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/TooManyRequests429"
     get:
       tags:
         - Resources
@@ -211,13 +209,11 @@ paths:
                 items:
                   $ref: "#/components/schemas/Resource"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
         "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
-        "500":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
   /resources/{resourceId}:
     get:
       tags:
@@ -239,15 +235,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/Resource"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
         "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
-        "500":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
     delete:
       tags:
         - Resources
@@ -267,15 +261,13 @@ paths:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
         "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
-        "500":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
 
 components:
   securitySchemes:
@@ -296,12 +288,16 @@ components:
   responses:
 
     # ─────────────────────────────────────────────────────────────────────────
-    # Resource-creation error responses (API-specific)
+    # Resource-creation error responses (API-specific, locally defined)
     #
     # API authors: rename to `Create<Resource>BadRequest400` and
     # `Create<Resource>UnprocessableEntity422` to match the resource being
     # created, and adjust the `code` enum and `examples` to the codes that
-    # actually apply to the API.
+    # actually apply to the API. Reference the shared examples from
+    # `CAMARA_common.yaml` / `CAMARA_event_common.yaml` so the error wording
+    # stays consistent; for identifier-related codes pick the `_DEVICE` or
+    # `_PHONE_NUMBER` example variant matching the API's subject type
+    # (`_DEVICE` shown here).
     # ─────────────────────────────────────────────────────────────────────────
 
     CreateResourceBadRequest400:
@@ -329,35 +325,17 @@ components:
                       - INVALID_SINK
           examples:
             GENERIC_400_INVALID_ARGUMENT:
-              description: Invalid Argument. Generic Syntax Exception
-              value:
-                status: 400
-                code: INVALID_ARGUMENT
-                message: Client specified an invalid argument, request body or query param.
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_400_INVALID_ARGUMENT"
             GENERIC_400_OUT_OF_RANGE:
-              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
-              value:
-                status: 400
-                code: OUT_OF_RANGE
-                message: Client specified an invalid range.
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_400_OUT_OF_RANGE"
             GENERIC_400_INVALID_PROTOCOL:
-              description: Invalid protocol for event delivery
-              value:
-                status: 400
-                code: INVALID_PROTOCOL
-                message: Only HTTP is supported
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_PROTOCOL"
             GENERIC_400_INVALID_CREDENTIAL:
-              description: Invalid sink credential type
-              value:
-                status: 400
-                code: INVALID_CREDENTIAL
-                message: Only Access token or Private key JWT are supported
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_CREDENTIAL"
+            GENERIC_400_INVALID_TOKEN:
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_TOKEN"
             GENERIC_400_INVALID_SINK:
-              description: Invalid sink value
-              value:
-                status: 400
-                code: INVALID_SINK
-                message: sink not valid for the specified protocol
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_SINK"
 
     CreateResourceUnprocessableEntity422:
       description: Unprocessable Entity
@@ -383,35 +361,15 @@ components:
                       - PRIVATE_KEY_JWT_NOT_CONFIGURED
           examples:
             GENERIC_422_SERVICE_NOT_APPLICABLE:
-              description: Service not applicable for the provided identifier
-              value:
-                status: 422
-                code: SERVICE_NOT_APPLICABLE
-                message: The service is not available for the provided identifier.
-            GENERIC_422_MISSING_IDENTIFIER:
-              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token
-              value:
-                status: 422
-                code: MISSING_IDENTIFIER
-                message: The device cannot be identified.
-            GENERIC_422_UNSUPPORTED_IDENTIFIER:
-              description: None of the provided identifiers is supported by the implementation
-              value:
-                status: 422
-                code: UNSUPPORTED_IDENTIFIER
-                message: The identifier provided is not supported.
-            GENERIC_422_UNNECESSARY_IDENTIFIER:
-              description: An explicit identifier is provided when a device or phone number has already been identified from the access token
-              value:
-                status: 422
-                code: UNNECESSARY_IDENTIFIER
-                message: The device is already identified by the access token.
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_422_SERVICE_NOT_APPLICABLE"
+            GENERIC_422_MISSING_IDENTIFIER_DEVICE:
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_422_MISSING_IDENTIFIER_DEVICE"
+            GENERIC_422_UNSUPPORTED_IDENTIFIER_DEVICE:
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_422_UNSUPPORTED_IDENTIFIER_DEVICE"
+            GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE:
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE"
             GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
-              description: Private key JWT sink credential type is used but no configuration was pre-shared
-              value:
-                status: 422
-                code: PRIVATE_KEY_JWT_NOT_CONFIGURED
-                message: Private key JWT credential type cannot be used because no configuration was pre-shared.
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED"
 
   schemas:
 

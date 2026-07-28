@@ -397,6 +397,15 @@ An example of JSON error structure is as follows:
 }
 ```
 
+CAMARA APIs document error responses in one of two ways:
+
+- **Reference a common error response.** [CAMARA_common.yaml](../artifacts/common/CAMARA_common.yaml) provides a catalogue of minimal, directly referenceable error responses under `components/responses`; each contains only error codes that every referencing API can return. Subscription and notification specific error responses are provided by [CAMARA_event_common.yaml](../artifacts/common/CAMARA_event_common.yaml). Responses related to subject identification come in two flavours — device (e.g. `DeviceIdentifier422`) and phone number (e.g. `PhoneNumberIdentifier422`) — and APIs reference the flavour matching their subject identifier (see [3.2.2. Error Responses - Device Object/Phone Number](#322-error-responses---device-objectphone-number)).
+- **Define the error response locally.** APIs that return API-specific error codes, or a combination of common error codes not covered by the catalogue, define the error response locally: the schema restricts `status` and `code` to exactly the codes the API can return (see the response template in [3.2.2.1. Templates](#3221-templates)), and the `examples` reference the shared error examples provided under `components/examples` of `CAMARA_common.yaml` and `CAMARA_event_common.yaml`, keeping the error documentation consistent across CAMARA APIs. Examples for API-specific error codes are defined inline in the API definition.
+
+In both cases, an API declares only the error codes it can actually return for the given operation. Each common file contains, per HTTP status, an intro comment listing the referenceable response(s) and the example ingredients available for local definitions; the API templates in [artifacts/api-templates](../artifacts/api-templates/) demonstrate both ways.
+
+NOTE: Releases of `CAMARA_common.yaml` up to Commonalities 0.8.0 provided `Generic<status>` error responses bundling all common error codes of an HTTP status. These are deprecated, as they declare error codes that do not apply to every referencing API, and are planned for removal in a future release.
+
 In error handling, different cases must be considered, even at the functional level that it is possible to modify the error message returned to the API consumer. For this error handling, there are two possible alternatives listed below:
 - Error handling done with custom policies in the API admin tool.
 - Error management performed in a service queried by API.
@@ -503,10 +512,12 @@ The Following table compiles the guidelines to be adopted:
 |:----------:|:---------------------------------------------------------------------------|:----------------:|:------------------------------:|:---------------------------------------------------------|
 |     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.            |
 |     1      | None of the provided identifiers is supported by the implementation |       422        |     UNSUPPORTED_IDENTIFIER     | The identifier provided is not supported.                                 |
-|     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | Device identifier not found.                             |
+|     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | The identifier is not found.                             |
 |     3      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        |     UNNECESSARY_IDENTIFIER      | The device is already identified by the access token. |
 |     4      | Service not applicable for the provided identifier                         |       422        |     SERVICE_NOT_APPLICABLE     | The service is not available for the provided identifier. |
 |     5      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
+
+`CAMARA_common.yaml` provides these cases as directly referenceable error responses: `IdentifierNotFound404` (case 2), and the subject-flavoured `DeviceIdentifier422` / `PhoneNumberIdentifier422` (cases 1, 3, 4, 5 — the phone number flavour omits `UNSUPPORTED_IDENTIFIER`, which does not apply to a single identifier type). The corresponding examples under `components/examples` come in `_DEVICE` and `_PHONE_NUMBER` wording variants for the identifier codes, so that the message wording matches the subject type.
 
 **NOTE:**
 The `Device` object defined in [CAMARA_common.yaml](/artifacts/common/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
@@ -521,8 +532,7 @@ An error MUST NOT be returned when the supplied device identifiers do not match 
 
 ##### Response template
 
-A response will group all examples for the same operation and status code.
-Schema is common for all errors.
+This template applies to error responses which are defined locally in the API definition (i.e. not referenced from the common files). A response will group all examples for the same operation and status code. Schema is common for all errors: the `allOf` combines the generic `ErrorInfo` schema with a local restriction of `status` and `code` to the values the API can return for this response.
 
 ```yaml
 description: |
@@ -533,7 +543,7 @@ content:
   application/json:
     schema:
       allOf:
-        - $ref: "#/components/schemas/ErrorInfo"
+        - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
         - type: object
           properties:
             status:
@@ -545,14 +555,16 @@ content:
                 - <code2>
     examples:
       {{case_1}}:
-        $ref: ""#/components/examples/{{case_1}}"
+        $ref: "../common/CAMARA_common.yaml#/components/examples/{{case_1}}"
       {{case_2}}:
-        $ref: ""#/components/examples/{{case_2}}"
+        $ref: "#/components/examples/{{case_2}}"
 ```
+
+Examples for common error codes are referenced from `components/examples` of `CAMARA_common.yaml` (or `CAMARA_event_common.yaml` for subscription-specific codes), as shown for `{{case_1}}`. For identifier-related codes, the example variant matching the API's subject type (`_DEVICE` or `_PHONE_NUMBER`) is referenced. Only examples for API-specific error codes are defined locally, as shown for `{{case_2}}`.
 
 ##### Examples template
 
-One case will be needed per row in the table above, following this template:
+For API-specific error codes, one case will be needed per error case scenario, following this template:
 
 ```yaml
 components:
