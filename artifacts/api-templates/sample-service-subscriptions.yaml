@@ -314,7 +314,7 @@ components:
           items:
             $ref: "#/components/schemas/ApiEventType"
         config:
-          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Config"
+          $ref: "#/components/schemas/Config"
       discriminator:
         propertyName: protocol
         mapping:
@@ -354,7 +354,7 @@ components:
           items:
             $ref: "#/components/schemas/ApiEventType"
         config:
-          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Config"
+          $ref: "#/components/schemas/Config"
         id:
           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionId"
         startsAt:
@@ -412,6 +412,47 @@ components:
             $ref: "#/components/schemas/Subscription"
         pagination:
           $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Config (API-specific due to subscriptionDetail)
+    #
+    # Extends the Commonalities-owned ConfigBase via allOf, adding the required
+    # `subscriptionDetail` property typed against this API's own
+    # CreateSubscriptionDetail schema. `subscriptionDetail` cannot be defined
+    # in CAMARA_event_common.yaml because it is API-specific.
+    # This is also where each API project add the predefined, optional `initialEvent` property.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    Config:
+      description: |
+        Implementation-specific configuration parameters needed by the subscription manager
+        for acquiring events. Extends `ConfigBase` from `CAMARA_event_common.yaml` with the
+        required, API-specific `subscriptionDetail` property. As an example, this template
+        also includes the predefined, optional `initialEvent` property; API projects MAY
+        omit it if sending a notification when a subscription is created is not relevant to the
+        API’s event type(s).
+        Note: if a request is performed for several event types, all subscribed events will
+        use the same `config` parameters.
+      allOf:
+        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ConfigBase"
+        - type: object
+          required:
+            - subscriptionDetail
+          properties:
+            subscriptionDetail:
+              $ref: "#/components/schemas/CreateSubscriptionDetail"
+            initialEvent:
+              type: boolean
+              description: |
+                Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.
+                It is up to the API project team to decide whether to keep it and to provide an explanation in the description.
+
+    CreateSubscriptionDetail:
+      description: |
+        The detail of the requested event subscription.
+        Replace with the actual API-specific subscription detail properties
+        (e.g. `device`, `area`) for this API project.
+      type: object
 
     # ─────────────────────────────────────────────────────────────────────────
     # API-specific event type enum (contains sample-service placeholders)
