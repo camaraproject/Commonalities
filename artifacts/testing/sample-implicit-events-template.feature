@@ -72,6 +72,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
     And the response property "$.code" is "INVALID_TOKEN" OR "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
+  # Service Error scenarios
+
   # Event notifications capability not supported scenario
   @{feature_identifier}_{operationId}_422.01_event_notifications_not_supported
   Scenario: Event notifications capability not supported
