@@ -376,7 +376,7 @@ components:
               $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE"
             GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
               $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED"
-            GENERIC_422_NOTIFICATIONS_NOT_SUPPORTED:
+            GENERIC_422_EVENT_NOTIFICATIONS_NOT_SUPPORTED:
               description: The API provider does not support event notification delivery for this resource
               value:
                 status: 422
