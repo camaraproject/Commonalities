@@ -6,7 +6,9 @@ info:
     CAMARA APIs supporting event notifications and/or explicit subscriptions.
 
     API repositories place this file in `code/common/` alongside `CAMARA_common.yaml`
-    and reference schemas via `$ref: "../common/CAMARA_event_common.yaml#/components/schemas/<SchemaName>"`.
+    and reference schemas via `$ref: "../common/CAMARA_event_common.yaml#/components/schemas/<SchemaName>"`,
+    and error responses and examples via the corresponding
+    `#/components/responses/...` and `#/components/examples/...` pointers.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -464,8 +466,15 @@ components:
   # ─────────────────────────────────────────────────────────────────────────
   # Subscription-specific error responses
   #
-  # These extend generic CAMARA error codes with subscription-specific codes.
-  # Commonalities-owned and identical across all APIs using explicit subscriptions.
+  # Referenceable error responses for subscription management and event
+  # notification, extending the generic catalogue in CAMARA_common.yaml with
+  # subscription-specific codes. Commonalities-owned and identical across all
+  # APIs using explicit subscriptions.
+  #
+  # Examples are referenced from the shared pools (`components/examples` in
+  # CAMARA_common.yaml and in this file). APIs needing other code combinations
+  # define error responses locally and reference the same examples — see the
+  # intro of `responses` in CAMARA_common.yaml.
   # ─────────────────────────────────────────────────────────────────────────
 
   responses:
@@ -494,35 +503,17 @@ components:
                       - INVALID_SINK
           examples:
             GENERIC_400_INVALID_ARGUMENT:
-              description: Invalid Argument. Generic Syntax Exception
-              value:
-                status: 400
-                code: INVALID_ARGUMENT
-                message: Client specified an invalid argument, request body or query param.
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_400_INVALID_ARGUMENT"
             GENERIC_400_OUT_OF_RANGE:
-              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
-              value:
-                status: 400
-                code: OUT_OF_RANGE
-                message: Client specified an invalid range.
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_400_OUT_OF_RANGE"
             GENERIC_400_INVALID_PROTOCOL:
-              description: Invalid protocol for events subscription management
-              value:
-                status: 400
-                code: INVALID_PROTOCOL
-                message: Only HTTP is supported
+              $ref: "#/components/examples/GENERIC_400_INVALID_PROTOCOL"
             GENERIC_400_INVALID_CREDENTIAL:
-              description: Invalid sink credential type
-              value:
-                status: 400
-                code: INVALID_CREDENTIAL
-                message: Only Access token or Private key JWT are supported
+              $ref: "#/components/examples/GENERIC_400_INVALID_CREDENTIAL"
+            GENERIC_400_INVALID_TOKEN:
+              $ref: "#/components/examples/GENERIC_400_INVALID_TOKEN"
             GENERIC_400_INVALID_SINK:
-              description: Invalid sink value
-              value:
-                status: 400
-                code: INVALID_SINK
-                message: sink not valid for the specified protocol
+              $ref: "#/components/examples/GENERIC_400_INVALID_SINK"
 
     SubscriptionIdRequired400:
       description: Problem with the client request
@@ -544,17 +535,9 @@ components:
                       - INVALID_ARGUMENT
           examples:
             GENERIC_400_INVALID_ARGUMENT:
-              description: Invalid Argument. Generic Syntax Exception
-              value:
-                status: 400
-                code: INVALID_ARGUMENT
-                message: Client specified an invalid argument, request body or query param.
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_400_INVALID_ARGUMENT"
             GENERIC_400_SUBSCRIPTION_ID_REQUIRED:
-              description: subscription id is required
-              value:
-                status: 400
-                code: INVALID_ARGUMENT
-                message: "Expected property is missing: subscriptionId"
+              $ref: "#/components/examples/GENERIC_400_SUBSCRIPTION_ID_REQUIRED"
 
     SubscriptionPermissionDenied403:
       description: Client does not have sufficient permission
@@ -577,18 +560,147 @@ components:
                       - SUBSCRIPTION_MISMATCH
           examples:
             GENERIC_403_PERMISSION_DENIED:
-              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
-              value:
-                status: 403
-                code: PERMISSION_DENIED
-                message: Client does not have sufficient permissions to perform this action.
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_403_PERMISSION_DENIED"
             GENERIC_403_SUBSCRIPTION_MISMATCH:
-              description: Inconsistent access token for requested subscription
-              value:
-                status: 403
-                code: "SUBSCRIPTION_MISMATCH"
-                message: "Inconsistent access token for requested events subscription"
+              $ref: "#/components/examples/GENERIC_403_SUBSCRIPTION_MISMATCH"
 
+    CreateSubscriptionConflict409:
+      description: Conflict with an existing subscription
+      headers:
+        x-correlator:
+          $ref: "CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 409
+                  code:
+                    enum:
+                      - ABORTED
+                      - ALREADY_EXISTS
+          examples:
+            GENERIC_409_ABORTED:
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_409_ABORTED"
+            GENERIC_409_ALREADY_EXISTS:
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_409_ALREADY_EXISTS"
+
+    # 410 for notification callbacks: the API consumer indicates that the
+    # event sink is no longer available
+    SinkGone410:
+      description: Gone
+      headers:
+        x-correlator:
+          $ref: "CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 410
+                  code:
+                    enum:
+                      - GONE
+          examples:
+            GENERIC_410_GONE:
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_410_GONE"
+
+    # 422 for subscription creation in APIs identifying their subject with
+    # the Device object
+    CreateSubscriptionDevice422:
+      description: Unprocessable Content
+      headers:
+        x-correlator:
+          $ref: "CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 422
+                  code:
+                    enum:
+                      - SERVICE_NOT_APPLICABLE
+                      - MISSING_IDENTIFIER
+                      - UNSUPPORTED_IDENTIFIER
+                      - UNNECESSARY_IDENTIFIER
+                      - MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED
+                      - MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED
+                      - PRIVATE_KEY_JWT_NOT_CONFIGURED
+          examples:
+            GENERIC_422_SERVICE_NOT_APPLICABLE:
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_422_SERVICE_NOT_APPLICABLE"
+            GENERIC_422_MISSING_IDENTIFIER_DEVICE:
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_422_MISSING_IDENTIFIER_DEVICE"
+            GENERIC_422_UNSUPPORTED_IDENTIFIER_DEVICE:
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_422_UNSUPPORTED_IDENTIFIER_DEVICE"
+            GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE:
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE"
+            GENERIC_422_MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED:
+              $ref: "#/components/examples/GENERIC_422_MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED"
+            GENERIC_422_MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED:
+              $ref: "#/components/examples/GENERIC_422_MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED"
+            GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
+              $ref: "#/components/examples/GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED"
+
+    # 422 for subscription creation in APIs identifying their subject with
+    # a phoneNumber field
+    CreateSubscriptionPhoneNumber422:
+      description: Unprocessable Content
+      headers:
+        x-correlator:
+          $ref: "CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 422
+                  code:
+                    enum:
+                      - SERVICE_NOT_APPLICABLE
+                      - MISSING_IDENTIFIER
+                      - UNNECESSARY_IDENTIFIER
+                      - MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED
+                      - MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED
+                      - PRIVATE_KEY_JWT_NOT_CONFIGURED
+          examples:
+            GENERIC_422_SERVICE_NOT_APPLICABLE:
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_422_SERVICE_NOT_APPLICABLE"
+            GENERIC_422_MISSING_IDENTIFIER_PHONE_NUMBER:
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_422_MISSING_IDENTIFIER_PHONE_NUMBER"
+            GENERIC_422_UNNECESSARY_IDENTIFIER_PHONE_NUMBER:
+              $ref: "CAMARA_common.yaml#/components/examples/GENERIC_422_UNNECESSARY_IDENTIFIER_PHONE_NUMBER"
+            GENERIC_422_MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED:
+              $ref: "#/components/examples/GENERIC_422_MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED"
+            GENERIC_422_MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED:
+              $ref: "#/components/examples/GENERIC_422_MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED"
+            GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
+              $ref: "#/components/examples/GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # DEPRECATED — CreateSubscriptionUnprocessableEntity422 bundles the device
+    # identifier codes for all subject types. It is DEPRECATED as of
+    # Commonalities 0.9.0 and planned for removal in the next meta-release
+    # cycle. Use CreateSubscriptionDevice422 or CreateSubscriptionPhoneNumber422
+    # instead. Content below is frozen.
+    # ─────────────────────────────────────────────────────────────────────────
     CreateSubscriptionUnprocessableEntity422:
       description: Unprocessable Entity
       headers:
@@ -656,3 +768,91 @@ components:
                 status: 422
                 code: PRIVATE_KEY_JWT_NOT_CONFIGURED
                 message: No JWK Set configured for PRIVATE_KEY_JWT authentication.
+
+  examples:
+    # ─────────────────────────────────────────────────────────────────────────
+    # Error examples — subscription-specific reusable ingredients
+    #
+    # Canonical examples for the subscription-specific CAMARA error codes,
+    # complementing the generic pool in `components/examples` of
+    # CAMARA_common.yaml. The subscription responses above reference examples
+    # from both pools; locally defined error responses in APIs do the same.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    # ── 400 Bad Request (subscription creation) ──────────────────────────────
+    # Responses: CreateSubscriptionBadRequest400, SubscriptionIdRequired400
+    # Examples: the generic 400 examples (CAMARA_common.yaml) plus
+    #   GENERIC_400_INVALID_PROTOCOL, GENERIC_400_INVALID_CREDENTIAL,
+    #   GENERIC_400_INVALID_TOKEN, GENERIC_400_INVALID_SINK,
+    #   GENERIC_400_SUBSCRIPTION_ID_REQUIRED
+    GENERIC_400_INVALID_PROTOCOL:
+      description: Invalid protocol for events subscription management
+      value:
+        status: 400
+        code: INVALID_PROTOCOL
+        message: Only HTTP is supported
+    GENERIC_400_INVALID_CREDENTIAL:
+      description: Invalid sink credential type
+      value:
+        status: 400
+        code: INVALID_CREDENTIAL
+        message: Only Access token or Private key JWT are supported
+    GENERIC_400_INVALID_TOKEN:
+      description: Invalid access token in the sink credential
+      value:
+        status: 400
+        code: INVALID_TOKEN
+        message: Access token in sink credential is invalid or expired
+    GENERIC_400_INVALID_SINK:
+      description: Invalid sink value
+      value:
+        status: 400
+        code: INVALID_SINK
+        message: sink not valid for the specified protocol
+    GENERIC_400_SUBSCRIPTION_ID_REQUIRED:
+      description: subscription id is required
+      value:
+        status: 400
+        code: INVALID_ARGUMENT
+        message: "Expected property is missing: subscriptionId"
+
+    # ── 403 Forbidden (subscriptions) ─────────────────────────────────────────
+    # Responses: SubscriptionPermissionDenied403
+    # Examples: GENERIC_403_PERMISSION_DENIED (CAMARA_common.yaml) plus
+    #   GENERIC_403_SUBSCRIPTION_MISMATCH
+    GENERIC_403_SUBSCRIPTION_MISMATCH:
+      description: Inconsistent access token for requested subscription
+      value:
+        status: 403
+        code: "SUBSCRIPTION_MISMATCH"
+        message: "Inconsistent access token for requested events subscription"
+
+    # ── 409 Conflict / 410 Gone (subscriptions) ──────────────────────────────
+    # Responses: CreateSubscriptionConflict409, SinkGone410
+    # Examples: GENERIC_409_ABORTED, GENERIC_409_ALREADY_EXISTS and
+    #   GENERIC_410_GONE (all in CAMARA_common.yaml)
+
+    # ── 422 Unprocessable Content (subscription creation) ────────────────────
+    # Responses: CreateSubscriptionDevice422, CreateSubscriptionPhoneNumber422
+    # Examples: the generic 422 examples (CAMARA_common.yaml) plus
+    #   GENERIC_422_MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED,
+    #   GENERIC_422_MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED,
+    #   GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED
+    GENERIC_422_MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED:
+      description: Multi event types subscription is not supported
+      value:
+        status: 422
+        code: MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED
+        message: Multi event types subscription not managed
+    GENERIC_422_MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED:
+      description: Combination of multiple event types is temporarily not supported
+      value:
+        status: 422
+        code: MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED
+        message: The requested combination of event types is temporarily not supported.
+    GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
+      description: Private key JWT sink credential type is used but no configuration was pre-shared
+      value:
+        status: 422
+        code: PRIVATE_KEY_JWT_NOT_CONFIGURED
+        message: No JWK Set configured for PRIVATE_KEY_JWT authentication.
