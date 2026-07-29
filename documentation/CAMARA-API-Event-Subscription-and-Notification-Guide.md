@@ -83,7 +83,7 @@ Several types of `sinkCredential` could be available in the future, but for now 
 **Sink delivery behaviour**
 
 When `sink` is provided in the POST request, the following rules apply:
-- API providers SHOULD implement event delivery support. If a request includes `sink` and the API provider does not support notification delivery (i.e. the implicit subscription feature is not implemented by this provider instance), the request MUST be rejected with 422 EVENT_NOTIFICATIONS_NOT_SUPPORTED and the resource MUST NOT be created.
+- API providers SHOULD implement event delivery support. If a request includes `sink` and the API provider does not support notification delivery (i.e. the implicit subscription feature is not implemented by this API provider), the request MUST be rejected with 422 EVENT_NOTIFICATIONS_NOT_SUPPORTED and the resource MUST NOT be created.
 - When event delivery is accepted, `sink` MUST be echoed in the response.
 - The implementation MUST NOT silently create the resource while ignoring the requested `sink`. If event delivery is unavailable, the consumer MUST be informed via the error response, so they can retry without `sink` (e.g. fall back to a polling pattern via `GET /<resource>`).
 
