@@ -147,7 +147,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
 ######################### Additional Happy Path Scenarios ##############################
 
   @<xxx>_subscriptions_12_Create_<xxx>_subscription_sync_with_accesstoken_sink_credential
-  Scenario: Create <xxx> subscription (sync creation)
+  Scenario: Create <xxx> subscription (sync creation) with ACCESSTOKEN sinkCredential
   # Some implementations may only support asynchronous subscription creation
   # Some implementations may decide to not return the sinkCredential in the response (data minimization principle)
     Given that subscriptions are created synchronously
@@ -165,7 +165,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the response body property "$.sinkCredential.accessTokenExpiresUtc", if present, is set to the same value of the request property "$.sinkCredential.accessTokenExpiresUtc"
 
   @<xxx>_subscriptions_13_Create_<xxx>_subscription_sync_with_private_jwt_key_sink_credential_out_of_band_provisioning
-  Scenario: Create <xxx> subscription (sync creation)
+  Scenario: Create <xxx> subscription (sync creation) with PRIVATE_JWT_KEY sinkCredential, out-of-band provisioning
   # Some implementations may only support asynchronous subscription creation
   # Some implementations may only support out_of_band provisioning
     Given that subscriptions are created synchronously
@@ -178,7 +178,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the response body complies with the OAS schema at "#/components/schemas/Subscription"
 
   @<xxx>_subscriptions_14_Create_<xxx>_subscription_sync_with_private_jwt_key_sink_credential_in_band_provisioning
-  Scenario: Create <xxx> subscription (sync creation)
+  Scenario: Create <xxx> subscription (sync creation) with PRIVATE_JWT_KEY sinkCredential, in-band provisioning
   # Some implementations may only support asynchronous subscription creation
   # Some implementations may additionally support in_band provisioning
     Given that subscriptions are created synchronously
@@ -196,7 +196,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
 
   @<xxx>_subscriptions_15_Operation_to_retrieve_subscription_based_on_an_existing_subscription-id_access_token_sink_credential_returned
   # Some implementations may decide to not return the sinkCredential in the response (data minimization principle)
-  Scenario: Get a subscription based on existing subscription-id.
+  Scenario: Get a subscription based on existing subscription-id, with ACCESSTOKEN sinkCredential returned.
     Given the path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
     When the request "retrieve<xxx>Subscription" is sent
     Then the response code is 200
@@ -209,7 +209,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @<xxx>_subscriptions_16_Operation_to_retrieve_subscription_based_on_an_existing_subscription-id_private_jwt_key_sink_credential_returned
   # Some implementations may decide to not return the sinkCredential in the response (data minimization principle)
   # Mainly applicable for in-band provisioning of PRIVATE_JWT_KEY mode for a given subscription
-  Scenario: Get a subscription based on existing subscription-id.
+  Scenario: Get a subscription based on existing subscription-id, with PRIVATE_JWT_KEY sinkCredential returned.
     Given the path parameter "subscriptionId" is set to the identifier of an existing <xxx> subscription
     When the request "retrieve<xxx>Subscription" is sent
     Then the response code is 200

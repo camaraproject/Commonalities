@@ -20,7 +20,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   #
   # References to OAS spec schemas refer to schemas specified in {apiname}.yaml
 
-  Background: Common "<operationId>" setup
+  Background: Common "{operationId}" setup
     Given an environment at "apiRoot"
     # Clause for createResource and listResources operations
     And the resource "/{apiname}/v{version}/{resources}"
@@ -31,9 +31,9 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
     # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema, clause only for createResource (i.e. only for POST/PUT operations in general)
-    And the request body is set by default to a request body compliant with the schema at "#/components/schemas/<createResource>"
+    And the request body is set by default to a request body compliant with the schema at "#/components/schemas/{createResource}"
     # Clause for getResource and deleteResource operations
-    And the path parameter "<ResourceId>" is set by default to a existing value
+    And the path parameter "{ResourceId}" is set by default to a existing value
 
 ############################ Happy Path Scenarios #############################################
 
@@ -41,18 +41,18 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # schema names MUST be replaced by applicable values for the tested operation
   # Applicable for APIs with device concept
   @{feature_identifier}_{createResource}_01_generic_success_scenario
-  Scenario Outline: Common validations for any success scenario
+  Scenario Outline: Common validations for any success scenario with device concept
     # Valid testing device and default request body compliant with the schema
     Given a valid testing device supported by the service, identified by the token or provided in the request body
     # Several clauses for request body property may apply depending on the operation
     And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
-    And the request body is compliant with the schema at "#/components/schemas/<createResource>"
-    When the request "<createResource>" is sent
+    And the request body is compliant with the schema at "#/components/schemas/{createResource}"
+    When the request "{createResource}" is sent
     Then the response status code is 201
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "#/components/schemas/<Resource>"
+    And the response body complies with the OAS schema at "#/components/schemas/{Resource}"
     # Additionally, in case any success response has to comply with some constraints beyond the schema compliance
     And the response property "<property>" matches the rule: <condition>
 
@@ -64,18 +64,18 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # schema names MUST be replaced by applicable values for the tested operation
   # Applicable for APIs with phoneNumber concept
   @{feature_identifier}_{createResource}_01_generic_success_scenario
-  Scenario Outline: Common validations for any success scenario
+  Scenario Outline: Common validations for any success scenario with phoneNumber concept
     # Valid testing phone number and default request body compliant with the schema
     Given a valid testing phone number supported by the service, identified by the token or provided in the request body
     # Several clauses for request body property may apply depending on the operation
     And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
-    And the request body is compliant with the schema at "#/components/schemas/<createResource>"
-    When the request "<createResource>" is sent
+    And the request body is compliant with the schema at "#/components/schemas/{createResource}"
+    When the request "{createResource}" is sent
     Then the response status code is 201
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "#/components/schemas/<Resource>"
+    And the response body complies with the OAS schema at "#/components/schemas/{Resource}"
     # Additionally, in case any success response has to comply with some constraints beyond the schema compliance
     And the response property "<property>" matches the rule: <condition>
 
@@ -87,17 +87,17 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # schema names MUST be replaced by applicable values for the tested operation
   # Applicable for APIs that does not own device nor phoneNumber concept
   @{feature_identifier}_{createResource}_01_generic_success_scenario
-  Scenario Outline: Common validations for any success scenario
+  Scenario Outline: Common validations for any success scenario without device nor phoneNumber concept
     Given the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     # Several clauses for request body property may apply depending on the operation
     And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
-    And the request body is compliant with the schema at "#/components/schemas/<createResource>"
-    When the request "<createResource>" is sent
+    And the request body is compliant with the schema at "#/components/schemas/{createResource}"
+    When the request "{createResource}" is sent
     Then the response status code is 201
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "#/components/schemas/<Resource>"
+    And the response body complies with the OAS schema at "#/components/schemas/{Resource}"
     # Additionally, in case any success response has to comply with some constraints beyond the schema compliance
     And the response property "<property>" matches the rule: <condition>
 
@@ -109,21 +109,21 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # Resource MUST be replaced by the applicable resource for the tested operation
   # schema names MUST be replaced by applicable values for the tested operation
   @{feature_identifier}_{listResources}_01_generic_success_scenario
-  Scenario: Common validations for any success scenario
-    Given at least an existing "<Resource>" created by operation "{operationId}"
-    When the request "<listResources>" is sent
+  Scenario: Common validations for any success scenario for {listResources}
+    Given at least an existing "{Resource}" created by operation "{operationId}"
+    When the request "{listResources}" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body is an array whose items comply with the OAS schema at "#/components/schemas/<Resource>"
+    And the response body is an array whose items comply with the OAS schema at "#/components/schemas/{Resource}"
 
   # listResources MUST be replaced by applicable operationId for the tested operation
   # Resources MUST be replaced by the applicable resource (in plural) for the tested operation
   @{feature_identifier}_{listResources}_02_empty_response
   Scenario: No existing {Resources}
     Given no {Resources} have been created by operation "{operationId}"
-    When the request "<listResources>" is sent
+    When the request "{listResources}" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -133,23 +133,23 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # Resource MUST be replaced by the applicable resource for the tested operation
   # schema names MUST be replaced by applicable values for the tested operation
   @{feature_identifier}_{getResource}_01_generic_success_scenario
-  Scenario: Common validations for any success scenario
-    Given an existing "<Resource>" created by operation "{operationId}"
-    And the path parameter "<ResourceId>" is set to the value of the identifier for that "<Resource>"
-    When the request "<getResource>" is sent
+  Scenario: Common validations for any success scenario for {getResource}
+    Given an existing "{Resource}" created by operation "{operationId}"
+    And the path parameter "{ResourceId}" is set to the value of the identifier for that "{Resource}"
+    When the request "{getResource}" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "#/components/schemas/<Resource>"
+    And the response body complies with the OAS schema at "#/components/schemas/{Resource}"
 
   # deleteResource MUST be replaced by applicable operationId for the tested operation
   # Resource MUST be replaced by the applicable resource for the tested operation
   @{feature_identifier}_{deleteResource}_01_generic_success_scenario
-  Scenario: Common validations for any success scenario
-    Given an existing "<Resource>" created by operation "{operationId}"
-    And the path parameter "<ResourceId>" is set to the value of the identifier for that "<Resource>"
-    When the request "<deleteResource>" is sent
+  Scenario: Common validations for any success scenario for {deleteResource}
+    Given an existing "{Resource}" created by operation "{operationId}"
+    And the path parameter "{ResourceId}" is set to the value of the identifier for that "{Resource}"
+    When the request "{deleteResource}" is sent
     Then the response status code is 204
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -162,7 +162,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # schema names MUST be replaced by applicable values for the tested operation
   @{feature_identifier}_{operationId}_400.01_schema_not_compliant
   Scenario: Invalid Argument. Generic Syntax Exception
-    Given the request body is included but is not compliant with the schema at "#/components/schemas/<requestSchema>"
+    Given the request body is included but is not compliant with the schema at "#/components/schemas/{requestSchema}"
     When the request "{operationId}" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -282,7 +282,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
 
   @{feature_identifier}_{operationId}_403.01_missing_access_token_scope
   Scenario: Missing access token scope
-    Given the header "Authorization" is set to an access token that does not include scope "<scope>"
+    Given the header "Authorization" is set to an access token that does not include scope "{scope}"
     When the request "{operationId}" is sent
     Then the response status code is 403
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -292,9 +292,9 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     And the response property "$.message" contains a user friendly text
 
   @{feature_identifier}_{operationId}_403.02_api_client_token_mismatch
-  Scenario: "<Resource>" not created by the API client given in the access token
+  Scenario: "{Resource}" not created by the API client given in the access token
     # To test this, a token has to be obtained for a different client
-    Given the header "Authorization" is set to a valid access token emitted to an API client which did not have rights to access/manage the "<Resource>"
+    Given the header "Authorization" is set to a valid access token emitted to an API client which did not have rights to access/manage the "{Resource}"
     When the request "{operationId}" is sent
     Then the response status code is 403
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -306,8 +306,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # Generic 404 Errors
 
   @{feature_identifier}_{operationId}_404.01_not_found
-  Scenario: non-existing "<ResourceId>"
-    Given the path parameter "<ResourceId>" is set to a random UUID
+  Scenario: non-existing "{ResourceId}"
+    Given the path parameter "{ResourceId}" is set to a random UUID
     When the request "{operationId}" is sent
     Then the response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -319,12 +319,12 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # Generic 409 Errors
 
   # This scenario applies to operations that create/manage a resource with a unique property (e.g. name) and the service does not allow multiple resources with the same value for that property, even if they have different identifiers. If the service allows multiple resources with the same value for that property, this scenario would not apply.
-  # unique property and Resource MUST be replaced by applicable values for the tested operation
+  # unique_property and Resource MUST be replaced by applicable values for the tested operation
   @{feature_identifier}_{operationId}_409.01_duplicated_resource
-  Scenario: Conflict due to existing "<Resource>"
-    Given a "<Resource>" already exists with the same "<unique property>" as the one in the request body
+  Scenario: Conflict due to existing "{Resource}"
+    Given a "{Resource}" already exists with the same "{unique_property}" as the one in the request body
     # Additional clauses may exist according to API nature
-    And the request body property "$.<requestProperty>" is set to a value already used in another successful "<Resource>" request
+    And the request body property "$.{requestProperty}" is set to a value already used in another successful "{Resource}" request
     When the request "{operationId}" is sent
     Then the response status code is 409
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -335,8 +335,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
 
   # Resource MUST be replaced by the applicable resource for the tested operation
   @{feature_identifier}_{operationId}_409.02_request_aborted
-  Scenario: Conflict due to "<Resource>" being modified
-    Given a "<Resource>" is being modified by another request and the service does not allow concurrent modifications for the same resource
+  Scenario: Conflict due to "{Resource}" being modified
+    Given a "{Resource}" is being modified by another request and the service does not allow concurrent modifications for the same resource
     # Additional clauses may exist according to API nature
     When the request "{operationId}" is sent
     Then the response status code is 409
@@ -348,8 +348,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
 
   # Resource MUST be replaced by the applicable resource for the tested operation
   @{feature_identifier}_{operationId}_409.03_incompatible_state
-  Scenario: Conflict due to "<Resource>" (target or referenced) is in incompatible state for the requested operation
-    Given the "<Resource>" is in an invalid state for management
+  Scenario: Conflict due to "{Resource}" (target or referenced) is in incompatible state for the requested operation
+    Given the "{Resource}" is in an invalid state for management
     # Additional clauses may exist according to API nature
     When the request "{operationId}" is sent
     Then the response status code is 409
