@@ -25,6 +25,14 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
 
 ############################ Happy Path Scenarios #############################################
 
+  # Test applicable for the related createResource operationId
+  @{feature_identifier}_{operationId}_xx_sink_echoed
+  Scenario: Sink is returned in the creation "<Resource>" response when event delivery is accepted
+    Given the request body includes property "$.sink" with a valid value
+    When the request "{operationId}" is sent
+    Then the response status code is 2<xx>
+    And the response property "$.sink" has same value as the request body property "$.sink"
+
   # Replace ... in the lastest sentence by any type of applicable validation for the property
   @{feature_identifier}_{operationId}_xx_event_notification
   Scenario: Event is received if the sink was provided and "<Resource>" lifecycle faces an update
