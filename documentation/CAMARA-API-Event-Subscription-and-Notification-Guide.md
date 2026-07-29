@@ -59,12 +59,14 @@ The subscription terminates with the managed entity.
 
 Providing this capability is OPTIONAL for any CAMARA API depending on UC requirements.
 
-If this capability is present in CAMARA API, the following attributes MUST be used in the POST request :
+If this capability is present in CAMARA API, the following attributes MUST be used in the POST request:
 
 | attribute name | type   | attribute description                                                                                                                                                                                                                                                                                       | cardinality |
 |----------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
 | sink           | string | https callback address where the notification must be POST-ed, `format: uri` SHOULD be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).  The [security considerations](#43-notifications-security-considerations) SHOULD be followed.                | optional   |
 | sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. It is RECOMMENDED for subscription consumer to provide credential to protect notification endpoint. | optional    |
+
+**NOTE**: To request the Implicit Subscription mode, `sink` attribute MUST be provided within the API request body.
 
 Several types of `sinkCredential` could be available in the future, but for now only access token and private key JWT credentials are managed.
 

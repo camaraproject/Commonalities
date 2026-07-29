@@ -448,6 +448,7 @@ components:
         sink:
           description: |
             The sink URL registered for notifications on this resource, if any.
+            Present in the response whenever `sink` was provided in the creation request.
             `sinkCredential` may be returned in responses, but limited to non-secret metadata only (e.g., `credentialType`).
           allOf:
             - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
