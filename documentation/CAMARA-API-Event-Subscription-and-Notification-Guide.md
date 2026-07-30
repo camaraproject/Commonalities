@@ -89,11 +89,12 @@ When `sink` is provided in the POST request, the following rules apply:
 - When event delivery is accepted, `sink` MUST be echoed in the response.
 - The implementation MUST NOT silently create the resource while ignoring the requested `sink`. If event delivery is unavailable, the consumer MUST be informed via the error response, so they can retry without `sink` (e.g. fall back to a polling pattern via `GET /<resource>`).
 
-Aforemention rules imply a breaking change, so as it is worth to state below since Metarelease Sync26:
-- New APIs that includes in their design the implicit subscription model MUST follow aforementioned behaviour.
-- Previous existing APIs that owns in their design the implicit subscription model. Whether to document/align with this behaviour is an each API's own decision:
-  - An API that wants to allow implementations without notification delivery adds it — that implies breaking change per section [7.4. Backward and Forward Compatibility of the CAMARA API Design Guide](./CAMARA-API-Design-Guide.md##74-backward-and-forward-compatibility) —, so a major version is required
-  - An API that expects every implementation to deliver events adds nothing and stays as it is.
+These rules apply to CAMARA APIs targeting Commonalities r4.4 and later. APIs targeting earlier Commonalities versions are unaffected.
+
+- An API newly adopting the implicit subscription model MUST follow the behaviour described above.
+- For an API that already offers the implicit subscription model, whether to document `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED` is that API's own decision:
+  - An API that allows implementations without notification delivery adds the error code to its API definition. This is a breaking change per [Section 7.4. Backward and Forward Compatibility](/documentation/CAMARA-API-Design-Guide.md#74-backward-and-forward-compatibility) of the CAMARA API Design Guide, so a new major version is required.
+  - An API that expects every implementation to deliver event notifications adds nothing and stays as it is. Implementations of such an API MUST deliver event notifications when `sink` is provided.
 
 A sample OpenAPI template for the implicit-subscription pattern is available in [Commonalities/artifacts/api-templates](/artifacts/api-templates/) directory (`sample-implicit-events.yaml`), with common event schemas in [Commonalities/artifacts/common](/artifacts/common/) (`CAMARA_event_common.yaml`).
 
