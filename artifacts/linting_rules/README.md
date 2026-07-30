@@ -10,6 +10,8 @@ The [Artifacts Lint workflow](../../.github/workflows/artifacts-lint.yml) runs o
 
 Lint configurations and tool versions are taken from the [tooling repository](https://github.com/camaraproject/tooling/tree/main/linting/config) at the same pinned ref API repositories use for CAMARA Validation, so findings here match the validation toolchain.
 
+Spectral runs once per template to preserve source attribution for findings in shared `$ref` targets, then deduplicates findings by file, line, and rule. Known S-313 findings that match the tooling metadata's `suppress_schema_paths` allowlist are summarized as one notice per common file; all other findings retain their individual Spectral severity.
+
 All three checks block only on error-level findings; warnings and hints are reported in the workflow log but do not fail the check.
 
 ### When a check fails

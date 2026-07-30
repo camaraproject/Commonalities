@@ -22,6 +22,8 @@
 #
 # Changelog:
 # - 2026-07-16: Initial version (yamllint + Spectral + gplint)
+# - 2026-07-30: Preserve Spectral attribution with per-template runs and
+#               collapse the documented S-313 common-library baseline.
 #
 # SEE ALSO: artifacts/linting_rules/README.md
 # =========================================================================================
@@ -69,6 +71,7 @@ jobs:
             validation/package.json
             validation/package-lock.json
             validation/.npmrc
+            validation/rules/spectral-rules.yaml
           sparse-checkout-cone-mode: false
 
       - name: Setup Python
@@ -84,6 +87,9 @@ jobs:
       - name: Install yamllint (tooling-pinned version)
         run: pip install --quiet -r .tooling/requirements.txt
 
+      - name: Test Spectral report formatter
+        run: python -B scripts/test_report_spectral_findings.py
+
       - name: Install Spectral and gplint (tooling-pinned versions)
         run: npm ci --ignore-scripts
         working-directory: .tooling/validation
@@ -94,25 +100,44 @@ jobs:
         if: ${{ !cancelled() }}
         run: yamllint -c .tooling/linting/config/.yamllint.yaml -f github artifacts/
 
-      # Findings in transitively referenced common files carry their real
-      # artifacts/common/** paths. The github-actions output goes to a file
-      # first so annotations survive the non-zero exit of the lint command.
+      # Spectral loses source attribution when multiple input documents share
+      # $ref targets (stoplightio/spectral#2640), so invoke it once per
+      # template. The formatter deduplicates shared findings and collapses the
+      # documented S-313 common-library baseline into notices.
       - name: Spectral over API and notification templates
         if: ${{ !cancelled() }}
         env:
           NODE_PATH: ${{ github.workspace }}/.tooling/validation/node_modules
         run: |
           export PATH="${{ github.workspace }}/.tooling/validation/node_modules/.bin:${PATH}"
+          results_dir="${RUNNER_TEMP}/spectral-results"
+          rm -rf "${results_dir}"
+          mkdir -p "${results_dir}"
+
           status=0
-          spectral lint \
-            --ruleset ".tooling/linting/config/${SPECTRAL_RULESET}" \
-            --fail-severity error \
-            -f pretty -f github-actions \
-            -o.pretty /dev/stdout \
-            -o.github-actions "${RUNNER_TEMP}/spectral-annotations.log" \
-            artifacts/api-templates/*.yaml artifacts/notification-templates/*.yaml \
-            || status=$?
-          cat "${RUNNER_TEMP}/spectral-annotations.log"
+          index=0
+          for template in artifacts/api-templates/*.yaml artifacts/notification-templates/*.yaml; do
+            output="${results_dir}/spectral-${index}.json"
+            if spectral lint \
+              --ruleset ".tooling/linting/config/${SPECTRAL_RULESET}" \
+              --fail-severity error \
+              --format json \
+              --output "${output}" \
+              "${template}"; then
+              :
+            else
+              spectral_status=$?
+              if (( spectral_status > status )); then
+                status=$spectral_status
+              fi
+            fi
+            index=$((index + 1))
+          done
+
+          python -B scripts/report_spectral_findings.py \
+            --metadata .tooling/validation/rules/spectral-rules.yaml \
+            --repo-root "${GITHUB_WORKSPACE}" \
+            "${results_dir}"/*.json
           exit $status
 
       # gplint exits non-zero only on error-level findings; warnings are
