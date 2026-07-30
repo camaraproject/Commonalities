@@ -59,7 +59,7 @@ The subscription terminates with the managed entity.
 
 Providing this capability is OPTIONAL for any CAMARA API depending on UC requirements.
 
-If this capability is present in CAMARA API, the following attributes MUST be used in the POST request:
+If this capability is present in CAMARA API, the following attribute names MUST be used in the POST request:
 
 | attribute name | type   | attribute description                                                                                                                                                                                                                                                                                       | cardinality |
 |----------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
