@@ -83,6 +83,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
   # Service Error scenarios
 
   # Event notifications capability not supported scenario
+  # Only applicable if the API defines the error 422 EVENT_NOTIFICATIONS_NOT_SUPPORTED
   @{feature_identifier}_{operationId}_422.01_event_notifications_not_supported
   Scenario: Event notifications capability not supported
     Given the request body includes property "$.sink" with a valid value
