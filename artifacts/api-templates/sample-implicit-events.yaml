@@ -377,11 +377,7 @@ components:
             GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
               $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED"
             GENERIC_422_EVENT_NOTIFICATIONS_NOT_SUPPORTED:
-              description: The API provider does not support event notification delivery for this resource
-              value:
-                status: 422
-                code: EVENT_NOTIFICATIONS_NOT_SUPPORTED
-                message: Notification delivery is not supported by this API provider. Retry the request without the sink field.
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_422_EVENT_NOTIFICATIONS_NOT_SUPPORTED"
 
   schemas:
 
