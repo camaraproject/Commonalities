@@ -36,7 +36,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     And the path parameter "<ResourceId>" is set by default to a existing value
 
 ############################ Happy Path Scenarios #############################################
-  
+
   # createResource MUST be replaced by applicable operationId for the tested operation
   # schema names MUST be replaced by applicable values for the tested operation
   # Applicable for APIs with device concept
@@ -199,8 +199,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
 
 # applicable for operations with request body
 # applicable to properties in the request body which are of type object, and have required properties or minProperties in their value
-@{feature_identifier}_{operationId}_400.04_empty_property
-Scenario Outline: Error response for empty property in request body
+  @{feature_identifier}_{operationId}_400.04_empty_property
+  Scenario Outline: Error response for empty property in request body
     Given the request body property "<required_property>" is set to {}
     When the request "{operationId}" is sent
     Then the response status code is 400
@@ -215,8 +215,8 @@ Scenario Outline: Error response for empty property in request body
       | {value}           |
 
 # applicable for operations with request body
-@{feature_identifier}_{operationId}_400.05_missing_required_property
-Scenario Outline: Error response for missing required property in request body
+  @{feature_identifier}_{operationId}_400.05_missing_required_property
+  Scenario Outline: Error response for missing required property in request body
     Given the request body property "<required_property>" is not included
     When the request "{operationId}" is sent
     Then the response status code is 400

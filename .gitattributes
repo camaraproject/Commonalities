@@ -1,0 +1,20 @@
+# Normalize all text files to LF line endings on commit.
+# Contributors on Windows will still see CRLF in their working tree
+# (if core.autocrlf is set), but the repository always stores LF.
+* text=auto eol=lf
+
+# Explicitly mark binary formats so Git never attempts EOL conversion.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+*.pptx binary
+*.docx binary
+*.xlsx binary
+
+# Slim down release artifacts by excluding meeting minutes.
+/documentation/MeetingMinutes export-ignore
