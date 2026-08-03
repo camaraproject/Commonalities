@@ -59,12 +59,14 @@ The subscription terminates with the managed entity.
 
 Providing this capability is OPTIONAL for any CAMARA API depending on UC requirements.
 
-If this capability is present in CAMARA API, the following attributes MUST be used in the POST request :
+If this capability is present in CAMARA API, the following attribute names MUST be used in the POST request:
 
 | attribute name | type   | attribute description                                                                                                                                                                                                                                                                                       | cardinality |
 |----------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
-| sink           | string | https callback address where the notification must be POST-ed, `format: uri` SHOULD be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).  The [security considerations](#43-notifications-security-considerations) SHOULD be followed.                | mandatory   |
+| sink           | string | https callback address where the notification must be POST-ed, `format: uri` SHOULD be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).  The [security considerations](#43-notifications-security-considerations) SHOULD be followed.                | optional   |
 | sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. It is RECOMMENDED for subscription consumer to provide credential to protect notification endpoint. | optional    |
+
+**NOTE**: To request the Implicit Subscription mode, `sink` attribute MUST be provided within the API request body.
 
 Several types of `sinkCredential` could be available in the future, but for now only access token and private key JWT credentials are managed.
 
@@ -79,6 +81,20 @@ Several types of `sinkCredential` could be available in the future, but for now 
 | clientId             | string           | The client ID used to authenticate when requesting an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
 | tokenUri             | string           | The URI where to request an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
 | jwksUri              | string           | The URI used to request the public key to verify that the JWT assertion was signed by `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Not needed in the request. Optional in the response  | optional    |
+
+**Sink delivery behaviour**
+
+When `sink` is provided in the POST request, the following rules apply:
+- API providers SHOULD implement event delivery support. If a request includes `sink` and the API provider does not support notification delivery (i.e. the implicit subscription feature is not implemented by this API provider), the request MUST be rejected with 422 EVENT_NOTIFICATIONS_NOT_SUPPORTED and the resource MUST NOT be created.
+- When event delivery is accepted, `sink` MUST be echoed in the response.
+- The implementation MUST NOT silently create the resource while ignoring the requested `sink`. If event delivery is unavailable, the consumer MUST be informed via the error response, so they can retry without `sink` (e.g. fall back to a polling pattern via `GET /<resource>`).
+
+These rules apply to CAMARA APIs targeting Commonalities r4.4 and later. APIs targeting earlier Commonalities versions are unaffected.
+
+- An API newly adopting the implicit subscription model MUST follow the behaviour described above.
+- For an API that already offers the implicit subscription model, whether to document `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED` is that API's own decision:
+  - An API that allows implementations without notification delivery adds the error code to its API definition. This is a breaking change per [Section 7.4. Backward and Forward Compatibility](/documentation/CAMARA-API-Design-Guide.md#74-backward-and-forward-compatibility) of the CAMARA API Design Guide, so a new major version is required.
+  - An API that expects every implementation to deliver event notifications adds nothing and stays as it is. Implementations of such an API MUST deliver event notifications when `sink` is provided.
 
 A sample OpenAPI template for the implicit-subscription pattern is available in [Commonalities/artifacts/api-templates](/artifacts/api-templates/) directory (`sample-implicit-events.yaml`), with common event schemas in [Commonalities/artifacts/common](/artifacts/common/) (`CAMARA_event_common.yaml`).
 

@@ -114,6 +114,11 @@ paths:
         includes the `sink` (and optionally `sinkCredential`) property, the API
         provider will deliver event notifications related to this resource to
         the supplied sink for as long as the resource exists.
+
+        If `sink` is provided but the API provider does not support notification
+        delivery, the request MUST be rejected with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED`
+        and the resource MUST NOT be created. The consumer can then retry without
+        `sink` (e.g. fall back to polling via `GET /resources/{resourceId}`).
       operationId: createResource
       parameters:
         - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
@@ -359,6 +364,7 @@ components:
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
                       - PRIVATE_KEY_JWT_NOT_CONFIGURED
+                      - EVENT_NOTIFICATIONS_NOT_SUPPORTED
           examples:
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_422_SERVICE_NOT_APPLICABLE"
@@ -370,6 +376,8 @@ components:
               $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE"
             GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
               $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED"
+            GENERIC_422_EVENT_NOTIFICATIONS_NOT_SUPPORTED:
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_422_EVENT_NOTIFICATIONS_NOT_SUPPORTED"
 
   schemas:
 
@@ -408,6 +416,11 @@ components:
             The HTTPS URL where event notifications for this resource will be
             delivered. Omit this field (and `sinkCredential`) to create the
             resource without event notifications.
+
+            If provided, the API provider SHOULD support event delivery. If
+            notification delivery is not supported, the request MUST be rejected
+            with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED` and the resource MUST NOT
+            be created.
           allOf:
             - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
         sinkCredential:
@@ -431,6 +444,7 @@ components:
         sink:
           description: |
             The sink URL registered for notifications on this resource, if any.
+            Present in the response whenever `sink` was provided in the creation request.
             `sinkCredential` may be returned in responses, but limited to non-secret metadata only (e.g., `credentialType`).
           allOf:
             - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
