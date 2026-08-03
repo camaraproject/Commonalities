@@ -80,7 +80,7 @@ components:
       name: perPage
       in: query
       description: >
-        Number of subscriptions to return per page.
+        Number of resources to return per page.
         Values outside the allowed range are rejected with `400 INVALID_ARGUMENT`.
       required: false
       schema:
