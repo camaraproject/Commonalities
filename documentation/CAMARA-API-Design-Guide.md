@@ -645,22 +645,49 @@ ResourceList:
     pagination:
       $ref: "#/components/schemas/Pagination"
 
-Pagination:
-  type: object
-  properties:
-    page:
+    Pagination:
+      description: Pagination details helping to navigate through paged results efficiently.
+      type: object
+      properties:
+        page:
+          $ref: "#/components/schemas/Page"
+        perPage:
+          $ref: "#/components/schemas/PerPage"
+        totalCount:
+          $ref: "#/components/schemas/TotalCount"
+        totalPages:
+          $ref: "#/components/schemas/TotalPages"
+
+    Page:
       type: integer
+      format: int32
       minimum: 1
-    perPage:
+      maximum: 2147483647
+      default: 1
+      description: Current page number (1-indexed).
+      example: 1
+    PerPage:
       type: integer
+      format: int32
       minimum: 1
       maximum: 100
-    totalCount:
+      default: 20
+      description: Number of items per page.
+      example: 20
+    TotalCount:
       type: integer
+      format: int32
       minimum: 0
-    totalPages:
+      maximum: 2147483647
+      description: Total number of items matching the query, after filters applied. MAY be omitted where a full count query is prohibitively expensive.
+      example: 87
+    TotalPages:
       type: integer
+      format: int32
       minimum: 0
+      maximum: 2147483647
+      description: Total number of pages. Equals ceil(totalCount / perPage). MAY be omitted where totalCount is omitted.
+      example: 5
 ```
 
 #### 4.1.4. Response Headers
