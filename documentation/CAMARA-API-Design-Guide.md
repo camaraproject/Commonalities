@@ -1237,7 +1237,7 @@ The following points can serve as a checklist to design the security mechanism o
 2. **Authentication and authorization**
 
    CAMARA follows the OAuth2 paradigm that separates authentication and authorization from API access.
-   This separation of concerns simplifies the implementation of the API endpoint that, after validating the access token, can now focus on its API implementation.
+   This separation of concerns lets the API implementation focus on its own logic once the access token has been validated.
 
    CAMARA uses the authentication and authorization protocols and flows as described in the released version of the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/).
    
