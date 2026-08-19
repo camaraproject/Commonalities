@@ -1,6 +1,10 @@
 # Changelog Commonalities
 
 ## Table of Contents
+- **[r4.3](#r43)**
+- **[r4.2](#r42)**
+- **[r4.1](#r41)**
+- **[r3.4](#r34)**
 - **[r3.3](#r33)**
 - **[r3.2](#r32)**
 - **[r3.1](#r31)**
@@ -14,6 +18,154 @@
 - **[v0.3.0](#v030)**
 - **[v0.2.0](#v020)**
 - **[v0.1.0 - Initial version](#v010---initial-version)**
+
+
+# r4.3
+## Release Notes
+
+This release contains documents and artifacts of Commonalities version 0.8.0:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r4.3/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r4.3/artifacts)** folder.
+**The relevant details of authentication and consent collection are covered by [release 4.2](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
+### Added
+* New 409 error code called INCOMPATIBLE_STATE added by @tlohmar in https://github.com/camaraproject/Commonalities/pull/550
+* Added device identifier constraints for test definitions by @Kevsy in https://github.com/camaraproject/Commonalities/pull/576
+* Array description guideline by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/559
+* Clarifications for asynchronous responses by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/575
+* Guidelines and linting rules for OWASP API Security Top 10 by @rartych in https://github.com/camaraproject/Commonalities/pull/582
+* Authentication mechanism based on pre-shared information for event notification by @m-nahum in https://github.com/camaraproject/Commonalities/pull/580
+* Business-level outcome guidance added to API Design Guide by @hdamker in https://github.com/camaraproject/Commonalities/pull/578
+* Subscription Testing Definitions Enhancements - Private JWT Key scenario by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/583
+* Alignment with OWASP and other linting rules in CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/590 and by @tlohmar in https://github.com/camaraproject/Commonalities/pull/597
+* Alignment with OWASP and other linting rules in Event subscription template by @rartych in https://github.com/camaraproject/Commonalities/pull/591
+* Added implicit-subscription API template by @hdamker in https://github.com/camaraproject/Commonalities/pull/612
+* Added pagination shared components and pagination example in sample-service-subscriptions API template by @rartych in https://github.com/camaraproject/Commonalities/pull/617
+* Testing artifacts for 400 Syntax Error including empty request body scenario by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/618
+* Clarification on string `maxLength` value by @rartych in https://github.com/camaraproject/Commonalities/pull/620
+* Added rule for undeclared properties in request bodies by @hdamker in https://github.com/camaraproject/Commonalities/pull/634
+* Added mandatory info.description templates to common artifacts and samples by @hdamker in https://github.com/camaraproject/Commonalities/pull/635
+
+### Changed
+* CAMARA_Common.yaml alignment with multiple device identifiers logic by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/570
+* Linting rules update 01 2026 by @rartych in https://github.com/camaraproject/Commonalities/pull/564
+* Status 409 standardized error codes modified by @tlohmar in https://github.com/camaraproject/Commonalities/pull/569
+* Cloudevents decoupled from EventTypeNotification scheme in Event Subscription Template by @rartych in https://github.com/camaraproject/Commonalities/pull/604
+* CAMARA error grouping updated in CAMARA API Design Guide by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/595
+* Message for Invalid Token Context Error by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/607
+* Artifacts directory restructured for $ref consumption by @hdamker in https://github.com/camaraproject/Commonalities/pull/606
+* Changed response pagination guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/610 and in https://github.com/camaraproject/Commonalities/pull/617
+* Implicit-subscription template: inline resource-flavoured 400/422 responses by @hdamker in https://github.com/camaraproject/Commonalities/pull/629
+* Testing artifacts reviewed and updated for Spring26 by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/626
+* Simplified usage of PrivateKeyJwtCredentials for event notification by @patrice-conil in https://github.com/camaraproject/Commonalities/pull/633
+
+### Fixed
+* `x-camara-commonalities` format fixed to string by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/537
+* Clarification meaning of {{API_NAME}}.{{SPECIFIC_CODE}} by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/541
+* 'Addr' schema objects updated to 'Address' by @Kevsy in https://github.com/camaraproject/Commonalities/pull/563
+* x-camara-commonalities to use full version string by @hdamker in https://github.com/camaraproject/Commonalities/pull/599
+* Commented out placeholders in CAMARA_common.yaml for $ref consumption by @hdamker in https://github.com/camaraproject/Commonalities/pull/602
+
+### Removed
+* Status 409 error code CONFLICT deprecated by @tlohmar in https://github.com/camaraproject/Commonalities/pull/569
+* Removed linting artifacts by @rartych in https://github.com/camaraproject/Commonalities/pull/614
+
+## New Contributors
+* @m-nahum made their first contribution in https://github.com/camaraproject/Commonalities/pull/580
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r3.4...r4.3
+
+
+# r4.2
+## Release Notes
+
+This release contains documents and artifacts of Commonalities version 0.8.0-rc.2:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r4.2/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r4.2/artifacts)** folder.
+**The relevant details of authentication and consent collection are covered by [release 4.2](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
+### Added
+* Alignment with OWASP and other linting rules in CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/590 and by @tlohmar in https://github.com/camaraproject/Commonalities/pull/597
+* Alignment with OWASP and other linting rules in Event subscription template by @rartych in https://github.com/camaraproject/Commonalities/pull/591
+* Added implicit-subscription API template by @hdamker in https://github.com/camaraproject/Commonalities/pull/612
+* Added pagination shared components and pagination example in sample-service-subscriptions API template by @rartych in https://github.com/camaraproject/Commonalities/pull/617
+* Testing artifacts for 400 Syntax Error including empty request body scenario by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/618
+* Clarification on string `maxLength' value by @rartych in https://github.com/camaraproject/Commonalities/pull/620
+
+### Changed
+* Cloudevents decoupled from EventTypeNotification scheme in Event Subscription Template by @rartych in https://github.com/camaraproject/Commonalities/pull/604
+* CAMARA error grouping updated in CAMARA API Design Guide by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/595
+* Message for Invalid Token Context Error by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/607
+* Artifacts directory restructured for $ref consumption by @hdamker in https://github.com/camaraproject/Commonalities/pull/606
+* Changed response pagination guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/610 and in https://github.com/camaraproject/Commonalities/pull/617
+
+### Fixed
+* x-camara-commonalities to use full version string by @hdamker in https://github.com/camaraproject/Commonalities/pull/599
+* Commented out placeholders in CAMARA_common.yaml for $ref consumption by @hdamker in https://github.com/camaraproject/Commonalities/pull/602
+
+### Removed
+* Removed linting artifacts by @rartych in https://github.com/camaraproject/Commonalities/pull/614
+
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r4.1...r4.2
+
+
+# r4.1
+## Release Notes
+
+This release contains documents and artifacts of Commonalities version 0.7.0-rc.1:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r4.1/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r4.1/artifacts)** folder.
+**The relevant details of authentication and consent collection are covered by [release 4.1](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
+### Added
+* New 409 error code called INCOMPATIBLE_STATE added by @tlohmar in https://github.com/camaraproject/Commonalities/pull/550
+* Added device identifier constraints for test desfinitions by @Kevsy in https://github.com/camaraproject/Commonalities/pull/576
+* Array description guideline by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/559
+* Clarifications for asynchronous responses by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/575
+* Guidelines and linting rules for OWASP API Security Top 10 by @rartych in https://github.com/camaraproject/Commonalities/pull/582
+* Authentication mechanism based on pre-shared information for event notification by @m-nahum in https://github.com/camaraproject/Commonalities/pull/580
+* Business-level outcome guidance added to API Design Guide by @hdamker in https://github.com/camaraproject/Commonalities/pull/578
+* Subscription Testing Definitions Enhancements - Private JWT Key scenario by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/583
+
+### Changed
+* CAMARA_Common.yaml aligment with multiple device identifiers logic by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/570
+* Linting rules update 01 2026 by @rartych in https://github.com/camaraproject/Commonalities/pull/564
+* Status 409 standardized error codes modified by @tlohmar in https://github.com/camaraproject/Commonalities/pull/569
+
+### Fixed
+* `x-camara-commonalities` format fixed to string by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/537
+* Clarification meaning of {{API_NAME}}.{{SPECIFIC_CODE}} by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/541
+* 'Addr' schema objects updated to 'Address' by @Kevsy in https://github.com/camaraproject/Commonalities/pull/563
+
+### Removed
+* Status 409 error code CONFLICT deprecated by @tlohmar in https://github.com/camaraproject/Commonalities/pull/569
+
+## New Contributors
+* @m-nahum made their first contribution in https://github.com/camaraproject/Commonalities/pull/580
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r3.4...r4.1
+
+
+# r3.4
+## Release Notes
+
+This release contains Commonalities version 0.6.1, a patch release from [r3.3](#r33).
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r3.4/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r3.4/artifacts)** folder.
+
+**The relevant details of authentication and consent collection are covered by [release 3.3](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Management Working Group documents.**
+
+### Fixed
+* ErrorInfo schema properties order in template files aligned to [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md) by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/517
+* Fixed typo in [Gherkin Device Errors Template](/artifacts/testing/C01-device-errors.feature) by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/523
+* Fixed link and description of `SubscriptionId` in  event-subscription-template.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/536
+* Changed networkAccessIdentifier and notification server example to use `example.com` by @Kevsy in https://github.com/camaraproject/Commonalities/pull/530
+
+### Removed
+* Removed "Hashing Passwords" subsection from CAMARA API Design Guide by @AxelNennker in https://github.com/camaraproject/Commonalities/pull/511
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r3.3...r3.4
 
 # r3.3
 ## Release Notes

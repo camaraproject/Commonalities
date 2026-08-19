@@ -1,0 +1,706 @@
+# NOTE: This is a template. Replace all occurrences of "sample-service-subscriptions"
+# (and its Title Case variant) with the actual API name in the appropriate casing.
+openapi: 3.0.3
+info:
+  title: Sample Service Subscription Template
+  description: |
+    This file is a template for CAMARA API explicit subscription endpoint and for Notification model.
+    Additional information are provided in [CAMARA API Event Subscription and Notification Guide](https://github.com/camaraproject/Commonalities/blob/main/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md).
+
+    Note on event name convention: the event type name MUST follow: ``org.camaraproject.<api-name>.<event-version>.<event-name>``
+
+    Note on ``security`` - ``openId`` scope: The scope values must be replaced accordingly to the format defined in the guideline document.
+
+    What follows are the mandatory CAMARA `info.description` content blocks, each bracketed by `<!-- CAMARA:MANDATORY:<name>:BEGIN/END -->` HTML comments (invisible in rendered documentation). The reference text lives in `code/common/info-description-templates.yaml` (synced from Commonalities); copy each block as-is from there. The Appendix A block (`identifying-device-from-access-token` / `identifying-phone-number-from-access-token`) is not included in this sample because its data model does not use `device` or `phoneNumber` as a subject identifier; APIs that do should include the applicable variant.
+
+    > In case of conflict, the authoritative source (API Design Guide for §3.2.3 / §3.2.4 / Appendix A; the ICM authorization-and-authentication template) takes precedence. This disclaimer applies to the mandatory texts and to any other content in this sample.
+
+    <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
+
+    # Authorization and authentication
+
+    The "Camara Security and Interoperability Profile" provides details of how an API consumer requests an access token. Please refer to Identity and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the profile.
+
+    The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the API consumer and the API provider, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
+
+    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
+    <!-- CAMARA:MANDATORY:authorization-and-authentication:END -->
+
+    <!-- CAMARA:MANDATORY:additional-error-responses:BEGIN -->
+
+    # Additional CAMARA error responses
+
+    The list of error codes in this API specification is not exhaustive. Therefore the API specification MAY not document some non-mandatory error statuses as indicated in `CAMARA API Design Guide`.
+
+    Please refer to the `CAMARA_common.yaml` of the Commonalities Release associated to this API version for a complete list of error responses. The applicable Commonalities Release can be identified in the `API Readiness Checklist` document associated to this API version.
+
+    As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
+    <!-- CAMARA:MANDATORY:additional-error-responses:END -->
+
+    <!-- CAMARA:MANDATORY:request-body-strictness:BEGIN -->
+
+    # Request body strictness
+
+    This API rejects requests with JSON request bodies that contain properties not declared in this specification, at any nesting level. Unknown properties result in a `400 INVALID_ARGUMENT` response.
+    <!-- CAMARA:MANDATORY:request-body-strictness:END -->
+
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: wip
+  x-camara-commonalities: wip
+
+externalDocs:
+  description: Product documentation at CAMARA
+  url: https://github.com/camaraproject/APIRepositoryName
+  # APIRepositoryName MUST be replaced by the CAMARA Subproject Repository name where the API design based on this template is hosted.
+servers:
+  - url: "{apiRoot}/sample-service-subscriptions/vwip"
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+tags:
+  - name: Sample Service Subscription
+    description: Operations to manage event subscriptions on event-type event
+
+paths:
+  /subscriptions:
+    post:
+      tags:
+        - Sample Service Subscription
+      summary: "Create a sample service event subscription"
+      description: Create a sample service event subscription
+      operationId: createSampleServiceSubscription
+      parameters:
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      security:
+        - openId:
+            - sample-service-subscriptions:event-type1:grant-level
+            - sample-service-subscriptions:event-type2:grant-level
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriptionRequest"
+        required: true
+      callbacks:
+        notifications:
+          "{$request.body#/sink}":
+            post:
+              summary: "notifications callback"
+              description: |
+                Important: this endpoint is to be implemented by the API consumer.
+                The sample service server will call this endpoint whenever a sample service event occurs.
+                `operationId` value will have to be replaced accordingly with WG API specific semantic
+              operationId: postNotification
+              parameters:
+                - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+              requestBody:
+                required: true
+                content:
+                  application/cloudevents+json:
+                    schema:
+                      $ref: "#/components/schemas/NotificationEvent"
+              responses:
+                "204":
+                  description: Successful notification
+                  headers:
+                    x-correlator:
+                      $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+                "400":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
+                "401":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
+                "403":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+                "410":
+                  $ref: "../common/CAMARA_event_common.yaml#/components/responses/SinkGone410"
+                "429":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/TooManyRequests429"
+              security:
+                - {}
+                - notificationsBearerAuth: []
+
+      responses:
+        "201":
+          description: Created
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+        "202":
+          description: Request accepted to be processed. It applies for async creation process.
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionAsync"
+        "400":
+          $ref: "../common/CAMARA_event_common.yaml#/components/responses/CreateSubscriptionBadRequest400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
+        "403":
+          $ref: "../common/CAMARA_event_common.yaml#/components/responses/SubscriptionPermissionDenied403"
+        "409":
+          $ref: "../common/CAMARA_event_common.yaml#/components/responses/CreateSubscriptionConflict409"
+        # Device-identified flavour — a phoneNumber-identified API references
+        # CreateSubscriptionPhoneNumber422 here instead
+        "422":
+          $ref: "../common/CAMARA_event_common.yaml#/components/responses/CreateSubscriptionDevice422"
+        "429":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/TooManyRequests429"
+    get:
+      tags:
+        - Sample Service Subscription
+      summary: "Retrieve a list of sample service event subscriptions"
+      description: Retrieve a list of sample service event subscriptions
+      operationId: retrieveSampleServiceSubscriptionList
+      parameters:
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/page"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/perPage"
+      security:
+        - openId:
+            - sample-service-subscriptions:read
+      responses:
+        "200":
+          description: List of event subscription details
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+            X-Total-Count:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-total-count"
+            X-Total-Pages:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-total-pages"
+            Link:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/link"
+
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionList"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+  /subscriptions/{subscriptionId}:
+    get:
+      tags:
+        - Sample Service Subscription
+      summary: "Retrieve a sample service event subscription"
+      description: Retrieve sample service subscription information for a given subscription.
+      operationId: retrieveSampleServiceSubscription
+      security:
+        - openId:
+            - sample-service-subscriptions:read
+      parameters:
+        - $ref: "#/components/parameters/SubscriptionId"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      responses:
+        "200":
+          description: OK
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+        "400":
+          $ref: "../common/CAMARA_event_common.yaml#/components/responses/SubscriptionIdRequired400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+        "404":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
+    delete:
+      tags:
+        - Sample Service Subscription
+      summary: "Delete a sample service event subscription"
+      operationId: deleteSampleServiceSubscription
+      description: Delete a given sample service subscription.
+      security:
+        - openId:
+            - sample-service-subscriptions:delete
+      parameters:
+        - $ref: "#/components/parameters/SubscriptionId"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      responses:
+        "204":
+          description: Sample service subscription deleted
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+        "202":
+          description: Request accepted to be processed. It applies for async deletion process.
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionAsync"
+        "400":
+          $ref: "../common/CAMARA_event_common.yaml#/components/responses/SubscriptionIdRequired400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+        "404":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
+
+components:
+  securitySchemes:
+    openId:
+      $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
+    notificationsBearerAuth:
+      $ref: "../common/CAMARA_event_common.yaml#/components/securitySchemes/notificationsBearerAuth"
+
+  parameters:
+    SubscriptionId:
+      name: subscriptionId
+      in: path
+      description: Subscription identifier that was obtained from the create event subscription operation
+      required: true
+      schema:
+        $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionId"
+
+  schemas:
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Subscription management (API-specific due to ApiEventType reference)
+    #
+    # SubscriptionRequest and Subscription reference ApiEventType in their
+    # `types` field, which contains sample-service placeholders. Protocol-specific
+    # request/response schemas extend these via allOf.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    SubscriptionRequest:
+      description: The request for creating a event-type event subscription
+      type: object
+      required:
+        - sink
+        - protocol
+        - config
+        - types
+      properties:
+        protocol:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Protocol"
+        sink:
+          description: The address to which events shall be delivered using the selected protocol.
+          allOf:
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
+        sinkCredential:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
+        types:
+          description: |
+            Camara Event types eligible to be delivered by this subscription.
+            References ApiEventType (not the full NotificationEvent union) —
+            subscription requests target API-specific events only; lifecycle
+            events are server-initiated and cannot be subscribed to directly.
+            Note: the maximum number of event types per subscription will be decided at API project level.
+          type: array
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: "#/components/schemas/ApiEventType"
+        config:
+          $ref: "#/components/schemas/Config"
+      discriminator:
+        propertyName: protocol
+        mapping:
+          HTTP: "#/components/schemas/HTTPSubscriptionRequest"
+          # Future protocol support (not yet used in CAMARA):
+          # MQTT3: "#/components/schemas/MQTTSubscriptionRequest"
+          # MQTT5: "#/components/schemas/MQTTSubscriptionRequest"
+          # AMQP: "#/components/schemas/AMQPSubscriptionRequest"
+          # NATS: "#/components/schemas/NATSSubscriptionRequest"
+          # KAFKA: "#/components/schemas/ApacheKafkaSubscriptionRequest"
+
+    Subscription:
+      description: Represents a event-type subscription.
+      type: object
+      required:
+        - sink
+        - protocol
+        - config
+        - types
+        - id
+      properties:
+        protocol:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Protocol"
+        sink:
+          description: The address to which events shall be delivered using the selected protocol.
+          allOf:
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
+        sinkCredential:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
+        types:
+          description: |
+            Camara Event types eligible to be delivered by this subscription.
+            Note: the maximum number of event types per subscription will be decided at API project level
+          type: array
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: "#/components/schemas/ApiEventType"
+        config:
+          $ref: "#/components/schemas/Config"
+        id:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionId"
+        startsAt:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+        expiresAt:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+        status:
+          type: string
+          description: |-
+            Current status of the subscription - Management of Subscription State engine is not mandatory for now. Note not all statuses may be considered to be implemented. Details:
+              - `ACTIVATION_REQUESTED`: Subscription creation (POST) is triggered but subscription creation process is not finished yet.
+              - `ACTIVE`: Subscription creation process is completed. Subscription is fully operative.
+              - `INACTIVE`: Subscription is temporarily inactive, but its workflow logic is not deleted.
+              - `EXPIRED`: Subscription is ended (no longer active). This status applies when subscription is ended due to `SUBSCRIPTION_EXPIRED` or `ACCESS_TOKEN_EXPIRED` event.
+              - `DELETED`: Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its meta-information is kept).
+          enum:
+            - ACTIVATION_REQUESTED
+            - ACTIVE
+            - EXPIRED
+            - INACTIVE
+            - DELETED
+      discriminator:
+        propertyName: protocol
+        mapping:
+          HTTP: "#/components/schemas/HTTPSubscriptionResponse"
+          # Future protocol support (not yet used in CAMARA):
+          # MQTT3: "#/components/schemas/MQTTSubscriptionResponse"
+          # MQTT5: "#/components/schemas/MQTTSubscriptionResponse"
+          # AMQP: "#/components/schemas/AMQPSubscriptionResponse"
+          # NATS: "#/components/schemas/NATSSubscriptionResponse"
+          # KAFKA: "#/components/schemas/ApacheKafkaSubscriptionResponse"
+
+    SubscriptionAsync:
+      description: Response for a event-type subscription request managed asynchronously (Creation or Deletion)
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionId"
+
+    SubscriptionList:
+      description: Response with subscriptions list
+      type: object
+      required:
+        - subscriptions
+        - pagination
+      properties:
+        subscriptions:
+          description: Subscriptions list
+          type: array
+          minItems: 0
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/Subscription"
+        pagination:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Config (API-specific due to subscriptionDetail)
+    #
+    # Extends the Commonalities-owned ConfigBase via allOf, adding the required
+    # `subscriptionDetail` property typed against this API's own
+    # CreateSubscriptionDetail schema. `subscriptionDetail` cannot be defined
+    # in CAMARA_event_common.yaml because it is API-specific.
+    # This is also where each API project add the predefined, optional `initialEvent` property.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    Config:
+      description: |
+        Implementation-specific configuration parameters needed by the subscription manager
+        for acquiring events. Extends `ConfigBase` from `CAMARA_event_common.yaml` with the
+        required, API-specific `subscriptionDetail` property. As an example, this template
+        also includes the predefined, optional `initialEvent` property; API projects MAY
+        omit it if sending a notification when a subscription is created is not relevant to the
+        API’s event type(s).
+        Note: if a request is performed for several event types, all subscribed events will
+        use the same `config` parameters.
+      allOf:
+        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ConfigBase"
+        - type: object
+          required:
+            - subscriptionDetail
+          properties:
+            subscriptionDetail:
+              $ref: "#/components/schemas/CreateSubscriptionDetail"
+            initialEvent:
+              type: boolean
+              description: |
+                Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.
+                It is up to the API project team to decide whether to keep it and to provide an explanation in the description.
+
+    CreateSubscriptionDetail:
+      description: |
+        The detail of the requested event subscription.
+        Replace with the actual API-specific subscription detail properties
+        (e.g. `device`, `area`) for this API project.
+      type: object
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # API-specific event type enum (contains sample-service placeholders)
+    # ─────────────────────────────────────────────────────────────────────────
+
+    ApiEventType:
+      type: string
+      description: |
+        Enum of API-specific event type strings for this API project.
+        The reverse-DNS prefix `org.camaraproject.<api-name>` makes each value
+        globally unique, so two different API groups can independently define
+        identically-named event types without any collision risk.
+      enum:
+        - org.camaraproject.sample-service-subscriptions.v0.event-type1
+        - org.camaraproject.sample-service-subscriptions.v0.event-type2
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Subscription lifecycle event group (Commonalities-owned structure,
+    # but event type strings contain sample-service placeholders)
+    #
+    # Common to every CAMARA API that supports subscriptions.
+    # Extends CloudEvent via allOf, constrains `type` to lifecycle values,
+    # and owns the lifecycle discriminator mapping.
+    #
+    # API projects reference this group via NotificationEvent but only update
+    # the sample-service prefix in the event type strings.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    SubscriptionLifecycleEvent:
+      description: |
+        Subscription lifecycle event group, common to all CAMARA APIs that
+        support explicit subscriptions.
+        Extends the CloudEvent envelope and constrains `type` to the set of
+        lifecycle event types managed by Commonalities.
+      allOf:
+        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            type:
+              $ref: "#/components/schemas/SubscriptionLifecycleEventType"
+      discriminator:
+        propertyName: type
+        mapping:
+          org.camaraproject.sample-service-subscriptions.v0.subscription-started: "#/components/schemas/EventSubscriptionStarted"
+          org.camaraproject.sample-service-subscriptions.v0.subscription-updated: "#/components/schemas/EventSubscriptionUpdated"
+          org.camaraproject.sample-service-subscriptions.v0.subscription-ended: "#/components/schemas/EventSubscriptionEnded"
+
+    SubscriptionLifecycleEventType:
+      type: string
+      description: |
+        Enum of subscription lifecycle event type strings.
+        These are managed by Commonalities and are identical across all CAMARA
+        APIs that support explicit subscriptions.
+        Kept as a separate named schema so the set of valid lifecycle type
+        strings can be referenced independently from the discriminated schema.
+      enum:
+        - org.camaraproject.sample-service-subscriptions.v0.subscription-started
+        - org.camaraproject.sample-service-subscriptions.v0.subscription-updated
+        - org.camaraproject.sample-service-subscriptions.v0.subscription-ended
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # API-specific notification event group
+    #
+    # Extends CloudEvent via allOf and does exactly two things:
+    #   1. Constrains `type` to its own ApiEventType enum
+    #   2. Owns the discriminator mapping from each enum value to a concrete schema
+    #
+    # Adding a new event type requires only: adding a value to ApiEventType and
+    # adding a discriminator mapping entry here. CloudEvent is never touched.
+
+    ApiNotificationEvent:
+      description: |
+        API-specific notification event group.
+        Extends the CloudEvent envelope and constrains `type` to the set of
+        event types defined by this API project.
+        Adding a new event type only requires updating ApiEventType and the
+        discriminator mapping below — the CloudEvent base never changes.
+      allOf:
+        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            type:
+              $ref: "#/components/schemas/ApiEventType"
+      discriminator:
+        propertyName: "type"
+        mapping:
+          org.camaraproject.sample-service-subscriptions.v0.event-type1: "#/components/schemas/EventApiSpecific1"
+          org.camaraproject.sample-service-subscriptions.v0.event-type2: "#/components/schemas/EventApiSpecific2"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Callback union (API project-owned)
+    #
+    # oneOf over all valid event groups at the callback endpoint.
+    # Owns no discriminator and applies no constraints of its own.
+    # Its only job is to enumerate which groups are valid for this API.
+    #
+    # To add a new event group: add it to the oneOf list. That is the only
+    # change required at this layer.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    NotificationEvent:
+      description: |
+        Union of all valid notification event groups at the callback endpoint.
+        This schema owns no discriminator — routing within each group is
+        handled by ApiNotificationEvent and SubscriptionLifecycleEvent
+        respectively. Its only responsibility is to enumerate which groups
+        are valid payloads for this API's notification callback.
+      oneOf:
+        - $ref: "#/components/schemas/ApiNotificationEvent"
+        - $ref: "#/components/schemas/SubscriptionLifecycleEvent"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Concrete event schemas — API-specific (API project-owned)
+    # ─────────────────────────────────────────────────────────────────────────
+
+    EventApiSpecific1:
+      description: event structure for event-type event 1
+      allOf:
+        - $ref: "#/components/schemas/ApiNotificationEvent"
+        - type: object
+          properties:
+            data:
+              type: object
+              description: |
+                Event-specific payload for event-type1.
+                Replace with the actual data schema for this event type.
+
+    EventApiSpecific2:
+      description: event structure for event-type event 2
+      allOf:
+        - $ref: "#/components/schemas/ApiNotificationEvent"
+        - type: object
+          properties:
+            data:
+              type: object
+              description: |
+                Event-specific payload for event-type2.
+                Replace with the actual data schema for this event type.
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Concrete event schemas — Subscription lifecycle (Commonalities-owned)
+    # Data payloads are referenced from CAMARA_event_common.yaml.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    EventSubscriptionStarted:
+      description: event structure for event subscription started
+      allOf:
+        - $ref: "#/components/schemas/SubscriptionLifecycleEvent"
+        - type: object
+          properties:
+            data:
+              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionStarted"
+
+    EventSubscriptionUpdated:
+      description: event structure for event subscription updated
+      allOf:
+        - $ref: "#/components/schemas/SubscriptionLifecycleEvent"
+        - type: object
+          properties:
+            data:
+              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionUpdated"
+
+    EventSubscriptionEnded:
+      description: event structure for event subscription ended
+      allOf:
+        - $ref: "#/components/schemas/SubscriptionLifecycleEvent"
+        - type: object
+          properties:
+            data:
+              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionEnded"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Protocol-specific subscription schemas
+    # Protocol settings are referenced from CAMARA_event_common.yaml.
+    #
+    # Future protocol support (not yet used in CAMARA):
+    # MQTTSubscriptionRequest:
+    #   allOf:
+    #     - $ref: "#/components/schemas/SubscriptionRequest"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/MQTTSettings"
+    # MQTTSubscriptionResponse:
+    #   allOf:
+    #     - $ref: "#/components/schemas/Subscription"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/MQTTSettings"
+    # AMQPSubscriptionRequest:
+    #   allOf:
+    #     - $ref: "#/components/schemas/SubscriptionRequest"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/AMQPSettings"
+    # AMQPSubscriptionResponse:
+    #   allOf:
+    #     - $ref: "#/components/schemas/Subscription"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/AMQPSettings"
+    # ApacheKafkaSubscriptionRequest:
+    #   allOf:
+    #     - $ref: "#/components/schemas/SubscriptionRequest"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ApacheKafkaSettings"
+    # ApacheKafkaSubscriptionResponse:
+    #   allOf:
+    #     - $ref: "#/components/schemas/Subscription"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ApacheKafkaSettings"
+    # NATSSubscriptionRequest:
+    #   allOf:
+    #     - $ref: "#/components/schemas/SubscriptionRequest"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/NATSSettings"
+    # NATSSubscriptionResponse:
+    #   allOf:
+    #     - $ref: "#/components/schemas/Subscription"
+    #     - type: object
+    #       properties:
+    #         protocolSettings:
+    #           $ref: "../common/CAMARA_event_common.yaml#/components/schemas/NATSSettings"
+    # ─────────────────────────────────────────────────────────────────────────
+
+    HTTPSubscriptionRequest:
+      description: Subscription request for HTTP-based event delivery.
+      allOf:
+        - $ref: "#/components/schemas/SubscriptionRequest"
+        - type: object
+          properties:
+            protocolSettings:
+              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/HTTPSettings"
+
+    HTTPSubscriptionResponse:
+      description: Subscription resource returned for HTTP-based event delivery.
+      allOf:
+        - $ref: "#/components/schemas/Subscription"
+        - type: object
+          properties:
+            protocolSettings:
+              $ref: "../common/CAMARA_event_common.yaml#/components/schemas/HTTPSettings"

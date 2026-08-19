@@ -11,10 +11,10 @@ This document outlines guidelines for API design within the CAMARA project, appl
 - [2. Data](#2-data)
   - [2.1. Common Data Types](#21-common-data-types)
   - [2.2. Data Definitions](#22-data-definitions)
-- [3. Error Responses](#3-error-responses)
-  - [3.1. Standardized Use of CAMARA Error Responses](#31-standardized-use-of-camara-error-responses)
-  - [3.2. Error Responses - Device Object/Phone Number](#32-error-responses---device-objectphone-number)
-  - [3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API](#33-error-responses---mandatory-template-for-infodescription-in-camara-api)
+  - [2.3. Strictness of Request Body Schemas](#23-strictness-of-request-body-schemas)
+- [3. Responses](#3-responses)
+  - [3.1. Business-level Outcomes in Successful Responses](#31-business-level-outcomes-in-successful-responses)
+  - [3.2. Error Responses](#32-error-responses)
 - [4. Pagination, Sorting and Filtering](#4-pagination-sorting-and-filtering)
   - [4.1. Pagination](#41-pagination)
   - [4.2. Sorting](#42-sorting)
@@ -43,6 +43,7 @@ This document outlines guidelines for API design within the CAMARA project, appl
   - [7.4. Backward and Forward Compatibility](#74-backward-and-forward-compatibility)
 - [8. External Documentation](#8-external-documentation)
 - [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier)
+- [Appendix B (Informative): `operationId` and `description` Guidelines for MCP and AI Agent Readiness](#appendix-b-informative-operationid-and-description-guidelines-for-mcp-and-ai-agent-readiness)
 
 <!-- /TOC -->
 
@@ -88,31 +89,33 @@ that this point is open to continuous evolution over time through the addition o
 To allow for proper management of this ever-evolving list, an external repository has been defined to that end.
 This repository is referenced below.
 
-[Link to Common Data Types documentation repository](../artifacts/CAMARA_common.yaml)
+[Link to Common Data Types documentation repository](../artifacts/common/CAMARA_common.yaml)
 
 
 ### 2.2. Data Definitions
 
 This part captures a detailed description of all the data structures used in the API specification. For each of these data, the specification MUST contain:
 - Name of the data object, used to reference it in other sections
-- Data type (String, Integer, Object, etc.)
+- Data type (string, integer, object, etc.)
+- If the data type is string, `maxLength` property or `enum` construct MUST be used to constrain values.
+  - Note: The `maxLength` requirement applies to all string properties regardless of whether format or pattern is also specified. While pattern may implicitly constrain length, `maxLength` provides a machine-readable upper bound that tools can consume without regex analysis. For properties with a well-defined format (e.g. `uuid`, `date-time`), set `maxLength` to the format's maximum representation length.
 - If the data type is string it is RECOMMENDED to use the appropriate modifier property `format` and/or `pattern` whenever possible. The [OpenAPI Initiative Formats Registry](https://spec.openapis.org/registry/format/) contains the list of formats used in OpenAPI specifications.
-
-
   - If the format of a string is `date-time`, the following sentence MUST be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.`
   - If the format of a string is `duration`, the following sentence MUST be present in the description: `It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#appendix-A) for duration`
     - Note: to avoid known ambiguity issues with duration strings, consider using intervals, which are anchored to a specific start and end date or time. Use of a start date or time string field in combination with the duration string field could help to mitigate ambiguity issues.
 
-- If the data type is an object, list of required properties.
+- If the data type is object, list of required properties.
+- If the data type is array, `maxItems` property MUST be specified.
+- If the data type is integer, format (`int32` or `int64`) and range (`minimum` and `maximum` properties) MUST be specified.
+  - Numeric schema values (e.g. `minimum`, `maximum`, `default`, `enum` values, examples) MUST be within the 53-bit integer range (-9007199254740991 through 9007199254740991). As noted in the [OpenAPI Format Registry](https://spec.openapis.org/registry/format/int64), values outside this range cause interoperability problems with recipients that parse JSON numbers into double-precision (binary64) representation and may be silently altered. A property whose domain requires values outside the 53-bit range MUST instead be modeled as a `string` with an appropriate `pattern`, as recommended by the registry.
 - List of properties within the object data, including:
    - Property name
    - Property description
-   - Property type (String, Integer, Object, etc.)
-   - Other properties by type:
-      - String ones: min and max length
-      - Integer ones: format (int32, int64), range, etc.
+   - Property type (string, integer, object, etc.)
+   - Any other properties required for given type, as indicated above.
 
-In this part, the error response structure MUST also be defined following the guidelines in [3. Error Responses](#3-error-responses).
+The error response structure MUST also be defined following the guidelines in [3.2. Error Responses](#32-error-responses).
+
 
 #### 2.2.1. Usage of Discriminator
 
@@ -221,20 +224,168 @@ When IpAddr is used in a payload, the property `objectType` MUST be present to i
 ```
 
 
+### 2.3. Strictness of Request Body Schemas
 
-## 3. Error Responses
+CAMARA APIs reject JSON request bodies that contain properties not declared in the API specification. The following rules apply:
+
+- A server MUST reject a request body containing JSON properties not declared in the API specification, at any nesting level. The rejection MUST produce a `400 INVALID_ARGUMENT` response per [3.2. Error Responses](#32-error-responses). The rule is restated to API consumers via the mandatory `info.description` template defined in [Section 3.2.4](#324-request-body-strictness---mandatory-template-for-infodescription-in-camara-api).
+- Where a request body schema and all its referenced schemas are free of composition (no `allOf` / `oneOf` / `anyOf`), the specification SHOULD also declare `additionalProperties: false` on the schema so validators can enforce it.
+- Under OAS 3.0.3, `additionalProperties: false` does not propagate through `allOf` / `oneOf` / `anyOf`. For composed request body schemas — including any schema referencing composed types from `CAMARA_common.yaml` — the mandatory [Section 3.2.4](#324-request-body-strictness---mandatory-template-for-infodescription-in-camara-api) template is the binding rule.
+- The rule applies to CAMARA APIs targeting Commonalities r4.3 and later. APIs targeting earlier Commonalities versions are unaffected.
+- The rule applies to JSON request bodies only. Response-side tolerant-reader behaviour is unchanged (see [Section 7.4](#74-backward-and-forward-compatibility)).
+
+
+
+## 3. Responses
+
+This chapter covers how CAMARA APIs model responses, including both successful business outcomes and error conditions.
+
+### 3.1. Business-level Outcomes in Successful Responses
+
+#### 3.1.1. Scope and Problem Statement
+
+CAMARA APIs already return negative, partial, or unknown business outcomes under HTTP 2xx and model them in different ways (explicit enums, booleans, nullability, presence/absence rules). This section describes legitimate patterns for such modeling and introduces optional refinements (`contextCode`, `contextMessage`) to improve consistency across APIs.
+
+#### 3.1.2. Core Principles
+
+The following principles apply to modeling business-level outcomes in successful responses:
+
+* HTTP `2xx` status codes indicate that the request was valid and processed; they MAY still represent negative, partial, or unknown business outcomes.
+* APIs SHOULD explicitly define and document how business outcomes are represented in successful responses (for example via explicit outcome enums, documented nullability, or documented presence/absence rules), and MUST NOT rely on undocumented inference from missing data.
+* APIs MAY add optional context fields to provide additional information about the outcome:
+  * `contextCode` — a machine-readable code providing additional context
+  * `contextMessage` — a human-readable explanation providing additional context
+* These optional context fields are additive and MUST NOT be the only way to interpret the business outcome of a successful response.
+* Outcome semantics (success, failure, partial, unknown, not applicable) MUST remain visible via the API's domain-specific response semantics and MUST NOT be moved into `contextCode` or `contextMessage`.
+* Well-designed modeling of business-level outcomes in `2xx` responses can reduce the need to define `4xx` responses for otherwise valid requests.
+
+This guidance primarily applies to new APIs and new MAJOR versions; existing APIs may evolve towards it over time (see Section 3.1.5).
+
+#### 3.1.3. Recommended Modeling Pattern
+
+The recommended structural pattern for business-level outcomes consists of:
+
+* A **domain-specific primary outcome field** representing the business result, where needed (for example `status`, `verificationResult`, `availability`). The field name and values are defined by the API based on its domain.
+* An **optional `contextCode` field** — a machine-readable code providing additional context about the outcome. Values SHOULD be constrained and documented by the API (OpenAPI enum is recommended). Values may include:
+  * CAMARA-wide codes (if defined in future Commonalities releases)
+  * API-specific codes following CAMARA conventions (`API_NAME.SPECIFIC_CODE` in SCREAMING_SNAKE_CASE)
+  * Provider-specific codes if agreed contractually. Provider-specific codes SHOULD be namespaced to avoid collisions.
+* An **optional `contextMessage` field** — a human-readable explanation providing additional context.
+
+**Client interpretation:** `contextCode` and `contextMessage` are supplementary. They MUST NOT be the only way to interpret the business outcome of a successful response. The API specification MUST define how the business outcome is determined from the response payload (for example via explicit outcome enums, documented nullability, or documented presence/absence rules).
+
+Note that:
+* The primary outcome field name is API- and domain-specific.
+* Not all APIs need to introduce a new primary outcome field; existing fields may already express the outcome clearly.
+* The `contextCode` and `contextMessage` names are standardized across APIs that choose to adopt them.
+
+**Legitimate patterns for outcome modeling:**
+
+CAMARA APIs use the following patterns to express business-level outcomes. Both are valid; the choice depends on the API's domain and existing contract:
+
+* **Outcome enum:** Introduce a domain-specific enum field and make further data fields optional or nullable.
+* **Nullability/presence rules:** Where compatible, make the data field nullable or optional and document that `null` (or absence) represents unknown/unavailable.
+
+Both patterns MAY use `contextCode`/`contextMessage` to explain why (for example privacy restriction, device not available).
+
+#### 3.1.4. Example
+
+The following examples illustrate both legitimate patterns described in Section 3.1.3. Both use the optional `contextCode`/`contextMessage` fields.
+
+**Outcome enum approach:** The primary outcome field (`result` in this example) is domain-specific and illustrative:
+
+```yaml
+components:
+  schemas:
+    CheckResult:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: string
+          description: Domain-specific result of the operation (example).
+          enum:
+            - POSITIVE_CHECK
+            - NEGATIVE_CHECK
+            - UNKNOWN
+        contextCode:
+          type: string
+          description: Optional machine-readable code providing additional business context to the result.
+          example: COMMON.REGIONAL_PRIVACY_RESTRICTION
+        contextMessage:
+          type: string
+          description: Optional human-readable explanation providing additional business context to the result.
+          example: "The requested information could not be disclosed for privacy regulation reasons."
+```
+
+An example JSON response body for an HTTP `200` response:
+
+```json
+{
+  "result": "UNKNOWN",
+  "contextCode": "COMMON.REGIONAL_PRIVACY_RESTRICTION",
+  "contextMessage": "The requested information could not be disclosed for privacy regulation reasons."
+}
+```
+
+**Nullability/presence rules approach:** The primary outcome field (`result` in this example) is nullable. When the outcome is unavailable, `result` is `null`:
+
+```yaml
+components:
+  schemas:
+    DataResult:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: object
+          nullable: true
+          description: The requested data object. Null when the data is unavailable.
+          properties:
+            value:
+              type: string
+              description: The data value (domain-specific).
+        contextCode:
+          type: string
+          description: Optional machine-readable code providing additional business context to the result.
+          example: COMMON.DEVICE_NOT_AVAILABLE
+        contextMessage:
+          type: string
+          description: Optional human-readable explanation providing additional business context to the result.
+          example: "The requested device is currently not available in the network."
+```
+
+An example JSON response body for an HTTP `200` response when the data is unavailable:
+
+```json
+{
+  "result": null,
+  "contextCode": "COMMON.DEVICE_NOT_AVAILABLE",
+  "contextMessage": "The requested device is currently not available in the network."
+}
+```
+
+#### 3.1.5. Versioning and Migration Guidance
+
+* New APIs and new MAJOR versions SHOULD follow this guidance.
+* Existing stable APIs MAY adopt it in a future MAJOR version where behavior or response semantics would otherwise change.
+* Where possible, APIs MAY introduce `contextCode` and `contextMessage` as additive, backward-compatible changes.
+
+### 3.2. Error Responses
 
 To ensure interoperability, it is crucial to implement error management that strictly adheres to the error codes defined in the HTTP protocol.
 
 An error representation MUST NOT differ from the representation of any resource. A main error message is defined with JSON structure with the following fields:
 - A field `status`, which can be identified in the response as a standard code from a list of Hypertext Transfer Protocol (HTTP) response status codes.
-- A unique error `code`, which can be identified and traced for more details. It MUST be human-readable; therefore, it MUST NOT be a numeric code. In turn, to achieve a better location of the error, you can reference the value or the field causing it, and include it in the message.
+- A unique error `code`, which can be identified and traced for more details. It MUST be human-readable; therefore, it MUST NOT be a numeric code. In turn, to achieve a better location of the error, you can reference the value or the field causing it, and include it in the message. The format for this field MUST be `SCREAMING_SNAKE_CASE` (e.g. "INVALID_ARGUMENT").
 - A detailed description in `message` - in English language in API specification, it can be changed to other languages in implementation if needed.
 
 All these aforementioned fields are mandatory in Error Responses.
-`status` and `code` fields have normative nature, so as their use has to be standardized (see [3.1. Standardized use of CAMARA error responses](#31-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
+`status` and `code` fields have normative nature, so as their use has to be standardized (see [3.2.1. Standardized use of CAMARA error responses](#321-standardized-use-of-camara-error-responses)). On the other hand, `message` is informative and within this document an example is shown.
 
-The values of the `status` and `code` fields are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/CAMARA_common.yaml).
+The values of the `status` and `code` fields are normative (i.e. they have a set of allowed values), as defined in [CAMARA_common.yaml](../artifacts/common/CAMARA_common.yaml).
 
 An example of JSON error structure is as follows:
 
@@ -245,6 +396,15 @@ An example of JSON error structure is as follows:
    "message": "A human-readable description of what the event represents"
 }
 ```
+
+CAMARA APIs document error responses in one of two ways:
+
+- **Reference a common error response.** [CAMARA_common.yaml](../artifacts/common/CAMARA_common.yaml) provides a catalogue of minimal, directly referenceable error responses under `components/responses`; each contains only error codes that every referencing API can return. Subscription and notification specific error responses are provided by [CAMARA_event_common.yaml](../artifacts/common/CAMARA_event_common.yaml). Responses related to subject identification come in two flavours — device (e.g. `DeviceIdentifier422`) and phone number (e.g. `PhoneNumberIdentifier422`) — and APIs reference the flavour matching their subject identifier (see [3.2.2. Error Responses - Device Object/Phone Number](#322-error-responses---device-objectphone-number)).
+- **Define the error response locally.** APIs that return API-specific error codes, or a combination of common error codes not covered by the catalogue, define the error response locally: the schema restricts `status` and `code` to exactly the codes the API can return (see the response template in [3.2.2.1. Templates](#3221-templates)), and the `examples` reference the shared error examples provided under `components/examples` of `CAMARA_common.yaml` and `CAMARA_event_common.yaml`, keeping the error documentation consistent across CAMARA APIs. Examples for API-specific error codes are defined inline in the API definition.
+
+In both cases, an API declares only the error codes it can actually return for the given operation. Each common file contains, per HTTP status, an intro comment listing the referenceable response(s) and the example ingredients available for local definitions; the API templates in [artifacts/api-templates](../artifacts/api-templates/) demonstrate both ways.
+
+NOTE: Releases of `CAMARA_common.yaml` up to Commonalities 0.8.0 provided `Generic<status>` error responses bundling all common error codes of an HTTP status. These are deprecated, as they declare error codes that do not apply to every referencing API, and are planned for removal in a future release.
 
 In error handling, different cases must be considered, even at the functional level that it is possible to modify the error message returned to the API consumer. For this error handling, there are two possible alternatives listed below:
 - Error handling done with custom policies in the API admin tool.
@@ -257,38 +417,56 @@ The essential requirements to consider would be:
 
 NOTE: When standardized AuthN/AuthZ flows are used, please refer to [6.2. Security definition](#62-security-definition), the format and content of Error Response for those procedures SHALL follow the guidelines of those standards.
 
-### 3.1. Standardized Use of CAMARA Error Responses
+#### 3.2.1. Standardized Use of CAMARA Error Responses
 
-This section aims to provide a common use of the fields `status` and `code` across CAMARA APIs.
+This section aims to provide a common use of the fields `status` and `code` of the `ErrorInfo` object across CAMARA APIs.
 
-In the following, we elaborate on the existing client errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature:
+- The value of the `status` field is matching the numeric status code of the HTTP response message, e.g. "400".
+- The value of the `code` field is matching the numeric error code value, which further details about the HTTP status code.
+- The value of the `message` field is a human understandable description.
+
+The `ErrorInfo` object is provided within the HTTP body of the HTTP response message.
+
+
+In the following, we elaborate on the existing errors. In particular, we identify the different error codes and cluster them into separate tables, depending on their nature:
 - i) syntax exceptions
+  - The API Consumer has made a request with invalid syntax, and re-sending the same request will always result in the same exception. The API Provider should indicate to the client what modification is required for the request to be resubmitted.
+
+  Examples: `400 - INVALID_ARGUMENT`, `405 - METHOD_NOT_ALLOWED`, etc.
 - ii) service exceptions
-- iii) server errors
+  - The API Consumer has made a request but the API Provider is currently unable to fulfil it. This can be due to a technical reason (e.g. server or backend failure) or a policy reason (e.g. business quota exceeded). The API Provider should indicate to the client if/when the request can be resubmitted and whether any modification is required.
+
+  Examples: `403 - PERMISSION_DENIED`, `422 - SERVICE_NOT_APPLICABLE`, `429 - QUOTA_EXCEEDED`, `5xx` range, etc.
 
 <font size="3"><span style="color: blue"> Syntax Exceptions </span></font>
 
-| **Error status** |     **Error code**      | **Message example**                                                 | **Scope/description**                                                                                                           |
+| **`status`** |     **`code`**      | **`message` example**                                                 | **Scope/description**                                                                                                           |
 |:----------------:|:-----------------------:|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
 |       400        |   `INVALID_ARGUMENT`    | Client specified an invalid argument, request body or query param.  | Generic Syntax Exception                                                                                                        |
 |       400        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific Syntax Exception regarding a field that is relevant in the context of the API (e.g. format of an amount)               |
 |       400        |     `OUT_OF_RANGE`      | Client specified an invalid range.                                  | Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested |
-|       403        |   `PERMISSION_DENIED`   | Client does not have sufficient permissions to perform this action. | OAuth2 token access does not have the required scope or when the user fails operational security                                |
-|       403        | `INVALID_TOKEN_CONTEXT` | `{{field}}` is not consistent with access token.                    | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token. This error SHOULD be used only when the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.                             |
-|       409        |        `ABORTED`        | Concurrency conflict.                                               | Concurrency of processes of the same nature/scope                                                                               |
-|       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                                                           |
-|       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource                                                                                             |
-|       409        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific conflict situation that is relevant in the context of the API                                                          |
+|       405        |   `METHOD_NOT_ALLOWED`   | The requested method is not allowed/supported on the target resource.                                         | Invalid HTTP verb used with a given endpoint                                                                                             |
+|       406        |     `NOT_ACCEPTABLE`     | The server cannot produce a response matching the content requested by the client through `Accept-*` headers. | API Server does not accept the media type (`Accept-*` header) indicated by API client                                                    |
+|       415        | `UNSUPPORTED_MEDIA_TYPE` | The server refuses to accept the request because the payload format is in an unsupported format.              | Payload format of the request is in an unsupported format by the Server. Should not happen                                               |
 
 <font size="3"><span style="color: blue"> Service Exceptions </span></font>
 
-| **Error status** |        **Error code**         | **Message example**                                                        | **Scope/description**                                                                                                                                                        |
+| **`status`** |        **`code`**         | **`message` example**                                                        | **Scope/description**                                                                                                                                                        |
 |:----------------:|:-----------------------------:|----------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |       401        |       `UNAUTHENTICATED`       | Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required. | The request cannot be authenticated and a new authentication is required                                                            |
+|       403        |   `PERMISSION_DENIED`   | Client does not have sufficient permissions to perform this action. | OAuth2 token access does not have the required scope or when the user fails operational security                                |
+|       403        | `INVALID_TOKEN_CONTEXT` | Request body is not consistent with access token.                    | Reflect some inconsistency between information in some field of the API and the related OAuth2 Token. This error SHOULD be used only when the scope of the API allows it to explicitly confirm whether or not the supplied identity matches that bound to the Three-Legged Access Token.                             |
 |       403        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API (e.g QoD session cannot be created for a set of users) |
 |       404        |          `NOT_FOUND`          | The specified resource is not found.                                       | Resource is not found                                                                                                                               |
 |       404        |     `IDENTIFIER_NOT_FOUND`    | Device identifier not found.                                               | Some identifier cannot be matched to a device                                                                                                                              |
 |       404        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Specific situation to highlight the resource/concept not found (e.g. use in device)                                                                                     |
+|       409        |        `ABORTED`        | Resource is being modified by another operation. Please wait, and retry if appropriate.      | The resource is undergoing modification by another process                                             |
+|       409        |    `ALREADY_EXISTS`     | The resource that a client tried to create already exists.          | Trying to create an existing resource                                                             |
+|       409        |       `CONFLICT`        | A specified resource duplicate entry found.                         | Duplication of an existing resource (**This Error Code is DEPRECATED**)                                                        |
+|       409        |       `INCOMPATIBLE_STATE`     | Resource must be in AVAILABLE state to extend. Current state is UNAVAILABLE. | Resource (target or referenced) is in incompatible state for the requested operation. Can be applicable for both:<br><li>Target resource state conflicts (e.g., session not in AVAILABLE state for extension)</li><li>Referenced resource state conflicts (e.g., device already has active session)</li>The message should clarify which resource and required state. |
+|       409        |   `{{SPECIFIC_CODE}}`   | `{{SPECIFIC_CODE_MESSAGE}}`                                         | Specific conflict situation that is relevant in the context of the API                                                          |
+|       410        |          `GONE`          | Access to the target resource is no longer available.                                                         | Use in notifications flow to allow API Consumer to indicate that its callback is no longer available                                     |
+|       412        |  `FAILED_PRECONDITION`   | Request cannot be executed in the current system state.                                                       | Indication by the API Server that the request cannot be processed in current system state                                                |
 |       422        |    `UNSUPPORTED_IDENTIFIER`   | The identifier provided is not supported.                                  | None of the provided identifiers is supported by the implementation                                                                                                     |
 |       422        |    `UNNECESSARY_IDENTIFIER`   | The device is already identified by the access token.                      | An explicit identifier is provided when a device or phone number has already been identified from the access token                                                            |
 |       422        |    `SERVICE_NOT_APPLICABLE`   | The service is not available for the provided identifier.                  | Service not applicable for the provided identifier                                                                                                                          |
@@ -296,16 +474,6 @@ In the following, we elaborate on the existing client errors. In particular, we 
 |       422        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Any semantic condition associated to business logic, specifically related to a field or data structure                                                                   |
 |       429        |       `QUOTA_EXCEEDED`        | Out of resource quota.                                                     | Request is rejected due to exceeding a business quota limit                                                                                                                |
 |       429        |      `TOO_MANY_REQUESTS`      | Rate limit reached.                                                        | Access to the API has been temporarily blocked due to rate or spike arrest limits being reached                                                                                                                    |
-
-<font size="3"><span style="color: blue"> Server Exceptions </span></font>
-
-| **Error status** |      **Error code**      | **Message example**                                                                                           | **Scope/description**                                                                                                                    |
-|:----------------:|:------------------------:|---------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
-|       405        |   `METHOD_NOT_ALLOWED`   | The requested method is not allowed/supported on the target resource.                                         | Invalid HTTP verb used with a given endpoint                                                                                             |
-|       406        |     `NOT_ACCEPTABLE`     | The server cannot produce a response matching the content requested by the client through `Accept-*` headers. | API Server does not accept the media type (`Accept-*` header) indicated by API client                                                    |
-|       410        |          `GONE`          | Access to the target resource is no longer available.                                                         | Use in notifications flow to allow API Consumer to indicate that its callback is no longer available                                     |
-|       412        |  `FAILED_PRECONDITION`   | Request cannot be executed in the current system state.                                                       | Indication by the API Server that the request cannot be processed in current system state                                                |
-|       415        | `UNSUPPORTED_MEDIA_TYPE` | The server refuses to accept the request because the payload format is in an unsupported format.              | Payload format of the request is in an unsupported format by the Server. Should not happen                                               |
 |       500        |        `INTERNAL`        | Unknown server error. Typically a server bug.                                                                 | Problem in Server side. Regular Server Exception                                                                                         |
 |       501        |    `NOT_IMPLEMENTED`     | This functionality is not implemented yet.                                                                    | Service not implemented. The use of this code SHOULD be avoided as far as possible to get the objective to reach aligned implementations |
 |       502        |      `BAD_GATEWAY`       | An upstream internal service cannot be reached.                                                               | Internal routing problem in the Server side that blocks to manage the service properly                                                   |
@@ -316,23 +484,25 @@ In the following, we elaborate on the existing client errors. In particular, we 
 
 > _NOTE 2: A {{SPECIFIC_CODE}}, unless it may have traversal scope (i.e. re-usable among different APIs), SHALL follow this scheme for a specific API: {{API_NAME}}.{{SPECIFIC_CODE}}_
 
+> _NOTE 3: Meaning of {{API_NAME}}.{{SPECIFIC_CODE}}. The double curly brackets '{{..}}' represent a placeholder to be replaced with the real values for the exception. `API_NAME` is the value of [`api-name`](#551-api-name) in `SCREAMING_SNAKE_CASE` format while `SPECIFIC_CODE` represents the value agreed for a given API error case scenario, in `SCREAMING_SNAKE_CASE` format as well (e.g. CARRIER_BILLING.PAYMENT_DENIED)._
+
 **Mandatory Errors** to be **documented in CAMARA API Spec YAML** are the following:
 
-- For event subscriptions APIs, the ones defined in Event Subscription section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification.md)
-- For event notifications flow, the ones defined in Event Notification section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification.md)
+- For event subscriptions APIs, the ones defined in Event Subscription section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md)
+- For event notifications flow, the ones defined in Event Notification section of [CAMARA API Event Subscription and Notification Guide](/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md)
 - For the rest of APIs:
   - Error status 401
   - Error status 403
 
 NOTE:
-The documentation of non-mandatory error statuses defined in section 3.1 depends on the specific considerations and design of the given API.
+The documentation of non-mandatory error statuses defined in section 3.2.1 depends on the specific considerations and design of the given API.
  - Error statuses 400, 404, 409, 422, 429: These error statuses SHOULD be documented based on the API design and the functionality involved. Subprojects evaluate the relevance and necessity of including these statuses in API specifications.
  - Error statuses 405, 406, 410, 412, 415, and 5xx: These error statuses are not documented by default in the API specification. However, they SHOULD be included if there is a relevant use case that justifies their documentation.
    - Special Consideration for error 501 NOT IMPLEMENTED to indicate optional endpoint:
      - The use of optional endpoints is discouraged in order to have aligned implementations
      - Only for exceptions where an optional endpoint can not be avoided and defining it in separate, atomic API is not possible - error status 501 SHOULD be documented as a valid response
 
-### 3.2. Error Responses - Device Object/Phone Number
+#### 3.2.2. Error Responses - Device Object/Phone Number
 
 This section provides guidelines for error responses related to the `Device` object or `phoneNumber` field.
 
@@ -342,13 +512,15 @@ The Following table compiles the guidelines to be adopted:
 |:----------:|:---------------------------------------------------------------------------|:----------------:|:------------------------------:|:---------------------------------------------------------|
 |     0      | The request body does not comply with the schema                           |       400        |        INVALID_ARGUMENT        | Request body does not comply with the schema.            |
 |     1      | None of the provided identifiers is supported by the implementation |       422        |     UNSUPPORTED_IDENTIFIER     | The identifier provided is not supported.                                 |
-|     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | Device identifier not found.                             |
+|     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | The identifier is not found.                             |
 |     3      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        |     UNNECESSARY_IDENTIFIER      | The device is already identified by the access token. |
 |     4      | Service not applicable for the provided identifier                         |       422        |     SERVICE_NOT_APPLICABLE     | The service is not available for the provided identifier. |
 |     5      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
 
+`CAMARA_common.yaml` provides these cases as directly referenceable error responses: `IdentifierNotFound404` (case 2), and the subject-flavoured `DeviceIdentifier422` / `PhoneNumberIdentifier422` (cases 1, 3, 4, 5 — the phone number flavour omits `UNSUPPORTED_IDENTIFIER`, which does not apply to a single identifier type). The corresponding examples under `components/examples` come in `_DEVICE` and `_PHONE_NUMBER` wording variants for the identifier codes, so that the message wording matches the subject type.
+
 **NOTE:**
-The `Device` object defined in [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
+The `Device` object defined in [CAMARA_common.yaml](/artifacts/common/CAMARA_common.yaml) allows the API consumer to provide more than one device identifier. This is to allow the API consumer to provide additional information to a given API provider that might be useful for their implementation of the API, or to different API providers who might prefer different identifier types, or might not support all possible device identifiers.
 
 Where an API consumer provides more than one device identifier, it is RECOMMENDED that the API provider include in the response a single device identifier (from those provided) which they are using to fulfil the API. This would apply even if the device identifiers do not all match the same device, as the API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device.
 
@@ -356,12 +528,11 @@ A `DeviceResponse` object is defined for this purpose, but is not mandatory to b
 
 An error MUST NOT be returned when the supplied device identifiers do not match to prevent the API consumer correlating identifiers for a given end user that they may not otherwise know. It is the responsibility of the API consumer to ensure that the identifiers they are using are associated with the same device. If they are unable to do that, only a single identifier SHOULD be provided to the API provider.
 
-#### 3.2.1. Templates
+##### 3.2.2.1. Templates
 
 ##### Response template
 
-A response will group all examples for the same operation and status code.
-Schema is common for all errors.
+This template applies to error responses which are defined locally in the API definition (i.e. not referenced from the common files). A response will group all examples for the same operation and status code. Schema is common for all errors: the `allOf` combines the generic `ErrorInfo` schema with a local restriction of `status` and `code` to the values the API can return for this response.
 
 ```yaml
 description: |
@@ -372,7 +543,7 @@ content:
   application/json:
     schema:
       allOf:
-        - $ref: "#/components/schemas/ErrorInfo"
+        - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
         - type: object
           properties:
             status:
@@ -384,14 +555,16 @@ content:
                 - <code2>
     examples:
       {{case_1}}:
-        $ref: ""#/components/examples/{{case_1}}"
+        $ref: "../common/CAMARA_common.yaml#/components/examples/{{case_1}}"
       {{case_2}}:
-        $ref: ""#/components/examples/{{case_2}}"
+        $ref: "#/components/examples/{{case_2}}"
 ```
+
+Examples for common error codes are referenced from `components/examples` of `CAMARA_common.yaml` (or `CAMARA_event_common.yaml` for subscription-specific codes), as shown for `{{case_1}}`. For identifier-related codes, the example variant matching the API's subject type (`_DEVICE` or `_PHONE_NUMBER`) is referenced. Only examples for API-specific error codes are defined locally, as shown for `{{case_2}}`.
 
 ##### Examples template
 
-One case will be needed per row in the table above, following this template:
+For API-specific error codes, one case will be needed per error case scenario, following this template:
 
 ```yaml
 components:
@@ -405,7 +578,7 @@ components:
         message: {{Message example}}
 ```
 
-### 3.3. Error Responses - Mandatory Template for `info.description` in CAMARA API
+#### 3.2.3. Error Responses - Mandatory Template for `info.description` in CAMARA API
 
 The following template MUST be used as part of the API documentation in the `info.description` property of the CAMARA API specification to provide a common reference for API Consumers, API Developers and API Providers about not documented error responses in case they are supported by a given API implementation.
 
@@ -421,6 +594,18 @@ As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error r
 ```
 
 
+#### 3.2.4. Request Body Strictness - Mandatory Template for `info.description` in CAMARA API
+
+The following template MUST be used as part of the API documentation in the `info.description` property of the CAMARA API specification to declare that the API rejects undeclared JSON properties in request bodies. See [Section 2.3](#23-strictness-of-request-body-schemas) for the underlying rule.
+
+```md
+# Request body strictness
+
+This API rejects requests with JSON request bodies that contain properties not declared in this specification, at any nesting level. Unknown properties result in a `400 INVALID_ARGUMENT` response.
+
+```
+
+
 
 ## 4. Pagination, Sorting and Filtering
 
@@ -429,27 +614,102 @@ To alleviate the above-mentioned issues and concerns, Pagination, Sorting and Fi
 
 ### 4.1. Pagination
 
-Services can answer with a resource or article collections. Sometimes these collections MAY be a partial set due to performance or security reasons. Elements MUST be identified and arranged consistently on all pages. Paging can be enabled by default on the server side to mitigate denial of service or similar attack.
 
-Services MUST accept and use these query parameters when paging is supported:
-- `perPage`: number of resources requested to be provided in the response
-- `page`: requested page number to indicate the start of the resources to be provided in the response (considering perPage page size)
-- `seek`: index of last result read, to create the next/previous number of results. This query parameter is used for pagination in systems with more than 1000 records. `seek` parameter offers finer control than `page` and could be used one or another as an alternative. If both are used in combination (NOT RECOMMENDED) `seek` would mark the index starting from the page number specified by `page` and `perPage` [index = (page * perPage) + seek].
+Services MAY return collections as a partial set due to performance or security constraints. All elements MUST be identified and arranged consistently across all pages — the same query with the same parameters must return the same ordering. Pagination MAY be enabled by default on the server side to mitigate denial-of-service and similar threats.
 
-Services MUST accept and use these headers when paging is supported:
-- `Content-Last-Key`: it allows specifying the key of the last resort provided in the response
-- `X-Total-Count`: it allows indicating the total number of elements in the collection
+#### 4.1.1. Query Parameters
+Services MUST accept the following query parameters on all list endpoints where pagination is supported:
+- `page` (integer, default: 1, minimum: 1) The requested page number. Pages are 1-indexed. Values below 1 MUST be rejected with `400 INVALID_ARGUMENT` error.
+- `perPage`  (integer, default: 20, minimum: 1, maximum: 100) Number of resources to return per page. Values outside the allowed range MUST be rejected with `400 INVALID_ARGUMENT` error. Servers MAY enforce a lower maximum for specific endpoints.
 
-If the server cannot meet any of the required parameters, it SHOULD return an error message.
+#### 4.1.2. Request Headers
+No pagination-specific request headers are required. Pagination is controlled entirely via query parameters.
 
-The HTTP codes that the server will use as a response are:
-- `200`: the response includes the complete list of resources
-- `206`: the response does not include the complete list of resources
-- `400`: request outside the range of the resource list
+#### 4.1.3. Response Body
 
-Petitions examples:
-- `page=0 perPage=20`, which returns the first 20 resources
-- `page=10 perPage=20`, which returns 20 resources from the 10th page (in terms of absolute index, 10 pages and 20 elements per page, means it will start on the 200th position as 10x20=200)
+In paginated response the `pagination` object MUST always be present; `totalCount` and `totalPages` MAY be omitted only where a full count query is prohibitively expensive — this MUST be documented per endpoint.
+
+The example below defines a paginated response schema named `ResourceList`, which includes an `items` array and a required `pagination` object. Note that the names `ResourceList` and `items` are specific to given API.
+
+```yaml
+ResourceList:
+  type: object
+  required:
+    - items
+    - pagination
+  properties:
+    items:
+      type: array
+      items:
+        $ref: "#/components/schemas/Resource"
+    pagination:
+      $ref: "#/components/schemas/Pagination"
+
+Pagination:
+  type: object
+  properties:
+    page:
+      type: integer
+      minimum: 1
+    perPage:
+      type: integer
+      minimum: 1
+      maximum: 100
+    totalCount:
+      type: integer
+      minimum: 0
+    totalPages:
+      type: integer
+      minimum: 0
+```
+
+#### 4.1.4. Response Headers
+
+Services MAY return the following headers on all paginated `200` responses:
+
+**`X-Total-Count`**
+Total number of items in the collection matching the current query, after filters are applied. Mirrors `pagination.totalCount` in the body.
+
+**`X-Total-Pages`**
+Total number of pages. Mirrors `pagination.totalPages` in the body.
+
+**`Link`**
+Navigation links per [RFC 8288](https://www.rfc-editor.org/rfc/rfc8288). MUST include only the rels applicable to the current position (`first`, `prev`, `next`, `last`). All original filter and sort query parameters MUST be preserved in Link URLs.
+```
+Link: <https://api.example.com/v1/resources?page=1&perPage=20>; rel="first",
+      <https://api.example.com/v1/resources?page=2&perPage=20>; rel="prev",
+      <https://api.example.com/v1/resources?page=4&perPage=20>; rel="next",
+      <https://api.example.com/v1/resources?page=5&perPage=20>; rel="last"
+```
+
+
+#### 4.1.5 HTTP Status Codes
+
+| Code | When to use |
+|---|---|
+| `200 OK` | All paginated responses, including empty result sets and out-of-range pages. The response body is always a complete, valid answer to the request. |
+| `400 INVALID_ARGUMENT` | Malformed pagination input: `page` or `perPage` violating type or range constraints (`page=-1`, `perPage=abc`, `perPage=999`). |
+
+
+Both empty result sets and out-of-range page requests MUST return `200` with an empty `items` array. The `pagination` object MUST still be present and accurate so the API Client can self-correct.
+
+```json
+// Request: GET /resources?page=50&perPage=20  (totalPages = 5)
+// HTTP 200 OK
+{
+  "items": [],
+  "pagination": {
+    "page": 50,
+    "perPage": 20,
+    "totalCount": 87,
+    "totalPages": 5,
+
+  }
+}
+```
+
+NOTE: The client receives all information needed to detect the out-of-range condition (`page > totalPages`) and redirect to the last valid page
+
 
 ### 4.2. Sorting
 
@@ -477,7 +737,7 @@ Filtering consists of restricting the number of resources queried by specifying 
 
 Next, it is specified how it should be used according to the filtering based on the type of data being searched for: a number or a date and the type of operation.
 
-Note: Services MAY not support all attributes for filtering.  In case a query includes an attribute for which filtering is not supported, it MAY be ignored by the service.
+NOTE: Services MAY not support all attributes for filtering.  In case a query includes an attribute for which filtering is not supported, it MAY be ignored by the service.
 
 #### 4.3.1. Filtering Security Considerations
 
@@ -612,6 +872,7 @@ info:
   # description explaining the API, part of the API documentation
   # including mandatory text for "Authorization and authentication"
   # including mandatory text for "Additional CAMARA error responses"
+  # including mandatory text for "Request body strictness"
 
 
   description: |
@@ -625,8 +886,8 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  # CAMARA Commonalities minor version - x.y
-  x-camara-commonalities: 0.5
+  # CAMARA Commonalities version
+  x-camara-commonalities: 0.7.0
 ```
 
 #### 5.3.1. Title
@@ -641,7 +902,7 @@ It is NOT RECOMMENDED to link images outside of the Github API repository, since
 ![API Diagram](https://raw.githubusercontent.com/camaraproject/{apiRepository}/main/documentation/API_documentation/resources/diagram.png)
 ```
 
-Some sections are REQUIRED, as defined in [Section 3.3](#33-error-responses---mandatory-template-for-infodescription-in-camara-api), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api)
+Some sections are REQUIRED, as defined in [Section 3.2.3](#323-error-responses---mandatory-template-for-infodescription-in-camara-api), [Section 3.2.4](#324-request-body-strictness---mandatory-template-for-infodescription-in-camara-api), [Section 6.4](#64-mandatory-template-for-infodescription-in-camara-api)
  or [Appendix A](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier).
 
 #### 5.3.3. Version
@@ -662,7 +923,7 @@ license
 ```
 
 #### 5.3.7. Extension Field
-The API SHALL specify the Commonalities minor release number they are compliant to, by including the `x-camara-commonalities` extension field.
+The API SHALL specify the Commonalities release version they are compliant to, by including the `x-camara-commonalities` extension field. The value is the full version string of the Commonalities release used by the API, as stored in `VERSION.yaml` at the corresponding Commonalities release tag (e.g. `0.7.0` for a public release, or `0.7.0-rc.1` for a pre-release).
 
 ### 5.4. ExternalDocs Object
 The `externalDocs` object SHALL have the following content:
@@ -822,13 +1083,36 @@ responses:
     content:
       application/json:
         schema:
-          $ref: "#/components/schemas/<schema-name>"
+          $ref: "#/components/schemas/<success-reponse-schema-name>"
   "4xx":
-    $ref: "#/components/responses/<schema-name>"
+    $ref: "#/components/responses/<4xx-schema-name>"
   "5xx":
-    $ref: "#/components/responses/<schema-name>"
+    $ref: "#/components/responses/<5xx-schema-name>"
 ```
 
+##### 5.7.6.1 Asynchronous responses
+
+An asynchronous response is not truly an event. An event is something that may occur once or multiple times, and it is the occurrence of that event that carries the main information. In contrast, an asynchronous response represents meta-information delivered in the same format as a synchronous response and happens exactly once.
+
+This is the rationale for not using the [CAMARA CloudEvents-based model for event notification](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#3-event-notification) in such scenarios. Instead, it is recommended to use the same response model as in an analogous synchronous scenario. In this context, when an API request initiates an asynchronous process, the server SHOULD respond with the HTTP status code `202 Accepted`. This code indicates that the request has been accepted for processing, but the processing has not been completed yet. The actual response or final result will be delivered asynchronously to the client via the callback URL (sink).
+
+For this case, it is advisable to use the concepts of `sink` and `sinkCredential`, which represent the callback URL and its associated security configuration, respectively, within the API request design. This ensures alignment with CAMARA specifications. These concepts follow the same design rules as the [CAMARA Instance-based (Implicit) Subscription](./CAMARA-API-Event-Subscription-and-Notification-Guide.md#21-instance-based-implicit-subscription) model.
+
+
+When a response schema or field is an array, a `description` property MUST be provided in the `items` object.
+
+
+**Case A:** Response is an array
+
+```yaml
+components:
+  schemas:
+    <success-reponse-schema-name>:
+      type: array
+      items:
+        type: string
+        description: <description>
+```
 
 ### 5.8. Components
 
@@ -876,6 +1160,33 @@ Otherwise, it is OPTIONAL to include the `x-correlator` header in the response w
 When an API client provides an `x-correlator` value not matching the pattern, error `400 - INVALID_ARGUMENT` MUST be returned.
 
 NOTE: HTTP headers are case-insensitive. The use of the naming `x-correlator` is a guideline to align the format across CAMARA APIs.
+
+
+##### Pagination Headers
+As documented in [4.1.4. Response Headers](#414-response-headers)  `X-Total-Count`, `X-Total-Pages` and `Link` MAY be added to paginated response
+
+```yaml
+headers:
+  X-Total-Count:
+    required: false
+    schema:
+      $ref: "#/components/schemas/TotalCount"
+  X-Total-Pages:
+    required: false
+    schema:
+      $ref: "#/components/schemas/TotalPages"
+  Link:
+    required: false
+    description: |
+      Navigation links following RFC 8288.
+      Example:
+        Link: <https://api.example.com/v1/resources?page=1&perPage=20>; rel="first",
+               <https://api.example.com/v1/resources?page=2&perPage=20>; rel="prev",
+               <https://api.example.com/v1/resources?page=4&perPage=20>; rel="next",
+               <https://api.example.com/v1/resources?page=5&perPage=20>; rel="last"
+    schema:
+      type: string
+```
 
 ##### Content-Type Header - clarification
 
@@ -942,15 +1253,12 @@ The following points can serve as a checklist to design the security mechanism o
   Validate the request parameters as the first step before they reach the application logic.
 Implement strong validation checks and immediately reject the request if validation fails.
 In the API response, provide relevant error message.
+This includes rejecting unknown JSON properties in request bodies at any nesting level (see [Section 2.3](#23-strictness-of-request-body-schemas) and [Section 3.2.4](#324-request-body-strictness---mandatory-template-for-infodescription-in-camara-api)).
 
 4. **Sensitive information must not be exposed in the URLs**
 
 Usernames, passwords, session tokens, and API keys SHOULD NOT appear in the URL, as this can be captured in web server logs, making them easily exploitable.
 See section [6.5. POST or GET for transferring sensitive or complex data](#65-post-or-get-for-transferring-sensitive-or-complex-data).
-
-5. **Hashing passwords**.
-
-   Passwords SHOULD never be transmitted in API bodies; however, if it becomes absolutely necessary, they MUST be hashed to protect the system and minimize potential damage in the event of a compromise. Utilizing strong hashing algorithms is crucial for password security. Effective options include Argon2, PBKDF2, bcrypt, and scrypt, which are designed to securely hash passwords and withstand various attack vectors.
 
 For further guidance, please refer to the [OWASP API Security Project](https://owasp.org/www-project-api-security/). This resource offers comprehensive insights and best practices for securing APIs against common vulnerabilities and threats.
 
@@ -1135,8 +1443,8 @@ This allows for both test and commercial usage of initial API versions as they a
 ### 7.3. API Versions Throughout the Release Process
 
 A given API will go through various intermediate and public versions during its life cycle:
-* intermediate versions are created during API version development, indicated by alpha and release-candidate version extensions 
-* various public versions may be created due to updates to a published API 
+* intermediate versions are created during API version development, indicated by alpha and release-candidate version extensions
+* various public versions may be created due to updates to a published API
 
 Overall, during its life cycle, an API can have any of the following versions:
 
@@ -1158,9 +1466,9 @@ The following table gives the values of the API version (Info object) and the AP
 
 The version in the URL is a shorthand of the API version. However, both v0.y.z-rc.1 and v0.y.z+1-rc.1 would be shortened to v0.yrc1 and, for x>0, both vx.y1.z1.0-rc.2 and vx.y2.z2-rc.2 would be shortened to vxrc2.
 
-To avoid such clashes of the version in the URL, both alpha and release-candidate (rc) version extension numbers need to be numbered consecutively across the whole life cycle of an API, including its PATCH versions. 
+To avoid such clashes of the version in the URL, both alpha and release-candidate (rc) version extension numbers need to be numbered consecutively across the whole life cycle of an API, including its PATCH versions.
 
-For example, in the life cycle of a (MAJOR) version 1 of an API, alpha and rc extension numbers will evolve as follows: 
+For example, in the life cycle of a (MAJOR) version 1 of an API, alpha and rc extension numbers will evolve as follows:
 
 | API Version | v1.0.0-alpha.1 | v1.0.0-alpha.2 | v1.0.0-rc.1 | v1.0.0-rc.2 | v1.0.0 | v1.1.0-alpha.3 | v1.1.0-rc.3 | v1.1.0
 | :---: | :---: | :---: | :--: | :--: | :--: | :--: | :--: | :--:
@@ -1215,6 +1523,8 @@ Breaking changes to an API that **DO** affect consumers:
 - Modifying or removing a mandatory parameter in existing operations (resource verbs). For example, when consulting a resource, a certain field is no longer returned. Another example: a field that was previously a string is now numeric.
 - Modifying or adding new responses to existing operations. For example: creating a resource can return a 412 response code.
 
+When adding or tightening schema constraints such as `maxLength`, `maxItems`, `minimum`, or `maximum` on an already published API, the compatibility impact MUST be assessed against the previous public API contract. The change can be treated as backward-compatible when it only makes an already intended or domain-limited constraint machine-readable and does not restrict well-behaving clients; if it newly rejects previously valid requests, narrows the responses that clients could validly receive, or requires new client behavior such as pagination, it is a breaking change. The API change should clearly communicate what changed, why it changed, and why well-behaving clients are not restricted when the change is classified as a clarification.
+
 Compatibility management:
 
 To ensure this compatibility, the following guidelines MUST be applied.
@@ -1223,10 +1533,14 @@ To ensure this compatibility, the following guidelines MUST be applied.
 - Never change an endpoint name; instead, add a new one and mark the original one for deprecation in a MINOR change and remove it in a later MAJOR change (see semver FAQ entry: https://semver.org/#how-should-i-handle-deprecating-functionality)
 - If possible, do the same for attributes
 - New fields should always be added as optional.
-- Postel's Law: “<em>Be conservative in what you do, be liberal in what you accept from others</em>”. When you have input fields that need to be removed, mark them as unused, so they can be ignored.
+- Postel's Law: “<em>Be conservative in what you do, be liberal in what you accept from others</em>”. Apply at the value level (e.g. accepting recoverable value formats) and to field deprecation — when you have input fields that need to be removed, mark them as unused so they can be ignored. This principle does not apply to acceptance of undeclared JSON properties in request bodies, which is governed by [Section 2.3](#23-strictness-of-request-body-schemas) and [Section 3.2.4](#324-request-body-strictness---mandatory-template-for-infodescription-in-camara-api).
 - Do not change the field’s semantics.
 - Do not change the field’s order.
-- Do not change the validation rules of the request fields to more restrictive ones.
+- Do not change the validation rules of the request fields to more restrictive ones. Exception: adopting `additionalProperties: false` on a request body schema, or adding the mandatory [Section 3.2.4](#324-request-body-strictness---mandatory-template-for-infodescription-in-camara-api) template to an existing API, is not considered a breaking change — clients sending undeclared properties were never compliant with the specification. RECOMMEND a minor version bump:
+  - Non-stable APIs (version < v1.0): minor bump (e.g. v0.x → v0.x+1).
+  - Stable APIs (version ≥ v1.0): minor bump (e.g. v1.x → v1.x+1). The URL major version is unchanged.
+
+  Adding a required request body parameter, or removing an existing one, remains a major-version event independent of this rule.
 - If you use collections that can be returned with no content, then answer with an empty collection and not null.
 - Layout pagination support from the start.
 
@@ -1250,7 +1564,7 @@ Make the information available:
 
 When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
 - If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly given that the `sub` will not be a globally unique identifier nor contain PII as per the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#id-token-sub-claim) requirements.
-- If the access token is a Two-Legged Access Token, no User is associated with the token, and hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
+- If the access token is a Two-Legged Access Token, no User is associated with the token, and hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/common/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
 
 If an API provider issues Three-Legged Access Tokens for use with the API, the following error may occur:
 - **Both a Three-Legged Access Token and an explicit User identifier (device or phone number) are provided by the API consumer.**
@@ -1284,7 +1598,7 @@ This API requires the API consumer to identify a [ device | phone number ](*) as
 - When the API is invoked using a two-legged access token, the subject will be identified from the optional [`device` object | `phoneNumber` field](*), which therefore MUST be provided.
 - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
+This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information associated with the access token that was identified during the authentication process.
 
 ## Error handling:
 
@@ -1293,6 +1607,108 @@ This approach simplifies API usage for API consumers using a three-legged access
 - If the subject can be identified from the access token and the optional [`device` object | `phoneNumber` field](*) is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same [ device | phone number ](*) is identified by these two methods, as the server is unable to make this comparison.
 ```
 
+## Appendix B (Informative): `operationId` and `description` Guidelines for MCP and AI Agent Readiness
 
+This appendix is the outcome of the CAMARA MCP Enablement Program – Phase 0. It extends the naming and documentation rules in [5.7.2](#572-operations) and [2.2](#22-data-definitions) with additional, targeted constraints to ensure CAMARA API operations can be reliably selected and invoked by automated consumers, including AI agents and **Model Context Protocol (MCP)** tool-selection pipelines. These consumers rely on the operation object itself — not the top-level `info.description` — to understand what an operation does, when to use it, and how to invoke it correctly.
+Note: Although this appendix is informative, it uses RFC 2119 keywords (MUST, SHOULD, MAY) to indicate the intended normative strength of each rule if and when it is promoted into the main body of this document.
 
+### B.1. `operationId` Naming Rules
 
+While [5.7.2](#572-operations) requires `operationId` to use lowerCamelCase when present, it does not mandate its presence. Since `operationId` is frequently used by tooling and automated systems as the primary handle to select and invoke an operation — and an operation without one generally cannot be used by such consumers — the following rules apply, beginning with an explicit presence requirement:
+
+- `operationId` MUST be present on every operation.
+- `operationId` MUST be in lowerCamelCase format and MUST NOT exceed 64 characters in length. This ensures compatibility with most code generators and vendor tooling limits. (These requirements are formally expressed by the regular expression: `^[a-z][a-zA-Z0-9]{0,63}$`.)
+- `operationId` MUST follow the shape `<verb><Noun>[<Qualifier>]`, for example:
+  - `createSession` (verb + noun)
+  - `getDeviceLocation` (verb + compound noun)
+  - `deleteSessionById` (verb + noun + qualifier)
+
+  The `<Noun>` represents the core resource, entity, or concept being acted upon — and MAY be a compound noun (e.g., `DeviceLocation`, `UserProfile`) formed from multiple domain terms.
+
+  The `<Qualifier>` is optional and SHOULD primarily serve to disambiguate two operations that would otherwise share the same `<verb><Noun>`, or to make the operation's scope explicit (e.g., `retrieveSessionsByDevice`). When the qualifier disambiguates on an identifying parameter, it SHOULD take the form `By<Param>` (e.g., `deleteSessionById`). Otherwise, it SHOULD be a single PascalCase noun or short noun phrase appended directly to `<Noun>`.
+  
+- `operationId` MUST NOT be prefixed with `post`, `put`, or `patch`. (`get` and `delete` are ordinary English verbs describing the operation's action and are not considered HTTP-method leakage.)
+  This avoids duplicating information already present in the OpenAPI `path`/`method` pair and adds no disambiguation value for automated selection.
+- `operationId` MUST NOT include a version marker such as `V1`, `_v1`, `v2`, or similar. Versioning belongs in the API path (e.g., `/v1/sessions`) or headers, not in the operation identifier.
+- Within a single API document, designers SHOULD use one consistent read verb per retrieval style: `get` for reading resources via `GET`, and `retrieve` for POST-based queries as defined in [6.5. POST or GET for Transferring Sensitive or Complex Data](#65-post-or-get-for-transferring-sensitive-or-complex-data), mirroring the `retrieve-*` verb path. Synonyms such as `read` or `fetch` SHOULD NOT be used in their place.
+- `operationId` MUST be unique within the API document, as required by the OpenAPI specification.
+
+#### Proposal: Approved Verb List
+
+Verbs used in `operationId` SHOULD be restricted to the list below. Any verb not present in the list MUST be submitted for formal review through a GitHub issue in the Commonalities repository before it may be used.
+
+**CRUD Core Verbs** (replace vague synonyms):
+- `create` — Instantiate a new resource. Replaces: `add`, `new`, `insert`, `post`.
+- `get` — Fetch a single resource by identity. Replaces: `fetch`, `read`, `find`.
+- `retrieve` — Fetch a single resource using POST-based queries. Replaces: `fetch`, `read`, `find`.
+- `list` — Fetch a collection, optionally filtered. Replaces: `getAll`, `fetchAll`, `search` (when browsing).
+- `update` — Modify an existing resource, fully or partially. Replaces: `edit`, `modify`, `patch`, `put`.
+- `delete` — Remove a resource permanently. Replaces: `remove`, `destroy`, `drop`.
+
+**Action Verbs** (for non-CRUD operations):
+- `check` — Evaluate a condition or status and return a result without side effects (e.g., `checkSimSwap`).
+- `verify` — Confirm that provided data matches operator records (e.g., `verifyLocation`, `verifyNumber`).
+- `send` — Dispatch a message, notification, or payload.
+- `submit` — Hand off for processing (e.g., forms, orders, applications).
+- `cancel` — Abort an in-progress or future operation.
+- `enable` / `disable` — Toggle active state.
+- `validate` — Check structural or syntactic correctness without side effects.
+
+This list is intentionally short and based on verbs in actual use across CAMARA APIs; it is expected to grow through the review process described above.
+
+**Discouraged Verbs** (SHOULD NOT be used):
+- `process` — too vague; does not convey what the operation does.
+- `handle` — internal/implementation language, not semantic.
+- `manage` — a catch-all with no meaning to an agent.
+- `do`, `run`, `execute`, `perform`, `trigger` — no accompanying noun can make these specific enough.
+- `get*Data` patterns (e.g., `getInvoiceData`) — the `Data` suffix adds noise; use `getInvoice` instead.
+
+Note:  The rules in this section apply to path operations only (i.e., operations defined under the OpenAPI `paths` object). Callback `operationId`s — such as the `postNotification` used in CAMARA notification callback definitions, which are implemented by the API consumer and never exposed as tools — are **out of scope** and not subject to these rules.
+
+### B.2. Operation `description` Completeness Rules
+
+Automated consumers (e.g., AI agents, MCP clients) typically evaluate operations using only the operation object — its `description`, `parameters`, `requestBody`, and `responses` — not the global `info.description`. The following rules ensure operations remain self-contained for this purpose.
+
+- Operation `description` MUST be present and non-empty.
+- Operation `description` MUST NOT be verbatim identical to `summary`.
+- The description MUST contain all information a tool-selecting consumer needs to:
+  - Decide whether to invoke the operation (*When to use*),
+  - Distinguish it from similar operations (*Differences*),
+  - Understand what it does (*Side effects*).
+
+- This information MUST be reachable from the operation object — via its `description`, parameters, and schemas — and MUST NOT rely exclusively on `info.description`.
+  - `info.description` may still provide valuable context (e.g., authentication flow, error-handling philosophy, rate limits), but the *operational essentials* must be self-contained.
+  - Additional information in the operation `description` that is primarily intended for human readers rather than automated consumers SHOULD, if present, be placed at the end of the description. This makes it easier to ignore or strip such content when processing the operation for tool selection. Descriptions also contribute directly to the token size of generated tool definitions, so designers SHOULD keep them concise and avoid restating information already conveyed by parameter and response schemas.
+
+#### Proposal: Operation `description` Template
+To help satisfy this rule, API designers MAY structure the operation description using the following template:
+```yaml
+description: |
+  {{Action}} {{core noun or concept}}.
+  {{Use this to... / Call this when... / Use this for...}}
+  {{Only mention side effects if they exist.}}
+  {{Any non-obvious requirements or context needed.}}
+```
+Example:
+```yaml
+description: |
+  Returns the current geographical location of a device.
+  Use this to get position information.
+```
+This template is not mandatory. It may be adapted, shortened, or omitted where the operation’s purpose is already unambiguous from its `operationId`, parameter names, and response schema — for example, simple, side-effect-free, parameter-light operations like `getHealth` or `getRoamingStatus`.
+In such cases, a brief description such as `"Returns the service health status"` or `"Returns the current roaming status and the country information"` is sufficient.
+
+### B.3. Property `description` Completeness Rules for Enums
+
+Building on the existing requirement in [2.2](#22-data-definitions) that every schema property must have a `description`, this section adds guidance for enums whose values are not self-explanatory to an automated consumer.
+
+Where enum values are not evident from their name alone (e.g., domain- or context-specific codes like `STATUS_OK`, `ERR_AUTH_FAIL`, or `STATE_PENDING`), the enum’s `description` SHOULD explain the meaning of each value using a markdown *bullet list*, with one bullet per value:
+```
+description: |
+  Result of the verification:
+  - `TRUE`: the provided data matches
+  - `FALSE`: the provided data does not match
+  - `UNKNOWN`: the match could not be determined
+```
+
+This format is OPTIONAL for self-evident enums (e.g., `true`/`false`, `red`/`green`/`blue`, `open`/`closed`), but is strongly encouraged where ambiguity could lead to misinterpretation by tools or agents.

@@ -1,0 +1,534 @@
+# NOTE: This is a template. Replace all occurrences of "sample-implicit-events"
+# (and its Title Case variant) with the actual API name in the appropriate casing.
+#
+# This template demonstrates event notifications via OpenAPI `callbacks:` on a
+# resource-creation operation (the implicit-subscription pattern), where the
+# consumer supplies a callback `sink` inline as part of creating a resource.
+# There is no dedicated `/subscriptions` sub-API.
+#
+# For the explicit-subscription pattern with full subscription CRUD, see
+# `sample-service-subscriptions.yaml`.
+openapi: 3.0.3
+info:
+  title: Sample Implicit Events
+  description: |
+    Template for a CAMARA API that delivers event notifications via OpenAPI
+    `callbacks:` on a resource-creation operation (implicit-subscription pattern).
+
+    The consumer provides an HTTPS `sink` (and optionally `sinkCredential`) as
+    part of the resource creation request. The API provider then delivers events
+    related to that resource to the supplied sink, using the CloudEvents format.
+    There is no separate subscription resource and no subscription lifecycle
+    management — the notification lifetime is bound to the resource lifetime.
+
+    Additional information is provided in the
+    [CAMARA API Event Subscription and Notification Guide](https://github.com/camaraproject/Commonalities/blob/main/documentation/CAMARA-API-Event-Subscription-and-Notification-Guide.md).
+
+    Note on event name convention: the event type name MUST follow: ``org.camaraproject.<api-name>.<event-version>.<event-name>``
+
+    Note on ``security`` - ``openId`` scope: The scope values must be replaced accordingly to the format defined in the guideline document.
+
+    What follows are the mandatory CAMARA `info.description` content blocks, each bracketed by `<!-- CAMARA:MANDATORY:<name>:BEGIN/END -->` HTML comments (invisible in rendered documentation). The reference text lives in `code/common/info-description-templates.yaml` (synced from Commonalities); copy each block as-is from there. The Appendix A block (`identifying-device-from-access-token` shown below) is opt-in — swap to `identifying-phone-number-from-access-token` if your API uses `phoneNumber` as the subject identifier, or remove it if the access-token-subject pattern does not apply.
+
+    > In case of conflict, the authoritative source (API Design Guide for §3.2.3 / §3.2.4 / Appendix A; the ICM authorization-and-authentication template) takes precedence. This disclaimer applies to the mandatory texts and to any other content in this sample.
+
+    <!-- CAMARA:MANDATORY:identifying-device-from-access-token:BEGIN -->
+
+    # Identifying the device from the access token
+
+    This API requires the API consumer to identify a device as the subject of the API as follows:
+    - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
+    - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
+
+    This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information associated with the access token that was identified during the authentication process.
+
+    ## Error handling:
+
+    - If the subject cannot be identified from the access token and the optional `device` object is not included in the request, then the server will return an error with the `422 MISSING_IDENTIFIER` error code.
+
+    - If the subject can be identified from the access token and the optional `device` object is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same device is identified by these two methods, as the server is unable to make this comparison.
+    <!-- CAMARA:MANDATORY:identifying-device-from-access-token:END -->
+
+    <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
+
+    # Authorization and authentication
+
+    The "Camara Security and Interoperability Profile" provides details of how an API consumer requests an access token. Please refer to Identity and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the profile.
+
+    The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the API consumer and the API provider, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
+
+    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
+    <!-- CAMARA:MANDATORY:authorization-and-authentication:END -->
+
+    <!-- CAMARA:MANDATORY:additional-error-responses:BEGIN -->
+
+    # Additional CAMARA error responses
+
+    The list of error codes in this API specification is not exhaustive. Therefore the API specification MAY not document some non-mandatory error statuses as indicated in `CAMARA API Design Guide`.
+
+    Please refer to the `CAMARA_common.yaml` of the Commonalities Release associated to this API version for a complete list of error responses. The applicable Commonalities Release can be identified in the `API Readiness Checklist` document associated to this API version.
+
+    As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
+    <!-- CAMARA:MANDATORY:additional-error-responses:END -->
+
+    <!-- CAMARA:MANDATORY:request-body-strictness:BEGIN -->
+
+    # Request body strictness
+
+    This API rejects requests with JSON request bodies that contain properties not declared in this specification, at any nesting level. Unknown properties result in a `400 INVALID_ARGUMENT` response.
+    <!-- CAMARA:MANDATORY:request-body-strictness:END -->
+
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: wip
+  x-camara-commonalities: wip
+
+externalDocs:
+  description: Product documentation at CAMARA
+  url: https://github.com/camaraproject/APIRepositoryName
+  # APIRepositoryName MUST be replaced by the CAMARA Subproject Repository name where the API design based on this template is hosted.
+servers:
+  - url: "{apiRoot}/sample-implicit-events/vwip"
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+tags:
+  - name: Resources
+    description: Operations on sample resources that emit event notifications.
+
+security:
+  - openId:
+      - sample-implicit-events:resource:read
+      - sample-implicit-events:resource:write
+
+paths:
+  /resources:
+    post:
+      tags:
+        - Resources
+      summary: Create a resource
+      description: |
+        Creates a new resource with the provided properties. If the request
+        includes the `sink` (and optionally `sinkCredential`) property, the API
+        provider will deliver event notifications related to this resource to
+        the supplied sink for as long as the resource exists.
+
+        If `sink` is provided but the API provider does not support notification
+        delivery, the request MUST be rejected with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED`
+        and the resource MUST NOT be created. The consumer can then retry without
+        `sink` (e.g. fall back to polling via `GET /resources/{resourceId}`).
+      operationId: createResource
+      parameters:
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResource"
+      callbacks:
+        notifications:
+          "{$request.body#/sink}":
+            post:
+              summary: "notifications callback"
+              description: |
+                Important: this endpoint is to be implemented by the API consumer.
+                The sample service server will call this endpoint whenever a
+                sample service event occurs for a resource whose creation
+                request registered a `sink`.
+                `operationId` value will have to be replaced accordingly with
+                WG API specific semantic.
+              operationId: postNotification
+              parameters:
+                - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+              requestBody:
+                required: true
+                content:
+                  application/cloudevents+json:
+                    schema:
+                      $ref: "#/components/schemas/ApiNotificationEvent"
+              responses:
+                "204":
+                  description: Successful notification
+                  headers:
+                    x-correlator:
+                      $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+                "400":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
+                "401":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
+                "403":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+                "410":
+                  $ref: "../common/CAMARA_event_common.yaml#/components/responses/SinkGone410"
+                "429":
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/TooManyRequests429"
+              security:
+                - {}
+                - notificationsBearerAuth: []
+
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+        "400":
+          $ref: "#/components/responses/CreateResourceBadRequest400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+        "409":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/AlreadyExists409"
+        "422":
+          $ref: "#/components/responses/CreateResourceUnprocessableEntity422"
+        "429":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/TooManyRequests429"
+    get:
+      tags:
+        - Resources
+      summary: List resources
+      description: Returns a list of all resources accessible to the API consumer.
+      operationId: listResources
+      parameters:
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      responses:
+        "200":
+          description: List of resources
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 0
+                maxItems: 1000
+                items:
+                  $ref: "#/components/schemas/Resource"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+  /resources/{resourceId}:
+    get:
+      tags:
+        - Resources
+      summary: Get a resource by ID
+      description: Returns the details of a specific resource identified by its ID.
+      operationId: getResource
+      parameters:
+        - $ref: "#/components/parameters/ResourceId"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      responses:
+        "200":
+          description: Resource details
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+        "404":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
+    delete:
+      tags:
+        - Resources
+      summary: Delete a resource
+      description: |
+        Deletes a specific resource identified by its ID. If the resource was
+        created with a `sink`, no further event notifications will be delivered
+        to that sink after deletion completes.
+      operationId: deleteResource
+      parameters:
+        - $ref: "#/components/parameters/ResourceId"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+      responses:
+        "204":
+          description: Resource deleted
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+        "400":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/BadRequest400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Unauthenticated401"
+        "403":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
+        "404":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
+
+components:
+  securitySchemes:
+    openId:
+      $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
+    notificationsBearerAuth:
+      $ref: "../common/CAMARA_event_common.yaml#/components/securitySchemes/notificationsBearerAuth"
+
+  parameters:
+    ResourceId:
+      name: resourceId
+      in: path
+      required: true
+      description: Identifier of the resource to operate on
+      schema:
+        $ref: "#/components/schemas/ResourceId"
+
+  responses:
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Resource-creation error responses (API-specific, locally defined)
+    #
+    # API authors: rename to `Create<Resource>BadRequest400` and
+    # `Create<Resource>UnprocessableEntity422` to match the resource being
+    # created, and adjust the `code` enum and `examples` to the codes that
+    # actually apply to the API. Reference the shared examples from
+    # `CAMARA_common.yaml` / `CAMARA_event_common.yaml` so the error wording
+    # stays consistent; for identifier-related codes pick the `_DEVICE` or
+    # `_PHONE_NUMBER` example variant matching the API's subject type
+    # (`_DEVICE` shown here).
+    # ─────────────────────────────────────────────────────────────────────────
+
+    CreateResourceBadRequest400:
+      description: Problem with the client request
+      headers:
+        x-correlator:
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+                      - OUT_OF_RANGE
+                      - INVALID_PROTOCOL
+                      - INVALID_CREDENTIAL
+                      - INVALID_TOKEN
+                      - INVALID_SINK
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_400_INVALID_ARGUMENT"
+            GENERIC_400_OUT_OF_RANGE:
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_400_OUT_OF_RANGE"
+            GENERIC_400_INVALID_PROTOCOL:
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_PROTOCOL"
+            GENERIC_400_INVALID_CREDENTIAL:
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_CREDENTIAL"
+            GENERIC_400_INVALID_TOKEN:
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_TOKEN"
+            GENERIC_400_INVALID_SINK:
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_SINK"
+
+    CreateResourceUnprocessableEntity422:
+      description: Unprocessable Entity
+      headers:
+        x-correlator:
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 422
+                  code:
+                    enum:
+                      - SERVICE_NOT_APPLICABLE
+                      - MISSING_IDENTIFIER
+                      - UNSUPPORTED_IDENTIFIER
+                      - UNNECESSARY_IDENTIFIER
+                      - PRIVATE_KEY_JWT_NOT_CONFIGURED
+                      - EVENT_NOTIFICATIONS_NOT_SUPPORTED
+          examples:
+            GENERIC_422_SERVICE_NOT_APPLICABLE:
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_422_SERVICE_NOT_APPLICABLE"
+            GENERIC_422_MISSING_IDENTIFIER_DEVICE:
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_422_MISSING_IDENTIFIER_DEVICE"
+            GENERIC_422_UNSUPPORTED_IDENTIFIER_DEVICE:
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_422_UNSUPPORTED_IDENTIFIER_DEVICE"
+            GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE:
+              $ref: "../common/CAMARA_common.yaml#/components/examples/GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE"
+            GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED"
+            GENERIC_422_EVENT_NOTIFICATIONS_NOT_SUPPORTED:
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_422_EVENT_NOTIFICATIONS_NOT_SUPPORTED"
+
+  schemas:
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Resource schemas (API-specific)
+    #
+    # CreateResource carries the notification opt-in fields `sink` and
+    # `sinkCredential` as flat top-level properties — the established
+    # convention across existing implicit-subscription CAMARA APIs.
+    # Omitting both creates the resource without any event notifications.
+    #
+    # Resource (response) echoes `sink` and may return `sinkCredential`, but limited to non-secret metadata only (e.g., `credentialType`)
+    # — credentials are never returned to the consumer.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    ResourceId:
+      type: string
+      format: uuid
+      maxLength: 36
+      description: Unique identifier for the resource
+
+    CreateResource:
+      description: Properties for creating a new resource
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          maxLength: 128
+          description: Human-readable name for the resource
+        device:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/Device"
+        sink:
+          description: |
+            The HTTPS URL where event notifications for this resource will be
+            delivered. Omit this field (and `sinkCredential`) to create the
+            resource without event notifications.
+
+            If provided, the API provider SHOULD support event delivery. If
+            notification delivery is not supported, the request MUST be rejected
+            with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED` and the resource MUST NOT
+            be created.
+          allOf:
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
+        sinkCredential:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
+
+    Resource:
+      description: A resource managed by the API
+      type: object
+      required:
+        - resourceId
+        - name
+      properties:
+        resourceId:
+          $ref: "#/components/schemas/ResourceId"
+        name:
+          type: string
+          maxLength: 128
+          description: Human-readable name for the resource
+        device:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/Device"
+        sink:
+          description: |
+            The sink URL registered for notifications on this resource, if any.
+            Present in the response whenever `sink` was provided in the creation request.
+            `sinkCredential` may be returned in responses, but limited to non-secret metadata only (e.g., `credentialType`).
+          allOf:
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
+        sinkCredential:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # API-specific event type enum (contains sample-implicit-events placeholders)
+    # ─────────────────────────────────────────────────────────────────────────
+
+    ApiEventType:
+      type: string
+      description: |
+        Enum of API-specific event type strings for this API project.
+        The reverse-DNS prefix `org.camaraproject.<api-name>` makes each value
+        globally unique, so two different API groups can independently define
+        identically-named event types without any collision risk.
+      enum:
+        - org.camaraproject.sample-implicit-events.v0.event-type1
+        - org.camaraproject.sample-implicit-events.v0.event-type2
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # API-specific notification event group
+    #
+    # Extends CloudEvent via allOf and does exactly two things:
+    #   1. Constrains `type` to its own ApiEventType enum
+    #   2. Owns the discriminator mapping from each enum value to a concrete schema
+    #
+    # Adding a new event type requires only: adding a value to ApiEventType and
+    # adding a discriminator mapping entry here. CloudEvent is never touched.
+    #
+    # Unlike the explicit-subscription template, this template intentionally
+    # does NOT define a SubscriptionLifecycleEvent group or a NotificationEvent
+    # oneOf wrapper. The implicit-subscription pattern has no subscription
+    # object and therefore no subscription lifecycle events, so ApiNotificationEvent
+    # is the sole schema at the callback endpoint. An API that later needs a
+    # second event group can introduce a NotificationEvent oneOf wrapper at
+    # that point — see `sample-service-subscriptions.yaml` for the two-group
+    # pattern.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    ApiNotificationEvent:
+      description: |
+        API-specific notification event group.
+        Extends the CloudEvent envelope and constrains `type` to the set of
+        event types defined by this API project.
+        Adding a new event type only requires updating ApiEventType and the
+        discriminator mapping below — the CloudEvent base never changes.
+      allOf:
+        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            type:
+              $ref: "#/components/schemas/ApiEventType"
+      discriminator:
+        propertyName: "type"
+        mapping:
+          org.camaraproject.sample-implicit-events.v0.event-type1: "#/components/schemas/EventApiSpecific1"
+          org.camaraproject.sample-implicit-events.v0.event-type2: "#/components/schemas/EventApiSpecific2"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Concrete event schemas — API-specific (API project-owned)
+    # ─────────────────────────────────────────────────────────────────────────
+
+    EventApiSpecific1:
+      description: event structure for event-type event 1
+      allOf:
+        - $ref: "#/components/schemas/ApiNotificationEvent"
+        - type: object
+          properties:
+            data:
+              type: object
+              description: |
+                Event-specific payload for event-type1.
+                Replace with the actual data schema for this event type.
+
+    EventApiSpecific2:
+      description: event structure for event-type event 2
+      allOf:
+        - $ref: "#/components/schemas/ApiNotificationEvent"
+        - type: object
+          properties:
+            data:
+              type: object
+              description: |
+                Event-specific payload for event-type2.
+                Replace with the actual data schema for this event type.

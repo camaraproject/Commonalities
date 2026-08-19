@@ -25,6 +25,7 @@ For general API design guidelines, please refer to [CAMARA API Design Guide](/do
   - [4.1. Scope Naming](#41-scope-naming)
   - [4.2. Abuse Protection](#42-abuse-protection)
   - [4.3. Notifications Security Considerations](#43-notifications-security-considerations)
+- [Appendix A: Notification authentication flows](#appendix-a-Notification-authentication-flows)
 
 <!-- /TOC -->
 
@@ -58,23 +59,44 @@ The subscription terminates with the managed entity.
 
 Providing this capability is OPTIONAL for any CAMARA API depending on UC requirements.
 
-If this capability is present in CAMARA API, the following attributes MUST be used in the POST request :
+If this capability is present in CAMARA API, the following attribute names MUST be used in the POST request:
 
 | attribute name | type   | attribute description                                                                                                                                                                                                                                                                                       | cardinality |
 |----------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
-| sink           | string | https callback address where the notification must be POST-ed, `format: uri` SHOULD be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).  The [security considerations](#43-notifications-security-considerations) SHOULD be followed.                | mandatory   |
+| sink           | string | https callback address where the notification must be POST-ed, `format: uri` SHOULD be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).  The [security considerations](#43-notifications-security-considerations) SHOULD be followed.                | optional   |
 | sinkCredential | object | Sink credential provides authentication or authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. It is RECOMMENDED for subscription consumer to provide credential to protect notification endpoint. | optional    |
 
-Several types of `sinkCredential` could be available in the future, but for now only access token credential is managed.
+**NOTE**: To request the Implicit Subscription mode, `sink` attribute MUST be provided within the API request body.
 
-``sinkCredential`` attributes table (MUST be access token for now):
+Several types of `sinkCredential` could be available in the future, but for now only access token and private key JWT credentials are managed.
 
-| attribute name       | type             | attribute description                                                          | cardinality |
-|----------------------|------------------|--------------------------------------------------------------------------------|-------------|
-| credentialtype       | string           | Type of the credential - MUST be set to `ACCESSTOKEN` for now                  | mandatory   |
-| accessToken          | string           | Access Token granting access to the POST operation to create notification      | mandatory   |
-| accessTokenExpireUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory   |
-| accessTokenType      | string           | Type of access token - MUST be set to `Bearer` for now                         | mandatory   |
+``sinkCredential`` attributes table:
+
+| attribute name       | type             | attribute description                                                             | cardinality |
+|----------------------|------------------|-----------------------------------------------------------------------------------|-------------|
+| credentialType       | string           | Type of the credential - MUST be set to `ACCESSTOKEN` or  `PRIVATE_KEY_JWT`        | mandatory   |
+| accessToken          | string           | Access Token granting access to send events related to the implicit subscription. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Not returned in the response  | optional    |
+| accessTokenExpiresUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Returned in the response   | optional    |
+| accessTokenType      | string           | Type of access token - MUST be set to `bearer` for now. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Not returned in the response                            | optional    |
+| clientId             | string           | The client ID used to authenticate when requesting an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
+| tokenUri             | string           | The URI where to request an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
+| jwksUri              | string           | The URI used to request the public key to verify that the JWT assertion was signed by `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Not needed in the request. Optional in the response  | optional    |
+
+**Sink delivery behaviour**
+
+When `sink` is provided in the POST request, the following rules apply:
+- API providers SHOULD implement event delivery support. If a request includes `sink` and the API provider does not support notification delivery (i.e. the implicit subscription feature is not implemented by this API provider), the request MUST be rejected with 422 EVENT_NOTIFICATIONS_NOT_SUPPORTED and the resource MUST NOT be created.
+- When event delivery is accepted, `sink` MUST be echoed in the response.
+- The implementation MUST NOT silently create the resource while ignoring the requested `sink`. If event delivery is unavailable, the consumer MUST be informed via the error response, so they can retry without `sink` (e.g. fall back to a polling pattern via `GET /<resource>`).
+
+These rules apply to CAMARA APIs targeting Commonalities r4.4 and later. APIs targeting earlier Commonalities versions are unaffected.
+
+- An API newly adopting the implicit subscription model MUST follow the behaviour described above.
+- For an API that already offers the implicit subscription model, whether to document `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED` is that API's own decision:
+  - An API that allows implementations without notification delivery adds the error code to its API definition. This is a breaking change per [Section 7.4. Backward and Forward Compatibility](/documentation/CAMARA-API-Design-Guide.md#74-backward-and-forward-compatibility) of the CAMARA API Design Guide, so a new major version is required.
+  - An API that expects every implementation to deliver event notifications adds nothing and stays as it is. Implementations of such an API MUST deliver event notifications when `sink` is provided.
+
+A sample OpenAPI template for the implicit-subscription pattern is available in [Commonalities/artifacts/api-templates](/artifacts/api-templates/) directory (`sample-implicit-events.yaml`), with common event schemas in [Commonalities/artifacts/common](/artifacts/common/) (`CAMARA_event_common.yaml`).
 
 #### 2.1.1. Instance-based (Implicit) Subscription Example
 
@@ -86,7 +108,7 @@ Illustration with bearer access token (Resource instance representation):
   "sinkCredential": {
     "credentialType": "ACCESSTOKEN",
     "accessToken" : "eyJ2ZXIiOiIxLjAiLCJ0eXAiOiJKV1QiL..",
-    "accessTokenExpireUtc" : "2024-12-06T14:37:56.147Z",
+    "accessTokenExpiresUtc" : "2024-12-06T14:37:56.147Z",
     "accessTokenType" : "bearer"
     }
 }
@@ -103,7 +125,7 @@ but the 'eventType' attribute is used to distinguish distinct events subscribed.
 To ease developer adoption,
 the pattern for Resource-based event subscription SHOULD be consistent with all API providing this feature.
 
-CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/cesql/v-1.0.0/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents/) directory (event-subscription-template.yaml).
+CAMARA subscription model leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [0.1-wip](https://github.com/cloudevents/spec/blob/cesql/v-1.0.0/subscriptions/spec.md) as it is a vendor-neutral specification for defining the format of subscription. A generic neutral CloudEvent subscription OpenAPI specification is available in [Commonalities/artifacts/api-templates](/artifacts/api-templates/) directory (`sample-service-subscriptions.yaml`), with common event schemas in [Commonalities/artifacts/common](/artifacts/common/) (`CAMARA_event_common.yaml`).
 
 To ensure consistency across Camara subprojects, it is necessary that explicit subscriptions are handled within separate API/s. It is mandatory to append the keyword "subscriptions" at the end of the API name. For e.g. device-roaming-subscriptions.yaml
 
@@ -151,26 +173,29 @@ The following table provides `/subscriptions` attributes
 | name           | type               | attribute description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | cardinality                  |
 |----------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------|
 | protocol       | string             | Identifier of a delivery protocol for the event notifications. The values follow the definitions of the [CloudEvent specification](https://github.com/cloudevents/spec/blob/main/subscriptions/spec.md#protocol). **Only** `HTTP` **is allowed for now**.                                                                                                                                                                                                                                                                                | mandatory                    |
-| sink           | string             | The URL, to which event notifications shall be sent - `format: uri` SHOULD be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986). The URI-scheme SHALL be set according to the definition of the `protocol` value, e.g. the URI-scheme is `https` when `HTTP`is the value of the `protocol` property. The [security considerations](43#notifications-security-considerations) SHOULD be followed.                                                                                 | mandatory                    |
-| sinkCredential | object             | Sink credential provides authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. To protect the notification endpoint providing sinkCredential is RECOMMENDED. <br> The sinkCredential MUST NOT be present in `POST` and `GET` responses.                                                                                                                                                                                       | optional                     |
+| sink           | string             | The URL, to which event notifications shall be sent - `format: uri` SHOULD be used to require a string that is compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986). The URI-scheme SHALL be set according to the definition of the `protocol` value, e.g. the URI-scheme is `https` when `HTTP`is the value of the `protocol` property. The [security considerations](43#notifications-security-considerations) SHOULD be followed.                                                                           | mandatory                    |
+| sinkCredential | object             | Sink credential provides authorization information necessary to enable delivery of events to a target. In order to be updated in future this object is polymorphic. See detail below. To protect the notification endpoint providing sinkCredential is RECOMMENDED. The sinkCredential MAY be present in `POST` and `GET` responses, but limited to non-secret metadata only (e.g., `credentialType`).                                                                                                                                   | optional                     |
 | types          | SubscriptionEventType | Type of event subscribed. This attribute MUST be present in the `POST` request. It is REQUIRED by API project to provide an enum for this attribute. The event type MUST follow the format: `org.camaraproject.<api-name>.<event-version>.<event-name>` - see chapter [2.3. Event versioning](#23-event-versioning) - Note: An array of types could be passed. The decision to use multiple event types in a single subscription will be made at the API level. | mandatory                    |
-| config         | object             | Implementation-specific configuration parameters needed by the subscription manager for acquiring events. In CAMARA we have predefined attributes like ``subscriptionExpireTime``, ``subscriptionMaxEvents`` or ``initialEvent``. See detail below.                                                                                                                                                                                                                                                                                      | mandatory                    |
-| id             | string             | Identifier of the event subscription - This attribute MUST NOT be present in the POST request as it is provided by API server                                                                                                                                                                                                                                                                                                                                                                                                            | mandatory in server response |
-| startsAt       | string - date-time | Date when the event subscription will begin/began. This attribute MUST NOT be present in the `POST` request as it is provided by API server. It MUST be present in `GET` endpoints                                                                                                                                                                                                                                                                                                                                                       | optional                     |
-| expiresAt      | string - date-time | Date when the event subscription will expire. This attribute MUST NOT be present in the `POST` request as it is provided (optionally) by API server. This attribute MUST be provided by the server if subscriptionExpireTime is provided in the request and server is not able to handle it.                                                                                                                                                                                                                                                                                                                                                                                 | optional                     |
-| status         | string             | Current status of the subscription - Management of Subscription state engine is not mandatory for now. Note: not all statuses MAY be considered to be implemented. See below status table.                                                                                                                                                                                                                                                                                                                                               | optional                     |
+| config         | object                | Implementation-specific configuration parameters needed by the subscription manager for acquiring events. In CAMARA we have predefined attributes like ``subscriptionExpireTime`` and ``subscriptionMaxEvents`` (defined in `ConfigBase`), and ``initialEvent`` (predefined, but declared in the API project's own `Config` schema — MAY be omitted). See details below.                                                                                                                                                                                                                                                                                      | mandatory                    |
+| id             | string                | Identifier of the event subscription - This attribute MUST NOT be present in the POST request as it is provided by API server                                                                                                                                                                                                                                                                                                                                                                                                            | mandatory in server response |
+| startsAt       | string - date-time    | Date when the event subscription will begin/began. This attribute MUST NOT be present in the `POST` request as it is provided by API server. It MUST be present in `GET` endpoints                                                                                                                                                                                                                                                                                                                                                       | optional                     |
+| expiresAt      | string - date-time    | Date when the event subscription will expire. This attribute MUST NOT be present in the `POST` request as it is provided (optionally) by API server. This attribute MUST be provided by the server if subscriptionExpireTime is provided in the request and server is not able to handle it.                                                                                                                                                                                                                                                                                                                                                                                 | optional                     |
+| status         | string                | Current status of the subscription - Management of Subscription state engine is not mandatory for now. Note: not all statuses MAY be considered to be implemented. See below status table.                                                                                                                                                                                                                                                                                                                                               | optional                     |
 
-``sinkCredential`` attributes table (MUST be only access token for now):
+``sinkCredential`` attributes table:
 
 | attribute name       | type               | attribute description                                                          | cardinality |
 |----------------------|--------------------|--------------------------------------------------------------------------------|-------------|
-| credentialtype       | string             | Type of the credential - MUST be set to `ACCESSTOKEN` for now                  | mandatory   |
-| accessToken          | string             | Access Token granting access to the POST operation to create notification      | mandatory   |
-| accessTokenExpireUtc | string - date-time | An absolute UTC instant at which the access token shall be considered expired. | mandatory   |
-| accessTokenType      | string             | Type of access token - MUST be set to `bearer` for now                         | mandatory   |
+| credentialType       | string             | Type of the credential - MUST be set to `ACCESSTOKEN` or `PRIVATE_KEY_JWT`     | mandatory   |
+| accessToken          | string           | Access Token granting access to send events related to the explicit subscription. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Not returned in the response  | optional    |
+| accessTokenExpiresUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Returned in the response   | optional    |
+| accessTokenType      | string           | Type of access token - MUST be set to `bearer` for now. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Not returned in the response                            | optional    |
+| clientId             | string           | The client ID used to authenticate when requesting an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
+| tokenUri             | string           | The URI where to request an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
+| jwksUri              | string           | The URI used to request the public key to verify that the JWT assertion was signed by `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Not needed in the request. Optional in the response  | optional    |
 
-Note about expired accessToken:
-when a notification is sent to the sink endpoint with sinkCredential it could occur a response back from the listener with an error about expired token.
+Note about expired access token when credentialType is `ACCESSTOKEN`:
+when a notification is sent to the sink endpoint with `sinkCredential` and `credentialType` set to `ACCESSTOKEN` it could occur a response back from the listener with an error about expired token.
 In this case, the subscription will shift to EXPIRED status.
 (as we do not have as of now capability to allow consumer to modify `subscription`).
 Remark: This action will trigger a subscription-ended event with terminationReason set to "ACCESS_TOKEN_EXPIRED"
@@ -180,14 +205,43 @@ Remark: This action will trigger a subscription-ended event with terminationReas
 
 | attribute name         | type               | attribute description                                                                                                                                                                                                                                                                                                               | cardinality |
 |------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
-| subscriptionMaxEvents  | integer            | Identifies the maximum number of event reports to be generated (>=1) - Once this number is reached, the subscription ends. Up to API project decision to keep it.                                                                                                                                                                   | optional    |
+| subscriptionMaxEvents  | integer            | Identifies the maximum number of event reports to be generated (>=1) - Once this number is reached, the subscription ends.                                                                                                                                                                   | optional    |
 | subscriptionDetail     | object             | Object defined for each event subscription depending on the event. This is in this object that for example the device identifier will be provided (see example below).                                                                                                                                                              | mandatory   |
-| subscriptionExpireTime | string - date-time | The subscription expiration time (in date-time format) requested by the API consumer. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. Up to API project decision to keep it.                                                                                                                                                                                                        | optional    |
-| initialEvent           | boolean            | Set to true by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request. Example: Consumer request Roaming event. If consumer sets initialEvent to true and device is in roaming situation, an event is triggered. Up to API project decision to keep it. | optional    |
+| subscriptionExpireTime | string - date-time | The subscription expiration time (in date-time format) requested by the API consumer. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.                                                                                                                                                                                                         | optional    |
+| initialEvent           | boolean            | Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request. Example for Device Roaming events: If the consumer sets initialEvent to true and the device is in a roaming state, an event is triggered. The API project team will decide whether to keep or remove this attribute, based on whether sending a notification when a subscription is created is relevant to the API’s event type(s). | optional    |
 
 **Note** on combined usage of initialEvent and subscriptionMaxEvents:
 Unless explicitly decided otherwise by the API Sub Project, if an event is triggered following initialEvent set to `true`, this event will be counted towards subscriptionMaxEvents (if provided).
 It is RECOMMENDED to provide this clarification in all subscription APIs featuring subscriptionMaxEvents and initialEvent.
+
+**Note** on the `config` schema split between Commonalities and the API project:
+`subscriptionDetail` is inherently API-specific (it carries attributes such as `device`, `area`, or event type filters that differ per API) and therefore cannot be defined in the Commonalities-owned common file. For this reason, `CAMARA_event_common.yaml` only defines a `ConfigBase` schema containing the two common optional attributes (`subscriptionExpireTime`, `subscriptionMaxEvents`). Each API project MUST define its own `Config` schema, in its main OpenAPI file, that extends `ConfigBase` via `allOf` and adds the required `subscriptionDetail` property typed against its own `CreateSubscriptionDetail` schema. The API project MAY also add the predefined, optional `initialEvent` attribute - see example below:
+
+```yaml
+Config:
+  description: |
+    Implementation-specific configuration parameters needed by the subscription manager
+    for acquiring events. Extends `ConfigBase` from `CAMARA_event_common.yaml` with the
+    required, API-specific `subscriptionDetail` property. As an example, this template
+    also includes the predefined, optional `initialEvent` attribute; API projects MAY
+    omit it if sending a notification when a subscription is created is not relevant to the
+    API’s event type(s).
+  allOf:
+    - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ConfigBase"
+    - type: object
+      required:
+        - subscriptionDetail
+      properties:
+        subscriptionDetail:
+          $ref: "#/components/schemas/CreateSubscriptionDetail"
+        initialEvent:
+          type: boolean
+          description: |
+            Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.
+            It is up to the API project team to decide whether to keep it and to provide an explanation in the description.
+```
+
+See [Commonalities/artifacts/api-templates](/artifacts/api-templates/) directory (`sample-service-subscriptions.yaml`) for a complete example.
 
 **Subscription status value table**:
 
@@ -198,7 +252,7 @@ Managing subscription is a draft feature, and it is not mandatory for now. An AP
 | ACTIVATION_REQUESTED | Subscription creation (POST) is triggered but subscription creation process is not finished yet.                                                                                                                                                                      |
 | ACTIVE               | Subscription creation process is completed. Subscription is fully operative.                                                                                                                                                                                          |
 | INACTIVE             | Subscription is temporarily inactive, but its workflow logic is not deleted. INACTIVE could be used when an user initially provided consent for the event monitor and then later denied this consent. For now we did not provide capability to reactive subscription. |
-| EXPIRED              | Subscription is ended (no longer active). This status applies when subscription is ended due to max event reached, expire time reached or access token indicated for notification security (i.e. sinkCredential) expiration time reached.                             |
+| EXPIRED              | Subscription is ended (no longer active). This status applies when subscription is ended due to max event reached, expire time reached or access token indicated for notification security (i.e. sinkCredential and credentialType set to ACCESSTOKEN) expiration time reached.                             |
 | DELETED              | Subscription is ended as deleted (no longer active). This status applies when subscription information is kept (i.e. subscription workflow is no longer active but its meta-information is kept).                                                                     |
 
 #### 2.2.4. Error Definition for Resource-based (Explicit) Subscription
@@ -212,7 +266,7 @@ The Following Error codes MUST be present:
 * for `GET .../{subscriptionId}`: 400, 401, 403, 404
 * for `DELETE`: 400, 401, 403, 404
 
-Please see in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory ``event-subscription-template.yaml`` for more information and error examples.
+Please see in [Commonalities/artifacts/api-templates](/artifacts/api-templates) directory `sample-service-subscriptions.yaml` for more information and error examples.
 
 #### 2.2.5. Termination for Resource-based (Explicit) Subscription
 
@@ -383,7 +437,7 @@ Examples of non breaking (backward-compatible) changes related to events are
 
 The API server uses the event notification endpoint to notify the API consumer that an event occurred.
 
-CAMARA event notification leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [1.0.2](https://github.com/cloudevents/spec/releases/tag/v1.0.2) as it is a vendor-neutral specification for defining the format of event data. A generic neutral CloudEvent notification OpenAPI specification is available in Commonalities/artifact directory (notification-as-cloud-event.yaml).
+CAMARA event notification leverages **[CloudEvents](https://cloudevents.io/)** and is based on release [1.0.2](https://github.com/cloudevents/spec/releases/tag/v1.0.2) as it is a vendor-neutral specification for defining the format of event data. A generic neutral CloudEvent notification OpenAPI specification is available in [Commonalities/artifacts/notification-templates](/artifacts/notification-templates/) directory (`sample-notification.yaml`).
 
 Note: The notification is the message posted on the listener side.
 We describe the notification(s) in the CAMARA API using the `callbacks`.
@@ -431,7 +485,7 @@ The following table lists values for `initiationReason` attribute:
 | -----------|-------------------- |
 | SUBSCRIPTION_CREATED | Subscription created by API Server |
 
-Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory).
+Note1: This enumeration is also defined in `sample-service-subscriptions.yaml` (placed in [Commonalities/artifacts/api-templates](/artifacts/api-templates) directory).
 
 Note2: The "subscription-started" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can receive 2 notifications, besides the notification sent for "subscription-started").
 
@@ -449,7 +503,7 @@ The following table lists values for `updateReason` attribute:
 | SUBSCRIPTION_ACTIVE | API server transitioned susbcription status to `ACTIVE` |
 | SUBSCRIPTION_INACTIVE | API server transitioned susbcription status to `INACTIVE` |
 
-Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory).
+Note1: This enumeration is also defined in `sample-service-subscriptions.yaml` (placed in [Commonalities/artifacts/api-templates](/artifacts/api-templates) directory).
 
 Note2: The "subscription-updated" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, it can receive 2 notifications, besides the notifications sent for "subscription-updated").
 
@@ -466,10 +520,10 @@ The following table lists values for `terminationReason` attribute:
 | NETWORK_TERMINATED | API server stopped sending notification |
 | SUBSCRIPTION_EXPIRED | Subscription expire time (optionally set by the requester) has been reached |
 | MAX_EVENTS_REACHED | Maximum number of events (optionally set by the requester) has been reached |
-| ACCESS_TOKEN_EXPIRED | Access Token sinkCredential (optionally set by the requester) expiration time has been reached |
+| ACCESS_TOKEN_EXPIRED | Access Token sinkCredential (optionally set by the requester with credential type `ACCESSTOKEN`) expiration time has been reached |
 | SUBSCRIPTION_DELETED | Subscription was deleted by the requester |
 
-Note1: This enumeration is also defined in `event-subscription-template.yaml` (placed in [Commonalities/artifacts/camara-cloudevents](/artifacts/camara-cloudevents) directory).
+Note1: This enumeration is also defined in `sample-service-subscriptions.yaml` (placed in [Commonalities/artifacts/api-templates](/artifacts/api-templates) directory).
 
 Note2: The "subscription-ended" notification is not counted in the `subscriptionMaxEvents`. (for example, if a client request set `subscriptionMaxEvents` to 2, and later, received 2 notifications, then a third notification will be sent for "subscription-ended").
 
@@ -508,7 +562,7 @@ curl -X 'POST' \
  ```json
 {
   "id": 123654,
-  "source": "https://notificationSendServer12.supertelco.com",
+  "source": "https://notificationSendServer12.example.com",
   "type": "org.camaraproject.device-roaming-subscriptions.v1.roaming-status",
   "specversion": "1.0",
   "datacontenttype": "application/json",
@@ -545,7 +599,7 @@ curl -X 'POST' \
  ```json
 {
   "id": 123658,
-  "source": "https://notificationSendServer12.supertelco.com",
+  "source": "https://notificationSendServer12.example.com",
   "type": "org.camaraproject.api.device-roaming-subscriptions.v1.subscription-ended",
   "specversion": "1.0",
   "datacontenttype": "application/json",
@@ -612,8 +666,8 @@ This Security Considerations need to be reconsidered if other protocols than `HT
 Camara Notifications MUST use HTTPS. The value of `sink` MUST be an URL with url-scheme `https`.
 The implementation of the Notification Sender MUST follow [10.2 Security Implementation](#102-security-implementation).
 
-This document restricts the `credendentialType` to `ACCESSTOKEN`. Neither `PLAIN`nor `REFRESHTOKEN` are allowed.
-This Security Considerations need to be reconsidered if other `credentialsType` values are allowed.
+This document restricts the `credentialType` to `ACCESSTOKEN` or `PRIVATE_KEY_JWT`.
+This Security Considerations need to be reconsidered if other `credentialType` values are allowed.
 
 CloudEvent Security and Privacy considerations RECOMMEND protecting event **data** through signature and encryption. The value of the `data` field of the notifications SHOULD be signed and encrypted.
 As Camara Notifications are JSON, Camara RECOMMENDS that the Camara Notification is signed and then encrypted using [JSON Web Signature (JWS)](https://datatracker.ietf.org/doc/html/rfc7515) and [JSON Web Encryption (JWE)](https://datatracker.ietf.org/doc/html/rfc7516).
@@ -622,3 +676,81 @@ The API Consumer and event producer have to agree which keys to use for signing 
 It is RECOMMENDED that the API consumer inspects all the fields of the notification, especially `source` and `type`. It is RECOMMENDED that if the notification event data is signed, that then the `source` and the signature key are associated.
 
 API Consumers SHOULD validate the schema of the notification event data that is defined by the API subproject. It is RECOMMENDED that additional fields are ignored. Reliance on additional fields is an interoperability issue. Additional fields can lead to security issues.
+
+#### 4.3.1 Pre-requisites for using credential type `PRIVATE_KEY_JWT`
+
+To use `credentialType` with value `PRIVATE_KEY_JWT`, the API Consumer and API Provider shall share
+authentication information needed to request an access token. This includes a client ID, a token endpoint
+and a JWK set.
+
+The client ID uniquely identifies the application ([RFC 6749, Section 2.2](https://www.rfc-editor.org/rfc/rfc6749.html#section-2.2)).
+
+The JWK Set ((JSON Web Key Set)) contains the cryptographic keys used for authentication ([RFC 7517](https://www.rfc-editor.org/rfc/rfc7517.html))
+
+This information could be shared out of band (manual exchange, contract data, via the Operate API, etc.) or as properties of `sinkCredential` object in subscription request/response.
+
+## Appendix A: Notification authentication flows
+
+The following diagram describes the authentication flows for API Consumers with different authentication capabilities. Depending on those capabilities the sink credential type used will be `ACCESSTOKEN` or `PRIVATE_KEY_JWT`
+
+```mermaid
+sequenceDiagram
+  autonumber
+  box API Consumer 1<br>Application Backend<br>(no authorization server)
+    participant appbe as API Client / Notification Sink
+  end
+  box API Consumer 2<br>(Application Backend/Aggregator)
+    participant appclient as API Client
+    participant appres as Notification Sink
+    participant appauth as Authorization Server
+  end
+  box API Provider / Operator
+    participant cspres as Resource Server
+    participant cspauth as Authorization Server
+    participant cspclient as Notification Server
+  end
+
+
+  opt Using ACCESSTOKEN sink credential type
+    opt Subscription
+      appbe ->> cspres: POST /subscriptions<br>Body: {<br>sink: <API Consumer 1>/sink,<br>sinkCredential:{ credentialType: ACCESSTOKEN,<br>accessToken:<Access Token>,<br>accessTokenExpiresUtc:<access token expire time>,<br>accessTokenType: bearer },<br>...}
+      cspres -->> appbe: 201 Created
+    end
+    opt Notification
+      cspclient ->> appbe: POST /sink<br>Authorization: Bearer <Access Token><br>{ ... }
+      appbe -->> cspclient: 204 No Content
+    end
+  end
+
+  opt Using PRIVATE_KEY_JWT sink credential type (credentials exchanged out of band)
+    note over appclient,cspclient: Onboarding: <br> API Consumer shares <Token Endpoint> and <Client ID><br>API Provider shares <JWKS URI>
+    opt Subscription
+      appclient ->> cspres: POST /subscriptions<br>Body: {<br>sink: <API Consumer 2>/sink,<br>sinkCredential:{ credentialType: PRIVATE_KEY_JWT },<br>...}
+      cspres -->> appclient: 201 Created
+      opt No preshared information
+      cspres -->> appclient: Invalid sink credential type or missing pre-shared information
+      end
+    end
+  end
+  opt Using PRIVATE_KEY_JWT sink credential attributes (credentials exchanged in band)
+    note over appclient,cspclient: Onboarding: <br> API Consumer shares nothing
+    opt Subscription
+    appclient ->> cspres: POST /subscriptions<br>Body: {<br>sink: <API Consumer 2>/sink,<br>sinkCredential:{ credentialType: PRIVATE_KEY_JWT,<br> tokenUri:<API Consumer 2>/tokenUri,<br> clientId:<API Provider clientId> },<br>...}
+    cspres -->> appclient: 201 Created<br>Body {<br>sinkCredential:{ credentialType: PRIVATE_KEY_JWT,<br> jwksUri:<API Provider>/jwksUri}
+  end
+    opt Authentication
+      cspclient->>appauth: Get Access Token<br>from API Consumer <Token Endpoint><br>with <signed JWT credentials>
+      appauth->>cspauth: Fetch <Public Key Set> from <JWKS URI>
+      cspauth-->>appauth: Return <Public Key Set>
+      note over appauth: Validate <signed JWT credentials>
+      appauth-->>cspclient: Return <Access Token>
+    end
+
+    opt Notification
+      cspclient ->> appres: POST /sink<br>Authorization: Bearer <Access Token><br>Body: { ... }
+      appres->>appauth: validate <Access Token>
+      appauth-->>appres: OK
+      appres -->> cspclient: 204 No Content
+    end
+  end
+```
