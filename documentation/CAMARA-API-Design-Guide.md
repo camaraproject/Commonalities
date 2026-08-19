@@ -1241,7 +1241,7 @@ The following points can serve as a checklist to design the security mechanism o
 
    CAMARA uses the authentication and authorization protocols and flows as described in the released version of the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-Security-Interoperability.md).
    
-   The access token is created by the API provider's Authorization Server to be consumed by the API provider's API endpoint.
+   The access token is created by the API Provider's Authorization Server to be consumed by the API Provider's API endpoint.
 
    As described in [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier) a three-legged access token is associated with Personal Identifiable Information (PII).
 
