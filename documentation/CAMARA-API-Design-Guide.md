@@ -1246,7 +1246,7 @@ The following points can serve as a checklist to design the security mechanism o
    As described in [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier), a three-legged access token is associated with Personally Identifiable Information (PII).
 
    If the access token is self-contained then the three-legged access token contains PII and the confidentiality of that PII must be protected.
-   The confidentiality of the PII in the self-contained access token can be achieved by the API Provider's authorization server encrypting the PII for the API Provider's API endpoint.
+   The confidentiality of the PII in a self-contained access token may be protected by, for example, the API Provider's authorization server encrypting the PII for the API Provider's API endpoint.
    
 3. **Input parameter validation**
 
