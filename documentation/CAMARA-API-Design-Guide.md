@@ -1239,7 +1239,7 @@ The following points can serve as a checklist to design the security mechanism o
    CAMARA follows the OAuth2 paradigm that separates authentication and authorization from API access.
    This separation of concerns lets the API implementation focus on its own logic once the access token has been validated.
 
-   CAMARA uses the authentication and authorization protocols and flows as described in the released version of the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-Security-Interoperability.md).
+   CAMARA uses the authentication and authorization protocols and flows as described in the released version of the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-Security-Interoperability.md).
    
    The access token is created by the API Provider's Authorization Server to be consumed by the API Provider's API endpoint.
 
