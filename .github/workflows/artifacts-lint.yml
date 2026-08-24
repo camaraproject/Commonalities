@@ -6,22 +6,30 @@
 #   1. yamllint over all YAML files in artifacts/ - including Github_templates/,
 #      whose installed copies in API repositories are not checked there.
 #   2. Spectral over the full-OpenAPI templates (api-templates/,
-#      notification-templates/) with the CAMARA ruleset of the release line
-#      under development; $ref resolution transitively lints the referenced
-#      common definitions (artifacts/common/).
+#      notification-templates/), one invocation per template, with the CAMARA
+#      ruleset of the release line under development; $ref resolution
+#      transitively lints the referenced common definitions (artifacts/common/).
 #   3. gplint over the Gherkin feature templates (artifacts/testing/).
 #
 # All three checks gate at error level; warnings and hints are reported but do
-# not block. Lint configurations and tool versions are taken from
-# camaraproject/tooling at the same pinned ref API repositories use for CAMARA
-# Validation, so findings here match the validation toolchain - no local
+# not block. Lint configurations, rule metadata and tool versions are taken
+# from camaraproject/tooling at the same pinned ref API repositories use for
+# CAMARA Validation, so findings here match the validation toolchain - no local
 # copies that could drift.
+#
+# The Spectral results of the per-template invocations are merged by
+# .github/scripts/spectral_annotations.py, which deduplicates them, annotates
+# the findings that need review, collapses the findings documented as expected
+# into one notice per file, and reports how the counts reconcile. See that
+# script's docstring for why each part exists.
 #
 # The Spectral ruleset is pinned to the release line main currently targets
 # (r4.x); update SPECTRAL_RULESET when main starts targeting the next line.
 #
 # Changelog:
 # - 2026-07-16: Initial version (yamllint + Spectral + gplint)
+# - 2026-07-29: Spectral runs per template and its results are merged into
+#   attributed annotations plus a reconciled report
 #
 # SEE ALSO: artifacts/linting_rules/README.md
 # =========================================================================================
@@ -69,6 +77,7 @@ jobs:
             validation/package.json
             validation/package-lock.json
             validation/.npmrc
+            validation/rules/spectral-rules.yaml
           sparse-checkout-cone-mode: false
 
       - name: Setup Python
@@ -94,25 +103,53 @@ jobs:
         if: ${{ !cancelled() }}
         run: yamllint -c .tooling/linting/config/.yamllint.yaml -f github artifacts/
 
-      # Findings in transitively referenced common files carry their real
-      # artifacts/common/** paths. The github-actions output goes to a file
-      # first so annotations survive the non-zero exit of the lint command.
+      # One invocation per template, because Spectral loses source attribution
+      # for most findings when several input files share $ref targets
+      # (stoplightio/spectral#2640) - the same bug CAMARA Validation works
+      # around the same way. Findings in transitively referenced common files
+      # then carry their real artifacts/common/** paths.
+      #
+      # Each invocation writes pretty output for the log and JSON for the
+      # annotation step; JSON goes to a file so it survives the non-zero exit
+      # of the lint command. A Spectral runtime error (exit status 2 or above)
+      # on one template does not stop the others - the step reports what the
+      # remaining templates found and then fails.
       - name: Spectral over API and notification templates
         if: ${{ !cancelled() }}
         env:
           NODE_PATH: ${{ github.workspace }}/.tooling/validation/node_modules
         run: |
           export PATH="${{ github.workspace }}/.tooling/validation/node_modules/.bin:${PATH}"
+          results="${RUNNER_TEMP}/spectral-results"
+          mkdir -p "${results}"
+          shopt -s nullglob
+          templates=(artifacts/api-templates/*.yaml artifacts/notification-templates/*.yaml)
+          shopt -u nullglob
+          if [ ${#templates[@]} -eq 0 ]; then
+            echo "::error::No templates matched - nothing was linted"
+            exit 1
+          fi
           status=0
-          spectral lint \
-            --ruleset ".tooling/linting/config/${SPECTRAL_RULESET}" \
-            --fail-severity error \
-            -f pretty -f github-actions \
-            -o.pretty /dev/stdout \
-            -o.github-actions "${RUNNER_TEMP}/spectral-annotations.log" \
-            artifacts/api-templates/*.yaml artifacts/notification-templates/*.yaml \
-            || status=$?
-          cat "${RUNNER_TEMP}/spectral-annotations.log"
+          for template in "${templates[@]}"; do
+            # Path-derived so two templates of the same name in different
+            # directories cannot overwrite each other's results.
+            name="${template//\//-}"
+            rc=0
+            spectral lint \
+              --ruleset ".tooling/linting/config/${SPECTRAL_RULESET}" \
+              --fail-severity error \
+              -f pretty -f json \
+              -o.pretty /dev/stdout \
+              -o.json "${results}/${name}.json" \
+              "${template}" \
+              || rc=$?
+            printf '%s\t%s\n' "${rc}" "${template}" >> "${results}/status.tsv"
+            if [ "${rc}" -gt "${status}" ]; then status=$rc; fi
+          done
+          python3 .github/scripts/spectral_annotations.py \
+            --findings-dir "${results}" \
+            --rules .tooling/validation/rules/spectral-rules.yaml \
+            --status-file "${results}/status.tsv"
           exit $status
 
       # gplint exits non-zero only on error-level findings; warnings are

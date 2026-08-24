@@ -851,3 +851,13 @@ components:
         status: 422
         code: PRIVATE_KEY_JWT_NOT_CONFIGURED
         message: No JWK Set configured for PRIVATE_KEY_JWT authentication.
+    # Responses: Local CreateResourceUnprocessableEntity422 in APIs that define it (reference sample-implicit-events.yaml)
+    # Examples: the generic 422 examples (CAMARA_common.yaml) plus
+    #   GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED (aforementioned defined),
+    #   GENERIC_422_EVENT_NOTIFICATIONS_NOT_SUPPORTED
+    GENERIC_422_EVENT_NOTIFICATIONS_NOT_SUPPORTED:
+      description: The API provider does not support event notification delivery for this resource
+      value:
+        status: 422
+        code: EVENT_NOTIFICATIONS_NOT_SUPPORTED
+        message: Notification delivery is not supported by this API provider. Retry the request without the sink field.

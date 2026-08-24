@@ -25,19 +25,27 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
 
 ############################ Happy Path Scenarios #############################################
 
-  # Replace ... in the lastest sentence by any type of applicable validation for the property
-  @{feature_identifier}_{operationId}_xx_event_notification
-  Scenario: Event is received if the sink was provided and "<Resource>" lifecycle faces an update
-    Given an existing "<Resource>" created by operation "{operationId}" with provided values for "sink" and "sinkCredential", with property "$.sinkCredential.credentialType" set to "ACCESSTOKEN"
-    And the path parameter "<ResourceId>" is set to the value for that "<Resource>"
+  # Test applicable for the related createResource operationId
+  @{feature_identifier}_{operationId}_xx_sink_echoed
+  Scenario: Sink is returned in the creation "<Resource>" response when event delivery is accepted
+    Given the request body includes property "$.sink" with a valid value
     When the request "{operationId}" is sent
     Then the response status code is 2<xx>
+    And the response property "$.sink" has same value as the request body property "$.sink"
+
+  # Replace ... in the lastest sentence by any type of applicable validation for the property
+  @{feature_identifier}_{operationId}_2xx_event_notification
+  Scenario: Event is received if the sink was provided and "{Resource}" lifecycle faces an update
+    Given an existing "{Resource}" created by operation "{operationId}" with provided values for "sink" and "sinkCredential", with property "$.sinkCredential.credentialType" set to "ACCESSTOKEN"
+    And the path parameter "{ResourceId}" is set to the value for that "{Resource}"
+    When the request "{operationId}" is sent
+    Then the response status code is 2{xx}
     And an event is received at the address of the "$.sink" provided for "{operationId}"
     And the event header "Authorization" is set to "Bearer " + the value of the property "$.sinkCredential.accessToken" provided for "{operationId}"
     And the event header "Content-Type" is set to "application/cloudevents+json"
     And the event body complies with the OAS schema at "#/components/schemas/ApiNotificationEvent"
     # Additionally any event body has to comply with some constraints beyond the schema compliance
-    And the event body property "$.<property>" is ...
+    And the event body property "$.{property}" is ...
 
 ############################ Error Scenarios #############################################
 
@@ -70,4 +78,20 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_TOKEN" OR "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+  # Service Error scenarios
+
+  # Event notifications capability not supported scenario
+  # Only applicable if the API defines the error 422 EVENT_NOTIFICATIONS_NOT_SUPPORTED
+  @{feature_identifier}_{operationId}_422.01_event_notifications_not_supported
+  Scenario: Event notifications capability not supported
+    Given the request body includes property "$.sink" with a valid value
+    And the API provider does not implement event notifications delivery for the operation "{operationId}"
+    When the request "{operationId}" is sent
+    Then the response status code is 422
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response header "Content-Type" is "application/json"
+    And the response property "$.status" is 422
+    And the response property "$.code" is "EVENT_NOTIFICATIONS_NOT_SUPPORTED"
     And the response property "$.message" contains a user friendly text
