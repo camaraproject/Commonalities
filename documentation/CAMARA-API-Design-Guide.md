@@ -1243,7 +1243,7 @@ The following points can serve as a checklist to design the security mechanism o
    
    The access token is created by the API Provider's Authorization Server to be consumed by the API Provider's API endpoint.
 
-   As described in [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier) a three-legged access token is associated with Personal Identifiable Information (PII).
+   As described in [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier), a three-legged access token is associated with Personally Identifiable Information (PII).
 
    If the access token is self-contained then the three-legged access token contains PII and the confidentiality of that PII must be protected.
    The confidentiality of the PII in the self-contained access token can be achieved by the API Provider's authorization server encrypting the PII for the API Provider's API endpoint.
