@@ -1419,7 +1419,7 @@ servers:
 
 ---
 
-IMPORTANT: CAMARA public APIs with x=0 (`v0.y.z`) MUST use both the MAJOR and the MINOR version number separated by a dot (".") in the API version in the `url` field: `v0.y`.
+IMPORTANT: CAMARA public APIs with x=0 (`v0.y.z`) MUST use both the MAJOR and the MINOR version numbers separated by a dot (".") in the API version in the `url` field: `v0.y`.
 
 ---
 
