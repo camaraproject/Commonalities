@@ -1248,7 +1248,7 @@ The following points can serve as a checklist to design the security mechanism o
    If the access token is self-contained then the three-legged access token contains PII and the confidentiality of that PII must be protected.
    The confidentiality of the PII in the self-contained access token can be achieved by the API Provider's authorization server encrypting the PII for the API Provider's API endpoint.
    
-4. **Input parameter validation**
+3. **Input parameter validation**
 
   Validate the request parameters as the first step before they reach the application logic.
 Implement strong validation checks and immediately reject the request if validation fails.
