@@ -45,7 +45,6 @@ This release contains documents and artifacts of Commonalities version 0.9.0:
 * `accessTokenType` description aligned in CAMARA_common.yaml by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/640
 
 ### Fixed
-* Date schema indentation corrected in CAMARA_common.yaml by @hdamker in https://github.com/camaraproject/Commonalities/pull/669
 * Spacing added after `info.description` markers by @hdamker in https://github.com/camaraproject/Commonalities/pull/660
 * Notification template aligned with CAMARA lint rules by @LarryHu0217 in https://github.com/camaraproject/Commonalities/pull/679
 * Artifact line endings and Gherkin formatting normalized by @LarryHu0217 in https://github.com/camaraproject/Commonalities/pull/678
