@@ -1143,7 +1143,7 @@ Special requirements related to HTTP headers.
 
 ##### x-correlator Header
 
-With the aim of standardizing the request observability and traceability process, common headers that provide a follow-up of the E2E processes SHOULD be included. The table below captures these headers.
+To enable standardized request observability and traceability across end-to-end processes, Service APIs MUST support the x-correlator header for tracking purposes. API consumers are encouraged to use the functionality. The table below captures these headers.
 
 | Name           | Description                                   | Schema          | Location         | Required by API Consumer | Required in OAS Definition | 	Example                              |
 |----------------|-----------------------------------------------|----------------------|------------------|--------------------------|----------------------------|----------------------------------------|
