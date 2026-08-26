@@ -64,7 +64,7 @@ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SH
 | **Header**     | HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by a colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.                                                               |
 | **HTTP**       | Hypertext Transfer Protocol (HTTP) is a communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.                                                                                                                                                                                                   |
 | **JSON**       | The JavaScript Object Notation (JSON) Data Interchange Format [RFC8259](https://datatracker.ietf.org/doc/html/rfc8259)                                                                                                                                                                                                                              |
-| **JWT**        | JSON Web Token (JWT) is an open standard based on JSON [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519)                                                                                                                                                                                                                                     |
+| **JWT**        | JSON Web Token (JWT) is an open standard based on JSON [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519)                                                                                                                                                                                                                                 |
 | **Kebab-case** | Practice in the words denomination where the hyphen is used to separate words.                                                                                                                                                                                                                                                                      |
 | **OAuth2**     | Open Authorization is an open standard that allows simple Authorization flows to be used in websites or applications. [RFC6749](https://datatracker.ietf.org/doc/html/rfc6749)                                                                                                                                                                      |
 | **OIDC**       | [OpenId Connect](https://openid.net/specs/openid-connect-core-1_0.html) is standard based on OAuth2 that adds authentication and consent to OAuth2.                                                                                                                                                                                                 |
@@ -1234,10 +1234,20 @@ The following points can serve as a checklist to design the security mechanism o
    - With HTTP/2 or HTTP/3, performance improvements can be achieved due to better optimization and multiplexing of requests.
    - If HTTP 1.1 is used, usage of _TCP persistent connections_ is RECOMMENDED to achieve comparable performance.
 
-2. **Authentication and authorization must be considered**
+2. **Authentication and authorization**
 
-   CAMARA uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-Security-Interoperability.md).\
+   CAMARA follows the OAuth2 paradigm that separates authentication and authorization from API access.
+   This separation of concerns lets the API implementation focus on its own logic once the access token has been validated.
 
+   CAMARA uses the authentication and authorization protocols and flows as described in the released version of the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-Security-Interoperability.md).
+   
+   The access token is created by the API Provider's Authorization Server to be consumed by the API Provider's API endpoint.
+
+   As described in [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier), a three-legged access token is associated with Personally Identifiable Information (PII).
+
+   If the access token is self-contained then the three-legged access token contains PII and the confidentiality of that PII must be protected.
+   The confidentiality of the PII in a self-contained access token may be protected by, for example, the API Provider's authorization server encrypting the PII for the API Provider's API endpoint.
+   
 3. **Input parameter validation**
 
   Validate the request parameters as the first step before they reach the application logic.
