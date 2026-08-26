@@ -64,7 +64,7 @@ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SH
 | **Header**     | HTTP Headers allow client and server send additional information joined to the request or response. A request header is divided by name (No case sensitive) followed by a colon and the header value (without line breaks). White spaces on the left hand from the value are ignored.                                                               |
 | **HTTP**       | Hypertext Transfer Protocol (HTTP) is a communication protocol that allows the information transfer using files (XHTML, HTML…) in World Wide Web.                                                                                                                                                                                                   |
 | **JSON**       | The JavaScript Object Notation (JSON) Data Interchange Format [RFC8259](https://datatracker.ietf.org/doc/html/rfc8259)                                                                                                                                                                                                                              |
-| **JWT**        | JSON Web Token (JWT) is an open standard based on JSON [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519)                                                                                                                                                                                                                                     |
+| **JWT**        | JSON Web Token (JWT) is an open standard based on JSON [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519)                                                                                                                                                                                                                                 |
 | **Kebab-case** | Practice in the words denomination where the hyphen is used to separate words.                                                                                                                                                                                                                                                                      |
 | **OAuth2**     | Open Authorization is an open standard that allows simple Authorization flows to be used in websites or applications. [RFC6749](https://datatracker.ietf.org/doc/html/rfc6749)                                                                                                                                                                      |
 | **OIDC**       | [OpenId Connect](https://openid.net/specs/openid-connect-core-1_0.html) is standard based on OAuth2 that adds authentication and consent to OAuth2.                                                                                                                                                                                                 |
@@ -470,7 +470,7 @@ In the following, we elaborate on the existing errors. In particular, we identif
 |       422        |    `UNSUPPORTED_IDENTIFIER`   | The identifier provided is not supported.                                  | None of the provided identifiers is supported by the implementation                                                                                                     |
 |       422        |    `UNNECESSARY_IDENTIFIER`   | The device is already identified by the access token.                      | An explicit identifier is provided when a device or phone number has already been identified from the access token                                                            |
 |       422        |    `SERVICE_NOT_APPLICABLE`   | The service is not available for the provided identifier.                  | Service not applicable for the provided identifier                                                                                                                          |
-|       422        |      `MISSING_IDENTIFIER`     | The device cannot be identified.                                           | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token                              |
+|       422        |      `MISSING_IDENTIFIER`     | The device cannot be identified.                                           | An identifier is not included in the request and the device or phone number identification cannot be derived from the access token                                       |
 |       422        |      `{{SPECIFIC_CODE}}`      | `{{SPECIFIC_CODE_MESSAGE}}`                                                | Any semantic condition associated to business logic, specifically related to a field or data structure                                                                   |
 |       429        |       `QUOTA_EXCEEDED`        | Out of resource quota.                                                     | Request is rejected due to exceeding a business quota limit                                                                                                                |
 |       429        |      `TOO_MANY_REQUESTS`      | Rate limit reached.                                                        | Access to the API has been temporarily blocked due to rate or spike arrest limits being reached                                                                                                                    |
@@ -515,7 +515,7 @@ The Following table compiles the guidelines to be adopted:
 |     2      | Some identifier cannot be matched to a device                              |       404        |      IDENTIFIER_NOT_FOUND      | The identifier is not found.                             |
 |     3      | An explicit identifier is provided when a device or phone number has already been identified from the access token |       422        |     UNNECESSARY_IDENTIFIER      | The device is already identified by the access token. |
 |     4      | Service not applicable for the provided identifier                         |       422        |     SERVICE_NOT_APPLICABLE     | The service is not available for the provided identifier. |
-|     5      | An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
+|     5      | An identifier is not included in the request and the device or phone number identification cannot be derived from the access token |       422       |      MISSING_IDENTIFIER      | The device cannot be identified. |
 
 `CAMARA_common.yaml` provides these cases as directly referenceable error responses: `IdentifierNotFound404` (case 2), and the subject-flavoured `DeviceIdentifier422` / `PhoneNumberIdentifier422` (cases 1, 3, 4, 5 — the phone number flavour omits `UNSUPPORTED_IDENTIFIER`, which does not apply to a single identifier type). The corresponding examples under `components/examples` come in `_DEVICE` and `_PHONE_NUMBER` wording variants for the identifier codes, so that the message wording matches the subject type.
 
@@ -1143,7 +1143,7 @@ Special requirements related to HTTP headers.
 
 ##### x-correlator Header
 
-With the aim of standardizing the request observability and traceability process, common headers that provide a follow-up of the E2E processes SHOULD be included. The table below captures these headers.
+To enable standardized request observability and traceability across end-to-end processes, Service APIs MUST support the x-correlator header for tracking purposes. API consumers are encouraged to use the functionality. The table below captures these headers.
 
 | Name           | Description                                   | Schema          | Location         | Required by API Consumer | Required in OAS Definition | 	Example                              |
 |----------------|-----------------------------------------------|----------------------|------------------|--------------------------|----------------------------|----------------------------------------|
@@ -1210,7 +1210,7 @@ Implementers MAY include the UTF-8 character set in the Content-Type header valu
 [Security schemes](https://spec.openapis.org/oas/v3.0.3#security-scheme-object) express security in OpenAPI.
 Security can be expressed for the API as a whole or for each endpoint.
 
-As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all CAMARA OpenAPI files MUST include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
+As specified in [Use of openIdConnect for securitySchemes](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-API-access-and-user-consent.md#use-of-openidconnect-for-securityschemes), all CAMARA OpenAPI files MUST include the following scheme definition, with an adapted `openIdConnectUrl` in its components section. The schema definition is repeated in this document for illustration purposes, the correct format must be extracted from the link above.
 
 ```yaml
 components:
@@ -1234,10 +1234,20 @@ The following points can serve as a checklist to design the security mechanism o
    - With HTTP/2 or HTTP/3, performance improvements can be achieved due to better optimization and multiplexing of requests.
    - If HTTP 1.1 is used, usage of _TCP persistent connections_ is RECOMMENDED to achieve comparable performance.
 
-2. **Authentication and authorization must be considered**
+2. **Authentication and authorization**
 
-   CAMARA uses the authentication and authorization protocols and flows as described in the [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md).\
+   CAMARA follows the OAuth2 paradigm that separates authentication and authorization from API access.
+   This separation of concerns lets the API implementation focus on its own logic once the access token has been validated.
 
+   CAMARA uses the authentication and authorization protocols and flows as described in the released version of the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-Security-Interoperability.md).
+   
+   The access token is created by the API Provider's Authorization Server to be consumed by the API Provider's API endpoint.
+
+   As described in [Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier](#appendix-a-normative-infodescription-template-for-when-user-identification-can-be-from-either-an-access-token-or-explicit-identifier), a three-legged access token is associated with Personally Identifiable Information (PII).
+
+   If the access token is self-contained then the three-legged access token contains PII and the confidentiality of that PII must be protected.
+   The confidentiality of the PII in a self-contained access token may be protected by, for example, the API Provider's authorization server encrypting the PII for the API Provider's API endpoint.
+   
 3. **Input parameter validation**
 
   Validate the request parameters as the first step before they reach the application logic.
@@ -1258,13 +1268,13 @@ In general, all APIs MUST be secured to ensure who has access to what and for wh
 CAMARA uses OIDC and CIBA for authentication and consent collection and to determine whether the user has,
 e.g. opted out of some API access.
 
-The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose values are defined by W3C Data Privacy Vocabulary as indicated in the [Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#purpose-as-a-scope).
+The [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-Security-Interoperability.md#purpose) defines that a single purpose is encoded in the list of scope values. The purpose values are defined by W3C Data Privacy Vocabulary as indicated in the [Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-Security-Interoperability.md#purpose-as-a-scope).
 
 ### 6.3. Expressing Security Requirements
 
 Security requirements of an API are expressed in OpenAPI through [Security Requirement Objects](https://spec.openapis.org/oas/v3.0.3#security-requirement-object).
 
-The following is an example of how to use the `openId` security scheme defined above as described in [Use of security property](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#use-of-security-property):
+The following is an example of how to use the `openId` security scheme defined above as described in [Use of security property](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-API-access-and-user-consent.md#use-of-security-property):
 
 ```yaml
 paths:
@@ -1281,7 +1291,7 @@ The name `openId` MUST be same as defined in the `components.securitySchemes` se
 
 ### 6.4. Mandatory Template for `info.description` in CAMARA API
 
-The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) MUST be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specification.
+The documentation template available in [CAMARA API Specification - Authorization and authentication common guidelines](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-API-access-and-user-consent.md#mandatory-template-for-infodescription-in-camara-api-specs) MUST be used as part of the authorization and authentication API documentation in the `info.description` property of the CAMARA API specification.
 
 ### 6.5. POST or GET for Transferring Sensitive or Complex Data
 
@@ -1419,7 +1429,7 @@ servers:
 
 ---
 
-IMPORTANT: CAMARA public APIs with x=0 (`v0.x.y`) MUST use both the MAJOR and the MINOR version number separated by a dot (".") in the API version in the `url` field: `v0.y`.
+IMPORTANT: CAMARA public APIs with x=0 (`v0.y.z`) MUST use both the MAJOR and the MINOR version numbers separated by a dot (".") in the API version in the `url` field: `v0.y`.
 
 ---
 
@@ -1552,8 +1562,8 @@ Make the information available:
 
 ## Appendix A (Normative): `info.description` template for when User identification can be from either an access token or explicit identifier
 
-When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
-- If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly given that the `sub` will not be a globally unique identifier nor contain PII as per the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r3.3/documentation/CAMARA-Security-Interoperability.md#id-token-sub-claim) requirements.
+When an API requires a User (as defined by the [ICM Glossary](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-API-access-and-user-consent.md#glossary-of-terms-and-concepts)) to be identified in order to get access to that User's data (as Resource Owner), the User can be identified in one of two ways:
+- If the access token is a Three-Legged Access Token, then the User will already have been associated with that token by the API provider, which in turn may be identified from the physical device that calls the `/authorize` endpoint for the OIDC authorisation code flow, or from the `login_hint` parameter of the OIDC CIBA flow (which can be a device IP, phone number or operator token). The `sub` claim of the ID token returned with the access token will confirm that an association with the User has been made, although this will not identify the User directly given that the `sub` will not be a globally unique identifier nor contain PII as per the [CAMARA Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/r4.2/documentation/CAMARA-Security-Interoperability.md#id-token-sub-claim) requirements.
 - If the access token is a Two-Legged Access Token, no User is associated with the token, and hence an explicit identifier MUST be provided. This is typically either a `Device` object named `device`, or a `PhoneNumber` string named `phoneNumber`. Both of these schema are defined in the [CAMARA_common.yaml](/artifacts/common/CAMARA_common.yaml) artifact. In both cases, it is the User that is being identified, although the `device` identifier allows this indirectly by identifying an active physical device.
 
 If an API provider issues Three-Legged Access Tokens for use with the API, the following error may occur:
@@ -1588,7 +1598,7 @@ This API requires the API consumer to identify a [ device | phone number ](*) as
 - When the API is invoked using a two-legged access token, the subject will be identified from the optional [`device` object | `phoneNumber` field](*), which therefore MUST be provided.
 - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information associated with the access token that was identified during the authentication process.
+This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
 ## Error handling:
 

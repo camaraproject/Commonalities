@@ -1034,7 +1034,7 @@ components:
                 code: SERVICE_NOT_APPLICABLE
                 message: The service is not available for the provided identifier.
             GENERIC_422_MISSING_IDENTIFIER:
-              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token
+              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the access token
               value:
                 status: 422
                 code: MISSING_IDENTIFIER
@@ -1381,7 +1381,7 @@ components:
         code: SERVICE_NOT_APPLICABLE
         message: The service is not available for the provided identifier.
     GENERIC_422_MISSING_IDENTIFIER_DEVICE:
-      description: The device identifier is not included in the request and the device cannot be derived from the 3-legged access token
+      description: The device identifier is not included in the request and the device cannot be derived from the access token
       value:
         status: 422
         code: MISSING_IDENTIFIER
@@ -1399,7 +1399,7 @@ components:
         code: UNNECESSARY_IDENTIFIER
         message: The device is already identified by the access token.
     GENERIC_422_MISSING_IDENTIFIER_PHONE_NUMBER:
-      description: The phone number is not included in the request and cannot be derived from the 3-legged access token
+      description: The phone number is not included in the request and cannot be derived from the access token
       value:
         status: 422
         code: MISSING_IDENTIFIER
