@@ -629,7 +629,7 @@ No pagination-specific request headers are required. Pagination is controlled en
 
 In paginated response the `pagination` object MUST always be present; `totalCount` and `totalPages` MAY be omitted only where a full count query is prohibitively expensive — this MUST be documented per endpoint.
 
-The example below defines a paginated response schema named `ResourceList`, which includes an `items` array and a required `pagination` object. Note that the names `ResourceList` and `items` are specific to given API.
+The example below defines a paginated response schema named `ResourceList`, which includes an `items` array and a required `pagination` object. This `Pagination` schema is defined in the [CAMARA_common.yaml](/artifacts/common/CAMARA_common.yaml) artifact.
 
 ```yaml
 ResourceList:
@@ -644,50 +644,6 @@ ResourceList:
         $ref: "#/components/schemas/Resource"
     pagination:
       $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
-
-Pagination:
-  description: Pagination details helping to navigate through paged results efficiently.
-  type: object
-  properties:
-    page:
-      $ref: "#/components/schemas/Page"
-    perPage:
-      $ref: "#/components/schemas/PerPage"
-    totalCount:
-      $ref: "#/components/schemas/TotalCount"
-    totalPages:
-      $ref: "#/components/schemas/TotalPages"
-
-Page:
-  type: integer
-  format: int32
-  minimum: 1
-  maximum: 2147483647
-  default: 1
-  description: Current page number (1-indexed).
-  example: 1
-PerPage:
-  type: integer
-  format: int32
-  minimum: 1
-  maximum: 100
-  default: 20
-  description: Number of items per page.
-  example: 20
-TotalCount:
-  type: integer
-  format: int32
-  minimum: 0
-  maximum: 2147483647
-  description: Total number of items matching the query, after filters applied. MAY be omitted where a full count query is prohibitively expensive.
-  example: 87
-TotalPages:
-  type: integer
-  format: int32
-  minimum: 0
-  maximum: 2147483647
-  description: Total number of pages. Equals ceil(totalCount / perPage). MAY be omitted where totalCount is omitted.
-  example: 5
 ```
 
 #### 4.1.4. Response Headers
