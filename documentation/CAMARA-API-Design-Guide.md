@@ -643,7 +643,7 @@ ResourceList:
       items:
         $ref: "#/components/schemas/Resource"
     pagination:
-      $ref: "#/components/schemas/Pagination"
+      $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
 
 Pagination:
   description: Pagination details helping to navigate through paged results efficiently.
