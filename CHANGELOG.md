@@ -43,6 +43,7 @@ This release contains documents and artifacts of Commonalities version 0.9.0:
 * Integer schema values bounded to the 53-bit safe integer range by @hdamker in https://github.com/camaraproject/Commonalities/pull/667
 * Schema constraint compatibility guidance clarified by @hdamker in https://github.com/camaraproject/Commonalities/pull/658
 * `accessTokenType` description aligned in CAMARA_common.yaml by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/640
+* Authentication and authorization section in CAMARA API Design Guide rewritten by @AxelNennker in https://github.com/camaraproject/Commonalities/pull/512
 
 ### Fixed
 * Spacing added after `info.description` markers by @hdamker in https://github.com/camaraproject/Commonalities/pull/660
@@ -51,7 +52,10 @@ This release contains documents and artifacts of Commonalities version 0.9.0:
 * Feature file template placeholders normalized to `{…}` convention and duplicate scenario names made distinct by @hdamker in https://github.com/camaraproject/Commonalities/pull/683
 * `perPage` description corrected in CAMARA_common.yaml (was "subscriptions", now "resources") by @rartych in https://github.com/camaraproject/Commonalities/pull/686
 * Editorial corrections and alignments in testing artifacts by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/642
-* Minor grammar fix in API Design Guide by @Kevsy in https://github.com/camaraproject/Commonalities/pull/637
+* x-correlator header description rephrased in CAMARA API Design Guide by @tlohmar in https://github.com/camaraproject/Commonalities/pull/695
+* `MISSING_IDENTIFIER` descriptions clarified for access tokens in CAMARA_common.yaml and Design Guide by @LarryHu0217 in https://github.com/camaraproject/Commonalities/pull/689
+* Design Guide ICM (Identity and Consent Management) links repointed to r4.2 instead of r3.3 by @hdamker in https://github.com/camaraproject/Commonalities/pull/702
+* Initial API version placeholder corrected in CAMARA API Design Guide by @LarryHu0217 in https://github.com/camaraproject/Commonalities/pull/704
 
 ### Removed
 N/A
