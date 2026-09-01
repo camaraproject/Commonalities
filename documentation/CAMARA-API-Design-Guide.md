@@ -629,7 +629,7 @@ No pagination-specific request headers are required. Pagination is controlled en
 
 In paginated response the `pagination` object MUST always be present; `totalCount` and `totalPages` MAY be omitted only where a full count query is prohibitively expensive — this MUST be documented per endpoint.
 
-The example below defines a paginated response schema named `ResourceList`, which includes an `items` array and a required `pagination` object. Note that the names `ResourceList` and `items` are specific to given API.
+The example below defines a paginated response schema named `ResourceList`, which includes an `items` array and a required `pagination` object. The `Pagination` schema is defined in the [CAMARA_common.yaml](/artifacts/common/CAMARA_common.yaml) artifact.
 
 ```yaml
 ResourceList:
@@ -643,24 +643,7 @@ ResourceList:
       items:
         $ref: "#/components/schemas/Resource"
     pagination:
-      $ref: "#/components/schemas/Pagination"
-
-Pagination:
-  type: object
-  properties:
-    page:
-      type: integer
-      minimum: 1
-    perPage:
-      type: integer
-      minimum: 1
-      maximum: 100
-    totalCount:
-      type: integer
-      minimum: 0
-    totalPages:
-      type: integer
-      minimum: 0
+      $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
 ```
 
 #### 4.1.4. Response Headers
