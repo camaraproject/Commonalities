@@ -56,6 +56,7 @@ This release contains documents and artifacts of Commonalities version 0.9.0:
 * `MISSING_IDENTIFIER` descriptions clarified for access tokens in CAMARA_common.yaml and Design Guide by @LarryHu0217 in https://github.com/camaraproject/Commonalities/pull/689
 * Design Guide ICM (Identity and Consent Management) links repointed to r4.2 instead of r3.3 by @hdamker in https://github.com/camaraproject/Commonalities/pull/702
 * Initial API version placeholder corrected in CAMARA API Design Guide by @LarryHu0217 in https://github.com/camaraproject/Commonalities/pull/704
+* Updated Pagination example in API Design Guide by @tlohmar in https://github.com/camaraproject/Commonalities/pull/698
 
 ### Removed
 N/A
