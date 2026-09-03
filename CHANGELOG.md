@@ -27,18 +27,24 @@
 This release contains documents and artifacts of Commonalities version 0.9.0:
 * Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r4.4/documentation)** folder.
 * Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r4.4/artifacts)** folder.
+* Analysis of the changes in Commonalities 0.9.0, including impact per API, is available on the [project wiki](https://lf-camaraproject.atlassian.net/wiki/x/G4DdOw).
 **The relevant details of authentication and consent collection are covered by [release 4.2](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
 
 ### Added
 * Appendix B - `operationId` and `description` guidelines for MCP and AI Agent readiness in CAMARA API Design Guide by @rartych in https://github.com/camaraproject/Commonalities/pull/664
 * `SingleIpv6Address` schema added to CAMARA_common.yaml for general use by @eric-murray in https://github.com/camaraproject/Commonalities/pull/654
-* `Date` schema added to CAMARA_common.yaml by @eric-murray in https://github.com/camaraproject/Commonalities/pull/645
+* `Date` schema added to CAMARA_common.yaml by @eric-murray in https://github.com/camaraproject/Commonalities/pull/645 and https://github.com/camaraproject/Commonalities/pull/669
 * Common `Sink` schema added to CAMARA_common.yaml to be used by API templates by @eric-murray in https://github.com/camaraproject/Commonalities/pull/646
+* New error `EVENT_NOTIFICATIONS_NOT_SUPPORTED` (422) added to CAMARA_event_common.yaml for implicit subscriptions by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/680
 
 ### Changed
-* `sink` behaviour clarified in implicit subscription model: providers must deliver events or reject with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED`; new error added to `CAMARA_event_common.yaml` and `sample-implicit-events.yaml` by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/680
+* `sink` behaviour clarified in implicit subscription model: providers must deliver events or reject with the new `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED` error by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/680
 * Configuration schema refactored in CAMARA_event_common.yaml (`Config`, `ConfigBase`, `CreateSubscriptionDetail` schemas, `initialEvent` moved to `Config`) by @rartych in https://github.com/camaraproject/Commonalities/pull/670
 * Minimal referenceable error responses and reusable error examples redesign by @hdamker in https://github.com/camaraproject/Commonalities/pull/665
+  * Named, referenceable error-response catalogue added to CAMARA_common.yaml (e.g. `BadRequest400`, `Unauthenticated401`, `PermissionDenied403`, `NotFound404`, `AlreadyExists409`, `TooManyRequests429`)
+  * Reusable error examples added to CAMARA_common.yaml
+  * `Generic*` error responses deprecated in favor of the catalogue above (see Deprecated)
+  * `INVALID_TOKEN_CONTEXT` and the deprecated `CONFLICT` code removed from `Generic403`/`Generic409` (see Removed)
 * `sinkCredential` model alignment in CAMARA API Event Subscription and Notification Guide by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/656
 * Integer schema values bounded to the 53-bit safe integer range by @hdamker in https://github.com/camaraproject/Commonalities/pull/667
 * Schema constraint compatibility guidance clarified by @hdamker in https://github.com/camaraproject/Commonalities/pull/658
@@ -57,9 +63,17 @@ This release contains documents and artifacts of Commonalities version 0.9.0:
 * Design Guide ICM (Identity and Consent Management) links repointed to r4.2 instead of r3.3 by @hdamker in https://github.com/camaraproject/Commonalities/pull/702
 * Initial API version placeholder corrected in CAMARA API Design Guide by @LarryHu0217 in https://github.com/camaraproject/Commonalities/pull/704
 * Updated Pagination example in API Design Guide by @tlohmar in https://github.com/camaraproject/Commonalities/pull/698
+* API Readiness Checklist pointer corrected in the mandatory `info.description` template and CAMARA API Design Guide by @hdamker in https://github.com/camaraproject/Commonalities/pull/693
+
+### Deprecated
+* `Generic400`, `Generic401`, `Generic403`, `Generic404`, `Generic405`, `Generic406`, `Generic409`, `Generic410`, `Generic412`, `Generic415`, `Generic422`, `Generic429`, `Generic5xx` error responses in CAMARA_common.yaml, in favor of the named catalogue responses above by @hdamker in https://github.com/camaraproject/Commonalities/pull/665
 
 ### Removed
-N/A
+* `INVALID_TOKEN_CONTEXT` removed from `Generic403` in CAMARA_common.yaml by @hdamker in https://github.com/camaraproject/Commonalities/pull/665
+* Deprecated code `CONFLICT` removed from `Generic409` in CAMARA_common.yaml by @hdamker in https://github.com/camaraproject/Commonalities/pull/665
+
+## New Contributors
+* @LarryHu0217 made their first contribution in https://github.com/camaraproject/Commonalities/pull/678
 
 **Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r4.3...r4.4
 
