@@ -1,6 +1,7 @@
 # Changelog Commonalities
 
 ## Table of Contents
+- **[r4.4](#r44)**
 - **[r4.3](#r43)**
 - **[r4.2](#r42)**
 - **[r4.1](#r41)**
@@ -18,6 +19,63 @@
 - **[v0.3.0](#v030)**
 - **[v0.2.0](#v020)**
 - **[v0.1.0 - Initial version](#v010---initial-version)**
+
+
+# r4.4
+## Release Notes
+
+This release contains documents and artifacts of Commonalities version 0.9.0:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r4.4/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r4.4/artifacts)** folder.
+* Analysis of the changes in Commonalities 0.9.0, including impact per API, is available on the [project wiki](https://lf-camaraproject.atlassian.net/wiki/x/G4DdOw).
+**The relevant details of authentication and consent collection are covered by [release 4.2](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
+### Added
+* Appendix B - `operationId` and `description` guidelines for MCP and AI Agent readiness in CAMARA API Design Guide by @rartych in https://github.com/camaraproject/Commonalities/pull/664
+* `SingleIpv6Address` schema added to CAMARA_common.yaml for general use by @eric-murray in https://github.com/camaraproject/Commonalities/pull/654
+* `Date` schema added to CAMARA_common.yaml by @eric-murray in https://github.com/camaraproject/Commonalities/pull/645 and https://github.com/camaraproject/Commonalities/pull/669
+* Common `Sink` schema added to CAMARA_common.yaml to be used by API templates by @eric-murray in https://github.com/camaraproject/Commonalities/pull/646
+* New error `EVENT_NOTIFICATIONS_NOT_SUPPORTED` (422) added to CAMARA_event_common.yaml for implicit subscriptions by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/680
+
+### Changed
+* `sink` behaviour clarified in implicit subscription model: providers must deliver events or reject with the new `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED` error by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/680
+* Configuration schema refactored in CAMARA_event_common.yaml (`Config`, `ConfigBase`, `CreateSubscriptionDetail` schemas, `initialEvent` moved to `Config`) by @rartych in https://github.com/camaraproject/Commonalities/pull/670
+* Minimal referenceable error responses and reusable error examples redesign by @hdamker in https://github.com/camaraproject/Commonalities/pull/665
+  * Named, referenceable error-response catalogue added to CAMARA_common.yaml (e.g. `BadRequest400`, `Unauthenticated401`, `PermissionDenied403`, `NotFound404`, `AlreadyExists409`, `TooManyRequests429`)
+  * Reusable error examples added to CAMARA_common.yaml
+  * `Generic*` error responses deprecated in favor of the catalogue above (see Deprecated)
+  * `INVALID_TOKEN_CONTEXT` and the deprecated `CONFLICT` code removed from `Generic403`/`Generic409` (see Removed)
+* `sinkCredential` model alignment in CAMARA API Event Subscription and Notification Guide by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/656
+* Integer schema values bounded to the 53-bit safe integer range by @hdamker in https://github.com/camaraproject/Commonalities/pull/667
+* Schema constraint compatibility guidance clarified by @hdamker in https://github.com/camaraproject/Commonalities/pull/658
+* `accessTokenType` description aligned in CAMARA_common.yaml by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/640
+* Authentication and authorization section in CAMARA API Design Guide rewritten by @AxelNennker in https://github.com/camaraproject/Commonalities/pull/512
+
+### Fixed
+* Spacing added after `info.description` markers by @hdamker in https://github.com/camaraproject/Commonalities/pull/660
+* Notification template aligned with CAMARA lint rules by @LarryHu0217 in https://github.com/camaraproject/Commonalities/pull/679
+* Artifact line endings and Gherkin formatting normalized by @LarryHu0217 in https://github.com/camaraproject/Commonalities/pull/678
+* Feature file template placeholders normalized to `{…}` convention and duplicate scenario names made distinct by @hdamker in https://github.com/camaraproject/Commonalities/pull/683
+* `perPage` description corrected in CAMARA_common.yaml (was "subscriptions", now "resources") by @rartych in https://github.com/camaraproject/Commonalities/pull/686
+* Editorial corrections and alignments in testing artifacts by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/642
+* x-correlator header description rephrased in CAMARA API Design Guide by @tlohmar in https://github.com/camaraproject/Commonalities/pull/695
+* `MISSING_IDENTIFIER` descriptions clarified for access tokens in CAMARA_common.yaml and Design Guide by @LarryHu0217 in https://github.com/camaraproject/Commonalities/pull/689
+* Design Guide ICM (Identity and Consent Management) links repointed to r4.2 instead of r3.3 by @hdamker in https://github.com/camaraproject/Commonalities/pull/702
+* Initial API version placeholder corrected in CAMARA API Design Guide by @LarryHu0217 in https://github.com/camaraproject/Commonalities/pull/704
+* Updated Pagination example in API Design Guide by @tlohmar in https://github.com/camaraproject/Commonalities/pull/698
+* API Readiness Checklist pointer corrected in the mandatory `info.description` template and CAMARA API Design Guide by @hdamker in https://github.com/camaraproject/Commonalities/pull/693
+
+### Deprecated
+* `Generic400`, `Generic401`, `Generic403`, `Generic404`, `Generic405`, `Generic406`, `Generic409`, `Generic410`, `Generic412`, `Generic415`, `Generic422`, `Generic429`, `Generic5xx` error responses in CAMARA_common.yaml, in favor of the named catalogue responses above by @hdamker in https://github.com/camaraproject/Commonalities/pull/665
+
+### Removed
+* `INVALID_TOKEN_CONTEXT` removed from `Generic403` in CAMARA_common.yaml by @hdamker in https://github.com/camaraproject/Commonalities/pull/665
+* Deprecated code `CONFLICT` removed from `Generic409` in CAMARA_common.yaml by @hdamker in https://github.com/camaraproject/Commonalities/pull/665
+
+## New Contributors
+* @LarryHu0217 made their first contribution in https://github.com/camaraproject/Commonalities/pull/678
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r4.3...r4.4
 
 
 # r4.3
@@ -247,7 +305,7 @@ This release contains documents and artifacts of Commonalities version 0.6.0-rc.
 * Sorting Logic in CAMARA-API-Design-Guide.md by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/471
 * Linting rules definition for OpenAPI specfications updated by @rartych in https://github.com/camaraproject/Commonalities/pull/466
 * Updated linting rules for test definitions in .gherkin-lintrc by @rartych in https://github.com/camaraproject/Commonalities/pull/472
-  
+
 ### Fixed
 N/A
 
@@ -275,7 +333,7 @@ This release contains documents and artifacts of Commonalities version 0.6.0-alp
 ### Changed
 * Aligned Error 401 wording in Notification Cloud Events artifact by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/449
 * Updated `types` property of `Subscription` allowing more than one event type per subscription by @eric-murray in https://github.com/camaraproject/Commonalities/pull/432
-  
+
 ### Fixed
 N/A
 
@@ -320,7 +378,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0:
   - added clarification on `expiresAt` attribute for subscription
 * Updated error codes and changed `info.description` template for device / phone number identifiers in Appendix A in API Design Guideliness by @eric-murray in https://github.com/camaraproject/Commonalities/pull/324 and https://github.com/camaraproject/Commonalities/pull/346
 * Guidelines regarding mandatory error `status` and alignment of error codes related to identifiers in API Design Guidelines by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/329 and https://github.com/camaraproject/Commonalities/pull/351
-* Guidelines on non-mandatory error statuses, 429 made non-mandatory and special considerations for 501 by @rartych in https://github.com/camaraproject/Commonalities/pull/374 
+* Guidelines on non-mandatory error statuses, 429 made non-mandatory and special considerations for 501 by @rartych in https://github.com/camaraproject/Commonalities/pull/374
 * Updated linting rules by @ravindrapalaskar17 in https://github.com/camaraproject/Commonalities/pull/337 and https://github.com/camaraproject/Commonalities/pull/367
 * Updated rules when using POST for sensitive data by @eric-murray in https://github.com/camaraproject/Commonalities/pull/358
 * Changed guidelines on `x-camara-commonalities` extension field by @rartych in https://github.com/camaraproject/Commonalities/pull/375
@@ -340,7 +398,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0:
 * Error 429 aligned for event-subscription-template.yaml and notification-as-cloud-event.yaml by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/407 and https://github.com/camaraproject/Commonalities/pull/408
 * Updated event example in notification-as-cloud-event.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/415
 
-  
+
 ### Removed
 * Removed sinkCredential from Subscription schema in event-subscription-template.yaml by @eric-murray in https://github.com/camaraproject/Commonalities/pull/400
 
@@ -380,7 +438,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0-rc.
   - added clarification on `expiresAt` attribute for subscription
 * Updated error codes and changed `info.description` template for device / phone number identifiers in Appendix A in API Design Guideliness by @eric-murray in https://github.com/camaraproject/Commonalities/pull/324 and https://github.com/camaraproject/Commonalities/pull/346
 * Guidelines regarding mandatory error `status` and alignment of error codes related to identifiers in API Design Guidelines by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/329 and https://github.com/camaraproject/Commonalities/pull/351
-* Guidelines on non-mandatory error statuses, 429 made non-mandatory and special considerations for 501 by @rartych in https://github.com/camaraproject/Commonalities/pull/374 
+* Guidelines on non-mandatory error statuses, 429 made non-mandatory and special considerations for 501 by @rartych in https://github.com/camaraproject/Commonalities/pull/374
 * Updated linting rules by @ravindrapalaskar17 in https://github.com/camaraproject/Commonalities/pull/337 and https://github.com/camaraproject/Commonalities/pull/367
 * Updated rules when using POST for sensitive data by @eric-murray in https://github.com/camaraproject/Commonalities/pull/358
 * Changed guidelines on `x-camara-commonalities` extension field by @rartych in https://github.com/camaraproject/Commonalities/pull/375
@@ -393,7 +451,7 @@ This release contains documents and artifacts of Commonalities version 0.5.0-rc.
 * Note on support for networkAccessIdentifier in CAMARA_common.yaml by @jlurien in https://github.com/camaraproject/Commonalities/pull/379
 * Improved 403 INVALID_TOKEN_CONTEXT scope/description by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/377
 * Updated message field and description for Error 429 by @rartych in https://github.com/camaraproject/Commonalities/pull/390
-  
+
 ### Removed
 N/A
 
@@ -466,7 +524,7 @@ The content of the release includes:
 * `minItems: 1` & `maxItems: 1` for subscription `types` in event-subscription-template.yaml by @maxl2287 in https://github.com/camaraproject/Commonalities/pull/236
 * `SUBSCRIPTION_DELETED` as new `terminationReason` for CloudEvents by @maxl2287 in https://github.com/camaraproject/Commonalities/pull/238
 * Error 422 UNIDENTIFIABLE_DEVICE added in API Design Guidelines and CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/256
-    
+
 ### Changed
 * API Design Guidelines updated with subscriptionMaxEvents by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/131
 * 'specversion' in CloudEvents as enum by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/187
@@ -483,7 +541,7 @@ The content of the release includes:
 * API-DocumentationTemplate.md marked as deprecated by @rartych in https://github.com/camaraproject/Commonalities/pull/261
 * Updated event-subscription-template.yaml with attribute startsAt set optional, sinkCredential definition, and other corrections by @rartych in https://github.com/camaraproject/Commonalities/pull/267
 * Filename boilerplate changed to kebab-case to match examples in API-Testing-Guidelines.md by @Kevsy in https://github.com/camaraproject/Commonalities/pull/281
-  
+
 ### Fixed
 * API Design Guidelines updated with character set guidance by @trehman-gsma in https://github.com/camaraproject/Commonalities/pull/143
 * Mandated '+' in all phoneNumber formats by @fernandopradocabrillo in https://github.com/camaraproject/Commonalities/pull/148
@@ -521,7 +579,7 @@ It contains the following corrections compared to [v0.4.0-rc.1](#v040-rc1).
 * API-DocumentationTemplate.md marked as deprecated by @rartych in https://github.com/camaraproject/Commonalities/pull/261
 * Updated event-subscription-template.yaml with attribute startsAt set optional, sinkCredential definition, and other corrections by @rartych in https://github.com/camaraproject/Commonalities/pull/267
 
-  
+
 ### Fixed
 * API Design Guidelines - formatting corrected in section 11.6.1 by @rartych in https://github.com/camaraproject/Commonalities/pull/255
 * MNO abbreviation replaced in CAMARA_common.yaml by @rartych in https://github.com/camaraproject/Commonalities/pull/270
@@ -539,7 +597,7 @@ It contains the following corrections compared to [v0.4.0-rc.1](#v040-rc1).
 **The relevant details of authentication and consent collection are covered by [version 0.2.0](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
 
 ## Please note:
-This is the first **Release Candidate** version for Commonalities release 0.4.0. 
+This is the first **Release Candidate** version for Commonalities release 0.4.0.
 
 The content of the release includes:
 * Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r0.4.0-rc.1/documentation)** folder
@@ -573,7 +631,7 @@ The content of the release includes:
 * Error response model updated in chapter 6 of API Design Guidelines by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/213
 * Enhanced API-Testing-Guidelines.md by @jlurien in https://github.com/camaraproject/Commonalities/pull/203
 * Updated API versioning guidelines chapter 5 of API Design Guidelines by @tanjadegroot in https://github.com/camaraproject/Commonalities/pull/215
-  
+
 ### Fixed
 * API Design Guidelines updated with character set guidance by @trehman-gsma in https://github.com/camaraproject/Commonalities/pull/143
 * Mandated '+' in all phoneNumber formats by @fernandopradocabrillo in https://github.com/camaraproject/Commonalities/pull/148
@@ -614,7 +672,7 @@ The content of the release includes:
 * Usage and style of operation tags in API Design Guidelines by @rartych in https://github.com/camaraproject/Commonalities/pull/152
 * x-correlator support in notifications in API Design Guidelines by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/170
 * Create subscription-notification-template.yaml by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/189
-* Added a different scope naming format for APIs that deal with explicit subscriptions by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/177 
+* Added a different scope naming format for APIs that deal with explicit subscriptions by @shilpa-padgaonkar in https://github.com/camaraproject/Commonalities/pull/177
 ### Changed
 * API Design Guidelines updated with subscriptionMaxEvents by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/131
 * 'specversion' in CloudEvents as enum by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/187
@@ -658,7 +716,7 @@ The content of the release includes:
 * API Design Guidelines updated with scopes naming guidelines by @jlurien in https://github.com/camaraproject/Commonalities/pull/57
 * API Linting Rules - initial linting ruleset description by @rartych in https://github.com/camaraproject/Commonalities/pull/74
 * API linting implementation and guidelines by @ravindrapalaskar17 in https://github.com/camaraproject/Commonalities/pull/110
-  
+
 ### Changed
 * CAMARA_common.yaml includes the following changes:
   - CAMARA_common.json was changed to CAMARA_common.yaml to be consistent with all CAMARA API specs
@@ -695,7 +753,7 @@ The content of the release includes:
 * Usage of discriminator: Encourage inheritance rather than polymorphism by @patrice-conil in https://github.com/camaraproject/Commonalities/pull/22
 * Use ObjectName as discriminator's mapping key by @patrice-conil in https://github.com/camaraproject/Commonalities/pull/78
 * OAS definition of CAMARA Event using Cloudevents in artifacts: [notification-as-cloud-event.yaml](https://github.com/camaraproject/Commonalities/blob/release-0.2.0/artifacts/notification-as-cloud-event.yaml) by @patrice-conil in https://github.com/camaraproject/Commonalities/pull/43
-    
+
 ### Changed
 * Updated API Design Guidelines with use of callbacks & cloudEvents by @bigludo7 in https://github.com/camaraproject/Commonalities/pull/56
 * Updated Architecture headers in API Design Guidelines by @eric-murray in https://github.com/camaraproject/Commonalities/pull/88
