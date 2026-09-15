@@ -207,7 +207,7 @@ Background:
 
 * It is recommended to only have one When/Then block per scenario. However, in case of complex scenarios, several When/Then blocks can be concatenated in the same scenario.
 
-* Each scenario will have a tag with the scenario unique identifier. The recommended format for scenario identifier is:
+* Each scenario MUST have a unique `Scenario` name (or `Scenario Outline` name) within a feature and a unique tag identifier. The recommended format for scenario tag identifier is:
 
 ```
 @<(mandatory)feature_identifier>_<(mandatory)number>_<(optional)short detail in lower case and using underscore “_” as the separator>
