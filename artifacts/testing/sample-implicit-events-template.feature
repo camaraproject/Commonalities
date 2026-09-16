@@ -1,6 +1,6 @@
 Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.yaml
 
-    CAMARA Commonalities: 0.9.0
+    CAMARA Commonalities: wip
     Additional Common test scenarios for operations defined in sample-implicit-events.yaml.
 
     Common test scenarios for operations defined in sample-implicit-events.yaml are already defined in sample-service-template.feature.
