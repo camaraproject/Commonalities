@@ -27,6 +27,9 @@ on:
 jobs:
   sync-and-sweep:
     name: CommonalitiesTest
+    # Forks copy this file and would run the schedule daily, but the run
+    # cannot succeed without the App secrets that only exist in camaraproject.
+    if: github.repository_owner == 'camaraproject'
     uses: camaraproject/tooling/.github/workflows/commonalities-regression-sync.yml@main
     with:
       force: ${{ inputs.force || false }}
