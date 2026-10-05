@@ -386,7 +386,7 @@ The following scenarios MUST be rejected with appropriate HTTP error codes and M
 * **Authorization failures:** Insufficient permissions, forbidden business logic conditions → `403 PERMISSION_DENIED` or `403 {{SPECIFIC_CODE}}`
 * **Resource not found:** Non-existent identifiers, missing resources → `404 NOT_FOUND` or `404 IDENTIFIER_NOT_FOUND`
 * **State conflicts:** Resource incompatibility, already exists, state mismatch → `409` status
-* **Identifier issues:** Missing, unnecessary, or unsupported identifiers in authentication context → `422 MISSING_IDENTIFIER`, `422 UNNECESSARY_IDENTIFIER`, or `422 UNSUPPORTED_IDENTIFIER`
+* **Identifier issues:** Missing, unnecessary, or unsupported identifiers in authentication context → `422 MISSING_IDENTIFIER`, `422 UNNECESSARY_IDENTIFIER`
 * **Service unavailable for subscriber:** Subscription or segment not supported, not commercially delivered → `422 SERVICE_NOT_APPLICABLE`
 * **Service cannot be delivered at all:** Permanent conditions preventing fulfillment, where the request context does not change the outcome → `422 {{SPECIFIC_CODE}}`
 
