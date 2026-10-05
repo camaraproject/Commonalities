@@ -395,7 +395,7 @@ The following scenarios MUST be rejected with appropriate HTTP error codes and M
 The following scenarios are candidates for HTTP `2xx` responses with business-level outcomes:
 
 * **Service available with degraded precision:** The API can provide a response with lower precision, accuracy, or completeness than the ideal case (e.g., location data with reduced accuracy).
-* **Service temporarily unavailable:** The service cannot be provided at this moment but may be available later; the response includes valuable context for the API consumer (e.g., device temporarily not reachable, but retry advised).
+* **Service temporarily unavailable**: The request was processed successfully but the service cannot be provided at this moment but may be available later; the response includes valuable context for the API consumer (e.g., device temporarily not reachable, but retry advised).
 * **Empty or out-of-range results:** Resource arrays are empty due to filtering, sorting, or pagination boundaries (e.g., requested page exceeds total pages).
 * **Partial data availability:** Only a subset of requested information can be provided due to constraints that may vary over time (e.g., some device properties unavailable, user privacy restrictions).
 
