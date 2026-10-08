@@ -373,6 +373,56 @@ An example JSON response body for an HTTP `200` response when the data is unavai
 * Existing stable APIs MAY adopt it in a future MAJOR version where behavior or response semantics would otherwise change.
 * Where possible, APIs MAY introduce `contextCode` and `contextMessage` as additive, backward-compatible changes.
 
+#### 3.1.6. Scope of Business-Level Outcome Scenarios
+
+Business-level outcomes in successful responses apply to a specific set of scenarios. This section clarifies which situations fall within scope and which require error responses instead.
+
+**Out of Scope — Use HTTP Error Responses:**
+
+The following scenarios MUST be rejected with appropriate HTTP error codes and MUST NOT be modeled as business-level outcomes in 2xx responses:
+
+* **Request validation failures:** Syntax errors, invalid parameters, missing required fields → `400 INVALID_ARGUMENT` or `400 OUT_OF_RANGE`
+* **Authentication failures:** Missing, invalid, or expired credentials → `401 UNAUTHENTICATED`
+* **Authorization failures:** Insufficient permissions, forbidden business logic conditions → `403 PERMISSION_DENIED` or `403 {{SPECIFIC_CODE}}`
+* **Resource not found:** Non-existent identifiers, missing resources → `404 NOT_FOUND` or `404 IDENTIFIER_NOT_FOUND`
+* **State conflicts:** Resource incompatibility, already exists, state mismatch → `409` status
+* **Identifier issues:** Missing, unnecessary, or unsupported identifiers in authentication context → `422 MISSING_IDENTIFIER`, `422 UNNECESSARY_IDENTIFIER`
+* **Service unavailable for subscriber:** Subscription or segment not supported, not commercially delivered → `422 SERVICE_NOT_APPLICABLE`
+* **Service cannot be delivered at all:** Permanent conditions preventing fulfillment, where the request context does not change the outcome → `422 {{SPECIFIC_CODE}}`
+
+**In Scope — May Use HTTP 2xx with Business-Level Outcomes:**
+
+The following scenarios are candidates for HTTP `2xx` responses with business-level outcomes:
+
+* **Service available with degraded precision:** The API can provide a response with lower precision, accuracy, or completeness than the ideal case (e.g., location data with reduced accuracy).
+* **Service temporarily unavailable**: The request was processed successfully but the service cannot be provided at this moment but may be available later; the response includes valuable context for the API consumer (e.g., device temporarily not reachable, but retry advised).
+* **Empty or out-of-range results:** Resource arrays are empty due to filtering, sorting, or pagination boundaries (e.g., requested page exceeds total pages).
+* **Partial data availability:** Only a subset of requested information can be provided due to constraints that may vary over time (e.g., some device properties unavailable, user privacy restrictions).
+
+**Distinction Criteria:**
+
+An outcome scenario qualifies for 2xx modeling if it meets ALL of the following conditions:
+
+* The service **can be delivered**, albeit potentially in a degraded or partial form at this moment.
+* The scenario represents a **temporal or contextual condition** that may change over time, where a retry could yield a different (potentially complete) response.
+* The scenario **does not hide a permanent inability** to deliver the service — the API request context does not fundamentally preclude service delivery.
+* The scenario is **chargeable** and the API design supports differentiated charging models if required by business alignment. Such a decision for this differentiated charging is outside CAMARA scope and it is up to business aligments and other forums (e.g. GSMA), but CAMARA APIs design MUST be ready to provide a mean for that business aligment.
+* The scenario is **agreed within the API initiative** and documented in the API specification so consumers understand the behavior.
+* There is no **sensible information, privacy regulation or data minimization** risk on providing that information
+
+**Initial Scenarios:**
+
+The following scenarios are identified as candidates for 2xx business-level outcome modeling:
+
+| Scenario | Applicable Behavior |
+|----------|---------------------|
+| Business condition where service can be provided with lower precision | 2xx Business-level Outcomes in Successful Responses |
+| Business condition where service cannot be provided temporarily, indicating valuable information for API Consumer | 2xx Business-level Outcomes in Successful Responses |
+| Resource Array is empty | 2xx Business-level Outcomes in Successful Responses |
+| Pagination Scenario — requested page is out of range (then the returned array is empty) | 2xx Business-level Outcomes in Successful Responses |
+
+**Note:** When in doubt, prefer using appropriate HTTP error codes. The primary goal of this guidance is to improve consistency and predictability across CAMARA APIs while ensuring API consumers can reliably distinguish between request failures and degraded service delivery.
+
 ### 3.2. Error Responses
 
 To ensure interoperability, it is crucial to implement error management that strictly adheres to the error codes defined in the HTTP protocol.
