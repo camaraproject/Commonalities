@@ -29,15 +29,15 @@ Based on the decision taken in the [Release Management](https://github.com/camar
 * Any public release must include a full test plan, covering both sunny and rainy day scenarios, to be considered stable. This may include unusual or not explicitly specified error scenarios, semantic validations, and corner cases.
 
 In this document:
-* **Basic test cases** cover the minimum mandatory scope for a release candidate: successful/error scenarios validating the API interface against the specification.
-* **Enhanced test cases** extend this scope for a public release (mandatory for a stable public) with broader coverage, including error specific scenarios, semantic validations, and corner cases. They  usually require an alignment among participants in a specific API initiative.
+* **Basic test cases** cover the minimum mandatory scope for a release candidate: successful and error scenarios that validate the API interface against the API specification.
+* **Enhanced test cases** extend this scope for public releases and are mandatory for a stable public release. They provide broader coverage, including specific error scenarios, semantic validations, and corner cases. Their scope usually needs to be agreed upon by participants in the relevant API initiative.
 
-In order to establish a clear boundary between them, `Basic test cases` scope is the one delimited by the [Commonalities Testing Artifacts](../artifacts/testing). Those artifacts apply to an API based on the API design:
-* When API has device concept it applies: [C01-device-errors.feature](../artifacts/testing/C01-device-errors.feature)
-* When API has phoneNumber concept it applies: [C02-phoneNumber-errors.feature](../artifacts/testing/C02-phoneNumber-errors.feature)
-* For Service APIs (No subscriptions) it applies: [sample-service-template.feature](../artifacts/testing/sample-service-template.feature)
-* For Service APIs with Implicit Subscription it applies: [sample-implicit-events-template.feature](../artifacts/testing/sample-implicit-events-template.feature)
-* For Service APIs with Explicit Subscription it applies: [sample-service-template.feature](../artifacts/testing/sample-service-template.feature)
+To clearly distinguish these scopes, the scope of `Basic test cases` is defined by the [Commonalities Testing Artifacts](../artifacts/testing). These artifacts apply according to the API design:
+* For APIs with a `device` concept, use: [C01-device-errors.feature](../artifacts/testing/C01-device-errors.feature)
+* For APIs with a `phoneNumber` concept, use: [C02-phoneNumber-errors.feature](../artifacts/testing/C02-phoneNumber-errors.feature)
+* For service APIs without subscriptions, use: [sample-service-template.feature](../artifacts/testing/sample-service-template.feature)
+* For service APIs with implicit subscriptions, use: [sample-implicit-events-template.feature](../artifacts/testing/sample-implicit-events-template.feature)
+* For service APIs with explicit subscriptions, use: [sample-service-template.feature](../artifacts/testing/sample-service-template.feature)
 
 If subprojects also intend to add test implementations, an aligned single implementation agreed among all provider implementors could be added to the main subproject repo. If no alignment is possible, each provider implementer will add the test implementation to their own repos.
 
