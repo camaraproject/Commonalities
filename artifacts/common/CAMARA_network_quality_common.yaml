@@ -1,0 +1,180 @@
+info:
+  title: CAMARA common network quality data types
+  description: |
+    Common data types for CAMARA APIs that express network quality, such as
+    data rates and packet delay budgets.
+
+    The file has three sections:
+    - Units (`Rate`, `Duration`): generic value-and-unit structures.
+    - Network quality indicators (`PacketDelayBudget`, `Jitter`, `PacketErrorLossRate`):
+      a value type with a defined network meaning.
+    - Combined requirement (`NetworkQualityThresholds`): the minimum quality an
+      application requires, as stated by the API consumer.
+
+    Units and indicators are role-neutral: they do not state whether a value is a
+    target, a requirement, a booked value or a measurement. The API that embeds them
+    defines that meaning in its own property descriptions.
+
+    API repositories that need these types place this file in `code/common/`
+    alongside `CAMARA_common.yaml` and reference schemas via
+    `$ref: "../common/CAMARA_network_quality_common.yaml#/components/schemas/<SchemaName>"`.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: wip
+  x-camara-commonalities: wip
+
+components:
+  schemas:
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Section 1: Units
+    #
+    # Generic value-and-unit structures with no network meaning of their own.
+    # Each embedding API documents whether a value is a target, a requirement,
+    # a booked value or a measurement.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    Rate:
+      description: A data rate, given as a numeric value and a unit.
+      type: object
+      required:
+        - value
+        - unit
+      properties:
+        value:
+          description: Numeric amount of the data rate.
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 1024
+          example: 10
+        unit:
+          $ref: "#/components/schemas/RateUnitEnum"
+
+    RateUnitEnum:
+      description: |
+        Unit of a data rate, in bits per second with SI decimal prefixes
+        (kbps = 10^3 bps, Mbps = 10^6 bps, Gbps = 10^9 bps, Tbps = 10^12 bps).
+      type: string
+      enum:
+        - bps
+        - kbps
+        - Mbps
+        - Gbps
+        - Tbps
+
+    Duration:
+      description: |
+        A duration, given as a numeric value and a time unit.
+        The value is bounded so that a duration is expressed in a suitable unit
+        rather than as a very large number of a smaller unit.
+      type: object
+      required:
+        - value
+        - unit
+      properties:
+        value:
+          description: Numeric amount of the duration.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 99999
+          example: 12
+        unit:
+          $ref: "#/components/schemas/TimeUnitEnum"
+
+    TimeUnitEnum:
+      description: Unit of time.
+      type: string
+      enum:
+        - Days
+        - Hours
+        - Minutes
+        - Seconds
+        - Milliseconds
+        - Microseconds
+        - Nanoseconds
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Section 2: Network quality indicators
+    #
+    # A value type plus a defined meaning for a network quality indicator.
+    # Role-neutral, like the units in Section 1.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    PacketDelayBudget:
+      description: |
+        The maximum allowable one-way latency between the device and the gateway
+        from the operator's network to other networks. The end-to-end or round-trip
+        latency will be about two times this value plus the latency not controlled
+        by the operator.
+      allOf:
+        - $ref: "#/components/schemas/Duration"
+
+    Jitter:
+      description: |
+        The maximum variation in round-trip packet delay for the 99th percentile of
+        traffic, following ITU-T Y.1540. It considers only acknowledged packets in a
+        session, which are packets that receive a confirmation of receipt from the
+        recipient (e.g., using TCP). Limiting jitter keeps latency consistent, which
+        is essential for real-time applications such as voice calls, video calls and
+        gaming.
+      allOf:
+        - $ref: "#/components/schemas/Duration"
+
+    PacketErrorLossRate:
+      description: |
+        The level of packet loss during transmission. The value is an exponent of 10,
+        so a value of 3 means up to 10⁻³, or 0.1%, of the data packets.
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 10
+      example: 3
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Section 3: Combined requirement type
+    #
+    # For APIs in which the API consumer states the minimum network quality
+    # its application requires.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    NetworkQualityThresholds:
+      description: |
+        The minimum network quality an application requires: the data rates are
+        lower bounds, and the packet delay budget, jitter and packet error loss rate
+        are upper bounds. At least one property MUST be provided. How the API provider evaluates
+        the thresholds (e.g. whether they are met, or are predicted to be met)
+        is defined by the API that references this schema.
+      type: object
+      minProperties: 1
+      properties:
+        targetMinDownstreamRate:
+          description: Minimum downstream (network to device) data rate the application requires.
+          allOf:
+            - $ref: "#/components/schemas/Rate"
+        targetMinUpstreamRate:
+          description: Minimum upstream (device to network) data rate the application requires.
+          allOf:
+            - $ref: "#/components/schemas/Rate"
+        packetDelayBudget:
+          $ref: "#/components/schemas/PacketDelayBudget"
+        jitter:
+          $ref: "#/components/schemas/Jitter"
+        packetErrorLossRate:
+          $ref: "#/components/schemas/PacketErrorLossRate"
+      example:
+        targetMinDownstreamRate:
+          value: 10
+          unit: Mbps
+        targetMinUpstreamRate:
+          value: 2
+          unit: Mbps
+        packetDelayBudget:
+          value: 50
+          unit: Milliseconds
+        jitter:
+          value: 20
+          unit: Milliseconds
+        packetErrorLossRate: 3
