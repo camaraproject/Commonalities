@@ -28,6 +28,17 @@ Based on the decision taken in the [Release Management](https://github.com/camar
 * Release candidates must have at least a basic API test plan, covering sunny day scenarios. Scenarios are expected to validate that the implemented interface is compliant with the specification, in terms of syntax and support for the mandatory aspects. 
 * Any public release must include a full test plan, covering both sunny and rainy day scenarios, to be considered stable. This may include unusual or not explicitly specified error scenarios, semantic validations, and corner cases.
 
+In this document:
+* **Basic test cases** cover the minimum mandatory scope for a release candidate: successful/error scenarios validating the API interface against the specification.
+* **Enhanced test cases** extend this scope for a public release (mandatory for a stable public) with broader coverage, including error specific scenarios, semantic validations, and corner cases. They  usually require an alignment among participants in a specific API initiative.
+
+In order to establish a clear boundary between them, `Basic test cases` scope is the one delimited by the [Commonalities Testing Artifacts](../artifacts/testing). Those artifacts apply to an API based on the API design:
+* When API has device concept it applies: [C01-device-errors.feature](../artifacts/testing/C01-device-errors.feature)
+* When API has phoneNumber concept it applies: [C02-phoneNumber-errors.feature](../artifacts/testing/C02-phoneNumber-errors.feature)
+* For Service APIs (No subscriptions) it applies: [sample-service-template.feature](../artifacts/testing/sample-service-template.feature)
+* For Service APIs with Implicit Subscription it applies: [sample-implicit-events-template.feature](../artifacts/testing/sample-implicit-events-template.feature)
+* For Service APIs with Explicit Subscription it applies: [sample-service-template.feature](../artifacts/testing/sample-service-template.feature)
+
 If subprojects also intend to add test implementations, an aligned single implementation agreed among all provider implementors could be added to the main subproject repo. If no alignment is possible, each provider implementer will add the test implementation to their own repos.
 
 * Test plans are not meant to certify the accuracy or veracity of the implementation's responses but to ensure that the interface complies with the API specification and that the API is fully implemented.
