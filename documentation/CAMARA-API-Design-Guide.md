@@ -373,6 +373,64 @@ An example JSON response body for an HTTP `200` response when the data is unavai
 * Existing stable APIs MAY adopt it in a future MAJOR version where behavior or response semantics would otherwise change.
 * Where possible, APIs MAY introduce `contextCode` and `contextMessage` as additive, backward-compatible changes.
 
+#### 3.1.6. Scope of Business-Level Outcome Scenarios
+
+Business-level outcomes in successful responses apply to a specific set of scenarios. This section clarifies which situations fall within scope and which require error responses instead.
+
+**Out of Scope — Use HTTP Error Responses:**
+
+The following scenarios MUST be rejected with appropriate HTTP error codes and MUST NOT be modeled as business-level outcomes in 2xx responses:
+
+* **Request validation failures:** Syntax errors, invalid parameters, missing required fields → `400 INVALID_ARGUMENT` or `400 OUT_OF_RANGE`
+* **Authentication failures:** Missing, invalid, or expired credentials → `401 UNAUTHENTICATED`
+* **Authorization failures:** Insufficient permissions, forbidden business logic conditions → `403 PERMISSION_DENIED` or `403 {{SPECIFIC_CODE}}`
+* **Resource not found:** Non-existent identifiers, missing resources → `404 NOT_FOUND` or `404 IDENTIFIER_NOT_FOUND`
+* **State conflicts:** Resource incompatibility, already exists, state mismatch → `409` status
+* **Identifier issues:** Missing, unnecessary, or unsupported identifiers in authentication context → `422 MISSING_IDENTIFIER`, `422 UNNECESSARY_IDENTIFIER`
+* **Service unavailable for subscriber:** Subscription or segment not supported, not commercially delivered → `422 SERVICE_NOT_APPLICABLE`
+* **Service cannot be delivered at all:** Permanent conditions preventing fulfillment, where the request context does not change the outcome → `422 {{SPECIFIC_CODE}}`
+
+**In Scope — May Use HTTP 2xx with Business-Level Outcomes:**
+
+The following scenarios are candidates for HTTP `2xx` responses with business-level outcomes:
+
+* **Service available with degraded precision:** The API can provide a response with lower precision, accuracy, or completeness than the ideal case (e.g., location data with reduced accuracy).
+* **Temporary business condition after processing:** The request was processed successfully and its domain outcome can be determined, but the service cannot be provided for the current subject or context at this moment. The response includes valuable information for the API Consumer, and a later retry may produce a different outcome.
+* **Empty or out-of-range results:** Resource arrays are empty due to filtering, sorting, or pagination boundaries (e.g., requested page exceeds total pages).
+* **Partial data availability:** Only a subset of requested information can be provided due to constraints that may vary over time (e.g., some device properties unavailable, user privacy restrictions).
+
+**Distinction Criteria:**
+
+An outcome scenario qualifies for 2xx modeling if it meets ALL of the following conditions:
+
+* The request is valid and has been processed to the point where a domain-level outcome can be determined, even if the requested service cannot be fully delivered for the current subject or context.
+* The scenario represents a **temporal or contextual condition** that may change over time, where a retry could yield a different (potentially complete) response.
+* The scenario **does not hide a permanent inability** to deliver the service — the API request context does not fundamentally preclude service delivery.
+* The scenario is **chargeable** and the API design supports differentiated charging models if required by business alignment. Such a decision for this differentiated charging is outside CAMARA scope and it is up to business aligments and other forums (e.g. GSMA), but CAMARA APIs design MUST be ready to provide a mean for that business aligment.
+* The scenario is **agreed within the API initiative** and documented in the API specification so consumers understand the behavior.
+* There is no **sensible information, privacy regulation or data minimization** risk on providing that information
+
+**Distinction between 2xx Business-Level Outcomes and `503 UNAVAILABLE`:**
+
+The fact that a condition is temporary or that the API Consumer may retry the request later MUST NOT, by itself, determine the HTTP status code.
+
+* A `2xx` response with a business-level outcome MUST be used when the request has been successfully validated and processed to the point where the API can determine the domain outcome, but a business or subject-specific condition prevents complete fulfilment. For example, a device status request may be processed successfully while the device is switched off or disconnected from the network. The response MUST expose the corresponding domain outcome.
+* `503 UNAVAILABLE` MUST be used when a temporary technical condition prevents the API from processing the request, or from processing it sufficiently to determine the domain outcome. In this case, the API MUST NOT represent the condition as a business-level outcome. Examples include service maintenance or a temporary failure of an internal dependency.
+* A recommendation to retry later MAY apply to both cases, but they are not equivalent: `2xx` indicates that a business outcome has been determined, whereas `503` indicates that the API could not determine that outcome.
+
+**Initial Scenarios:**
+
+The following scenarios are identified as candidates for 2xx business-level outcome modeling:
+
+| Scenario | Applicable Behavior |
+|----------|---------------------|
+| Business condition where service can be provided with lower precision | 2xx Business-level Outcomes in Successful Responses |
+| Business condition where the request has been processed but the service cannot be provided temporarily for the current subject or context | 2xx Business-level Outcomes in Successful Responses |
+| Resource Array is empty | 2xx Business-level Outcomes in Successful Responses |
+| Pagination Scenario — requested page is out of range (then the returned array is empty) | 2xx Business-level Outcomes in Successful Responses |
+
+**Note:** When in doubt, prefer using appropriate HTTP error codes. The primary goal of this guidance is to improve consistency and predictability across CAMARA APIs while ensuring API consumers can reliably distinguish between request failures and degraded service delivery.
+
 ### 3.2. Error Responses
 
 To ensure interoperability, it is crucial to implement error management that strictly adheres to the error codes defined in the HTTP protocol.
@@ -477,7 +535,7 @@ In the following, we elaborate on the existing errors. In particular, we identif
 |       500        |        `INTERNAL`        | Unknown server error. Typically a server bug.                                                                 | Problem in Server side. Regular Server Exception                                                                                         |
 |       501        |    `NOT_IMPLEMENTED`     | This functionality is not implemented yet.                                                                    | Service not implemented. The use of this code SHOULD be avoided as far as possible to get the objective to reach aligned implementations |
 |       502        |      `BAD_GATEWAY`       | An upstream internal service cannot be reached.                                                               | Internal routing problem in the Server side that blocks to manage the service properly                                                   |
-|       503        |      `UNAVAILABLE`       | Service Unavailable.                                                                                          | Service is not available. Temporary situation usually related to maintenance process in the server side                                  |
+|       503        |      `UNAVAILABLE`       | Service Unavailable.                                                                                          | Service is not available. Temporary situation usually related to maintenance process in the server side. It represents a temporary technical condition preventing the API from processing the request, or from processing it sufficiently to determine a business-level outcome.                                |
 |       504        |        `TIMEOUT`         | Request timeout exceeded.                                                                                     | API Server Timeout                                                                                                                       |
 
 > _NOTE 1: When no login has been performed or no authentication has been assigned, a non-descriptive generic error will always be returned in all cases, an `UNAUTHENTICATED` 401 “Request not authenticated due to missing, invalid, or expired credentials.” is returned, whatever the reason._
