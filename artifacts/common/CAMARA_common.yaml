@@ -324,6 +324,38 @@ components:
       minimum: -180
       maximum: 180
 
+    Imei:
+      description: Schema for the International Mobile Equipment Identity (IMEI) of a physical mobile device
+      type: string
+      minLength: 15
+      maxLength: 15
+      pattern: ^[0-9]{15}$
+      example: "490154203237518"
+
+    ImeiSv:
+      description: Schema for the International Mobile Equipment Identity - Software Version (IMEISV) of a physical mobile device
+      type: string
+      minLength: 16
+      maxLength: 16
+      pattern: ^[0-9]{16}$
+      example: "4901542032375180"
+
+    Tac:
+      description: Schema for the IMEI Type Allocation Code (TAC) of a physical mobile device
+      type: string
+      minLength: 8
+      maxLength: 8
+      pattern: ^[0-9]{8}$
+      example: "49015420"
+
+    Ppid:
+      description: Schema for the Pairwise Pseudonymous Identifier (PPID) of a physical mobile device
+      type: string
+      minLength: 64
+      maxLength: 128
+      pattern: ^[a-fA-F0-9]{64,128}$
+      example: "b083f65ccdad365d7489fff24b6d5074b30c12b6d81db3404d25964ffd908813"
+
     # ─────────────────────────────────────────────────────────────────────────
     # Pagination
     # ─────────────────────────────────────────────────────────────────────────
