@@ -240,6 +240,25 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
+  # applicable for operations with a JSON request body
+  # Examples: one top-level path, plus one path inside each object-typed property of the request schema
+  @{feature_identifier}_{operationId}_400.09_request_body_strictness
+  Scenario Outline: Undeclared property in request body
+    Given the request body is set to a valid request body
+    And the request body includes the property "<undeclared_property>" which is not declared in the schema at "#/components/schemas/{requestSchema}"
+    When the request "{operationId}" is sent
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+    Examples:
+      | undeclared_property                   |
+      | $.undeclaredProperty                  |
+      | $.{objectProperty}.undeclaredProperty |
+
   # Service Error scenarios
 
   ## Authentication/Authorization errors
