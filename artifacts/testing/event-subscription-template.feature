@@ -164,26 +164,26 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the response body property "$.sinkCredential.credentialType", if present, is set to value "ACCESSTOKEN"
     And the response body property "$.sinkCredential.accessTokenExpiresUtc", if present, is set to the same value of the request property "$.sinkCredential.accessTokenExpiresUtc"
 
-  @{xxx}_subscriptions_13_Create_{xxx}_subscription_sync_with_private_jwt_key_sink_credential_out_of_band_provisioning
-  Scenario: Create {xxx} subscription (sync creation) with PRIVATE_JWT_KEY sinkCredential, out-of-band provisioning
+  @{xxx}_subscriptions_13_Create_{xxx}_subscription_sync_with_private_key_jwt_sink_credential_out_of_band_provisioning
+  Scenario: Create {xxx} subscription (sync creation) with PRIVATE_KEY_JWT sinkCredential, out-of-band provisioning
   # Some implementations may only support asynchronous subscription creation
   # Some implementations may only support out_of_band provisioning
     Given that subscriptions are created synchronously
     And a valid subscription request body
-    And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_JWT_KEY"
+    And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_KEY_JWT"
     When the request "create{xxx}Subscription" is sent
     Then the response code is 201
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/Subscription"
 
-  @{xxx}_subscriptions_14_Create_{xxx}_subscription_sync_with_private_jwt_key_sink_credential_in_band_provisioning
-  Scenario: Create {xxx} subscription (sync creation) with PRIVATE_JWT_KEY sinkCredential, in-band provisioning
+  @{xxx}_subscriptions_14_Create_{xxx}_subscription_sync_with_private_key_jwt_sink_credential_in_band_provisioning
+  Scenario: Create {xxx} subscription (sync creation) with PRIVATE_KEY_JWT sinkCredential, in-band provisioning
   # Some implementations may only support asynchronous subscription creation
   # Some implementations may additionally support in_band provisioning
     Given that subscriptions are created synchronously
     And a valid subscription request body
-    And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_JWT_KEY"
+    And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_KEY_JWT"
     And the request property "$.sinkCredential.clientId" is set to a valid value
     And the request property "$.sinkCredential.tokenUri" is set to a valid value
     When the request "create{xxx}Subscription" is sent
@@ -191,7 +191,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/Subscription"
-    And the response body property "$.sinkCredential.credentialType" is set to value "PRIVATE_JWT_KEY"
+    And the response body property "$.sinkCredential.credentialType" is set to value "PRIVATE_KEY_JWT"
     And the response body property "$.sinkCredential.jwksUri" is set to a valid value
 
   @{xxx}_subscriptions_15_Operation_to_retrieve_subscription_based_on_an_existing_subscription-id_access_token_sink_credential_returned
@@ -206,17 +206,17 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the response body property "$.sinkCredential.credentialType", if present, is set to value "ACCESSTOKEN"
     And the response body property "$.sinkCredential.accessTokenExpiresUtc", if present, is set to the same value of the request property "$.sinkCredential.accessTokenExpiresUtc"
 
-  @{xxx}_subscriptions_16_Operation_to_retrieve_subscription_based_on_an_existing_subscription-id_private_jwt_key_sink_credential_returned
+  @{xxx}_subscriptions_16_Operation_to_retrieve_subscription_based_on_an_existing_subscription-id_private_key_jwt_sink_credential_returned
   # Some implementations may decide to not return the sinkCredential in the response (data minimization principle)
-  # Mainly applicable for in-band provisioning of PRIVATE_JWT_KEY mode for a given subscription
-  Scenario: Get a subscription based on existing subscription-id, with PRIVATE_JWT_KEY sinkCredential returned.
+  # Mainly applicable for in-band provisioning of PRIVATE_KEY_JWT mode for a given subscription
+  Scenario: Get a subscription based on existing subscription-id, with PRIVATE_KEY_JWT sinkCredential returned.
     Given the path parameter "subscriptionId" is set to the identifier of an existing {xxx} subscription
     When the request "retrieve{xxx}Subscription" is sent
     Then the response code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/Subscription"
-    And the response body property "$.sinkCredential.credentialType" is set to value "PRIVATE_JWT_KEY"
+    And the response body property "$.sinkCredential.credentialType" is set to value "PRIVATE_KEY_JWT"
     And the response body property "$.sinkCredential.jwksUri" is set to a valid value
 
 ########################### Error response scenarios ############################################
@@ -448,7 +448,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
 
 ########Specific Subscription error scenario if Private JWT Key is not pre-configured ################
 
-  @{xxx}_subscriptions_61_creation_with_private_jwt_key_not_configured
+  @{xxx}_subscriptions_61_creation_with_private_key_jwt_not_configured
   Scenario: Private JWT Key not configured for subscription creation
     Given the API provider requires the use of a Private JWT key mechanism for subscription creation authentication
     And the Private JWT key mechanism is not pre-configured in the environment
