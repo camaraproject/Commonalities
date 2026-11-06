@@ -165,8 +165,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the request body is included but is not compliant with the schema at "#/components/schemas/{requestSchema}"
     When the request "{operationId}" is sent
     Then the response status code is 400
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
@@ -177,8 +177,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the request body is not included
     When the request "{operationId}" is sent
     Then the response status code is 400
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
@@ -191,8 +191,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the request body is set to {}
     When the request "{operationId}" is sent
     Then the response status code is 400
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
@@ -204,8 +204,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the request body property "<required_property>" is set to {}
     When the request "{operationId}" is sent
     Then the response status code is 400
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
@@ -220,8 +220,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the request body property "<required_property>" is not included
     When the request "{operationId}" is sent
     Then the response status code is 400
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
@@ -235,6 +235,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the header "x-correlator" does not comply with the schema at "#/components/schemas/XCorrelator"
     When the request "{operationId}" is sent
     Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
@@ -250,8 +251,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the header "Authorization" is not sent
     When the request "{operationId}" is sent
     Then the response status code is 401
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -261,8 +262,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the header "Authorization" is set to an expired access token
     When the request "{operationId}" is sent
     Then the response status code is 401
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -272,8 +273,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the header "Authorization" is set to an invalid access token
     When the request "{operationId}" is sent
     Then the response status code is 401
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -285,8 +286,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the header "Authorization" is set to an access token that does not include scope "{scope}"
     When the request "{operationId}" is sent
     Then the response status code is 403
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 403
     And the response property "$.code" is "PERMISSION_DENIED"
     And the response property "$.message" contains a user friendly text
@@ -297,8 +298,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the header "Authorization" is set to a valid access token emitted to an API client which did not have rights to access/manage the "{Resource}"
     When the request "{operationId}" is sent
     Then the response status code is 403
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 403
     And the response property "$.code" is "PERMISSION_DENIED"
     And the response property "$.message" contains a user friendly text
@@ -310,8 +311,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     Given the path parameter "{ResourceId}" is set to a random UUID
     When the request "{operationId}" is sent
     Then the response status code is 404
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 404
     And the response property "$.code" is "NOT_FOUND"
     And the response property "$.message" contains a user friendly text
@@ -327,8 +328,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     And the request body property "$.{requestProperty}" is set to a value already used in another successful "{Resource}" request
     When the request "{operationId}" is sent
     Then the response status code is 409
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 409
     And the response property "$.code" is "ALREADY_EXISTS"
     And the response property "$.message" contains a user friendly text
@@ -340,8 +341,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     # Additional clauses may exist according to API nature
     When the request "{operationId}" is sent
     Then the response status code is 409
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 409
     And the response property "$.code" is "ABORTED"
     And the response property "$.message" contains a user friendly text
@@ -353,8 +354,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     # Additional clauses may exist according to API nature
     When the request "{operationId}" is sent
     Then the response status code is 409
-    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 409
     And the response property "$.code" is "INCOMPATIBLE_STATE"
     And the response property "$.message" contains a user friendly text
@@ -369,6 +370,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     And the threshold of requests has been reached
     When the request "{operationId}" is sent
     Then the response status code is 429
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 429
     And the response property "$.code" is "TOO_MANY_REQUESTS"
     And the response property "$.message" contains a user friendly text
