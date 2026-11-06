@@ -621,6 +621,7 @@ components:
             GENERIC_422_UNNECESSARY_IDENTIFIER_PHONE_NUMBER:
               $ref: "#/components/examples/GENERIC_422_UNNECESSARY_IDENTIFIER_PHONE_NUMBER"
 
+    # 429 for APIs with rate limiting but no quotas
     TooManyRequests429:
       description: Too Many Requests
       headers:
@@ -642,6 +643,32 @@ components:
           examples:
             GENERIC_429_TOO_MANY_REQUESTS:
               $ref: "#/components/examples/GENERIC_429_TOO_MANY_REQUESTS"
+
+    # 429 for APIs with both rate limiting and quotas
+    TooManyRequestsOrQuotaExceeded429:
+      description: Too Many Requests or Quota Exceeded
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 429
+                  code:
+                    enum:
+                      - TOO_MANY_REQUESTS
+                      - QUOTA_EXCEEDED
+          examples:
+            GENERIC_429_TOO_MANY_REQUESTS:
+              $ref: "#/components/examples/GENERIC_429_TOO_MANY_REQUESTS"
+            GENERIC_429_QUOTA_EXCEEDED:
+              $ref: "#/components/examples/GENERIC_429_QUOTA_EXCEEDED"
 
     # ─────────────────────────────────────────────────────────────────────────
     # DEPRECATED error responses
@@ -665,7 +692,7 @@ components:
     #   Generic410 → SinkGone410 (CAMARA_event_common.yaml) in notification
     #                callbacks; local definition from GENERIC_410_GONE otherwise
     #   Generic422 → DeviceIdentifier422 or PhoneNumberIdentifier422
-    #   Generic429 → TooManyRequests429
+    #   Generic429 → TooManyRequests429 or TooManyRequestsOrQuotaExceeded429
     #   Generic405, Generic406, Generic412, Generic415, Generic5xx →
     #                local definition from the corresponding examples
     #                (statuses not documented by default)
@@ -1057,7 +1084,7 @@ components:
                 #     status: 422
                 #     code: "{{SPECIFIC_CODE}}"
                 #     message: Message for specific code
-    # DEPRECATED — use TooManyRequests429 instead
+    # DEPRECATED — use TooManyRequests429 or TooManyRequestsOrQuotaExceeded429 instead
     Generic429:
       description: Too Many Requests
       headers:
