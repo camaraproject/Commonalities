@@ -78,7 +78,7 @@ Several types of `sinkCredential` could be available in the future, but for now 
 | accessToken          | string           | Access Token granting access to send events related to the implicit subscription. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Not returned in the response  | optional    |
 | accessTokenExpiresUtc | string date-time | An absolute UTC instant at which the access token shall be considered expired. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Returned in the response   | optional    |
 | accessTokenType      | string           | Type of access token - MUST be set to `bearer` for now. Applicable for `ACCESSTOKEN` credentialType. Required in the request. Not returned in the response                            | optional    |
-| clientId             | string           | The client ID used to authenticate when requesting an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
+| clientId             | string           | The client  used to authenticate when requesting an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
 | tokenUri             | string           | The URI where to request an access token using `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Optional in the request. Not returned in the response  | optional    |
 | jwksUri              | string           | The URI used to request the public key to verify that the JWT assertion was signed by `PRIVATE_KEY_JWT`. Applicable for `PRIVATE_KEY_JWT` credentialType. Not needed in the request. Optional in the response  | optional    |
 
@@ -347,7 +347,7 @@ response:
     "initialEvent" : true,
     "subscriptionMaxEvents" : 10
   },
-  "id": "456g899g",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
   "startsAt": "2023-03-17T16:02:41.314Z",
   "expiresAt" : "2024-03-17T00:00:00.000Z",
   "status" : "ACTIVE"
