@@ -97,6 +97,11 @@ For operations with a request body, several scenarios are expected to test diffe
     -	group in one file all scenarios testing one closely related API capability (that can cover one or several endpoints).
     -	provide several files when one CAMARA API (yaml) covers several independent functions that can be provided independently
 
+* The feature filename SHOULD reflect the grouping of scenarios within the file:
+    - APIs with a single feature file will use the api-name as file name: E.g. `location-verification.feature`
+    - For APIs with several operations that split the test plan in one feature file per operation, recommendation is to add the `operationId` to the api-name as file name: `quality-on-demand-createSession.feature`.
+    - APIs with several feature files, not split by operation, should use the api-name along some other description, e.g.: `quality-on-demand-notifications.feature`
+
 * Third-person pronoun usage in feature file is advisable as using the third person, conveys information in a more official manner.
 
 
@@ -109,13 +114,6 @@ The feature files will reside under
 E.g.: 
 
 `https://github.com/camaraproject/DeviceLocation/blob/main/code/Test_definitions/location-verification.feature`
-
-
-Filename:
-
-- APIs with a single feature file will use the api-name as file name: E.g. `location-verification.feature`
-- For APIs with several operations that split the test plan in one feature file per operation, recommendation is to add the `operationId` to the api-name as file name: `quality-on-demand-createSession.feature`.
-- APIs with several feature files, not split by operation, should use the api-name along some other description, e.g.: `quality-on-demand-notifications.feature`
 
 ### Feature structure
 
