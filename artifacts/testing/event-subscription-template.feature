@@ -38,7 +38,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     Given that subscriptions are created synchronously
     And a valid subscription request body
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 201
+    Then the response status code is 201
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/Subscription"
@@ -49,7 +49,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     Given that subscriptions are created asynchronously
     And a valid subscription request body
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 202
+    Then the response status code is 202
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/SubscriptionAsync"
@@ -58,7 +58,9 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Receive notification for subscription-started event on creation
     Given a valid subscription request body
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 201 or 202
+    Then the response status code is 201 or 202
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
     And event notification "subscription-started" is received on callback-url
     And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionStarted"
     And type="org.camaraproject.{xxx}-subscriptions.v{x}.subscription-started"
@@ -68,7 +70,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Get a list of {xxx} subscriptions when no subscriptions available
     Given a client without {xxx} subscriptions created
     When the request "retrieve{xxx}SubscriptionList" is sent
-    Then the response code is 200
+    Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/SubscriptionList"
@@ -79,7 +81,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Get a list of subscriptions
     Given a client with {xxx} subscriptions created
     When the request "retrieve{xxx}SubscriptionList" is sent
-    Then the response code is 200
+    Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/SubscriptionList"
@@ -90,7 +92,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Get a subscription based on existing subscription-id.
     Given the path parameter "subscriptionId" is set to the identifier of an existing {xxx} subscription
     When the request "retrieve{xxx}Subscription" is sent
-    Then the response code is 200
+    Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/Subscription"
@@ -99,7 +101,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Delete a subscription based on existing subscription-id.
     Given the path parameter "subscriptionId" is set to the identifier of an existing {xxx} subscription
     When the request "delete{xxx}Subscription" is sent
-    Then the response code is 202 or 204
+    Then the response status code is 202 or 204
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And if the response property "$.status" is 204 then the response body is not available
     And if the response property "$.status" is 202 then the response body complies with the OAS schema at "#/components/schemas/SubscriptionAsync"
@@ -127,7 +129,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Receive notification for subscription-ended event on deletion
     Given the path parameter "subscriptionId" is set to the identifier of an existing {xxx} subscription
     When the request "delete{xxx}Subscription" is sent
-    Then the response code is 202 or 204
+    Then the response status code is 202 or 204
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
     And event notification "subscription-ended" is received on callback-url
     And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnded"
     And type="org.camaraproject.{xxx}-subscriptions.v{x}.subscription-ended"
@@ -140,7 +143,9 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     Given the API supports initial events to be sent
     And a valid subscription request body with property "$.config.initialEvent" set to true
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 201 or 202
+    Then the response status code is 201 or 202
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
     And an event notification of the subscribed type is received on callback-url
     And notification body complies with the OAS schema at "#/components/schemas/CloudEvent"
 
@@ -157,41 +162,41 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the request property "$.sinkCredential.accessToken" is set to a valid access token
     And the request property "$.sinkCredential.accessTokenExpiresUtc" is set to a valid expiry date in the future
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 201
+    Then the response status code is 201
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/Subscription"
     And the response body property "$.sinkCredential.credentialType", if present, is set to value "ACCESSTOKEN"
     And the response body property "$.sinkCredential.accessTokenExpiresUtc", if present, is set to the same value of the request property "$.sinkCredential.accessTokenExpiresUtc"
 
-  @{xxx}_subscriptions_13_Create_{xxx}_subscription_sync_with_private_jwt_key_sink_credential_out_of_band_provisioning
-  Scenario: Create {xxx} subscription (sync creation) with PRIVATE_JWT_KEY sinkCredential, out-of-band provisioning
+  @{xxx}_subscriptions_13_Create_{xxx}_subscription_sync_with_private_key_jwt_sink_credential_out_of_band_provisioning
+  Scenario: Create {xxx} subscription (sync creation) with PRIVATE_KEY_JWT sinkCredential, out-of-band provisioning
   # Some implementations may only support asynchronous subscription creation
   # Some implementations may only support out_of_band provisioning
     Given that subscriptions are created synchronously
     And a valid subscription request body
-    And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_JWT_KEY"
+    And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_KEY_JWT"
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 201
+    Then the response status code is 201
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/Subscription"
 
-  @{xxx}_subscriptions_14_Create_{xxx}_subscription_sync_with_private_jwt_key_sink_credential_in_band_provisioning
-  Scenario: Create {xxx} subscription (sync creation) with PRIVATE_JWT_KEY sinkCredential, in-band provisioning
+  @{xxx}_subscriptions_14_Create_{xxx}_subscription_sync_with_private_key_jwt_sink_credential_in_band_provisioning
+  Scenario: Create {xxx} subscription (sync creation) with PRIVATE_KEY_JWT sinkCredential, in-band provisioning
   # Some implementations may only support asynchronous subscription creation
   # Some implementations may additionally support in_band provisioning
     Given that subscriptions are created synchronously
     And a valid subscription request body
-    And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_JWT_KEY"
+    And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_KEY_JWT"
     And the request property "$.sinkCredential.clientId" is set to a valid value
     And the request property "$.sinkCredential.tokenUri" is set to a valid value
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 201
+    Then the response status code is 201
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/Subscription"
-    And the response body property "$.sinkCredential.credentialType" is set to value "PRIVATE_JWT_KEY"
+    And the response body property "$.sinkCredential.credentialType" is set to value "PRIVATE_KEY_JWT"
     And the response body property "$.sinkCredential.jwksUri" is set to a valid value
 
   @{xxx}_subscriptions_15_Operation_to_retrieve_subscription_based_on_an_existing_subscription-id_access_token_sink_credential_returned
@@ -199,24 +204,24 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Get a subscription based on existing subscription-id, with ACCESSTOKEN sinkCredential returned.
     Given the path parameter "subscriptionId" is set to the identifier of an existing {xxx} subscription
     When the request "retrieve{xxx}Subscription" is sent
-    Then the response code is 200
+    Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/Subscription"
     And the response body property "$.sinkCredential.credentialType", if present, is set to value "ACCESSTOKEN"
     And the response body property "$.sinkCredential.accessTokenExpiresUtc", if present, is set to the same value of the request property "$.sinkCredential.accessTokenExpiresUtc"
 
-  @{xxx}_subscriptions_16_Operation_to_retrieve_subscription_based_on_an_existing_subscription-id_private_jwt_key_sink_credential_returned
+  @{xxx}_subscriptions_16_Operation_to_retrieve_subscription_based_on_an_existing_subscription-id_private_key_jwt_sink_credential_returned
   # Some implementations may decide to not return the sinkCredential in the response (data minimization principle)
-  # Mainly applicable for in-band provisioning of PRIVATE_JWT_KEY mode for a given subscription
-  Scenario: Get a subscription based on existing subscription-id, with PRIVATE_JWT_KEY sinkCredential returned.
+  # Mainly applicable for in-band provisioning of PRIVATE_KEY_JWT mode for a given subscription
+  Scenario: Get a subscription based on existing subscription-id, with PRIVATE_KEY_JWT sinkCredential returned.
     Given the path parameter "subscriptionId" is set to the identifier of an existing {xxx} subscription
     When the request "retrieve{xxx}Subscription" is sent
-    Then the response code is 200
+    Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/Subscription"
-    And the response body property "$.sinkCredential.credentialType" is set to value "PRIVATE_JWT_KEY"
+    And the response body property "$.sinkCredential.credentialType" is set to value "PRIVATE_KEY_JWT"
     And the response body property "$.sinkCredential.jwksUri" is set to a valid value
 
 ########################### Error response scenarios ############################################
@@ -226,7 +231,9 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario:  Create {xxx} subscription with invalid parameter
     Given the request body is not compliant with the schema "#/components/schemas/SubscriptionRequest"
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 400
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
@@ -236,7 +243,9 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     Given a valid {xxx} subscription request body
     And request body property "$.config.subscriptionExpireTime" in the past
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 400
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
@@ -246,7 +255,10 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     Given a valid {xxx} subscription request body
     And the request body property "$.types" is set to invalid value
     When the request "create{xxx}Subscription" is sent
-    Then the response property "$.status" is 400
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
@@ -255,7 +267,10 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     Given a valid {xxx} subscription request body
     And the request property "$.protocol" is not set to "HTTP"
     When the request "create{xxx}Subscription" is sent
-    Then the response property "$.status" is 400
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_PROTOCOL"
     And the response property "$.message" contains a user friendly text
 
@@ -265,7 +280,10 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the request property "$.protocol" is set to "HTTP"
     And the request property "$.sinkCredential.credentialType" is not set to "ACCESSTOKEN" and is not set to "PRIVATE_KEY_JWT"
     When the request "create{xxx}Subscription" is sent
-    Then the response property "$.status" is 400
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_CREDENTIAL"
     And the response property "$.message" contains a user friendly text
 
@@ -278,7 +296,10 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the request property "$.sinkCredential.accessToken" is valued with a valid value
     And the request property "$.sinkCredential.accessTokenExpiresUtc" is valued with a valid value
     When the request "create{xxx}Subscription" is sent
-    Then the response property "$.status" is 400
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_TOKEN"
     And the response property "$.message" contains a user friendly text
 
@@ -288,7 +309,10 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the request property "$.protocol" is set to "HTTP"
     And the request property "$.sink" is set to "invalid-url"
     When the request "create{xxx}Subscription" is sent
-    Then the response property "$.status" is 400
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_SINK"
     And the response property "$.message" contains a user friendly text
 
@@ -298,6 +322,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the request does not include the "Authorization" header
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 401
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -307,6 +333,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     Given a valid {xxx} subscription request body and header "Authorization" is expired
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 401
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -317,6 +345,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And header "Authorization" set to an invalid access token
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 401
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -329,6 +359,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And path parameter "subscriptionId" is set to the identifier of an existing {xxx} subscription
     When the request "retrieve{xxx}Subscription" is sent
     Then the response status code is 401
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -339,6 +371,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And path parameter "subscriptionId" is set to the identifier of an existing {xxx} subscription
     When the request "retrieve{xxx}Subscription" is sent
     Then the response status code is 401
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -349,6 +383,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And path parameter "subscriptionId" is set to the identifier of an existing {xxx} subscription
     When the request "retrieve{xxx}Subscription" is sent
     Then the response status code is 401
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -357,7 +393,9 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario:  Get method for {xxx} subscription with subscription-id unknown to the system
     Given the path parameter "subscriptionId" is set to a value not corresponding to any existing subscription
     When the request "retrieve{xxx}Subscription" is sent
-    Then the response  code is 404
+    Then the response status code is 404
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 404
     And the response property "$.code" is "NOT_FOUND"
     And the response property "$.message" contains a user friendly text
@@ -369,6 +407,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     Given header "Authorization" is not present
     When the request "retrieve{xxx}SubscriptionList" is sent
     Then the response status code is 401
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -378,6 +418,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     Given the header "Authorization" is set to expired token
     When the request "retrieve{xxx}SubscriptionList" is sent
     Then the response status code is 401
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -387,6 +429,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     Given the header "Authorization" set to an invalid access token
     When the request "retrieve{xxx}SubscriptionList" is sent
     Then the response status code is 401
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -399,6 +443,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And path parameter "subscriptionId" is set to the identifier of an existing {xxx} subscription
     When the request "delete{xxx}Subscription" is sent
     Then the response status code is 401
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -409,6 +455,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And path parameter "subscriptionId" is set to the identifier of an existing {xxx} subscription
     When the request "delete{xxx}Subscription" is sent
     Then the response status code is 401
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -420,6 +468,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     When the request "delete{xxx}Subscription" is sent
     Then the response status code is 401
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
@@ -428,7 +477,9 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario:  Delete {xxx} subscription with subscription-id unknown to the system
     Given the path parameter "subscriptionId" is set to a value not corresponding to any existing subscription
     When the request "delete{xxx}Subscription" is sent
-    Then the response code is 404
+    Then the response status code is 404
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 404
     And the response property "$.code" is "NOT_FOUND"
     And the response property "$.message" contains a user friendly text
@@ -441,20 +492,24 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And a valid subscription request body
     And the request body property "$.types" is set to an array with 2 valid items
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 422
+    Then the response status code is 422
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 422
     And the response property "$.code" is "MULTIEVENT_SUBSCRIPTION_NOT_SUPPORTED"
     And the response property "$.message" contains a user friendly text
 
 ########Specific Subscription error scenario if Private JWT Key is not pre-configured ################
 
-  @{xxx}_subscriptions_61_creation_with_private_jwt_key_not_configured
+  @{xxx}_subscriptions_61_creation_with_private_key_jwt_not_configured
   Scenario: Private JWT Key not configured for subscription creation
     Given the API provider requires the use of a Private JWT key mechanism for subscription creation authentication
     And the Private JWT key mechanism is not pre-configured in the environment
     And a valid subscription request body with the property "$.sinkCredential.credentialType" set to "PRIVATE_KEY_JWT"
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 422
+    Then the response status code is 422
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 422
     And the response property "$.code" is "PRIVATE_KEY_JWT_NOT_CONFIGURED"
     And the response property "$.message" contains a user friendly text
@@ -467,7 +522,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Subscription list pagination with default values for page and perPage
     Given an API client with more than 20 {xxx} subscriptions created
     When the request "retrieve{xxx}SubscriptionList" is sent without setting query parameters "page" and "perPage"
-    Then the response code is 200
+    Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response header "Link" contains a link to the next page with rel="next"
@@ -481,7 +536,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Subscription list pagination with custom values for page and perPage
     Given an API client with more than 40 {xxx} subscriptions created
     When the request "retrieve{xxx}SubscriptionList" is sent with query parameters "page" set to 1 and "perPage" set to 20
-    Then the response code is 200
+    Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response header "Link" contains a link to the next page with rel="next"
@@ -499,7 +554,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Subscription list pagination fetching a middle page of the list
     Given an API client with more than 40 {xxx} subscriptions created
     When the request "retrieve{xxx}SubscriptionList" is sent with query parameters "page" set to 2 and "perPage" set to 20
-    Then the response code is 200
+    Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response header "Link" contains a link to the previous page with rel="prev" and a link to the next page with rel="next"
@@ -517,7 +572,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Subscription list pagination fetching the last page of the list
     Given an API client with more than 40 and less than 60 {xxx} subscriptions created
     When the request "retrieve{xxx}SubscriptionList" is sent with query parameters "page" set to 3 and "perPage" set to 20
-    Then the response code is 200
+    Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response header "Link" contains a link to the previous page with rel="prev"
@@ -535,7 +590,9 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Subscription list pagination with invalid value for page parameter
     Given an API client with more than 20 {xxx} subscriptions created
     When the request "retrieve{xxx}SubscriptionList" is sent with query parameter "page" set to any value less than 1 and "perPage" set to 20
-    Then the response code is 400
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
@@ -544,7 +601,9 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Subscription list pagination with invalid value for perPage parameter
     Given an API client with more than 20 {xxx} subscriptions created
     When the request "retrieve{xxx}SubscriptionList" is sent with query parameter "page" set to 1 and "perPage" set to any value outside the range [1-100]
-    Then the response code is 400
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has the same value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
