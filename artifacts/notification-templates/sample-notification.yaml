@@ -72,6 +72,8 @@ paths:
 
 components:
   securitySchemes:
+    openId:
+      $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
     notificationsBearerAuth:
       type: http
       scheme: bearer
