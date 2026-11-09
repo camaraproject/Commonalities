@@ -29,7 +29,9 @@ Based on the decision taken in the [Release Management](https://github.com/camar
 * Any public release must include a full test plan, covering both sunny and rainy day scenarios, to be considered stable. This may include unusual or not explicitly specified error scenarios, semantic validations, and corner cases.
 
 In this document:
-* **Basic test cases** cover the minimum mandatory scope for a release candidate: successful and error scenarios that validate the API interface against the API specification.
+* **Basic test cases** cover the minimum mandatory scope for a release candidate: 
+  * successful scenarios: see the ones provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below)
+  * error scenarios that validate the API interface against the API specification for all error responses documented in the API.
 * **Enhanced test cases** extend this scope for public releases and are mandatory for a stable public release. They provide broader coverage, including specific error scenarios, semantic validations, and corner cases. Their scope usually needs to be agreed upon by participants in the relevant API initiative.
 
 To clearly distinguish these scopes, the scope of `Basic test cases` is defined by the [Commonalities Testing Artifacts](../artifacts/testing). These artifacts apply according to the API design:
