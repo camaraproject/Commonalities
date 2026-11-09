@@ -403,12 +403,12 @@ The following scenarios are candidates for HTTP `2xx` responses with business-le
 
 An outcome scenario qualifies for 2xx modeling if it meets ALL of the following conditions:
 
-* The request is valid and has been processed to the point where a domain-level outcome can be determined, even if the requested service cannot be fully delivered for the current subject or context.
+* The request is **valid** and has been processed to the point where a domain-level outcome can be determined, even if the requested service cannot be fully delivered for the current subject or context.
 * The scenario represents a **temporal or contextual condition** that may change over time, where a retry could yield a different (potentially complete) response.
-* The scenario **does not hide a permanent inability** to deliver the service — the API request context does not fundamentally preclude service delivery.
-* The scenario is **chargeable** and the API design supports differentiated charging models if required by business alignment. Such a decision for this differentiated charging is outside CAMARA scope and it is up to business aligments and other forums (e.g. GSMA), but CAMARA APIs design MUST be ready to provide a mean for that business aligment.
+* The scenario **does not hide a permanent inability** to deliver the service: the API request context does not fundamentally preclude service delivery.
+* The scenario is **chargeable** and the API design supports differentiated charging models if required by business alignment. The decision on differentiated charging is outside CAMARA scope and is up to business alignments or other industry forums, but CAMARA API design MUST provide a means to support that alignment.
 * The scenario is **agreed within the API initiative** and documented in the API specification so consumers understand the behavior.
-* There is no **sensible information, privacy regulation or data minimization** risk on providing that information
+* Providing the information poses **no sensitive information, privacy regulation or data minimization risk**.
 
 **Distinction between 2xx Business-Level Outcomes and `503 UNAVAILABLE`:**
 
