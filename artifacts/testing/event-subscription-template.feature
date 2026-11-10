@@ -65,7 +65,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionStarted"
     And the notification property "$.type" is "org.camaraproject.{xxx}-subscriptions.v{x}.subscription-started"
     And the notification property "$.data.subscriptionId" is response property "$.id"
-    And the notification property "$.initiationReason" is "SUBSCRIPTION_CREATED"
+    And the notification property "$.data.initiationReason" is "SUBSCRIPTION_CREATED"
 
   @{xxx}_subscriptions_04_Operation_to_retrieve_list_of_subscriptions_when_no_records
   Scenario: Get a list of {xxx} subscriptions when no subscriptions available
