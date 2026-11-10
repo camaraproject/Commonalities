@@ -98,9 +98,9 @@ For operations with a request body, several scenarios are expected to test diffe
     -	provide several files when one CAMARA API (yaml) covers several independent functions that can be provided independently
 
 * The feature filename SHOULD reflect the grouping of scenarios within the file:
-    - APIs with a single feature file will use the api-name as file name: E.g. `location-verification.feature`
-    - For APIs with several operations that split the test plan in one feature file per operation, recommendation is to add the `operationId` to the api-name as file name: `quality-on-demand-createSession.feature`.
-    - APIs with several feature files, not split by operation, should use the api-name along some other description, e.g.: `quality-on-demand-notifications.feature`
+    - APIs with a single feature file will use the api-name as file name: E.g. `sample-service.feature`
+    - For APIs with several operations that split the test plan in one feature file per operation, recommendation is to add the `operationId` to the api-name as file name: `sample-service-createResource.feature`.
+    - APIs with several feature files, not split by operation, should use the api-name along some other description, e.g.: `sample-implicit-events-notifications.feature`
 
 * Third-person pronoun usage in feature file is advisable as using the third person, conveys information in a more official manner.
 
