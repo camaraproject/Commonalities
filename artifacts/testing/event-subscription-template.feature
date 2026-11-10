@@ -109,22 +109,24 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
 
   @{xxx}_subscriptions_08_subscription_ends_on_expiry
   Scenario: Receive notification for subscription-ended event on expiry
-    Given an existing {xxx} subscription with some value for the property "expiresAt" in the near future
+    Given an existing {xxx} subscription with identity "id" and some value for the property "expiresAt" in the near future
     When the subscription is expired
     Then the event notification "subscription-ended" is received on callback-url
     And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnded"
-    And type="org.camaraproject.{xxx}-subscriptions.v{x}.subscription-ended"
-    And the response property "$.terminationReason" is "SUBSCRIPTION_EXPIRED"
+    And the notification property "$.type" is "org.camaraproject.{xxx}-subscriptions.v{x}.subscription-ended"
+    And the notification property "$.data.subscriptionId" is "id"
+    And the notification property "$.data.terminationReason" is "SUBSCRIPTION_EXPIRED"
 
   @{xxx}_subscriptions_09_subscription_ends_on_max_events
   Scenario: Receive notification for subscription-ended event on max events reached
-    Given an existing {xxx} subscription with the property "config.subscriptionMaxEvents" set to 1
+    Given an existing {xxx} subscription with identity "id" and the property "$.config.subscriptionMaxEvents" set to 1
     When the event subscribed occurs
     Then event notification "{event-type}" is received on callback-url
     And event notification "subscription-ended" is received on callback-url
     And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnded"
-    And type="org.camaraproject.{xxx}-subscriptions.v{x}.subscription-ended"
-    And the response property "$.terminationReason" is "MAX_EVENTS_REACHED"
+    And the notification property "$.type" is "org.camaraproject.{xxx}-subscriptions.v{x}.subscription-ended"
+    And the notification property "$.data.subscriptionId" is "id"
+    And the notification property "$.data.terminationReason" is "MAX_EVENTS_REACHED"
 
   @{xxx}_subscriptions_10_subscription_delete_event_validation
   Scenario: Receive notification for subscription-ended event on deletion
@@ -134,8 +136,9 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     And event notification "subscription-ended" is received on callback-url
     And notification body complies with the OAS schema at "#/components/schemas/EventSubscriptionEnded"
-    And type="org.camaraproject.{xxx}-subscriptions.v{x}.subscription-ended"
-    And the response property "$.terminationReason" is "SUBSCRIPTION_DELETED"
+    And the notification property "$.type" is "org.camaraproject.{xxx}-subscriptions.v{x}.subscription-ended"
+    And the notification property "$.data.subscriptionId" is "subscriptionId"
+    And the notification property "$.data.terminationReason" is "SUBSCRIPTION_DELETED"
 
 ######################### Scenario in case initialEvent is managed ##############################
 
