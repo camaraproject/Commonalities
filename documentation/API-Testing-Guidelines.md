@@ -93,7 +93,7 @@ For operations with a request body, several scenarios are expected to test diffe
 
 ## Test plan design guidelines
 
-* Granularity of the feature file MUST be decided at the project level. Each feature file MUST contain less than 50 scenarios. It is recommended to:
+* Granularity of the feature file MUST be decided at the project level. Each feature file MUST NOT contain more than 50 scenarios. It is recommended to:
     -	group in one file all scenarios testing one closely related API capability (that can cover one or several endpoints).
     -	provide several files when one CAMARA API (yaml) covers several independent functions that can be provided independently
 
