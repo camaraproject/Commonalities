@@ -93,9 +93,14 @@ For operations with a request body, several scenarios are expected to test diffe
 
 ## Test plan design guidelines
 
-* Granularity of the feature file must be decided at the project level, but it is recommended to:
+* Granularity of the feature file MUST be decided at the project level. Each feature file MUST NOT contain more than 50 scenarios. It is recommended to:
     -	group in one file all scenarios testing one closely related API capability (that can cover one or several endpoints).
     -	provide several files when one CAMARA API (yaml) covers several independent functions that can be provided independently
+
+* The feature filename SHOULD reflect the grouping of scenarios within the file:
+    - APIs with a single feature file will use the api-name as file name: E.g. `sample-service.feature`
+    - For APIs with several operations that split the test plan in one feature file per operation, recommendation is to add the `operationId` to the api-name as file name: `sample-service-createResource.feature`.
+    - APIs with several feature files, not split by operation, should use the api-name along some other description, e.g.: `sample-implicit-events-notifications.feature`
 
 * Third-person pronoun usage in feature file is advisable as using the third person, conveys information in a more official manner.
 
@@ -109,13 +114,6 @@ The feature files will reside under
 E.g.: 
 
 `https://github.com/camaraproject/DeviceLocation/blob/main/code/Test_definitions/location-verification.feature`
-
-
-Filename:
-
-- APIs with a single feature file will use the api-name as file name: E.g. `location-verification.feature`
-- For APIs with several operations that split the test plan in one feature file per operation, recommendation is to add the `operationId` to the api-name as file name: `quality-on-demand-createSession.feature`.
-- APIs with several feature files, not split by operation, should use the api-name along some other description, e.g.: `quality-on-demand-notifications.feature`
 
 ### Feature structure
 
@@ -207,15 +205,14 @@ Background:
 
 * It is recommended to only have one When/Then block per scenario. However, in case of complex scenarios, several When/Then blocks can be concatenated in the same scenario.
 
-* Each scenario will have a tag with the scenario unique identifier. The recommended format for scenario identifier is:
+* Within a feature file, each scenario MUST have both a unique `Scenario` or `Scenario Outline` name, and a unique scenario tag identifier. The recommended format for scenario tag identifier is:
 
 ```
 @<(mandatory)feature_identifier>_<(mandatory)number>_<(optional)short detail in lower case and using underscore “_” as the separator>
 ```
 E.g.: `@location_verification_10_device_empty`
 
-* `Scenario Outline` may be used at convenience with an `Examples` section. 
-
+* Each tested error response SHOULD be covered by its own scenario. `Scenario Outline` with an `Examples` section MAY be used to cover the same behaviour for several inputs. For behaviour that is specific to an operation, separate scenarios or one feature file per operation (see [Location of feature files](#location-of-feature-files)) are preferred.
 
 ### Request setup
 
