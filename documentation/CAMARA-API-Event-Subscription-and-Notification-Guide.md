@@ -347,7 +347,7 @@ response:
     "initialEvent" : true,
     "subscriptionMaxEvents" : 10
   },
-  "id": "456g899g",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
   "startsAt": "2023-03-17T16:02:41.314Z",
   "expiresAt" : "2024-03-17T00:00:00.000Z",
   "status" : "ACTIVE"
@@ -567,7 +567,7 @@ curl -X 'POST' \
   "specversion": "1.0",
   "datacontenttype": "application/json",
   "data": {
-    "subscriptionId": "456g899g",
+    "subscriptionId": "550e8400-e29b-41d4-a716-446655440000",
     "device": {
       "phoneNumber": "+123456789"
     },
@@ -604,7 +604,7 @@ curl -X 'POST' \
   "specversion": "1.0",
   "datacontenttype": "application/json",
   "data": {
-    "subscriptionId": "456g899g",
+    "subscriptionId": "550e8400-e29b-41d4-a716-446655440000",
     "device": {
       "phoneNumber": "+123456789"
     },
