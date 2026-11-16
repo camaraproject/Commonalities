@@ -514,6 +514,20 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the response property "$.code" is "PRIVATE_KEY_JWT_NOT_CONFIGURED"
     And the response property "$.message" contains a user friendly text
 
+########Specific Subscription error scenario if multi-event is not supported temporarily ################
+
+  @{xxx}_subscriptions_62_creation_with_temporarily_unsupported_multiple_event_type
+  Scenario: Multi event subscription temporarily not supported
+    Given the API provider supports subscribing to multiple event types in a single subscription
+    And a valid subscription request body
+    And the request body property "$.types" is set to an array with 2 valid items
+    And the requested combination of event types is temporarily not supported
+    When the request "create{xxx}Subscription" is sent
+    Then the response code is 422
+    And the response property "$.status" is 422
+    And the response property "$.code" is "MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED"
+    And the response property "$.message" contains a user friendly text
+
 ######## Subscription Pagination Scenarios (Optional depending on API initiative) ################
 
 # Check applicability of below tests according to the nature of the API initiative Use Cases
