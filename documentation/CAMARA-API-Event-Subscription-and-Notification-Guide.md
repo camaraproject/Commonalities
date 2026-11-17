@@ -23,8 +23,9 @@ For general API design guidelines, please refer to [CAMARA API Design Guide](/do
   - [3.7. Notification Examples](#37-notification-examples)
 - [4. Security](#4-security)
   - [4.1. Scope Naming](#41-scope-naming)
-  - [4.2. Abuse Protection](#42-abuse-protection)
-  - [4.3. Notifications Security Considerations](#43-notifications-security-considerations)
+  - [4.2. Security Specification](#42-security-specification)
+  - [4.3. Abuse Protection](#43-abuse-protection)
+  - [4.4. Notifications Security Considerations](#44-notifications-security-considerations)
 - [Appendix A: Notification authentication flows](#appendix-a-Notification-authentication-flows)
 
 <!-- /TOC -->
@@ -644,8 +645,48 @@ Scopes SHOULD be represented as below for APIs that offer explicit event subscri
 
 makes scope name: `device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create`.
 
+### 4.2. Security Specification
 
-### 4.2. Abuse Protection
+As a separate scope is required for each event in order to create a subscription for that event, the API design must consider whether the API consumer requires permission to create a subscription for all events (i.e. requires all scopes to be granted, irrespective of whether they specify all events, or only a subset), or only requires permission to create the specific events for which they want to create a subscription.
+
+#### 4.2.1 All scopes are required
+
+If the API consumer requires permission to create a subscription for all events, irrespective of the actual events requested, the scopes must all be included together in the security requirement object within `POST /subscriptions`.
+
+For example:
+```
+paths:
+  /subscriptions:
+    post:
+      ...
+      security:
+        - openId:
+            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on:create
+            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-off:create
+```
+
+This is interpreted to mean that both scopes are required to create a subscription for either (or both) of the associated events.
+
+#### 4.2.2 Only the associated event scopes are required
+
+If the API consumer only requires permission to create a subscription for the events they request, the scopes must be included separately as individual entries in the security requirement object within `POST /subscriptions`.
+
+For example:
+```
+paths:
+  /subscriptions:
+    post:
+      ...
+      security:
+        - openId:
+            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on:create
+        - openId:
+            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-off:create
+```
+
+This is interpreted to mean that any combination of scopes is valid (i.e. one or the other or both), but a subscription can only be created for events for which the API consumer has been granted the associated scope.
+
+### 4.3. Abuse Protection
 
 Any system permitting the registration and delivery of notifications to arbitrary HTTP endpoints holds the potential for abuse. This could occur if someone, either intentionally or unintentionally, registers the address of a system unprepared for such requests, or for which the registering party lacks authorization to perform such registration.
 
@@ -655,7 +696,7 @@ To protect the sender, CloudEvents specification provides some guidance there: h
 
 Event Producers SHALL choose based on their internal security guidelines to implement measures based on the above guidance to ensure abuse protection. For e.g., An event producer might ask the subscriber to pre-register the notification URL at the time of app onboarding. If this registered notification URL doesn't match later with the notification URL in the request, the event producer can choose to reject the request with the relevant error code.
 
-### 4.3. Notifications Security Considerations
+### 4.4. Notifications Security Considerations
 
 As notifications may carry sensitive information, privacy and security have to be considered.
 
@@ -677,7 +718,7 @@ It is RECOMMENDED that the API consumer inspects all the fields of the notificat
 
 API Consumers SHOULD validate the schema of the notification event data that is defined by the API subproject. It is RECOMMENDED that additional fields are ignored. Reliance on additional fields is an interoperability issue. Additional fields can lead to security issues.
 
-#### 4.3.1 Pre-requisites for using credential type `PRIVATE_KEY_JWT`
+#### 4.4.1 Pre-requisites for using credential type `PRIVATE_KEY_JWT`
 
 To use `credentialType` with value `PRIVATE_KEY_JWT`, the API Consumer and API Provider shall share
 authentication information needed to request an access token. This includes a client ID, a token endpoint
