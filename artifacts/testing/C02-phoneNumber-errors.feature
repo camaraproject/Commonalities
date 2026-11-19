@@ -33,6 +33,8 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     And the request body property "{path_to_phoneNumber}" does not comply with the OAS schema at "#/components/schemas/PhoneNumber"
     When the request "{operationId}" is sent
     Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
@@ -43,6 +45,8 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     And the request body property "{path_to_phoneNumber}" is compliant with the schema but does not identify a valid phone number
     When the request "{operationId}" is sent
     Then the response status code is 404
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 404
     And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
     And the response property "$.message" contains a user friendly text
@@ -53,6 +57,8 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     And  the request body property "{path_to_phoneNumber}" is set to a valid phone number
     When the request "{operationId}" is sent
     Then the response status code is 422
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 422
     And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
     And the response property "$.message" contains a user friendly text
@@ -63,6 +69,8 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     And the request body property "{path_to_phoneNumber}" is not included
     When the request "{operationId}" is sent
     Then the response status code is 422
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 422
     And the response property "$.code" is "MISSING_IDENTIFIER"
     And the response property "$.message" contains a user friendly text
@@ -74,6 +82,8 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     And a valid phone number, identified by the token or provided in the request body, for which the service is not applicable
     When the request "{operationId}" is sent
     Then the response status code is 422
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 422
     And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
     And the response property "$.message" contains a user friendly text
