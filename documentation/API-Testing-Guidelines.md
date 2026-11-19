@@ -32,7 +32,8 @@ In this document:
 * **Basic test cases** cover the minimum mandatory scope for a release candidate: 
   * successful scenarios: see the ones provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below).
   * error scenarios that validate the API interface against the API specification for all error responses documented in the API. Some of them are also provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below).
-* **Enhanced test cases** extend this scope for public releases and are mandatory for a stable public release. They provide broader coverage, including specific error scenarios, semantic validations, and corner cases. Their scope usually needs to be agreed upon by participants in the relevant API initiative.
+* **Enhanced test cases** extend this scope at any release. They provide broader coverage, including specific error scenarios, semantic validations, and corner cases. Their scope usually needs to be agreed upon by participants in the relevant API initiative.
+* Full coverage by the basic and the complete set of enhanced test cases is mandatory for a stable public release.
 
 To clearly distinguish these scopes, the scope of `Basic test cases` is defined by the [Commonalities Testing Artifacts](../artifacts/testing). These artifacts apply according to the API design:
 * For APIs with a `device` concept, use: [C01-device-errors.feature](../artifacts/testing/C01-device-errors.feature)
