@@ -25,14 +25,14 @@ This document captures guidelines for the API testing in CAMARA project. These g
 
 Based on the decision taken in the [Release Management](https://github.com/camaraproject/ReleaseManagement) and Commonalities working groups, and as documented in the [API Release Process and Readiness Checklist](https://github.com/camaraproject/ReleaseManagement/blob/main/documentation/readiness/api-readiness-checklist.md), at least one Gherkin feature file per API will be added to the API repo folder for test plans, and this test plan must fulfill the minimum criteria of readiness with respect to API test cases and documentation:
 
-* Release candidates must have at least a basic API test plan (see definition below). Scenarios are expected to validate that the implemented interface is compliant with the specification, in terms of syntax and support for the mandatory aspects defined by CAMARA. 
+* Release candidates must have at least a basic API test plan (see definition below). Scenarios are expected to validate that the implemented interface is compliant with the specification, in terms of syntax and support for the mandatory aspects defined by CAMARA.
 * Any public release must include a test plan, covering both sunny and rainy day scenarios, with full coverage in case of a stable public release. Enhanced error cases include unusual or not explicitly specified error scenarios, semantic validations, and API specific corner cases.
 
 In this document:
 * **Basic test cases** cover the minimum mandatory scope for a release candidate: 
-  * successful (sunny day) scenarios: see the ones provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below).
-  * error (rainy day) scenarios that validate the API interface against the API specification for all error responses documented in the API. Some of them are also provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below).
-* **Enhanced test cases** extend this scope at any release. They provide broader coverage, including specific error scenarios, semantic validations, and corner cases. Their scope usually needs to be agreed upon by participants in the relevant API initiative.
+  * successful (sunny day) scenarios provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below).
+  * error (rainy day) scenarios that validate the API interface against the API specification for all error responses documented in the API under Commonalities definition (i.e. non API-specific errors). Provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below).
+* **Enhanced test cases** extend this scope at any release. They provide broader coverage, including API-specific error scenarios, semantic validations, and corner cases. Their scope usually needs to be agreed upon by participants in the relevant API initiative.
 * Full coverage by the basic and the complete set of enhanced test cases is mandatory for a stable public release.
 
 To clearly distinguish their scope, the `Basic test cases` are defined to be (minimally) the set of sample test cases described in the [Commonalities Testing Artifacts](../artifacts/testing) instantiated for each API endpoint. These artifacts apply according to the API design:
