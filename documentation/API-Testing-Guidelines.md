@@ -35,7 +35,7 @@ In this document:
 * **Enhanced test cases** extend this scope at any release. They provide broader coverage, including specific error scenarios, semantic validations, and corner cases. Their scope usually needs to be agreed upon by participants in the relevant API initiative.
 * Full coverage by the basic and the complete set of enhanced test cases is mandatory for a stable public release.
 
-To clearly distinguish these scopes, the scope of `Basic test cases` is defined by the [Commonalities Testing Artifacts](../artifacts/testing). These artifacts apply according to the API design:
+To clearly distinguish their scope, the `Basic test cases` are defined to be (minimally) the set of sample test cases described in the [Commonalities Testing Artifacts](../artifacts/testing) instantiated for each API endpoint. These artifacts apply according to the API design:
 * For APIs with a `device` concept, use: [C01-device-errors.feature](../artifacts/testing/C01-device-errors.feature)
 * For APIs with a `phoneNumber` concept, use: [C02-phoneNumber-errors.feature](../artifacts/testing/C02-phoneNumber-errors.feature)
 * For service APIs without subscriptions, use: [sample-service-template.feature](../artifacts/testing/sample-service-template.feature)
