@@ -39,7 +39,7 @@ To clearly distinguish these scopes, the scope of `Basic test cases` is defined 
 * For APIs with a `phoneNumber` concept, use: [C02-phoneNumber-errors.feature](../artifacts/testing/C02-phoneNumber-errors.feature)
 * For service APIs without subscriptions, use: [sample-service-template.feature](../artifacts/testing/sample-service-template.feature)
 * For service APIs with implicit subscriptions, use: [sample-implicit-events-template.feature](../artifacts/testing/sample-implicit-events-template.feature)
-* For service APIs with explicit subscriptions, use: [sample-service-template.feature](../artifacts/testing/sample-service-template.feature)
+* For service APIs with explicit subscriptions, use: [event-subscription-template.feature](../artifacts/testing/event-subscription-template.feature)
 
 If subprojects also intend to add test implementations, an aligned single implementation agreed among all provider implementors could be added to the main subproject repo. If no alignment is possible, each provider implementer will add the test implementation to their own repos.
 
