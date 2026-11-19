@@ -30,7 +30,7 @@ Based on the decision taken in the [Release Management](https://github.com/camar
 
 In this document:
 * **Basic test cases** cover the minimum mandatory scope for a release candidate: 
-  * successful scenarios: see the ones provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below).
+  * successful (sunny day) scenarios: see the ones provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below).
   * error scenarios that validate the API interface against the API specification for all error responses documented in the API. Some of them are also provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below).
 * **Enhanced test cases** extend this scope at any release. They provide broader coverage, including specific error scenarios, semantic validations, and corner cases. Their scope usually needs to be agreed upon by participants in the relevant API initiative.
 * Full coverage by the basic and the complete set of enhanced test cases is mandatory for a stable public release.
