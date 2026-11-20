@@ -164,15 +164,6 @@ components:
       type: object
       description: HTTP protocol settings for event delivery.
       properties:
-        headers:
-          type: object
-          description: |-
-            A set of key/value pairs that is copied into the HTTP request as custom headers.
-
-            NOTE: Use/Applicability of this concept has not been discussed in Commonalities. When required by an API project as an option to meet a UC/Requirement, please generate an issue for Commonalities discussion about it.
-          additionalProperties:
-            type: string
-            maxLength: 512
         method:
           type: string
           description: The HTTP method to use for sending the message.
