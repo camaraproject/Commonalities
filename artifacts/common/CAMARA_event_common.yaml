@@ -328,7 +328,10 @@ components:
               maxLength: 64
               description: |
                 REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired.
-                In the case of an ACCESS_TOKEN_EXPIRED termination reason, implementation should notify the client before the expiration date.
+                When the subscription is created through a subscriptions endpoint (explicit subscription), in the case of an ACCESS_TOKEN_EXPIRED termination reason,
+                implementation SHOULD notify the client before the expiration date.
+                When notifications are requested by providing `sink` in the creation request of another resource (implicit subscription), token expiration SHOULD occur after the expiration of that resource,
+                allowing the client to be notified of any changes during the resource's existence. If the token expires while that resource is still active, the client will stop receiving notifications.
                 If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
                 It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
               example: "2023-07-03T12:27:08.312Z"
