@@ -328,7 +328,7 @@ components:
               maxLength: 64
               description: |
                 REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired.
-                When the subscription is created through a subscriptions endpoint (explicit subscription), in the case of an ACCESS_TOKEN_EXPIRED termination reason, 
+                When the subscription is created through a subscriptions endpoint (explicit subscription), in the case of an ACCESS_TOKEN_EXPIRED termination reason,
                 implementation SHOULD notify the client before the expiration date.
                 When notifications are requested by providing `sink` in the creation request of another resource (implicit subscription), token expiration SHOULD occur after the expiration of that resource,
                 allowing the client to be notified of any changes during the resource's existence. If the token expires while that resource is still active, the client will stop receiving notifications.
