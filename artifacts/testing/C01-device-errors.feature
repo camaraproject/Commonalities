@@ -1,6 +1,6 @@
 Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
 
-    CAMARA Commonalities: wip
+    CAMARA Commonalities: 0.10.0-alpha.1
 
     Common error scenarios for operations with device as input either in the request
     body or implied from the access.

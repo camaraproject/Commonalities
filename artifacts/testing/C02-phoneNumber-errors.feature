@@ -1,6 +1,6 @@
 Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
-    CAMARA Commonalities: wip
+    CAMARA Commonalities: 0.10.0-alpha.1
 
     Common error scenarios for operations with phoneNumber as input either in the request
     body or implied from the access

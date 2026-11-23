@@ -25,7 +25,7 @@
 #   section "Mandatory template for `info.description` in CAMARA API specs"
 
 info:
-  x-camara-commonalities: wip
+  x-camara-commonalities: 0.10.0-alpha.1
 
 authorization-and-authentication:
   content: |
