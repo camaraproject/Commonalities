@@ -647,29 +647,15 @@ makes scope name: `device-roaming-subscriptions:org.camaraproject.device-roaming
 
 ### 4.2. Security Specification
 
-As a separate scope is required for each event in order to create a subscription for that event, the API design must consider whether the API consumer requires permission to create a subscription for all events (i.e. requires all scopes to be granted, irrespective of whether they specify all events, or only a subset), or only requires permission to create the specific events for which they want to create a subscription.
+As a separate dedicated creation scope is required by each event type for an API consumer to be able to create a subscription for that event type, the API design must consider which combinations of event type creation scopes must be granted together, and which can be granted separately, within the context of the use case for the subscription API.
 
-#### 4.2.1 All scopes are required
+The required scopes for subscription creation are specified in the [security requirement object](https://spec.openapis.org/oas/v3.0.3#security-requirement-object), which defines which security schemes must be satisfied for the associated operation to be permitted. CAMARA only define a single security scheme `openId`, but it is permitted to specify this multiple times with different required scope combinations. Scopes defined under a given `openId` instance must all be satisfied for that `openId` instance to be satisfied. But if multiple `openId` instances are specified, the operation is permitted for all of those instances that are satisfied, and only if none are satisfied is the operation prohibited.
 
-If the API consumer requires permission to create a subscription for all events, irrespective of the actual events requested, the scopes must all be included together in the security requirement object within `POST /subscriptions`.
+Example scope formulations are given in the following sections.
 
-For example:
-```
-paths:
-  /subscriptions:
-    post:
-      ...
-      security:
-        - openId:
-            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on:create
-            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-off:create
-```
+#### 4.2.1 Multiple event type creation scopes are required for subscription creation
 
-This is interpreted to mean that both scopes are required to create a subscription for either (or both) of the associated events.
-
-#### 4.2.2 Only the associated event scopes are required
-
-If the API consumer only requires permission to create a subscription for the events they request, the scopes must be included separately as individual entries in the security requirement object within `POST /subscriptions`.
+If the use case requires the API consumer to have permission to create a subscription for multiple, perhaps all, of the defined events types (even if the subscription is only created for a subset of these), the scopes must all be included together under a single `opendId` instance within the security requirement object of the `POST /subscriptions` operation.
 
 For example:
 ```
@@ -679,12 +665,36 @@ paths:
       ...
       security:
         - openId:
+            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-status:create
+            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on:create
+            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-off:create
+            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-change-country:create
+```
+
+This is interpreted to mean that all four scopes are required for the API consumer to be able to create a subscription for any combination of the specified event types. The end user must therefore consent to all of them.
+
+#### 4.2.2 Only a single event type creation scope is required for subscription creation
+
+If the use case allows the API consumer to create a subscription for a given event type using only the associated creation scope for that event type, that scope must be defined under its own `opendId` instance within the security requirement object of the `POST /subscriptions` operation. If the API defines multiple events, it is possible to define each under its own `opendId` instance, giving the API consumer flexibility to only request those scopes associated with the event types required for their subscription. This will likely be the normal case.
+
+For example:
+```
+paths:
+  /subscriptions:
+    post:
+      ...
+      security:
+        - openId:
+            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-status:create
+        - openId:
             - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-on:create
         - openId:
             - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-off:create
+        - openId:
+            - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-change-country:create
 ```
 
-This is interpreted to mean that any combination of scopes is valid (i.e. one or the other or both), but a subscription can only be created for events for which the API consumer has been granted the associated scope.
+This is interpreted to mean that any combination of scopes is valid, from only one up to all of them, but a subscription can only be created for event types for which the API consumer has been granted the associated scope. The end user need only consent to those scopes necessary for the specific use case.
 
 ### 4.3. Abuse Protection
 
