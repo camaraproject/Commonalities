@@ -23,7 +23,7 @@ For general API design guidelines, please refer to [CAMARA API Design Guide](/do
   - [3.7. Notification Examples](#37-notification-examples)
 - [4. Security](#4-security)
   - [4.1. Scope Naming](#41-scope-naming)
-  - [4.2. Security Specification](#42-security-specification)
+  - [4.2. Security Requirement Specification](#42-security-requirement-specification)
   - [4.3. Abuse Protection](#43-abuse-protection)
   - [4.4. Notifications Security Considerations](#44-notifications-security-considerations)
 - [Appendix A: Notification authentication flows](#appendix-a-Notification-authentication-flows)
@@ -645,7 +645,7 @@ Scopes SHOULD be represented as below for APIs that offer explicit event subscri
 
 makes scope name: `device-roaming-subscriptions:org.camaraproject.device-roaming-subscriptions.v0.roaming-on:create`.
 
-### 4.2. Security Specification
+### 4.2. Security Requirement Specification
 
 As a separate dedicated creation scope is required by each event type for an API consumer to be able to create a subscription for that event type, the API design must consider which combinations of event type creation scopes must be granted together, and which can be granted separately, within the context of the use case for the subscription API.
 
