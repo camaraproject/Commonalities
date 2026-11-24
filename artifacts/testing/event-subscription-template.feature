@@ -240,8 +240,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscriptions_20_creation_{xxx}_subscription_with_invalid_parameter
   Scenario:  Create {xxx} subscription with invalid parameter
     Given the request body is not compliant with the schema "#/components/schemas/SubscriptionRequest"
-    When the request "create{xxx}Subscription" is sent
     And the request header "Content-Type" is set to "application/json"
+    When the request "create{xxx}Subscription" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
