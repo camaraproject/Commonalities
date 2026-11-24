@@ -68,8 +68,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
   @{feature_identifier}_{operationId}_400.07_invalid_sink_credential
   Scenario Outline: Invalid credential
     Given the request body property  "$.sinkCredential.credentialType" is set to "<unsupported_credential_type>"
-    When the request "{operationId}" is sent
     And the request header "Content-Type" is set to "application/json"
+    When the request "{operationId}" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -87,8 +87,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
   @{feature_identifier}_{operationId}_400.08_sink_credential_invalid_token
   Scenario: Invalid token
     Given the request body property  "$.sinkCredential.accessTokenType" is set to a value other than "bearer"
-    When the request "{operationId}" is sent
     And the request header "Content-Type" is set to "application/json"
+    When the request "{operationId}" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
