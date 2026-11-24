@@ -27,9 +27,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     # Clause for getResource and deleteResource operations
     And the resource "/{apiname}/v{version}/{resources}/{resourceId}"
     # Clause only for createResource, listResources and getResource operations
-    And the header "Content-Type" is set to "application/json"
-    And the header "Authorization" is set to a valid access token
-    And the header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
+    And the request header "Authorization" is set to a valid access token
+    And the request header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
     # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema, clause only for createResource (i.e. only for POST/PUT operations in general)
     And the request body is set by default to a request body compliant with the schema at "#/components/schemas/{createResource}"
     # Clause for getResource and deleteResource operations
@@ -45,6 +44,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     # Valid testing device and default request body compliant with the schema
     Given a valid testing device supported by the service, identified by the token or provided in the request body
     # Several clauses for request body property may apply depending on the operation
+    And the request header "Content-Type" is set to "application/json"
     And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     And the request body is compliant with the schema at "#/components/schemas/{createResource}"
     When the request "{createResource}" is sent
@@ -68,6 +68,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     # Valid testing phone number and default request body compliant with the schema
     Given a valid testing phone number supported by the service, identified by the token or provided in the request body
     # Several clauses for request body property may apply depending on the operation
+    And the request header "Content-Type" is set to "application/json"
     And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     And the request body is compliant with the schema at "#/components/schemas/{createResource}"
     When the request "{createResource}" is sent
@@ -90,6 +91,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   Scenario Outline: Common validations for any success scenario without device nor phoneNumber concept
     Given the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     # Several clauses for request body property may apply depending on the operation
+    And the request header "Content-Type" is set to "application/json"
     And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     And the request body is compliant with the schema at "#/components/schemas/{createResource}"
     When the request "{createResource}" is sent
@@ -151,7 +153,6 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     And the path parameter "{ResourceId}" is set to the value of the identifier for that "{Resource}"
     When the request "{deleteResource}" is sent
     Then the response status code is 204
-    And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
 
 ############################ Error Scenarios #############################################
