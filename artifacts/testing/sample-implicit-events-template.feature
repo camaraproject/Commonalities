@@ -47,8 +47,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
   # Replace ... in the lastest sentence by any type of applicable validation for the property
   @{feature_identifier}_{operationId}_2{xx}_event_notification
   Scenario: Event is received if the sink was provided and "{Resource}" lifecycle faces an update
-    Given an resource "{Resource}" to be created by operation "{operationId}" with provided values for "sink" and "sinkCredential", with property "$.sinkCredential.credentialType" set to "ACCESSTOKEN"
-    And the path parameter "{ResourceId}" is set to the value for that "{Resource}"
+    Given an existing resource "{Resource}" was created with valid values for "sink" and "sinkCredential", and with property "$.sinkCredential.credentialType" set to "ACCESSTOKEN"
+    And the path parameter "{ResourceId}" is set to the identity for that "{Resource}"
     And the request header "Content-Type" is set to "application/json"
     When the request "{operationId}" is sent
     Then the response status code is 2{xx}
