@@ -619,7 +619,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
 
   @{xxx}_subscriptions_73_pagination_last_page
   Scenario: Subscription list pagination fetching the last page of the list
-    Given an API client with more than 40 and less than 60 {xxx} subscriptions created
+    Given an API client with more than 40 and no more than 60 {xxx} subscriptions created
     When the request "retrieve{xxx}SubscriptionList" is sent with query parameters "page" set to 3 and "perPage" set to 20
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
