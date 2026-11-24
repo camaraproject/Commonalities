@@ -26,7 +26,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Background: Common {xxx} Subscriptions setup
     Given the resource "{apiroot}/{xxx}-subscriptions/vwip/" as {xxx} base-url
     And the request header "Authorization" is set to a valid access token
-    And the header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
+    And the request header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
 
 ############################ Happy Path Scenarios #############################################
 
