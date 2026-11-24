@@ -29,9 +29,9 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
   Background: Common "{operationId}" setup
     Given an environment at "apiRoot"
     And the resource "/{apiname}/v{version}/{resources}"
-    And the header "Content-Type" is set to "application/json"
-    And the header "Authorization" is set to a valid access token
-    And the header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
+    And the request header "Content-Type" is set to "application/json"
+    And the request header "Authorization" is set to a valid access token
+    And the request header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
     And the request body is set by default to a request body compliant with the schema at "#/components/schemas/{createResource}"
 
   # Error scenarios for management of input parameter device
