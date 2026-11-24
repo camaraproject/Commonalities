@@ -574,6 +574,8 @@ components:
       allOf:
         - $ref: "#/components/schemas/ApiNotificationEvent"
         - type: object
+          required:
+            - data
           properties:
             data:
               type: object
@@ -586,6 +588,8 @@ components:
       allOf:
         - $ref: "#/components/schemas/ApiNotificationEvent"
         - type: object
+          required:
+            - data
           properties:
             data:
               type: object
@@ -603,6 +607,8 @@ components:
       allOf:
         - $ref: "#/components/schemas/SubscriptionLifecycleEvent"
         - type: object
+          required:
+            - data
           properties:
             data:
               $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionStarted"
@@ -612,6 +618,8 @@ components:
       allOf:
         - $ref: "#/components/schemas/SubscriptionLifecycleEvent"
         - type: object
+          required:
+            - data
           properties:
             data:
               $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionUpdated"
@@ -621,6 +629,8 @@ components:
       allOf:
         - $ref: "#/components/schemas/SubscriptionLifecycleEvent"
         - type: object
+          required:
+            - data
           properties:
             data:
               $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SubscriptionEnded"

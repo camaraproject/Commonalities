@@ -112,7 +112,7 @@ components:
       type: string
       maxLength: 256
       description: The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, it SHALL be referred to as `subscriptionId` as per the Commonalities Event Notification Model.
-      example: qs15-h556-rt89-1298
+      example: 550e8400-e29b-41d4-a716-446655440000
 
     ConfigBase:
       description: |
@@ -164,15 +164,6 @@ components:
       type: object
       description: HTTP protocol settings for event delivery.
       properties:
-        headers:
-          type: object
-          description: |-
-            A set of key/value pairs that is copied into the HTTP request as custom headers.
-
-            NOTE: Use/Applicability of this concept has not been discussed in Commonalities. When required by an API project as an option to meet a UC/Requirement, please generate an issue for Commonalities discussion about it.
-          additionalProperties:
-            type: string
-            maxLength: 512
         method:
           type: string
           description: The HTTP method to use for sending the message.
