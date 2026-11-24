@@ -29,7 +29,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     # Clause only for createResource, listResources and getResource operations
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
-    And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
+    And the header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
     # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema, clause only for createResource (i.e. only for POST/PUT operations in general)
     And the request body is set by default to a request body compliant with the schema at "#/components/schemas/{createResource}"
     # Clause for getResource and deleteResource operations
@@ -232,10 +232,11 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
 
   @{feature_identifier}_{operationId}_400.06_invalid_x-correlator
   Scenario: Invalid x-correlator header
-    Given the header "x-correlator" does not comply with the schema at "#/components/schemas/XCorrelator"
+    Given the header "x-correlator" does not comply with the OAS schema at "#/components/schemas/XCorrelator"
     When the request "{operationId}" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator", if present, does not have the same invalid value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
