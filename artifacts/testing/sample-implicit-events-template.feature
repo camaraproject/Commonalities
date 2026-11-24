@@ -29,7 +29,6 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
     And the resource "/{apiname}/v{version}/{resources}"
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
-    And the header "Authorization" is set to a valid access token
     And the header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
     And the request body is set by default to a request body compliant with the schema at "#/components/schemas/{createResource}"
 
