@@ -26,7 +26,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Background: Common {xxx} Subscriptions setup
     Given the resource "{apiroot}/{xxx}-subscriptions/vwip/" as {xxx} base-url
     And the header "Authorization" is set to a valid access token
-    And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
+    And the header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
 
 ############################ Happy Path Scenarios #############################################
 
@@ -234,6 +234,17 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+  @{xxx}_subscriptions_20A_creation_{xxx}_subscription_with_invalid_x-correlator header
+  Scenario: Create {xxx} subscription with invalid x-correlator header
+    Given the request header "x-correlator" is not compliant with the OAS schema "#/components/schemas/XCorrelator"
+    When the request "create{xxx}Subscription" is sent
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator", if present, does not have the same invalid value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
