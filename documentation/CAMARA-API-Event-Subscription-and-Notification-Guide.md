@@ -655,7 +655,7 @@ Example scope formulations are given in the following sections.
 
 #### 4.2.1 Multiple event type creation scopes are required for subscription creation
 
-If the use case requires the API consumer to have permission to create a subscription for multiple, perhaps all, of the defined events types (even if the subscription is only created for a subset of these), the scopes must all be included together under a single `opendId` instance within the security requirement object of the `POST /subscriptions` operation.
+If the use case requires the API consumer to have permission to create a subscription for multiple, perhaps all, of the defined events types (even if the subscription is only created for a subset of these), the scopes must all be included together under a single `openId` instance within the security requirement object of the `POST /subscriptions` operation.
 
 For example:
 ```
@@ -675,7 +675,7 @@ This is interpreted to mean that all four scopes are required for the API consum
 
 #### 4.2.2 Only a single event type creation scope is required for subscription creation
 
-If the use case allows the API consumer to create a subscription for a given event type using only the associated creation scope for that event type, that scope must be defined under its own `opendId` instance within the security requirement object of the `POST /subscriptions` operation. If the API defines multiple events, it is possible to define each under its own `opendId` instance, giving the API consumer flexibility to only request those scopes associated with the event types required for their subscription. This will likely be the normal case.
+If the use case allows the API consumer to create a subscription for a given event type using only the associated creation scope for that event type, that scope must be defined under its own `openId` instance within the security requirement object of the `POST /subscriptions` operation. If the API defines multiple events, it is possible to define each under its own `openId` instance, giving the API consumer flexibility to only request those scopes associated with the event types required for their subscription. This will likely be the normal case.
 
 For example:
 ```
