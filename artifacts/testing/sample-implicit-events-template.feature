@@ -19,9 +19,19 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
 
     * {operationId} has to be substituted to the value of operationId for the tested operation
 
-  # This feature file is to be used by CAMARA subproject for operations defined in sample-service.yaml.
+  # This feature file is to be used by CAMARA subproject for operations defined in sample-implicit-events.yaml.
   #
   # References to OAS spec schemas refer to schemas specified in {apiname}.yaml
+
+  # Example Background specification for resource creation that generates implicit events
+  Background: Common "{operationId}" setup
+    Given an environment at "apiRoot"
+    And the resource "/{apiname}/v{version}/{resources}"
+    And the header "Content-Type" is set to "application/json"
+    And the header "Authorization" is set to a valid access token
+    And the header "Authorization" is set to a valid access token
+    And the header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
+    And the request body is set by default to a request body compliant with the schema at "#/components/schemas/{createResource}"
 
 ############################ Happy Path Scenarios #############################################
 
