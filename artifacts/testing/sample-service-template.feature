@@ -32,7 +32,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema, clause only for createResource (i.e. only for POST/PUT operations in general)
     And the request body is set by default to a request body compliant with the schema at "#/components/schemas/{createResource}"
     # Clause for getResource and deleteResource operations
-    And the path parameter "{ResourceId}" is set by default to a existing value
+    And the path parameter "{ResourceId}" is set by default to the identifier of an existing "{Resource}"
 
 ############################ Happy Path Scenarios #############################################
 
