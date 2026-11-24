@@ -39,7 +39,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # createResource MUST be replaced by applicable operationId for the tested operation
   # schema names MUST be replaced by applicable values for the tested operation
   # Applicable for APIs with device concept
-  @{feature_identifier}_{createResource}_01_generic_success_scenario
+  @{feature_identifier}_{createResource}_01A_generic_success_scenario
   Scenario Outline: Common validations for any success scenario with device concept
     # Valid testing device and default request body compliant with the schema
     Given a valid testing device supported by the service, identified by the token or provided in the request body
@@ -63,7 +63,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # createResource MUST be replaced by applicable operationId for the tested operation
   # schema names MUST be replaced by applicable values for the tested operation
   # Applicable for APIs with phoneNumber concept
-  @{feature_identifier}_{createResource}_01_generic_success_scenario
+  @{feature_identifier}_{createResource}_01B_generic_success_scenario
   Scenario Outline: Common validations for any success scenario with phoneNumber concept
     # Valid testing phone number and default request body compliant with the schema
     Given a valid testing phone number supported by the service, identified by the token or provided in the request body
@@ -87,7 +87,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # createResource MUST be replaced by applicable operationId for the tested operation
   # schema names MUST be replaced by applicable values for the tested operation
   # Applicable for APIs that does not own device nor phoneNumber concept
-  @{feature_identifier}_{createResource}_01_generic_success_scenario
+  @{feature_identifier}_{createResource}_01C_generic_success_scenario
   Scenario Outline: Common validations for any success scenario without device nor phoneNumber concept
     Given the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     # Several clauses for request body property may apply depending on the operation
