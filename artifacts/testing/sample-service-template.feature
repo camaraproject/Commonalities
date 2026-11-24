@@ -91,9 +91,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   Scenario Outline: Common validations for any success scenario without device nor phoneNumber concept
     Given the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     # Several clauses for request body property may apply depending on the operation
-    And the request header "Content-Type" is set to "application/json"
-    And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     And the request body is compliant with the schema at "#/components/schemas/{createResource}"
+    And the request header "Content-Type" is set to "application/json"
     When the request "{createResource}" is sent
     Then the response status code is 201
     And the response header "Content-Type" is "application/json"
