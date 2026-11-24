@@ -107,9 +107,9 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     When the request "delete{xxx}Subscription" is sent
     Then the response status code is 202 or 204
     And the response header "x-correlator" has the same value as the request header "x-correlator"
-    And if the response status code is 202 then the request header "Content-Type" is set to "application/json"
+    And if the response status code is 202 then the response header "Content-Type" is set to "application/json"
     And if the response status code is 202 then the response body complies with the OAS schema at "#/components/schemas/SubscriptionAsync"
-    And if the response status code is 204 then the request header "Content-Type" is not present
+    And if the response status code is 204 then the response header "Content-Type" is not present
     And if the response status code is 204 then the response body is not present
 
   @{xxx}_subscriptions_08_subscription_ends_on_expiry
