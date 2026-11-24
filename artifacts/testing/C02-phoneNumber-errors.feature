@@ -25,7 +25,16 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
   #
   # References to OAS spec schemas refer to schemas specified in {apiname}.yaml
 
-    # Error scenarios for management of input parameter phoneNumber
+  # Example Background for phone number error tests
+  Background: Common "{operationId}" setup
+    Given an environment at "apiRoot"
+    And the resource "/{apiname}/v{version}/{resources}"
+    And the header "Content-Type" is set to "application/json"
+    And the header "Authorization" is set to a valid access token
+    And the header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
+    And the request body is set by default to a request body compliant with the schema at "#/components/schemas/{createResource}"
+
+  # Error scenarios for management of input parameter phoneNumber
 
   @{feature_identifier}_C02.01_phone_number_not_schema_compliant
   Scenario: Phone number value does not comply with the schema
