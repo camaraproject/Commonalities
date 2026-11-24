@@ -54,7 +54,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
     Then the response status code is 2{xx}
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And an event is received at the address of the "$.sink" provided for "{operationId}"
+    And an event is received at the address of the "$.sink" provided for "{Resource}"
     And the event header "Authorization" is set to "Bearer " + the value of the property "$.sinkCredential.accessToken" provided for "{Resource}"
     And the event header "Content-Type" is set to "application/cloudevents+json"
     And the event body complies with the OAS schema at "#/components/schemas/ApiNotificationEvent"
