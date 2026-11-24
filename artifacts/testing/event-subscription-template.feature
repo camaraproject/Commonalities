@@ -249,7 +249,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
-  @{xxx}_subscriptions_20A_creation_{xxx}_subscription_with_invalid_x-correlator header
+  @{xxx}_subscriptions_20A_creation_{xxx}_subscription_with_invalid_x-correlator_header
   Scenario: Create {xxx} subscription with invalid x-correlator header
     Given the request header "x-correlator" is not compliant with the OAS schema "#/components/schemas/XCorrelator"
     And the request header "Content-Type" is set to "application/json"
