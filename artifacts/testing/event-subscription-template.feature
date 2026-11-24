@@ -558,7 +558,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the request body property "$.types" is set to an array with 2 valid items
     And the requested combination of event types is temporarily not supported
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 422
+    Then the response status code is 422
     And the response property "$.status" is 422
     And the response property "$.code" is "MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED"
     And the response property "$.message" contains a user friendly text
