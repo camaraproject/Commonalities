@@ -633,7 +633,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the response body property "$.pagination.page" is 3
     And the response body property "$.pagination.perPage" is 20
     And the response body property "$.pagination.totalPages", if present, is 3
-    And the response body property "$.pagination.totalCount", if present, is greater than 40 and less than 60
+    And the response body property "$.pagination.totalCount", if present, is greater than 40 and no more than 60
 
   @{xxx}_subscriptions_74_pagination_invalid_page_parameter
   Scenario: Subscription list pagination with invalid value for page parameter
