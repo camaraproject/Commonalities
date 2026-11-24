@@ -38,7 +38,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
   @{feature_identifier}_C02.01_phone_number_not_schema_compliant
   Scenario: Phone number value does not comply with the schema
-    Given the header "Authorization" is set to a valid access token which does not identify a single phone number
+    Given the request header "Authorization" is set to a valid access token which does not identify a single phone number
     And the request body property "{path_to_phoneNumber}" does not comply with the OAS schema at "#/components/schemas/PhoneNumber"
     When the request "{operationId}" is sent
     Then the response status code is 400
@@ -50,7 +50,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
   @{feature_identifier}_C02.02_phone_number_not_found
   Scenario: Phone number not found
-    Given the header "Authorization" is set to a valid access token which does not identify a single phone number
+    Given the request header "Authorization" is set to a valid access token which does not identify a single phone number
     And the request body property "{path_to_phoneNumber}" is compliant with the schema but does not identify a valid phone number
     When the request "{operationId}" is sent
     Then the response status code is 404
@@ -62,7 +62,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
   @{feature_identifier}_C02.03_unnecessary_phone_number
   Scenario: Phone number not to be included when it can be deduced from the access token
-    Given the header "Authorization" is set to a valid access token identifying a phone number
+    Given the request header "Authorization" is set to a valid access token identifying a phone number
     And  the request body property "{path_to_phoneNumber}" is set to a valid phone number
     When the request "{operationId}" is sent
     Then the response status code is 422
@@ -74,7 +74,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
 
   @{feature_identifier}_C02.04_missing_phone_number
   Scenario: Phone number not included and cannot be deduced from the access token
-    Given the header "Authorization" is set to a valid access token which does not identify a single phone number
+    Given the request header "Authorization" is set to a valid access token which does not identify a single phone number
     And the request body property "{path_to_phoneNumber}" is not included
     When the request "{operationId}" is sent
     Then the response status code is 422
