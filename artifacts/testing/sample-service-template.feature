@@ -154,6 +154,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     When the request "{deleteResource}" is sent
     Then the response status code is 204
     And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response body is not present
 
 ############################ Error Scenarios #############################################
 
