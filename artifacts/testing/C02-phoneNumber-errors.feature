@@ -84,7 +84,7 @@ Feature: CAMARA Common Artifact C02 - Test scenarios for phoneNumber errors
     And the response property "$.code" is "MISSING_IDENTIFIER"
     And the response property "$.message" contains a user friendly text
 
-    # When the service is only offered to certain types of subscriptions, e.g. IoT, , B2C, etc
+    # When the service is only offered to certain types of subscriptions, e.g. IoT, B2C, etc
   @{feature_identifier}_C02.05_phone_number_not_supported
   Scenario: Service not available for the phone number
     Given that the service is not available for all phone numbers commercialized by the operator
