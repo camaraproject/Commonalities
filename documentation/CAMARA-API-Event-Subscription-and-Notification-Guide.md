@@ -694,7 +694,7 @@ paths:
             - device-roaming-status-subscriptions:org.camaraproject.device-roaming-status-subscriptions.v0.roaming-change-country:create
 ```
 
-This is interpreted to mean that any combination of scopes is valid, from only one up to all of them, but a subscription can only be created for event types for which the API consumer has been granted the associated scope. The end user need only consent to those scopes necessary for the specific use case.
+This is interpreted to mean that any combination of scopes, from one to all of them, is valid for authorization, but a subscription can only be created for event types for which the API consumer has been granted the corresponding scopes. Where consent is required, the end user need only consent to those scopes necessary for the specific use case.
 
 ### 4.3. Abuse Protection
 
