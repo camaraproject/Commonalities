@@ -8,7 +8,7 @@
   - [Notifications](#notifications)
   - [Error scenarios](#error-scenarios)
 - [Test plan design guidelines](#test-plan-design-guidelines)
-  - [Location of feature file](#location-of-feature-files)
+  - [Location of feature files](#location-of-feature-files)
   - [Feature structure](#feature-structure)
   - [Environment variables](#environment-variables)
   - [Background section](#background-section)
