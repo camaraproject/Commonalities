@@ -90,7 +90,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   @{feature_identifier}_{createResource}_01C_generic_success_scenario
   Scenario Outline: Common validations for any success scenario without device nor phoneNumber concept
     Given the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
-    # Several clauses for request body property may apply depending on the operation as tests 01A and 01B
+    # As for tests 01A and 01B, several clauses for request body property may apply depending on the operation
     And the request body is compliant with the schema at "#/components/schemas/{createResource}"
     And the request header "Content-Type" is set to "application/json"
     When the request "{createResource}" is sent
