@@ -23,30 +23,30 @@ This document captures guidelines for the API testing in CAMARA project. These g
 
 ## Test plan coverage
 
-Based on the decision taken in the [Release Management](https://github.com/camaraproject/ReleaseManagement) and Commonalities working groups, and as documented in [API Release Process](https://wiki.camaraproject.org/display/CAM/API+Release+Process)(https://wiki.camaraproject.org/display/CAM/API+Release+Process#APIReleaseProcess-APIreadinesschecklist), at least one Gherkin feature file per API will be added to the API repo folder for test plans, and this test plan must fulfill the minimum criteria of readiness with respect to API test cases and documentation:
+Based on the decision taken in the [Release Management](https://github.com/camaraproject/ReleaseManagement) and Commonalities working groups, and as documented in [API Release Process](https://wiki.camaraproject.org/display/CAM/API+Release+Process)(https://wiki.camaraproject.org/display/CAM/API+Release+Process#APIReleaseProcess-APIreadinesschecklist), at least one Gherkin feature file per API will be added to the API repo folder for test plans, and this test plan MUST fulfill the minimum criteria of readiness with respect to API test cases and documentation:
 
-* Release candidates must have at least a basic API test plan, covering sunny day scenarios. Scenarios are expected to validate that the implemented interface is compliant with the specification, in terms of syntax and support for the mandatory aspects. 
-* Any public release must include a full test plan, covering both sunny and rainy day scenarios, to be considered stable. This may include unusual or not explicitly specified error scenarios, semantic validations, and corner cases.
+* Release candidates MUST have at least a basic API test plan, covering sunny day scenarios. Scenarios are expected to validate that the implemented interface is compliant with the specification, in terms of syntax and support for the mandatory aspects. 
+* Any public release MUST include a full test plan, covering both sunny and rainy day scenarios, to be considered stable. This may include unusual or not explicitly specified error scenarios, semantic validations, and corner cases.
 
 If subprojects also intend to add test implementations, an aligned single implementation agreed among all provider implementors could be added to the main subproject repo. If no alignment is possible, each provider implementer will add the test implementation to their own repos.
 
 * Test plans are not meant to certify the accuracy or veracity of the implementation's responses but to ensure that the interface complies with the API specification and that the API is fully implemented.
 
-* When the API allows options or alternative approaches, the test plan should cover those situations and define the expected behaviour for inputs or options not supported.
+* When the API allows options or alternative approaches, the test plan SHOULD cover those situations and define the expected behaviour for inputs or options not supported.
   - Implementations will need to inform in advance to the API tester about which subset of options is supported. 
 
 ### Independent operations
 
 Operations that execute an action or retrieve information from the operator without modifying a resource will usually be tested in its own dedicated feature file. Splitting a test plan into several features is a test plan design decision, taking into account the complexity of the test plan.
 
-Test plan must validate that providing a valid input, a success response is received and that the response body complies with the JSON schema in the API spec.
+Test plan MUST validate that providing a valid input, a success response is received and that the response body complies with the JSON schema in the API spec.
 
-For operations receiving an input request body with optional properties, several scenarios should be included, testing different sets of valid inputs.
+For operations receiving an input request body with optional properties, several scenarios SHOULD be included, testing different sets of valid inputs.
 
 
 ### Operations modifying resources
 
-For path resources with CRUD (Create/Read/Update/Delete) operations, some scenario should validate that the new state of the resource is coherent with the result of the operation:
+For path resources with CRUD (Create/Read/Update/Delete) operations, some scenario SHOULD validate that the new state of the resource is coherent with the result of the operation:
 
 * For Create operations:
   - If operation success returns the created object, validate that the properties of the response object are coherent with the request object
@@ -78,14 +78,14 @@ For the explicit subscriptions model:
 
 ### Error scenarios
 
-* Test plan must be aligned with API specification regarding the coverage of HTTP statuses in the responses.
-  - All errors explicitly documented in the API spec must be covered by one or more dedicated error scenarios.
-  - On the contrary, HTTP Statuses which are not explicitly documented in the API specification should not be covered in the test plan. If any of the non-mandatory "status" in API Design Guidelines is relevant in the context of a given API and deserves to have a specific test, it needs to be documented in the API specification as well.
-  - In particular operations that expect a `device` object allowing one or more identifiers to be provided, must include scenarios to test the error cases defined, aligned with the device error management section of the API design guidelines. 
+* Test plan MUST be aligned with API specification regarding the coverage of HTTP statuses in the responses.
+  - All errors explicitly documented in the API spec MUST be covered by one or more dedicated error scenarios.
+  - On the contrary, HTTP Statuses which are not explicitly documented in the API specification SHOULD not be covered in the test plan. If any of the non-mandatory "status" in API Design Guidelines is relevant in the context of a given API and deserves to have a specific test, it needs to be documented in the API specification as well.
+  - In particular operations that expect a `device` object allowing one or more identifiers to be provided, MUST include scenarios to test the error cases defined, aligned with the device error management section of the API design guidelines. 
 
-* It must be validated that the HTTP status code and response property `code` are exactly those specified in the API spec.
+* It MUST be validated that the HTTP status code and response property `code` are exactly those specified in the API spec.
 
-* It must be validated that the property `message` is present, but its value is free for the implementation to decide. Test plan may validate that message is human friendly and coherent with the scenario.
+* It MUST be validated that the property `message` is present, but its value is free for the implementation to decide. Test plan MAY validate that message is human friendly and coherent with the scenario.
 
 For operations with a request body, several scenarios are expected to test different sets of input data which do not comply with the request body schema, testing that an error, typically `400` `INVALID_ARGUMENT` is received. Typical tests:
 - Values with invalid format
@@ -119,7 +119,7 @@ E.g.:
 
 A feature will typically test an independent API operation or several closely related API operations. It will consist of several scenarios testing the server responses to the API operations under different conditions and input content in the requests, covering both success and error scenarios. Each scenario will validate that the response complies with the expected HTTP status, that the response body syntactically complies with the specified JSON schema, and, when applicable, that some properties have the expected semantic values.
 
-For the Feature description, API name and version must be included. When the feature is focused on an operation, it also should be included, e.g.:
+For the Feature description, API name and version MUST be included. When the feature is focused on an operation, it also SHOULD be included, e.g.:
 
 ```
 Feature: CAMARA Device location verification API, v0.2.0 - Operation verifyLocation
@@ -127,11 +127,11 @@ Feature: CAMARA Device location verification API, v0.2.0 - Operation verifyLocat
 
 #### Feature Context
 
-Every feature may include a context after the `Feature` tag to provide relevant information about the implementation and execution of the tests.
+Every feature MAY include a context after the `Feature` tag to provide relevant information about the implementation and execution of the tests.
 
 This feature context is RECOMMENDED unless it does not provide additional value (e.g. all the info could have been given in the Background section for a certain API)
 
-For the feature context, the following template should be used:
+For the feature context, the following template SHOULD be used:
 
 ```
   # Input to be provided by the implementation to the tester
@@ -179,7 +179,7 @@ A first step is to identify potential environment variables writing the test pla
 | knownLatitude  | The latitude where locatedDevice is known to be located                                                                           |
 | knownLongitude | The longitude where locatedDevice is known to be located                                                                          |
 
-This list of input data to be requested may be kept in a separated file. The Structure of this file is yet TBD.
+This list of input data to be requested MAY be kept in a separated file. The Structure of this file is yet TBD.
 
 ### Background section
 
@@ -218,7 +218,7 @@ E.g.: `@location_verification_10_device_empty`
 
 `Given` steps generally put the system in a well-defined state. For API testing, this typically implies setting up the request according to the scenario preconditions, filling the necessary path, query, header and/or body parameters.   
 
-For coherence and to ease reusability of testing implementations, a common syntax should be followed by all testing plans:
+For coherence and to ease reusability of testing implementations, a common syntax SHOULD be followed by all testing plans:
 
 ```
 * the path parameter "{name}" is set as "{value}"
@@ -255,7 +255,7 @@ Alternatively, instead of specifying exact values for specific parameters or pro
 * the request body property "$.device" is a valid device which location is known
 ```
 
-Testing plans should identify the list of input values that have to be provided by the implementation, and maintain this list as an asset of the test plan. 
+Testing plans SHOULD identify the list of input values that have to be provided by the implementation, and maintain this list as an asset of the test plan. 
 
 
 ### Request sending
@@ -266,7 +266,7 @@ For scenarios testing individual operations, the request will be sent by means o
 When the request "{operationId}" is sent
 ```
 
-For scenarios involving several requests, further requests may be included as additional `When` steps after the response to the first one is validated. E.g.:
+For scenarios involving several requests, further requests MAY be included as additional `When` steps after the response to the first one is validated. E.g.:
 
 ```
 Scenario: Delete an item and check that is deleted
@@ -299,7 +299,7 @@ Typical response validations:
 - the response header "Content-Type" is "application/json"
 ```
 
-- response schema validations. Reference to the schema in the OAS spec may be explicit or implicit, e.g.:
+- response schema validations. Reference to the schema in the OAS spec MAY be explicit or implicit, e.g.:
 
 ```
 - the response body complies with the OAS schema for this operation and status code
@@ -315,7 +315,7 @@ Typical response validations:
 - the response property "{json_path}" only exists if property "{json_path}" is "{value}"
 ```
 
-- for error scenarios, the response property `code` must be checked, e.g.:
+- for error scenarios, the response property `code` MUST be checked, e.g.:
 
 ```
 - the response property "$.code" is "INVALID_ARGUMENT"
