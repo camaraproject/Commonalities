@@ -99,7 +99,7 @@ For operations with a request body, several scenarios are expected to test diffe
 
 * The feature filename SHOULD reflect the grouping of scenarios within the file:
     - APIs with a single feature file will use the api-name as file name: E.g. `sample-service.feature`
-    - For APIs with several operations that split the test plan in one feature file per operation, recommendation is to add the `operationId` to the api-name as file name: `sample-service-createResource.feature`.
+    - For APIs with several operations that split the test plan into one feature file per operation, the `operationId` SHOULD be appended to the api-name: `sample-service-createResource.feature`.
     - APIs with several feature files, not split by operation, should use the api-name along some other description, e.g.: `sample-implicit-events-notifications.feature`
 
 * Third-person pronoun usage in feature file is advisable as using the third person, conveys information in a more official manner.
