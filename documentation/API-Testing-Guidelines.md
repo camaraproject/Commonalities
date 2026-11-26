@@ -102,7 +102,7 @@ For operations with a request body, several scenarios are expected to test diffe
     - For APIs with several operations that split the test plan into one feature file per operation, the `operationId` SHOULD be appended to the api-name: `sample-service-createResource.feature`.
     - APIs with several feature files, not split by operation, SHOULD use the api-name along with some other description, e.g.: `sample-implicit-events-notifications.feature`
 
-* Third-person pronoun usage in feature file is advisable as using the third person, conveys information in a more official manner.
+* Third-person pronoun usage in feature files is advisable as using the third-person conveys information in a more official manner.
 
 
 ### Location of feature files
