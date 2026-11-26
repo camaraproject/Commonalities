@@ -43,8 +43,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   Scenario Outline: Common validations for any success scenario with device concept
     # Valid testing device and default request body compliant with the schema
     Given a valid testing device supported by the service, identified by the token or provided in the request body
-    # Several clauses for request body property may apply depending on the operation
     And the request header "Content-Type" is set to "application/json"
+    # Several clauses for request body property may apply depending on the operation
     And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     And the request body is compliant with the schema at "#/components/schemas/{createResource}"
     When the request "{createResource}" is sent
@@ -67,8 +67,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   Scenario Outline: Common validations for any success scenario with phoneNumber concept
     # Valid testing phone number and default request body compliant with the schema
     Given a valid testing phone number supported by the service, identified by the token or provided in the request body
-    # Several clauses for request body property may apply depending on the operation
     And the request header "Content-Type" is set to "application/json"
+    # Several clauses for request body property may apply depending on the operation
     And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     And the request body is compliant with the schema at "#/components/schemas/{createResource}"
     When the request "{createResource}" is sent
