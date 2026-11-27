@@ -976,7 +976,7 @@ components:
               value:
                 status: 409
                 code: INCOMPATIBLE_STATE
-                message: Resource must be in AVAILABLE state to extend. Current state is UNAVAILABLE.
+                message: The resource is in a state that does not allow the requested operation.
                 # GENERIC_409_{{SPECIFIC_CODE}}:
                 #   description: Specific conflict situation that is relevant in the context of the API
                 #   value:
@@ -1394,7 +1394,7 @@ components:
       value:
         status: 409
         code: INCOMPATIBLE_STATE
-        message: Resource must be in AVAILABLE state to extend. Current state is UNAVAILABLE.
+        message: The resource is in a state that does not allow the requested operation.
 
     # ── 410 Gone ─────────────────────────────────────────────────────────────
     # Responses: SinkGone410 (CAMARA_event_common.yaml) for notification

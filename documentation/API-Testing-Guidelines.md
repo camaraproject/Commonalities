@@ -8,7 +8,7 @@
   - [Notifications](#notifications)
   - [Error scenarios](#error-scenarios)
 - [Test plan design guidelines](#test-plan-design-guidelines)
-  - [Location of feature file](#location-of-feature-files)
+  - [Location of feature files](#location-of-feature-files)
   - [Feature structure](#feature-structure)
   - [Environment variables](#environment-variables)
   - [Background section](#background-section)
@@ -23,10 +23,24 @@ This document captures guidelines for the API testing in CAMARA project. These g
 
 ## Test plan coverage
 
-Based on the decision taken in the [Release Management](https://github.com/camaraproject/ReleaseManagement) and Commonalities working groups, and as documented in [API Release Process](https://wiki.camaraproject.org/display/CAM/API+Release+Process)(https://wiki.camaraproject.org/display/CAM/API+Release+Process#APIReleaseProcess-APIreadinesschecklist), at least one Gherkin feature file per API will be added to the API repo folder for test plans, and this test plan must fulfill the minimum criteria of readiness with respect to API test cases and documentation:
+Based on the decision taken in the [Release Management](https://github.com/camaraproject/ReleaseManagement) and Commonalities working groups, and as documented in the [API Release Process and Readiness Checklist](https://github.com/camaraproject/ReleaseManagement/blob/main/documentation/readiness/api-readiness-checklist.md), at least one Gherkin feature file per API will be added to the API repo folder for test plans, and this test plan must fulfill the minimum criteria of readiness with respect to API test cases and documentation:
 
-* Release candidates must have at least a basic API test plan, covering sunny day scenarios. Scenarios are expected to validate that the implemented interface is compliant with the specification, in terms of syntax and support for the mandatory aspects. 
-* Any public release must include a full test plan, covering both sunny and rainy day scenarios, to be considered stable. This may include unusual or not explicitly specified error scenarios, semantic validations, and corner cases.
+* Release candidates must have at least a basic API test plan (see definition below). Scenarios are expected to validate that the implemented interface is compliant with the specification, in terms of syntax and support for the mandatory aspects defined by CAMARA.
+* Any public release must include a test plan, covering both sunny and rainy day scenarios, with full coverage in case of a stable public release. Enhanced error cases include unusual or not explicitly specified error scenarios, semantic validations, and API specific corner cases.
+
+In this document:
+* **Basic test cases** cover the minimum mandatory scope for a release candidate: 
+  * successful (sunny day) scenarios provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below).
+  * error (rainy day) scenarios that validate the API interface against the API specification for all error responses documented in the API under Commonalities definition (i.e. non API-specific errors). Provided in the sample feature files in the `Commonalities/artefacts/testing/` folder (see below).
+* **Enhanced test cases** extend this scope at any release. They provide broader coverage, including API-specific error scenarios, semantic validations, and corner cases. Their scope usually needs to be agreed upon by participants in the relevant API initiative.
+* Full coverage by the basic and the complete set of enhanced test cases is mandatory for a stable public release.
+
+To clearly distinguish their scope, the `Basic test cases` are defined to be (minimally) the set of sample test cases described in the [Commonalities Testing Artifacts](../artifacts/testing) instantiated for each API endpoint. These artifacts apply according to the API design:
+* For APIs with a `device` concept, use: [C01-device-errors.feature](../artifacts/testing/C01-device-errors.feature)
+* For APIs with a `phoneNumber` concept, use: [C02-phoneNumber-errors.feature](../artifacts/testing/C02-phoneNumber-errors.feature)
+* For service APIs without subscriptions, use: [sample-service-template.feature](../artifacts/testing/sample-service-template.feature)
+* For service APIs with implicit subscriptions, use: [sample-implicit-events-template.feature](../artifacts/testing/sample-implicit-events-template.feature)
+* For service APIs with explicit subscriptions, use: [event-subscription-template.feature](../artifacts/testing/event-subscription-template.feature)
 
 If subprojects also intend to add test implementations, an aligned single implementation agreed among all provider implementors could be added to the main subproject repo. If no alignment is possible, each provider implementer will add the test implementation to their own repos.
 
@@ -39,14 +53,14 @@ If subprojects also intend to add test implementations, an aligned single implem
 
 Operations that execute an action or retrieve information from the operator without modifying a resource will usually be tested in its own dedicated feature file. Splitting a test plan into several features is a test plan design decision, taking into account the complexity of the test plan.
 
-Test plan must validate that providing a valid input, a success response is received and that the response body complies with the JSON schema in the API spec.
+Test plan MUST validate that providing a valid input, a success response is received and that the response body complies with the JSON schema in the API spec.
 
-For operations receiving an input request body with optional properties, several scenarios should be included, testing different sets of valid inputs.
+For operations receiving an input request body with optional properties, several scenarios SHOULD be included, testing different sets of valid inputs.
 
 
 ### Operations modifying resources
 
-For path resources with CRUD (Create/Read/Update/Delete) operations, some scenario should validate that the new state of the resource is coherent with the result of the operation:
+For path resources with CRUD (Create/Read/Update/Delete) operations, some scenario SHOULD validate that the new state of the resource is coherent with the result of the operation:
 
 * For Create operations:
   - If operation success returns the created object, validate that the properties of the response object are coherent with the request object
@@ -78,14 +92,14 @@ For the explicit subscriptions model:
 
 ### Error scenarios
 
-* Test plan must be aligned with API specification regarding the coverage of HTTP statuses in the responses.
-  - All errors explicitly documented in the API spec must be covered by one or more dedicated error scenarios.
-  - On the contrary, HTTP Statuses which are not explicitly documented in the API specification should not be covered in the test plan. If any of the non-mandatory "status" in API Design Guidelines is relevant in the context of a given API and deserves to have a specific test, it needs to be documented in the API specification as well.
-  - In particular operations that expect a `device` object allowing one or more identifiers to be provided, must include scenarios to test the error cases defined, aligned with the device error management section of the API design guidelines. 
+* Test plan MUST be aligned with API specification regarding the coverage of HTTP statuses in the responses.
+  - All errors explicitly documented in the API spec MUST be covered by one or more dedicated error scenarios.
+  - On the contrary, HTTP Statuses which are not explicitly documented in the API specification SHOULD NOT be covered in the test plan. If any of the non-mandatory "status" in API Design Guidelines is relevant in the context of a given API and deserves to have a specific test, it needs to be documented in the API specification as well.
+  - In particular operations that expect a `device` object allowing one or more identifiers to be provided, MUST include scenarios to test the error cases defined, aligned with the device error management section of the API design guidelines. 
 
-* It must be validated that the HTTP status code and response property `code` are exactly those specified in the API spec.
+* It MUST be validated that the HTTP status code and response property `code` are exactly those specified in the API spec.
 
-* It must be validated that the property `message` is present, but its value is free for the implementation to decide. Test plan may validate that message is human friendly and coherent with the scenario.
+* It MUST be validated that the property `message` is present, but its value is free for the implementation to decide. Test plan MAY validate that message is human friendly and coherent with the scenario.
 
 For operations with a request body, several scenarios are expected to test different sets of input data which do not comply with the request body schema, testing that an error, typically `400` `INVALID_ARGUMENT` is received. Typical tests:
 - Values with invalid format
@@ -93,11 +107,16 @@ For operations with a request body, several scenarios are expected to test diffe
 
 ## Test plan design guidelines
 
-* Granularity of the feature file must be decided at the project level, but it is recommended to:
+* Granularity of the feature file MUST be decided at the project level. Each feature file MUST NOT contain more than 50 scenarios. It is recommended to:
     -	group in one file all scenarios testing one closely related API capability (that can cover one or several endpoints).
     -	provide several files when one CAMARA API (yaml) covers several independent functions that can be provided independently
 
-* Third-person pronoun usage in feature file is advisable as using the third person, conveys information in a more official manner.
+* The feature filename SHOULD reflect the grouping of scenarios within the file:
+    - APIs with a single feature file will use the api-name as file name: E.g. `sample-service.feature`
+    - For APIs with several operations that split the test plan into one feature file per operation, the `operationId` SHOULD be appended to the api-name: `sample-service-createResource.feature`.
+    - APIs with several feature files, not split by operation, SHOULD use the api-name along with some other description, e.g.: `sample-implicit-events-notifications.feature`
+
+* Third-person pronoun usage in feature files is advisable as using the third-person conveys information in a more official manner.
 
 
 ### Location of feature files
@@ -110,18 +129,11 @@ E.g.:
 
 `https://github.com/camaraproject/DeviceLocation/blob/main/code/Test_definitions/location-verification.feature`
 
-
-Filename:
-
-- APIs with a single feature file will use the api-name as file name: E.g. `location-verification.feature`
-- For APIs with several operations that split the test plan in one feature file per operation, recommendation is to add the `operationId` to the api-name as file name: `quality-on-demand-createSession.feature`.
-- APIs with several feature files, not split by operation, should use the api-name along some other description, e.g.: `quality-on-demand-notifications.feature`
-
 ### Feature structure
 
 A feature will typically test an independent API operation or several closely related API operations. It will consist of several scenarios testing the server responses to the API operations under different conditions and input content in the requests, covering both success and error scenarios. Each scenario will validate that the response complies with the expected HTTP status, that the response body syntactically complies with the specified JSON schema, and, when applicable, that some properties have the expected semantic values.
 
-For the Feature description, API name and version must be included. When the feature is focused on an operation, it also should be included, e.g.:
+For the Feature description, API name and version MUST be included. When the feature is focused on an operation, it also SHOULD be included, e.g.:
 
 ```
 Feature: CAMARA Device location verification API, v0.2.0 - Operation verifyLocation
@@ -129,11 +141,11 @@ Feature: CAMARA Device location verification API, v0.2.0 - Operation verifyLocat
 
 #### Feature Context
 
-Every feature may include a context after the `Feature` tag to provide relevant information about the implementation and execution of the tests.
+Every feature MAY include a context after the `Feature` tag to provide relevant information about the implementation and execution of the tests.
 
 This feature context is RECOMMENDED unless it does not provide additional value (e.g. all the info could have been given in the Background section for a certain API)
 
-For the feature context, the following template should be used:
+For the feature context, the following template SHOULD be used:
 
 ```
   # Input to be provided by the implementation to the tester
@@ -181,7 +193,7 @@ A first step is to identify potential environment variables writing the test pla
 | knownLatitude  | The latitude where locatedDevice is known to be located                                                                           |
 | knownLongitude | The longitude where locatedDevice is known to be located                                                                          |
 
-This list of input data to be requested may be kept in a separated file. The Structure of this file is yet TBD.
+This list of input data to be requested MAY be kept in a separated file. The Structure of this file is yet TBD.
 
 ### Background section
 
@@ -207,21 +219,20 @@ Background:
 
 * It is recommended to only have one When/Then block per scenario. However, in case of complex scenarios, several When/Then blocks can be concatenated in the same scenario.
 
-* Each scenario will have a tag with the scenario unique identifier. The recommended format for scenario identifier is:
+* Within a feature file, each scenario MUST have both a unique `Scenario` or `Scenario Outline` name, and a unique scenario tag identifier. The recommended format for scenario tag identifier is:
 
 ```
 @<(mandatory)feature_identifier>_<(mandatory)number>_<(optional)short detail in lower case and using underscore “_” as the separator>
 ```
 E.g.: `@location_verification_10_device_empty`
 
-* `Scenario Outline` may be used at convenience with an `Examples` section. 
-
+* Each tested error response SHOULD be covered by its own scenario. `Scenario Outline` with an `Examples` section MAY be used to cover the same behaviour for several inputs. For behaviour that is specific to an operation, separate scenarios or one feature file per operation (see [Location of feature files](#location-of-feature-files)) are preferred.
 
 ### Request setup
 
 `Given` steps generally put the system in a well-defined state. For API testing, this typically implies setting up the request according to the scenario preconditions, filling the necessary path, query, header and/or body parameters.   
 
-For coherence and to ease reusability of testing implementations, a common syntax should be followed by all testing plans:
+For coherence and to ease reusability of testing implementations, a common syntax SHOULD be followed by all testing plans:
 
 ```
 * the path parameter "{name}" is set as "{value}"
@@ -258,7 +269,7 @@ Alternatively, instead of specifying exact values for specific parameters or pro
 * the request body property "$.device" is a valid device which location is known
 ```
 
-Testing plans should identify the list of input values that have to be provided by the implementation, and maintain this list as an asset of the test plan. 
+Testing plans SHOULD identify the list of input values that have to be provided by the implementation, and maintain this list as an asset of the test plan. 
 
 
 ### Request sending
@@ -269,7 +280,7 @@ For scenarios testing individual operations, the request will be sent by means o
 When the request "{operationId}" is sent
 ```
 
-For scenarios involving several requests, further requests may be included as additional `When` steps after the response to the first one is validated. E.g.:
+For scenarios involving several requests, further requests MAY be included as additional `When` steps after the response to the first one is validated. E.g.:
 
 ```
 Scenario: Delete an item and check that is deleted
@@ -302,7 +313,7 @@ Typical response validations:
 - the response header "Content-Type" is "application/json"
 ```
 
-- response schema validations. Reference to the schema in the OAS spec may be explicit or implicit, e.g.:
+- response schema validations. Reference to the schema in the OAS spec MAY be explicit or implicit, e.g.:
 
 ```
 - the response body complies with the OAS schema for this operation and status code
@@ -318,7 +329,7 @@ Typical response validations:
 - the response property "{json_path}" only exists if property "{json_path}" is "{value}"
 ```
 
-- for error scenarios, the response property `code` must be checked, e.g.:
+- for error scenarios, the response property `code` MUST be checked, e.g.:
 
 ```
 - the response property "$.code" is "INVALID_ARGUMENT"

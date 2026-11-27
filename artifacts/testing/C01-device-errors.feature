@@ -25,11 +25,20 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
   #
   # References to OAS spec schemas refer to schemas specified in {apiname}.yaml
 
-    # Error scenarios for management of input parameter device
+  # Example Background for device error tests
+  Background: Common "{operationId}" setup
+    Given an environment at "apiRoot"
+    And the resource "/{apiname}/v{version}/{resources}"
+    And the request header "Content-Type" is set to "application/json"
+    And the request header "Authorization" is set to a valid access token
+    And the request header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
+    And the request body is set by default to a request body compliant with the schema at "#/components/schemas/{createResource}"
+
+  # Error scenarios for management of input parameter device
 
   @{feature_identifier}_C01.01_device_empty
   Scenario: The device value is an empty object
-    Given the header "Authorization" is set to a valid access token which does not identify a single device
+    Given the request header "Authorization" is set to a valid access token which does not identify a single device
     And the request body property "{path_to_device}" is set to: {}
     When the request "{operationId}" is sent
     Then the response status code is 400
@@ -41,7 +50,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
 
   @{feature_identifier}_C01.02_device_identifiers_not_schema_compliant
   Scenario Outline: Some device identifier value does not comply with the schema
-    Given the header "Authorization" is set to a valid access token which does not identify a single device
+    Given the request header "Authorization" is set to a valid access token which does not identify a single device
     And the request body property "<device_identifier>" does not comply with the OAS schema at "<oas_spec_schema>"
     When the request "{operationId}" is sent
     Then the response status code is 400
@@ -61,7 +70,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
     # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
   @{feature_identifier}_C01.03_device_not_found
   Scenario: Some identifier cannot be matched to a device
-    Given the header "Authorization" is set to a valid access token which does not identify a single device
+    Given the request header "Authorization" is set to a valid access token which does not identify a single device
     And the request body property "{path_to_device}" is compliant with the schema but does not identify a valid device
     When the request "{operationId}" is sent
     Then the response status code is 404
@@ -73,7 +82,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
 
   @{feature_identifier}_C01.04_unnecessary_device
   Scenario: Device not to be included when it can be deduced from the access token
-    Given the header "Authorization" is set to a valid access token identifying a device
+    Given the request header "Authorization" is set to a valid access token identifying a device
     And the request body property "{path_to_device}" is set to a valid device
     When the request "{operationId}" is sent
     Then the response status code is 422
@@ -85,7 +94,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
 
   @{feature_identifier}_C01.05_missing_device
   Scenario: Device not included and cannot be deduced from the access token
-    Given the header "Authorization" is set to a valid access token which does not identify a single device
+    Given the request header "Authorization" is set to a valid access token which does not identify a single device
     And the request body property "{path_to_device}" is not included
     When the request "{operationId}" is sent
     Then the response status code is 422
@@ -98,7 +107,7 @@ Feature: CAMARA Common Artifact C01 - Test scenarios for device errors
   @{feature_identifier}_C01.06_unsupported_device
   Scenario: None of the provided device identifiers is supported by the implementation
     Given that some types of device identifiers are not supported by the implementation
-    And the header "Authorization" is set to a valid access token which does not identify a single device
+    And the request header "Authorization" is set to a valid access token which does not identify a single device
     And the request body property "{path_to_device}" only includes device identifiers not supported by the implementation
     When the request "{operationId}" is sent
     Then the response status code is 422

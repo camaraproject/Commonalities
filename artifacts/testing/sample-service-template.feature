@@ -27,23 +27,23 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     # Clause for getResource and deleteResource operations
     And the resource "/{apiname}/v{version}/{resources}/{resourceId}"
     # Clause only for createResource, listResources and getResource operations
-    And the header "Content-Type" is set to "application/json"
-    And the header "Authorization" is set to a valid access token
-    And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
+    And the request header "Authorization" is set to a valid access token
+    And the request header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
     # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema, clause only for createResource (i.e. only for POST/PUT operations in general)
     And the request body is set by default to a request body compliant with the schema at "#/components/schemas/{createResource}"
     # Clause for getResource and deleteResource operations
-    And the path parameter "{ResourceId}" is set by default to a existing value
+    And the path parameter "{ResourceId}" is set by default to the identifier of an existing "{Resource}"
 
 ############################ Happy Path Scenarios #############################################
 
   # createResource MUST be replaced by applicable operationId for the tested operation
   # schema names MUST be replaced by applicable values for the tested operation
   # Applicable for APIs with device concept
-  @{feature_identifier}_{createResource}_01_generic_success_scenario
+  @{feature_identifier}_{createResource}_01A_generic_success_scenario
   Scenario Outline: Common validations for any success scenario with device concept
     # Valid testing device and default request body compliant with the schema
     Given a valid testing device supported by the service, identified by the token or provided in the request body
+    And the request header "Content-Type" is set to "application/json"
     # Several clauses for request body property may apply depending on the operation
     And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     And the request body is compliant with the schema at "#/components/schemas/{createResource}"
@@ -63,10 +63,11 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # createResource MUST be replaced by applicable operationId for the tested operation
   # schema names MUST be replaced by applicable values for the tested operation
   # Applicable for APIs with phoneNumber concept
-  @{feature_identifier}_{createResource}_01_generic_success_scenario
+  @{feature_identifier}_{createResource}_01B_generic_success_scenario
   Scenario Outline: Common validations for any success scenario with phoneNumber concept
     # Valid testing phone number and default request body compliant with the schema
     Given a valid testing phone number supported by the service, identified by the token or provided in the request body
+    And the request header "Content-Type" is set to "application/json"
     # Several clauses for request body property may apply depending on the operation
     And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
     And the request body is compliant with the schema at "#/components/schemas/{createResource}"
@@ -86,12 +87,12 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
   # createResource MUST be replaced by applicable operationId for the tested operation
   # schema names MUST be replaced by applicable values for the tested operation
   # Applicable for APIs that does not own device nor phoneNumber concept
-  @{feature_identifier}_{createResource}_01_generic_success_scenario
+  @{feature_identifier}_{createResource}_01C_generic_success_scenario
   Scenario Outline: Common validations for any success scenario without device nor phoneNumber concept
     Given the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
-    # Several clauses for request body property may apply depending on the operation
-    And the request body property "$.{requestProperty}" is set to a valid {placeholder_suitable_text}
+    # As for tests 01A and 01B, several clauses for request body property may apply depending on the operation
     And the request body is compliant with the schema at "#/components/schemas/{createResource}"
+    And the request header "Content-Type" is set to "application/json"
     When the request "{createResource}" is sent
     Then the response status code is 201
     And the response header "Content-Type" is "application/json"
@@ -151,8 +152,8 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
     And the path parameter "{ResourceId}" is set to the value of the identifier for that "{Resource}"
     When the request "{deleteResource}" is sent
     Then the response status code is 204
-    And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response body is not present
 
 ############################ Error Scenarios #############################################
 
@@ -232,10 +233,11 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-service.yaml
 
   @{feature_identifier}_{operationId}_400.06_invalid_x-correlator
   Scenario: Invalid x-correlator header
-    Given the header "x-correlator" does not comply with the schema at "#/components/schemas/XCorrelator"
+    Given the header "x-correlator" does not comply with the OAS schema at "#/components/schemas/XCorrelator"
     When the request "{operationId}" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator", if present, does not have the same invalid value as the request header "x-correlator"
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text

@@ -19,16 +19,25 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
 
     * {operationId} has to be substituted to the value of operationId for the tested operation
 
-  # This feature file is to be used by CAMARA subproject for operations defined in sample-service.yaml.
+  # This feature file is to be used by CAMARA subproject for operations defined in sample-implicit-events.yaml.
   #
   # References to OAS spec schemas refer to schemas specified in {apiname}.yaml
+
+  # Example Background specification for resource creation that generates implicit events
+  Background: Common "{operationId}" setup
+    Given an environment at "apiRoot"
+    And the resource "/{apiname}/v{version}/{resources}"
+    And the request header "Authorization" is set to a valid access token
+    And the request header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
+    And the request body is set by default to a request body compliant with the schema at "#/components/schemas/{createResource}"
 
 ############################ Happy Path Scenarios #############################################
 
   # Test applicable for the related createResource operationId
   @{feature_identifier}_{operationId}_2{xx}_sink_echoed
-  Scenario: Sink is returned in the creation "<Resource>" response when event delivery is accepted
+  Scenario: Sink is returned in the creation "{Resource}" response when event delivery is accepted
     Given the request body includes property "$.sink" with a valid value
+    And the request header "Content-Type" is set to "application/json"
     When the request "{operationId}" is sent
     Then the response status code is 2{xx}
     And the response header "Content-Type" is "application/json"
@@ -38,14 +47,15 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
   # Replace ... in the lastest sentence by any type of applicable validation for the property
   @{feature_identifier}_{operationId}_2{xx}_event_notification
   Scenario: Event is received if the sink was provided and "{Resource}" lifecycle faces an update
-    Given an existing "{Resource}" created by operation "{operationId}" with provided values for "sink" and "sinkCredential", with property "$.sinkCredential.credentialType" set to "ACCESSTOKEN"
-    And the path parameter "{ResourceId}" is set to the value for that "{Resource}"
+    Given an existing resource "{Resource}" was created with valid values for "sink" and "sinkCredential", and with property "$.sinkCredential.credentialType" set to "ACCESSTOKEN"
+    And the path parameter "{ResourceId}" is set to the identifier for that "{Resource}"
+    And the request header "Content-Type" is set to "application/json"
     When the request "{operationId}" is sent
     Then the response status code is 2{xx}
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And an event is received at the address of the "$.sink" provided for "{operationId}"
-    And the event header "Authorization" is set to "Bearer " + the value of the property "$.sinkCredential.accessToken" provided for "{operationId}"
+    And an event is received at the address of the "$.sink" provided for "{Resource}"
+    And the event header "Authorization" is set to "Bearer " + the value of the property "$.sinkCredential.accessToken" provided for "{Resource}"
     And the event header "Content-Type" is set to "application/cloudevents+json"
     And the event body complies with the OAS schema at "#/components/schemas/ApiNotificationEvent"
     # Additionally any event body has to comply with some constraints beyond the schema compliance
@@ -58,6 +68,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
   @{feature_identifier}_{operationId}_400.07_invalid_sink_credential
   Scenario Outline: Invalid credential
     Given the request body property  "$.sinkCredential.credentialType" is set to "<unsupported_credential_type>"
+    And the request header "Content-Type" is set to "application/json"
     When the request "{operationId}" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
@@ -76,6 +87,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
   @{feature_identifier}_{operationId}_400.08_sink_credential_invalid_token
   Scenario: Invalid token
     Given the request body property  "$.sinkCredential.accessTokenType" is set to a value other than "bearer"
+    And the request header "Content-Type" is set to "application/json"
     When the request "{operationId}" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
@@ -92,6 +104,7 @@ Feature: CAMARA Template Artifact - Test scenarios for sample-implicit-events.ya
   Scenario: Event notifications capability not supported
     Given the request body includes property "$.sink" with a valid value
     And the API provider does not implement event notifications delivery for the operation "{operationId}"
+    And the request header "Content-Type" is set to "application/json"
     When the request "{operationId}" is sent
     Then the response status code is 422
     And the response header "Content-Type" is "application/json"
