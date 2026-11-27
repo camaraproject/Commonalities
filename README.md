@@ -24,6 +24,7 @@ The `artifacts` directory contains:
 * common data types and error formats for CAMARA APIs in [artifacts/common](artifacts/common):
   * [CAMARA_common.yaml](artifacts/common/CAMARA_common.yaml) — shared schemas, error responses, headers, and parameters
   * [CAMARA_event_common.yaml](artifacts/common/CAMARA_event_common.yaml) — CloudEvents envelope, subscription management, protocol settings, credentials, and subscription-specific error responses
+  * [CAMARA_network_quality_common.yaml](artifacts/common/CAMARA_network_quality_common.yaml) — data rate and duration units, network quality indicators (packet delay budget, jitter, packet error loss rate) and network quality thresholds
 * API templates demonstrating `$ref` consumption of common schemas in [artifacts/api-templates](artifacts/api-templates):
   * [sample-service.yaml](artifacts/api-templates/sample-service.yaml) — request-response CRUD template
   * [sample-service-subscriptions.yaml](artifacts/api-templates/sample-service-subscriptions.yaml) — explicit subscription management template
