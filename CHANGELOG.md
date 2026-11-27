@@ -1,6 +1,7 @@
 # Changelog Commonalities
 
 ## Table of Contents
+- **[r4.5](#r45)**
 - **[r4.4](#r44)**
 - **[r4.3](#r43)**
 - **[r4.2](#r42)**
@@ -20,6 +21,42 @@
 - **[v0.2.0](#v020)**
 - **[v0.1.0 - Initial version](#v010---initial-version)**
 
+# r4.5
+## Release Notes
+This release contains documents and artifacts of Commonalities version 0.10.0:
+* Commonalities approved deliverables in **[documentation](https://github.com/camaraproject/Commonalities/tree/r4.5/documentation)** folder.
+* Commonalities approved artifacts in **[artifacts](https://github.com/camaraproject/Commonalities/tree/r4.5/artifacts)** folder.
+* Analysis of the changes in Commonalities 0.10.0, including impact per API, is available on the [project wiki](https://lf-camaraproject.atlassian.net/wiki/x/Z4DITg).
+**The relevant details of authentication and consent collection are covered by [release 4.2](https://github.com/camaraproject/IdentityAndConsentManagement/releases) of Identity and Consent Working Group documents.**
+
+### Added
+* Added the `TooManyRequestsOrQuotaExceeded429` schema by @eric-murray in https://github.com/camaraproject/Commonalities/pull/723
+* Added missing checks for the `x-correlator` and `Content-Type` response headers in testing artifacts by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/727
+* Added a test scenario for undeclared request body properties (request body strictness) by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/732
+* Added device identifier schemas to `CAMARA_common.yaml` by @eric-murray in https://github.com/camaraproject/Commonalities/pull/737
+* Added a missing test scenario for `MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED` by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/742
+* Added guidance on business-level outcome scenarios and the distinction between `2xx` and `4xx` responses by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/721
+
+### Changed
+* Clarified scenario name uniqueness and the limit on the number of scenarios per feature file, and standardized the capitalization of normative keywords in the API Testing Guidelines by @tlohmar in https://github.com/camaraproject/Commonalities/pull/711
+* Clarified the scope of Basic and Enhanced test cases by @PedroDiez in https://github.com/camaraproject/Commonalities/pull/743
+* Updated the `GENERIC_409_INCOMPATIBLE_STATE` example to use a more generic error message by @rartych in https://github.com/camaraproject/Commonalities/pull/745
+* Updated the `accessTokenExpiresUtc` description and clarified access token expiration rules for explicit and implicit event subscriptions in the common schema and the Event Subscription and Notification Guide by @rartych in https://github.com/camaraproject/Commonalities/pull/752
+
+### Fixed
+* Fixed editorial issues in the Event Subscription and Notification Guide, including TLS and sink security references, the `subscription-ended` event type example, and CloudEvent identifier types in notification examples by @rartych in https://github.com/camaraproject/Commonalities/pull/725
+* Corrected the spelling of the `PRIVATE_KEY_JWT` credential type in the event subscription test template by @hdamker in https://github.com/camaraproject/Commonalities/pull/729
+* Aligned subscription ID examples in `CAMARA_event_common.yaml` and the Event Subscription and Notification Guide by @rartych in https://github.com/camaraproject/Commonalities/pull/744
+* Fixed issues with test definitions for event notifications by @eric-murray in https://github.com/camaraproject/Commonalities/pull/749
+* Fixed issues with example feature files by @eric-murray in https://github.com/camaraproject/Commonalities/pull/756
+
+### Deprecated
+n/a
+
+### Removed
+* Removed the unsupported `HTTPSettings.headers` property from `CAMARA_event_common.yaml` by @rartych in https://github.com/camaraproject/Commonalities/pull/753
+
+**Full Changelog**: https://github.com/camaraproject/Commonalities/compare/r4.4...r4.5
 
 # r4.4
 ## Release Notes
