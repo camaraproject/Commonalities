@@ -23,16 +23,16 @@ This document captures guidelines for the API testing in CAMARA project. These g
 
 ## Test plan coverage
 
-Based on the decision taken in the [Release Management](https://github.com/camaraproject/ReleaseManagement) and Commonalities working groups, and as documented in [API Release Process](https://wiki.camaraproject.org/display/CAM/API+Release+Process)(https://wiki.camaraproject.org/display/CAM/API+Release+Process#APIReleaseProcess-APIreadinesschecklist), at least one Gherkin feature file per API will be added to the API repo folder for test plans, and this test plan MUST fulfill the minimum criteria of readiness with respect to API test cases and documentation:
+Based on the decision taken in the [Release Management](https://github.com/camaraproject/ReleaseManagement) and Commonalities working groups, and as documented in [API Release Process](https://wiki.camaraproject.org/display/CAM/API+Release+Process)(https://wiki.camaraproject.org/display/CAM/API+Release+Process#APIReleaseProcess-APIreadinesschecklist), at least one Gherkin feature file per API will be added to the API repo folder for test plans, and this test plan must fulfill the minimum criteria of readiness with respect to API test cases and documentation:
 
-* Release candidates MUST have at least a basic API test plan, covering sunny day scenarios. Scenarios are expected to validate that the implemented interface is compliant with the specification, in terms of syntax and support for the mandatory aspects. 
-* Any public release MUST include a full test plan, covering both sunny and rainy day scenarios, to be considered stable. This may include unusual or not explicitly specified error scenarios, semantic validations, and corner cases.
+* Release candidates must have at least a basic API test plan, covering sunny day scenarios. Scenarios are expected to validate that the implemented interface is compliant with the specification, in terms of syntax and support for the mandatory aspects. 
+* Any public release must include a full test plan, covering both sunny and rainy day scenarios, to be considered stable. This may include unusual or not explicitly specified error scenarios, semantic validations, and corner cases.
 
 If subprojects also intend to add test implementations, an aligned single implementation agreed among all provider implementors could be added to the main subproject repo. If no alignment is possible, each provider implementer will add the test implementation to their own repos.
 
 * Test plans are not meant to certify the accuracy or veracity of the implementation's responses but to ensure that the interface complies with the API specification and that the API is fully implemented.
 
-* When the API allows options or alternative approaches, the test plan SHOULD cover those situations and define the expected behaviour for inputs or options not supported.
+* When the API allows options or alternative approaches, the test plan should cover those situations and define the expected behaviour for inputs or options not supported.
   - Implementations will need to inform in advance to the API tester about which subset of options is supported. 
 
 ### Independent operations
