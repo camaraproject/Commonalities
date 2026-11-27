@@ -49,6 +49,7 @@ A list of some of the frequently accessed documents that are an output of the wo
 NOTE: Guidelines for Release Management of API versions, e.g. the API-Readiness-Checklist, are located within [ReleaseManagement](https://github.com/camaraproject/ReleaseManagement). The versioning of APIs is defined within the [CAMARA API Design Guide](/documentation/CAMARA-API-Design-Guide.md#7-versioning). 
 
 ## Status and released versions
+* The alpha release of version 0.10.0 of the guidelines and assets for the 2027 CAMARA APIs meta-release is available under the [r4.5 tag](https://github.com/camaraproject/Commonalities/tree/r4.5)
 * Version 0.9.0 of guidelines and assets for 2026 meta-release of CAMARA APIs is available with the [r4.4 tag](https://github.com/camaraproject/Commonalities/releases/tag/r4.4)
 * Previous releases and pre-releases are available in https://github.com/camaraproject/Commonalities/releases
 
