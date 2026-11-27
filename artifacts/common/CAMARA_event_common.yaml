@@ -112,7 +112,7 @@ components:
       type: string
       maxLength: 256
       description: The unique identifier of the subscription in the scope of the subscription manager. When this information is contained within an event notification, it SHALL be referred to as `subscriptionId` as per the Commonalities Event Notification Model.
-      example: qs15-h556-rt89-1298
+      example: 550e8400-e29b-41d4-a716-446655440000
 
     ConfigBase:
       description: |
@@ -164,15 +164,6 @@ components:
       type: object
       description: HTTP protocol settings for event delivery.
       properties:
-        headers:
-          type: object
-          description: |-
-            A set of key/value pairs that is copied into the HTTP request as custom headers.
-
-            NOTE: Use/Applicability of this concept has not been discussed in Commonalities. When required by an API project as an option to meet a UC/Requirement, please generate an issue for Commonalities discussion about it.
-          additionalProperties:
-            type: string
-            maxLength: 512
         method:
           type: string
           description: The HTTP method to use for sending the message.
@@ -328,7 +319,10 @@ components:
               maxLength: 64
               description: |
                 REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired.
-                In the case of an ACCESS_TOKEN_EXPIRED termination reason, implementation should notify the client before the expiration date.
+                When the subscription is created through a subscriptions endpoint (explicit subscription), in the case of an ACCESS_TOKEN_EXPIRED termination reason,
+                implementation SHOULD notify the client before the expiration date.
+                When notifications are requested by providing `sink` in the creation request of another resource (implicit subscription), token expiration SHOULD occur after the expiration of that resource,
+                allowing the client to be notified of any changes during the resource's existence. If the token expires while that resource is still active, the client will stop receiving notifications.
                 If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
                 It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
               example: "2023-07-03T12:27:08.312Z"
