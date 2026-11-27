@@ -25,8 +25,8 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
 
   Background: Common {xxx} Subscriptions setup
     Given the resource "{apiroot}/{xxx}-subscriptions/vwip/" as {xxx} base-url
-    And the header "Authorization" is set to a valid access token
-    And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
+    And the request header "Authorization" is set to a valid access token
+    And the request header "x-correlator" is non-empty and complies with the OAS schema at "#/components/schemas/XCorrelator"
 
 ############################ Happy Path Scenarios #############################################
 
@@ -37,6 +37,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   # Some implementations may only support asynchronous subscription creation
     Given that subscriptions are created synchronously
     And a valid subscription request body
+    And the request header "Content-Type" is set to "application/json"
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 201
     And the response header "Content-Type" is "application/json"
@@ -48,6 +49,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   # Some implementations may only support synchronous subscription creation
     Given that subscriptions are created asynchronously
     And a valid subscription request body
+    And the request header "Content-Type" is set to "application/json"
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 202
     And the response header "Content-Type" is "application/json"
@@ -57,6 +59,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscriptions_03_subscription_creation_event_validation
   Scenario: Receive notification for subscription-started event on creation
     Given a valid subscription request body
+    And the request header "Content-Type" is set to "application/json"
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 201 or 202
     And the response header "Content-Type" is "application/json"
@@ -70,6 +73,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscriptions_04_Operation_to_retrieve_list_of_subscriptions_when_no_records
   Scenario: Get a list of {xxx} subscriptions when no subscriptions available
     Given a client without {xxx} subscriptions created
+    And the request header "Content-Type" is set to "application/json"
     When the request "retrieve{xxx}SubscriptionList" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -104,8 +108,10 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     When the request "delete{xxx}Subscription" is sent
     Then the response status code is 202 or 204
     And the response header "x-correlator" has the same value as the request header "x-correlator"
-    And if the response property "$.status" is 204 then the response body is not available
-    And if the response property "$.status" is 202 then the response body complies with the OAS schema at "#/components/schemas/SubscriptionAsync"
+    And if the response status code is 202 then the response header "Content-Type" is set to "application/json"
+    And if the response status code is 202 then the response body complies with the OAS schema at "#/components/schemas/SubscriptionAsync"
+    And if the response status code is 204 then the response header "Content-Type" is not present
+    And if the response status code is 204 then the response body is not present
 
   @{xxx}_subscriptions_08_subscription_ends_on_expiry
   Scenario: Receive notification for subscription-ended event on expiry
@@ -146,6 +152,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Receive initial event notification on creation
     Given the API supports initial events to be sent
     And a valid subscription request body with property "$.config.initialEvent" set to true
+    And the request header "Content-Type" is set to "application/json"
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 201 or 202
     And the response header "Content-Type" is "application/json"
@@ -160,6 +167,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   # Some implementations may only support asynchronous subscription creation
   # Some implementations may decide to not return the sinkCredential in the response (data minimization principle)
     Given that subscriptions are created synchronously
+    And the request header "Content-Type" is set to "application/json"
     And a valid subscription request body
     And the request property "$.sinkCredential.credentialType" is set to "ACCESSTOKEN"
     And the request property "$.sinkCredential.accessTokenType" is set to "bearer"
@@ -178,6 +186,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   # Some implementations may only support asynchronous subscription creation
   # Some implementations may only support out_of_band provisioning
     Given that subscriptions are created synchronously
+    And the request header "Content-Type" is set to "application/json"
     And a valid subscription request body
     And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_KEY_JWT"
     When the request "create{xxx}Subscription" is sent
@@ -192,6 +201,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   # Some implementations may additionally support in_band provisioning
     Given that subscriptions are created synchronously
     And a valid subscription request body
+    And the request header "Content-Type" is set to "application/json"
     And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_KEY_JWT"
     And the request property "$.sinkCredential.clientId" is set to a valid value
     And the request property "$.sinkCredential.tokenUri" is set to a valid value
@@ -234,6 +244,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscriptions_20_creation_{xxx}_subscription_with_invalid_parameter
   Scenario:  Create {xxx} subscription with invalid parameter
     Given the request body is not compliant with the schema "#/components/schemas/SubscriptionRequest"
+    And the request header "Content-Type" is set to "application/json"
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
@@ -242,9 +253,22 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
+  @{xxx}_subscriptions_20A_creation_{xxx}_subscription_with_invalid_x-correlator_header
+  Scenario: Create {xxx} subscription with invalid x-correlator header
+    Given the request header "x-correlator" is not compliant with the OAS schema "#/components/schemas/XCorrelator"
+    And the request header "Content-Type" is set to "application/json"
+    When the request "create{xxx}Subscription" is sent
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator", if present, does not have the same invalid value as the request header "x-correlator"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
   @{xxx}_subscriptions_21_creation_of_subscription_with_expiry_time_in_past
   Scenario: Expiry time in past
     Given a valid {xxx} subscription request body
+    And the request header "Content-Type" is set to "application/json"
     And request body property "$.config.subscriptionExpireTime" in the past
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 400
@@ -257,6 +281,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscription_22_creation_with_invalid_eventType
   Scenario: Subscription creation with invalid event type
     Given a valid {xxx} subscription request body
+    And the request header "Content-Type" is set to "application/json"
     And the request body property "$.types" is set to invalid value
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 400
@@ -269,6 +294,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscription_23_invalid_protocol
   Scenario: Subscription creation with invalid protocol
     Given a valid {xxx} subscription request body
+    And the request header "Content-Type" is set to "application/json"
     And the request property "$.protocol" is not set to "HTTP"
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 400
@@ -281,6 +307,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscription_24_invalid_credential
   Scenario: Subscription creation with invalid credential
     Given a valid {xxx} subscription request body
+    And the request header "Content-Type" is set to "application/json"
     And the request property "$.protocol" is set to "HTTP"
     And the request property "$.sinkCredential.credentialType" is not set to "ACCESSTOKEN" and is not set to "PRIVATE_KEY_JWT"
     When the request "create{xxx}Subscription" is sent
@@ -294,6 +321,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscription_25_invalid_token
   Scenario: Subscription creation with invalid token
     Given a valid {xxx} subscription request body
+    And the request header "Content-Type" is set to "application/json"
     And the request property "$.protocol" is set to "HTTP"
     And the request property "$.sinkCredential.credentialType" is set to "ACCESSTOKEN"
     And the request property "$.sinkCredential.accessTokenType" is not set to "bearer"
@@ -310,6 +338,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscription_26_invalid_url
   Scenario: Subscription creation with invalid url
     Given a valid {xxx} subscription request body
+    And the request header "Content-Type" is set to "application/json"
     And the request property "$.protocol" is set to "HTTP"
     And the request property "$.sink" is set to "invalid-url"
     When the request "create{xxx}Subscription" is sent
@@ -323,6 +352,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscriptions_27_no_authorization_header_for_create_subscription
   Scenario: No Authorization header for create subscription
     Given a valid {xxx} subscription request body
+    And the request header "Content-Type" is set to "application/json"
     And the request does not include the "Authorization" header
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 401
@@ -335,6 +365,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscriptions_28_expired_access_token_for_create_subscription
   Scenario: Expired access token for create subscription
     Given a valid {xxx} subscription request body and header "Authorization" is expired
+    And the request header "Content-Type" is set to "application/json"
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 401
     And the response header "Content-Type" is "application/json"
@@ -346,6 +377,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscriptions_29_invalid_access_token_for_create_subscription
   Scenario: Invalid access token for create subscription
     Given a valid {xxx} subscription request body
+    And the request header "Content-Type" is set to "application/json"
     And header "Authorization" set to an invalid access token
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 401
@@ -493,6 +525,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscriptions_60_creation_with_unsupported_multiple_event_type
   Scenario: Multi event subscription not supported
     Given the API provider only allows one event to be subscribed per subscription request
+    And the request header "Content-Type" is set to "application/json"
     And a valid subscription request body
     And the request body property "$.types" is set to an array with 2 valid items
     When the request "create{xxx}Subscription" is sent
@@ -509,6 +542,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   Scenario: Private JWT Key not configured for subscription creation
     Given the API provider requires the use of a Private JWT key mechanism for subscription creation authentication
     And the Private JWT key mechanism is not pre-configured in the environment
+    And the request header "Content-Type" is set to "application/json"
     And a valid subscription request body with the property "$.sinkCredential.credentialType" set to "PRIVATE_KEY_JWT"
     When the request "create{xxx}Subscription" is sent
     Then the response status code is 422
@@ -523,11 +557,14 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
   @{xxx}_subscriptions_62_creation_with_temporarily_unsupported_multiple_event_type
   Scenario: Multi event subscription temporarily not supported
     Given the API provider supports subscribing to multiple event types in a single subscription
+    And the request header "Content-Type" is set to "application/json"
     And a valid subscription request body
     And the request body property "$.types" is set to an array with 2 valid items
     And the requested combination of event types is temporarily not supported
     When the request "create{xxx}Subscription" is sent
-    Then the response code is 422
+    Then the response status code is 422
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.status" is 422
     And the response property "$.code" is "MULTIEVENT_COMBINATION_TEMPORARILY_NOT_SUPPORTED"
     And the response property "$.message" contains a user friendly text
@@ -588,7 +625,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
 
   @{xxx}_subscriptions_73_pagination_last_page
   Scenario: Subscription list pagination fetching the last page of the list
-    Given an API client with more than 40 and less than 60 {xxx} subscriptions created
+    Given an API client with more than 40 and no more than 60 {xxx} subscriptions created
     When the request "retrieve{xxx}SubscriptionList" is sent with query parameters "page" set to 3 and "perPage" set to 20
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -602,7 +639,7 @@ Feature: Camara Template Subscriptions API - Operations on subscriptions
     And the response body property "$.pagination.page" is 3
     And the response body property "$.pagination.perPage" is 20
     And the response body property "$.pagination.totalPages", if present, is 3
-    And the response body property "$.pagination.totalCount", if present, is greater than 40 and less than 60
+    And the response body property "$.pagination.totalCount", if present, is greater than 40 and no more than 60
 
   @{xxx}_subscriptions_74_pagination_invalid_page_parameter
   Scenario: Subscription list pagination with invalid value for page parameter
